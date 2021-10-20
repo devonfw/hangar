@@ -1,0 +1,147 @@
+= Create a repository on azure devops
+
+This Guide is made to be able to create repository with command line and automatically, if you prefer using the azure web interface, you can follow the guide under the name: *'block3_create_repo_manually'*
+
+== Prerequisite
+For this part we suppose you have git and azure CLI installed on your computer.
+
+If not, check these pages:
+
+Azure CLI : https://docs.microsoft.com/en-us/cli/azure/install-azure-cli +
+Git : https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+
+NOTE: Here you will see two types of repository, git repository and azure repository, it is important to know that azure repositories are still git repositories, but in this documentation we will use azure repository to talk about the one we want to create, and git repository is about any other git repository (it can be host on github, on your local computer, on another azure project ...)
+
+== I. Using the script to create your repository
+
+There is a script called create_a_repo.ps1 (path to define).
+
+In this part we will explain how to use the script to create your repository. In the paragraph II. we explain how the script works and explain every commands.
+
+It can be used in three different ways:
+
+  - 1st case: create an empty repository with just a README file and clone it to your computer into the directory you set.
+  - 2nd case: import an already existing git repository into your project (Note: all modifications made into your azure repository will not apply into your git repository. As modification made into your git repository will not apply in your azure repo), then clone this repo on your computer into the directory you set.
+  - 3rd case: Convert one of your local folder into a git repository, then push this repository to your azure project, works also if your folder is already a git repository, if it is just a local git repository it will add the remote origin url, if your git repository already have one configured, it will ask a confirmation to change it
+
+Use the 1st case if this is a brand new repository. +
+Use the 2nd case if you already started your code and already pushed it into git, for example if you are migrating to azure. +
+use the 3rd case if you already worked on local but have not pushed online your modification or use it as an alternative from the second case (instead of using the url we use the configuration on your computer).
+
+Syntax: +
+```
+  create_a_repo.ps1
+      [-action <String>]
+      [-name <String>]
+      [-directory <String>]
+      [-organisation <String>]
+      [-project <String>]
+      [-giturl <String>]
+```
+
+arguments: +
+```
+  -action :       (mandatory) The value of this will tell in which case the script must be executed, can be 'empty' (1st case), 'import'(2nd case), 'push'(3rd case)
+  -name :         (mandatory if the value of 'action' is 'empty') Name the azure repository will have
+                  if not set for action 'import', it will used the name of the git repository you are trying to import (the one written in the url)
+                  if not set for action 'push', it will used the name of the directory you will convert
+  -directory :    (mandatory) Name of the directory where your repository will be clone (for the action 'empty' and 'import'), or name of the folder you want to convert into a git repository (for the action 'push')
+  -organisation : URL of your azure organisation (mandatory)
+  -project :      (mandatory) name of you azure project
+  -giturl :       (Mandatory if you choose the action import) URL of the git repository you want to clone
+```
+examples:
+
+1st case: +
+  `.\create_a_repo.ps1 -action 'empty' -directory . -organisation \https://dev.azure.com/azure_organisation -project azure_project -name repository_azure` +
+
+This command has created a repository on azure and also cloned this repository into the current directory
+
+2nd case: +
+  `create_a_repo.ps1 -action 'import' -directory "C:\GIT_STORE" -organisation  \https://dev.azure.com/azure_organisation -project azure_project -name repository_import -giturl \https://github.com/elastic/examples.git` +
+
+It will import all the content of the repository stored at that url \https://github.com/elastic/examples.git under the name 'repository_import', if no name would have been set, the repository would have been imported under the name 'examples' (it uses the url to know the name).
+Then the repository is cloned inside the folder 'C:\GIT_STORE'. +
+
+NOTE: Importing a git repository into azure just import the content (branchs, files ...), but once the repository is imported there is no link between them ,any modification made on the original repo will not apply on your azure project (and the other way around is also true) +
+
+3rd case: +
+  `create_a_repo.ps1 -action 'push' -directory .\repository_push -organisation \https://dev.azure.com/azure_organisation -project azure_project -name repository_push` +
+
+If your folder .\repository_push is just a folder, it will convert it into a git repository then push it to your azure project. +
+If your folder is a local git repository, it will just push it to your azure project. +
+If your folder is an online git repository, it will change the url so that next commits will be pushed into your azure repository but not on the one already configured, and it will push all your branches qt the new URL. +
+
+== II. Commands used in this script
+
+This paragraph will explain what command we used in case you need to adapt the command for yourself.
+
+<name>, <directory>, <project> and <giturl> are the value that we chose for every arguments of the same name
+
+First thing that is done is set the location to the directory you wrote in the command (for the 3 cases):
+
+```
+cd <directory>
+```
+
+Then we create the azure repository: (for the 3 cases) +
+
+```
+az repos create --name <name> --organization <organisation> --project <project>
+```
+If a repository already exists with the same name you will get an error message but the script will continue (in case you already played it and it exited with an error)
+
+see here for more information about the `az repo create` command: https://docs.microsoft.com/en-us/cli/azure/repos?view=azure-cli-latest#az_repos_create
+
+Then for every cases now the commands differ.
+
+=== A. 1st case
+
+We play all of these commands inside the directory we set location before:
+
+`git clone <organisation>/<project>/_git/<name>` is used to get a local version of a remote git repository, so here in our case, the repo we just created wit `az repo create` (the argument after clone is an URL, it looks like that in general: https://dev.azure.com/amazingorganisation/amazingproject/_git/amazingrepo) +
+`cd <name>` we set the location inside the repository we just cloned. +
+`cp <folder_of_script>\README.md .` We copy inside the new repository a template of a README file (that is initially located in the same directory as the script is). +
+`git add -A` This command is used to add every modification made into the repository into the next commit. +
+`git commit -m "Adding README"` We now commit the modifications with an information message. +
+`git push` We now push our modification so that it is on the online repository
+
+(If you do not want a README file you can just clone your repo)
+
+=== B. 2nd case
+
+We play all of these commands inside the directory we set location before:
+
+`az repos import create --git-url <giturl> --organization <organisation> --project <project> --repository <name>` +
+
+This command is used to import an existing git repository into our empty azure repository. +
+More information on the command here: https://docs.microsoft.com/en-us/cli/azure/repos/import?view=azure-cli-latest#az_repos_import_create
+
+We then clone the repository we just created:
+
+`git clone <organisation>/<project>/_git/<name>`
+
+=== C. 3rd case
+
+We convert the directory into a local git repository (command skipped if it is already a git repository):
+
+`git init .`
+
+We then commit everything that is inside the repo (these 2 commands are skipped if the directory was already a git repository)
+
+```
+git add -A
+git commit -m "creation of the repository"
+```
+
+Then, if your directory was already a git repository with a remote url, we change that url to the one of your new repository created on azure
+
+`git remote set-url --add --push origin <organisation>/<project>/_git/<name>`
+
+If not, we just add the URL to the configuration of your local repository:
+
+`git remote add origin <organisation>/<project>/_git/<name>`
+
+Finally we push every branch (`-all`) and add an upstream reference (`-u`) to them so that git pull update every branchs, and we use `origin` to push it to the repository we specified in the URL:
+
+`git push -u origin --all`
