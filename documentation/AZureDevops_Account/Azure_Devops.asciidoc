@@ -1,0 +1,125 @@
+
+== Activate and prepare Azure DevOps 
+Azure DevOps provides developer services for support teams to plan work, collaborate on code development, and build and deploy applications.
+
+:url-doc: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#sign-up-with-a-personal-microsoft-account
+
+:url-dashboard: https://docs.microsoft.com/en-us/azure/devops/report/dashboards/overview?view=azure-devops
+
+:url-Boards: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/plan-track-work?view=azure-devops&tabs=agile-process
+
+:url-testplan: https://docs.microsoft.com/en-us/azure/devops/test/overview?view=azure-devops
+
+:url-artifacts: https://docs.microsoft.com/en-us/azure/devops/artifacts/start-using-azure-artifacts?view=azure-devops
+
+:url-azureCli: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+
+:url-pat:  https://docs.microsoft.com/en-us/azure/devops/cli/log-in-via-pat?view=azure-devops&tabs=windows
+
+*Prerequisites:*
+
+** Sign into Azure DevOps (If you don’t have a Microsoft account, choose Create one. To learn more, see create a {url-doc}[Microsoft Account])
+* Create Azure Devops organization.
+
+   - Create Extensions for external template (Example: EKS).
+   -  Create Azure Active Directory and Add policies.
+   -   Agent pool to execute pipeline, here we can use azure pipeline or external Virtual machine .
+   
+* Create Azure Devops Project.
+   - Invite team members to your project 
+   - Azure {url-dashboard}[Dashboards] are customizable interactive signboards that provide real-time information, and display configurable charts and widgets
+   -   Azure {url-Boards}[Boards] delivers a suite of Agile tools to support planning and tracking work, code defects, and issues using Kanban and Scrum methods.
+   -  Azure Repos provides Git repositories for source control of your code.
+   - Azure Pipelines provides build and release services to support CI/CD of your applications.
+   -   Azure {url-testplan}[Test Plans] provides several tools to test your apps, including manual/exploratory testing and continuous testing.
+   - Azure {url-artifacts}[Artifacts] allows teams to share packages such as Maven, npm, etc.
+   
+   - Service Connection for for external template.
+
+** Install the {url-azureCli}[Azure CLI] and Check Version.
+[source,asciidoc]
+----
+az --version
+----
+
+== *Create Azure DevOps From CLI*
+
+
+** Login from Azure cli.
+[source,asciidoc]
+----
+az login 
+----
+
+** Add subscription.
+[source,asciidoc]
+----
+az account set --subscription $subscriptionName
+----
+
+** Create the resource group.
+[source,asciidoc]
+----
+az group create --location $region --name $resourceGroupName
+----
+
+** Run pipelines on Microsoft-hosted agents or You can create self-hosted agents.
+
+** Add the Azure DevOps Extension.
+[source,asciidoc]
+----
+az extension add --name azure-devops
+----
+** Azure devops login. Create Personal Access Tokens ({url-pat}([PAT]) to authorization header to access REST APIs.
+[source,asciidoc]
+----
+az devops login 
+----
+** configure the organization and project. 
+[source,asciidoc]
+----
+az devops configure --defaults organization=https://dev.azure.com/{{MyOrganizationName}} 
+
+az devops configure --defaults project={{ProjectName}}
+
+az devops configure --list
+----
+
+**PowerShell Script**
+
+
+-  Create Automated script for above process in "myScript.ps1"
+-  Set Secret values under "my_pat_token.txt"
+
+
+[source,asciidoc]
+----
+# Install the Azure DevOps extension
+az extension add --name azure-devops
+
+#Set Secret Values in AZURE_DEVOPS_EXT_PAT
+#set AZURE_DEVOPS_EXT_PAT=xxxxxxxxxx
+
+
+# Login to Azure Devops With PAT
+echo "You can Login by using PAT."
+cat my_pat_token.txt | az devops login
+
+#cat my_pat_token.txt | az devops login --organization https://dev.azure.com/contoso/
+
+
+# List of Configured Organizations
+echo "Condigure Organizations and project"
+az devops configure --defaults organization=https://dev.azure.com/prathibhapadma-org 
+
+az devops configure --defaults project=test
+
+echo "Configure list"
+
+az devops configure --list
+----
+
+
+You can run your Script using: `./myScript.ps1`
+
+
