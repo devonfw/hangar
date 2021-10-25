@@ -1,4 +1,13 @@
-What is a Container Registry?
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+
+= Container Registry
+
+There are many different views that are summarized by the term _architecture_. First, we will introduce the xref:key-principles[key principles] and xref:architecture-principles[architecture principles] of devonfw. Then, we will go into details of the the xref:application-architecture[architecture of an application].
+
+== What is a Container Registry?
 * Docker registry is a service that is storing our docker images.
 * Docker registry could be hosted by a third party, as public or private registry.
 * Could be used one of the below:
@@ -16,14 +25,14 @@ What is a Container Registry?
   12. Portus (port.us.org)
 * We can host the Docker Registry by ourself using "docker registry" or other options like Quay, Harbor, Portus, etc.
 
-What is a Container Repository?
+== What is a Container Repository?
 * Docker repository is a collection of different docker images with same name, that have different tags. 
 * Tag is alphanumeric identifier of the image within a repository.
 * For example see https://hub.docker.com/r/library/python/tags/. 
   - There are many different tags for the official python image, these tags are all members of the official python repository on the Docker Hub. 
   - Docker Hub is a Docker Registry hosted by Docker.
   
-What is Docker Registry and why to use it?
+== What is Docker Registry and why to use it?
 * The Registry is a stateless, highly scalable server side application that stores and lets you distribute Docker images. 
 * The Registry is open-source, under the permissive Apache license.
 * You should use the Registry if you want to:
