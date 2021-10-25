@@ -1,0 +1,35 @@
+What is a Container Registry?
+* Docker registry is a service that is storing our docker images.
+* Docker registry could be hosted by a third party, as public or private registry.
+* Could be used one of the below:
+  1. Docker Hub (hub.docker.com)
+  2. Amazon Elastic Container Registry (ECR)
+  3. Google Container Registry (GCR)
+  4. Azure Container Registry (ACR)
+  5. IBM Cloud Container Registry
+  6. Oracle Container Registry
+  7. Alibaba Cloud Container Registry
+  8. GitLab Container Registry
+  9. JFrog Container Registry
+  10. Red Hat Quay (quay.io)
+  11. Harbor (goharbor.io)
+  12. Portus (port.us.org)
+* We can host the Docker Registry by ourself using "docker registry" or other options like Quay, Harbor, Portus, etc.
+
+What is a Container Repository?
+* Docker repository is a collection of different docker images with same name, that have different tags. 
+* Tag is alphanumeric identifier of the image within a repository.
+* For example see https://hub.docker.com/r/library/python/tags/. 
+  - There are many different tags for the official python image, these tags are all members of the official python repository on the Docker Hub. 
+  - Docker Hub is a Docker Registry hosted by Docker.
+  
+What is Docker Registry and why to use it?
+* The Registry is a stateless, highly scalable server side application that stores and lets you distribute Docker images. 
+* The Registry is open-source, under the permissive Apache license.
+* You should use the Registry if you want to:
+  - tightly control where your images are being stored
+  - fully own your images distribution pipeline
+  - integrate image storage and distribution tightly into your in-house development workflow
+* Users looking for a zero maintenance, ready-to-go solution are encouraged to head-over to the Docker Hub.
+* Docker Hub provides a free-to-use, hosted Registry, plus additional features (organization accounts, automated builds, and more).
+* The Registry is compatible with Docker engine version 1.6.0 or higher.
