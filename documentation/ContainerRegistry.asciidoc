@@ -12,14 +12,14 @@ toc::[]
   2. Amazon Elastic Container Registry (https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html[ECR])
   3. Google Container Registry (https://cloud.google.com/container-registry/docs/pushing-and-pulling[GCR])
   4. Azure Container Registry (https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli[ACR])
-  5. IBM Cloud Container Registry
-  6. Oracle Container Registry
-  7. Alibaba Cloud Container Registry
-  8. GitLab Container Registry
-  9. JFrog Container Registry
-  10. Red Hat Quay (quay.io)
-  11. Harbor (goharbor.io)
-  12. Portus (port.us.org)
+  5. IBM Cloud Container Registry (https://www.ibm.com/cloud/container-registry[link])
+  6. Oracle Container Registry (https://docs.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm[link])
+  7. Alibaba Cloud Container Registry (https://www.alibabacloud.com/help/doc-detail/198212.htm[link])
+  8. GitLab Container Registry (https://docs.gitlab.com/ee/user/packages/container_registry/[link])
+  9. JFrog Container Registry (https://jfrog.com/container-registry/[link])
+  10. Red Hat Quay  (https://quay.io/[link])
+  11. Harbor  (https://goharbor.io/docs/2.3.0/install-config/[link])
+  12. Portus  (http://port.us.org/docs/first-steps.html[link])
 * We can host the Docker Registry by ourself using "docker registry" or other options like Quay, Harbor, Portus, etc.
 
 == What is a Container Repository?
