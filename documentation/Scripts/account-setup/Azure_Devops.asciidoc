@@ -11,7 +11,7 @@
 1. Login to Azure  `az login`.
 
 
-2. Create Automated script file `myScript.ps1`
+2. Create Automated script file `myScript.sh`
 3. Install the Azure DevOps Extension to manage Azure DevOps Services from the command line . 
 
 3. Login to azure devops with PAT token
@@ -21,7 +21,7 @@
 4. configure the organization and project. 
 
 
-**PowerShell Script**
+**Script**
 
 
  
@@ -50,6 +50,6 @@ az devops configure --list
 ----
 
 
-You can run your Script using: `./myScript.ps1`
+You can run your Script using: `./myScript.sh`
 
 
