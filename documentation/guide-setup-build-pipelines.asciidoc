@@ -1,6 +1,6 @@
 = Setting Up the Build Pipelines
 
-In this section we will look at how to create our build pipelines in order to compile our code. A script has `build_pipeline_generation.ps1` has been created in order to automate the creation of your build pipeline, this script can be found in the folde \scripts\pipelines\azure-devops.
+In this section we will look at how to create our build pipelines in order to compile our code. A script named `build_pipeline_generation.ps1` has been created in order to automate the creation of your build pipeline, this script can be found in the folde \scripts\pipelines\azure-devops.
 
 You can execute this script in two different ways, if you want to create a new pipeline from scratch or if you want to create a new pipeline from a `.yaml` file which is already inside your repository. For more detail check the following sections.
 
