@@ -1,0 +1,55 @@
+== Activate and prepare Azure DevOps 
+
+*Prerequisites:*
+
+1. Install the Azure CLI.
+2. Create Azure DevOps Account
+
+== *Create Azure DevOps From CLI*
+
+
+1. Login to Azure  `az login`.
+
+
+2. Create Automated script file `myScript.ps1`
+3. Install the Azure DevOps Extension to manage Azure DevOps Services from the command line . 
+
+3. Login to azure devops with PAT token
+ - Create Personal Access Tokens (PAT) to authorization header to access REST APIs.
+- Set Secret values under "my_pat_token.txt"
+
+4. configure the organization and project. 
+
+
+**PowerShell Script**
+
+
+ 
+[source,asciidoc]
+----
+# Install the Azure DevOps extension
+az extension add --name azure-devops
+
+# Login to Azure Devops With PAT
+echo "You can Login by using PAT."
+cat my_pat_token.txt | az devops login
+
+#cat my_pat_token.txt | az devops login --organization https://dev.azure.com/contoso/
+
+# List of Configured Organizations
+echo "Configure Organizations and project"
+
+az devops configure --defaults organization=https://dev.azure.com/{{Organization-org}} 
+
+az devops configure --defaults project={{project}}
+
+# List of Configured Organizations
+echo "Configure list"
+
+az devops configure --list
+----
+
+
+You can run your Script using: `./myScript.ps1`
+
+
