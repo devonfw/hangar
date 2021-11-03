@@ -1,6 +1,6 @@
 = Setting Up the Build Pipelines
 
-In this section we will look at how to create our build pipelines in order to compile our code. A script named `build_pipeline_generation.ps1` has been created in order to automate the creation of your build pipeline, this script can be found in the folde \scripts\pipelines\azure-devops.
+In this section we will look at how to create our build pipelines in order to compile our code. A script named `build_pipeline_generation.ps1` has been created in order to automate the creation of your build pipeline, this script can be found in the folder \scripts\pipelines\azure-devops.
 
 You can execute this script in two different ways, if you want to create a new pipeline from scratch or if you want to create a new pipeline from a `.yaml` file which is already inside your repository. For more detail check the following sections.
 
@@ -50,15 +50,15 @@ The first way would be if you want to create a new build pipeline based on a `.y
 .. `[2]` will open a text editor with the `.yaml` file allowing you to make changes.
 . Check on your Azure DevOps that your pipeline is up and running.
 
-The other way to execute this script would be if you want to create a new build pipeline but you do not have any `.yaml` file in your repository. On order to create the pipeline and the `.yaml` file, you will need to:
+The other way to execute this script would be if you want to create a new build pipeline but you do not have any `.yaml` file in your repository. In order to create the pipeline and the `.yaml` file, you will need to:
 
 . Execute the script like in the example before: `.\build_pipeline_generation.ps1 -name 'my_build_pipeline' -repository	<my_azure_repo_url> -branch master`.
 . Select the pipeline template according to the programming language of your project.
 . Select the secon option (`[2]`) to edit the `.yaml` file.
 .. Replace `{{ branch }}` with `master`.
-.. Replace `{{ pool }}` with `<agent_used>'` (For example: vmImage: 'ubuntu-latest').
+.. Replace `{{ pool }}` with `'<agent_used>'` (For example: vmImage: 'ubuntu-latest').
 .. Edit the steps as desired in order to build your project.
-. Select the first option (`[1]`) in order to proceed the execution with this `.yaml` file.
+. Select the first option (`[1]`) in order to proceed the execution with this new `.yaml` file.
 . Select the branch where you want to commit this `.yaml` file.
 .. `[1]` will commit the file into the master branch.
 .. `[2]` will create a new branch where the file will be commited.
