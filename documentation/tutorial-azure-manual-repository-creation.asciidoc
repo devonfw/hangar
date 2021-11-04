@@ -4,7 +4,7 @@
 
 In this documentation we will see how repositories works on azure, we will see how to create one when it is a brand new project,  but also how to do it when your project already has a repository +
 
-All the actions will be done manually with the web interface, if you want to use command line or a script that automatize these steps, check this documentation: *'guide-azure-script_repository-creation'*
+All the actions will be done manually with the web interface, if you want to use command line or a script that automatize these steps, check this documentation: *'guide-azure-script-repository-creation'*
 
 == I. Your project is new and your repository is empty
 
@@ -230,12 +230,76 @@ Then you just need to put the URL of the repository you want to import qnd choos
 
 image:P2_C_URL_name.PNG[]
 
-==== 4. Gitflow and policies
+== III. Branches and policies
 
-Now that you have created a repository, you may need to set a gitflow and branches policies.
+Now that you have created a repository, you may need to set a workflow and policies for your branches.
 
-To create branches you can follow this link: +
-https://docs.microsoft.com/en-us/azure/devops/repos/git/create-branch?view=azure-devops&tabs=browser
+=== A. Branches
 
-to manage the branches policies, follow this link: +
+==== 1. Create a branch
+
+To create a branch, on the left menu, select 'Repos' > 'Branches'.
+
+image::P3_A_1_1_menu_branches.png[]
+
+On the top right corner, press the 'New branch' button.
+
+image::P3_A_1_2_new_branche.png[]
+
+You can now choose how your branch is gonna be called and from which branch you create it.
+
+image::P3_A_1_3_name_branch.PNG[]
+
+==== 2. Workflow
+
+We advice you to follow this workflow for your branches.
+
+You have 4 type of branches:
+
+- *develop* (one branch): This is the branch containing all finished development waiting for validation, everytime you work on a new feature (or bug fix), you need to create a new branch, this branch must be created from *develop*, once your development is over, you can merge it into *develop* where validation tests will play on it. If these tests are succesful, *develop* is merged into *master* +
+- *master* (one branch): This branch contains every validated development ready to be released. This is from this branch that we create releases. +
+- *Feature branches*: As described above, you need to create a branch from *develop*, once your work is over, you merge it into *develop*. +
+- *Release Branches*: They contain a full version of the application, and as explained above, you should create them from master.
+
+NOTE: You should never commit directly on *develop* or *master*, modifications on *develop* should only come from merge of feature branches and modifications on *master* should only come from merge of *develop*.
+
+=== B. Branch policies
+
+==== 1. Create/modify policies
+
+Branches policies are important because it allows you to set rules for commiting in branches. These rules are useful to avoid messing with the commit history so that in case of problem it is clean to make analysis easier, it can also allow only specific user to validate merge request to secure your branches.
+
+To access the policy of a branch, go back to the list of branches ('Repos' > 'Branches' on the left menu). +
+Then click on the 3 dots on the line of your branch to display more options and select 'Branch policies'
+
+image::P3_B_1_1_menu_branches_for_policy.png[]
+
+This menu will appear:
+
+image::P3_B_1_2_policy_menu.png[]
+
+Here we are gonna to talk only about merge limits, but if you want detailed information about every options: +
 https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops&tabs=browser
+
+==== 2. Limit merge type
+
+On the menu that appears previously, you can activate *Limit merge types*, you can choose to block/allow 4 types of merge.
+
+- Basic merge (no fast-forward): creates a merge commit in the target whose parents are the target and source branches.
+- Rebase and fast-forward: creates a linear history by replaying source commits onto the target branch with no merge commit.
+- Squash merge: creates a linear history with a single commit in the target branch with the changes from the source branch. Learn more about squash merging and how it affects your branch history
+- Rebase with merge commit: replays the source commits onto the target and still creates a merge commit.
+
+Source: https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops&tabs=browser
+
+We advice you to choose these parameters for your branches:
+
+===== master
+
+image::P3_B_2_1_master_policy.PNG[]
+
+===== develop
+
+image::P3_B_2_2_develop_policy.PNG[]
+
+We do not advice you to allow merge that will not create a merge commit on your branches, because thanks to that merge commit you can easily undo your merge.
