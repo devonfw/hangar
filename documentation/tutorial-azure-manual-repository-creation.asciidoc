@@ -229,3 +229,13 @@ image:P2_B_0_import.png[]
 Then you just need to put the URL of the repository you want to import qnd choose the name of the repository that will be created.
 
 image:P2_C_URL_name.PNG[]
+
+==== 4. Gitflow and policies
+
+Now that you have created a repository, you may need to set a gitflow and branches policies.
+
+To create branches you can follow this link: +
+https://docs.microsoft.com/en-us/azure/devops/repos/git/create-branch?view=azure-devops&tabs=browser
+
+to manage the branches policies, follow this link: +
+https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops&tabs=browser

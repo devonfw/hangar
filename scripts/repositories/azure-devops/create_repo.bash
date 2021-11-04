@@ -2,19 +2,22 @@
 # Creation: 18/10/2021 Timothé Paty
 # Description: 	Script to create a repo on azure, you can choose between three differents way of creation
 #
-# Arguments:  -action:        Type of action you want to do: import, create, push
-#             -name:          name of the repository you want to create (mandatory in the case you choose create,
+# Arguments:  -a:        Type of action you want to do: import, create, push
+#             -n:        name of the repository you want to create (mandatory in the case you choose create,
 #                             in other case if not set it will be the name of the directory given without the path)
-#             -directory:     path to the directory where you want to clone your repository or directory you want to push/import in your azure project
-#             -organization:  url of your azure organization
-#             -project:       name of you azure project
-#             -giturl:        URL of the git repository you want to clone (only if you choose the action import)
+#             -d:        path to the directory where you want to clone your repository or directory you want to push/import in your azure project
+#             -o:        url of your azure organization
+#             -p:        name of you azure project
+#             -g:        URL of the git repository you want to clone (only if you choose the action import)
+#             -s:        (default false, and is only used with action 'create') can take true or false, if true a repository of a sample application will be created
 #
 ######################################################################################################
 # Modification:		Name									date		Description
 # ex : 				Timothé Paty							20/09/2021	adding something because of a reason
 
 ####################################################################################################
+
+# We check if the '-h' flag is set
 echo $* | grep "\-h" >> /dev/null
 RET_GREP=$?
 if [ $RET_GREP -eq 0 ] || [ "$*" = "" ]
@@ -38,6 +41,12 @@ then
   exit
 fi
 sample="false"
+yellow='\e[1;33m'
+white='\e[1;37m'
+red='\e[0;31m'
+green='\e[1;32m'
+blue='\e[1;34m'
+#We read every arguments given
 while getopts a:n:d:o:p:g:s: flag
 do
   case "${flag}" in
@@ -50,11 +59,7 @@ do
     s) sample="true"
 esac
 done
-yellow='\e[1;33m'
-white='\e[1;37m'
-red='\e[0;31m'
-green='\e[1;32m'
-blue='\e[1;34m'
+
 #We save the path from where the script is executing to cd there back at the end of the script
 old_path=$(pwd)
 [ "$directory" != "" ] && cd $directory
@@ -125,7 +130,9 @@ else
   cd $old_path
   exit 1
 fi
+
 echo "Creating repo $name"
+#We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
 az repos create --name $name --organization ${organization} --project $project > ./tmp_json_repo
 MSG_ERROR "Creating repo $name" $?
 repo_id=$(cat  ./tmp_json_repo | grep '"id"' -m1 | cut -d: -f2 | cut -d, -f1 | tr -d \")
@@ -137,6 +144,7 @@ echo -e "--${white}"
 
 if [ "$action" = "push" ]
 then
+  #We check if the directory is already a git repository or not
   git rev-parse --git-dir > /dev/null
   isGitRepo=$?
   if [ $isGitRepo -eq 0 ]
@@ -145,10 +153,12 @@ then
   else
     echo "$(pwd) is not a git repository, executing git init and commiting all files ..."
     git init .
+# When using git init, the branch created will be the one you definie with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
     git checkout -b master
     git add -A
     git commit -m "creation of the repository"
   fi
+# We check if the repo already have an url set
   git config --get remote.origin.url > /dev/null
   if [ $? -eq "0" ]
   then
