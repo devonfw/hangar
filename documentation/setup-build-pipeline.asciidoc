@@ -1,0 +1,69 @@
+= Setting up a Build Pipeline on Azure DevOps
+
+In this section we will create a build pipeline for compiling project code. The script located at `\scripts\pipelines\azure-devops\build_pipeline_generator.sh` will assist you on the creation of the build pipeline.
+
+This script either creates a new pipeline from scratch or creates a new pipeline from a `.yaml` file already inside your repository. See <<usage>> section for further details.
+
+== The script
+
+=== Syntax
+```
+    build_pipeline_generator.sh
+        [-n <String>]
+        [-r <String>]
+        [-b <String>]
+        [-y <String>]
+
+```
+
+=== Arguments 
+```
+    -n    [Required] Name that will be set to the build pipeline.
+    -r    [Required] URL of the repository where the code is located.
+    -b    [Required] Name of the branch for which the pipeline will be configured.
+    -y               Path to the yaml file (inside of the repository).
+```
+
+=== Examples
+
+Create a pipeline from scratch: +
+
+```
+    bash build_pipeline_generator.sh -name 'my_build_pipeline' -repository <my_azure_repo_url> -branch master
+```
+
+Create a pipeline from a `.yaml` file in the repository: +
+```
+    bash build_pipeline_generator.sh -name 'my_build_pipeline' -repository <my_azure_repo_url> -branch master -yamlFile azure-pipelines.yml
+```
+
+== Usage [[usage]]
+
+=== Creating a new pipeline from an existing yaml
+
+You should execute the script this way if you want to create a new build pipeline based on a `.yaml` file which already exists inside your Azure DevOps repository. In order to create the pipeline you will need to:
+
+. Execute the script like in the example before: `bash build_pipeline_generator.sh -name 'my_build_pipeline' -repository <my_azure_repo_url> -branch master -yamlFile azure-pipelines.yml`.
+. Select the option `Existing yaml`, which should be `[1]`.
+. Select whether you want to continue the execution or edit/view the `.yaml` file.
+.. `[1]` will continue the execution with the `.yaml` file from the repository.
+.. `[2]` will open a text editor with the `.yaml` file allowing you to make changes.
+. Check on your Azure DevOps that your pipeline is up and running.
+
+=== Creating a new pipeline from scratch
+
+The other way to execute this script would be if you want to create a new build pipeline from scratch, for example: if you do not have any `.yaml` file inside your repository. In order to create the pipeline and the `.yaml` file, you will need to:
+
+. Execute the script like in the example before: `bash build_pipeline_generator.sh -name 'my_build_pipeline' -repository	<my_azure_repo_url> -branch master`.
+. Select the pipeline template according to the programming language of your project.
+. Select the second option (`[2]`) to edit the `.yaml` file.
+.. Replace `{{ branch }}` with `master`.
+.. Replace `{{ pool }}` with `'<agent_used>'` (For example: vmImage: 'ubuntu-latest').
+.. Edit the steps as desired in order to build your project.
+. Select the first option (`[1]`) in order to proceed the execution with this new `.yaml` file.
+. Select the branch where you want to commit this `.yaml` file.
+.. `[1]` will commit the file into the master branch.
+.. `[2]` will create a new branch where the file will be commited.
+. Check on your Azure DevOps that your pipeline is up and running.
+
+WARNING: If the pipeline does not build properly, check that your `.yaml` file is correct with the followig tool: http://www.yamllint.com/.
