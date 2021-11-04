@@ -2,9 +2,9 @@ param($name, $repository, $branch, $yamlPath)
 
 if($args -contains '-h')
 {
-  echo "This script is used to create a build pipeline in azure."
+  echo "Generates a build pipeline on Azure DevOps."
   echo ""
-  echo "arguments:"
+  echo "Arguments:"
   echo "  -name          [Required] Name that will be set to the build pipeline."
   echo "  -repository    [Required] URL of the repository where the code is located."
   echo "  -branch        [Required] Name of the branch for which the pipeline will be configured."
@@ -15,8 +15,8 @@ if($args -contains '-h')
 # Arguments check
 if ($name -eq $null -or $repository -eq $null -or $branch -eq $null)
 {
-    Write-Host "Missing paerameters, name, repository and branch parameters are mandatory." -ForegroundColor Red
-    echo "You can type -h to get more information about the script."
+    Write-Host "Missing parameters: name, repository and branch parameters are mandatory." -ForegroundColor Red
+    echo "Use -h flag to display help."
     exit 1
 }
 
