@@ -40,7 +40,7 @@ Use the 3rd case if you already worked on local but have not pushed online your 
 === Syntax +
 
 ```
-  create_a_repo.ps1
+  create_repo.bash
       [-a <String>]
       [-n <String>]
       [-d <String>]
@@ -75,17 +75,29 @@ For the `-o`: Be careful, this parameter is not the name of your organization, b
 
 
 ==== 1st case a: +
-  `\path\to\script\create_a_repo.ps1 -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure` +
+  `\path\to\script\create_repo.bash -action 'create' -directory /path/to/directory -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure` +
 
 This command creates a repository on Azure and clone it into our local directory, then it creates the necessary branches and branch policies (see after for more information).
 
+Steps: +
+  Create the Azure repository online inside the project *azure_project* of the organization *azure_organization* . +
+  Clone the repository on local into your folder */path/to/directory*. +
+  Create the branches (see *Branches and policies* below for more information). +
+  Push these branches. +
+  Set develop as default branch. +
+  Create the policies for develop and master. +
+
 ==== 1st case b: +
-  `\path\to\script\create_a_repo.ps1 -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure -s true` +
+  `\path\to\script\create_repo.bash -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure -s true` +
 
 This command has created a repository on Azure, it imported a sample repository of an application and then created the branches and policies.
 
+Steps: +
+  Create the Azure repository online inside the project *azure_project* of the organization *azure_organization* . +
+  Import the sample directory
+
 ==== 2nd case: +
-  `\path\to\script\create_a_repo.ps1 -action 'import' -directory "C:\GIT_STORE" -organization  \https://dev.azure.com/azure_organization -project azure_project -name repository_import -giturl \https://github.com/elastic/examples.git` +
+  `\path\to\script\create_repo.bash -action 'import' -directory /path/to/directory -organization  \https://dev.azure.com/azure_organization -project azure_project -name repository_import -giturl \https://github.com/elastic/examples.git` +
 
 It will import all the content of the repository stored at that url \https://github.com/elastic/examples.git under the name 'repository_import', if no name would have been set, the repository would have been imported under the name 'examples' (it uses the url to know the name).
 Then the repository is cloned inside the folder 'C:\GIT_STORE'. +
@@ -93,7 +105,7 @@ Then the repository is cloned inside the folder 'C:\GIT_STORE'. +
 NOTE: Importing a git repository into Azure just import the content (branchs, files ...), but once the repository is imported there is no link between them ,any modification made on the original repo will not apply on your Azure project (and the other way around is also true) +
 
 ==== 3rd case: +
-  `\path\to\script\create_a_repo.ps1 -action 'push' -directory .\repository_push -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_push` +
+  `\path\to\script\create_repo.bash -action 'push' -directory .\repository_push -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_push` +
 
 If your folder .\repository_push is just a folder, it will convert it into a git repository, push it to your Azure project and create branches and branch policies (see after for more information). +
 
