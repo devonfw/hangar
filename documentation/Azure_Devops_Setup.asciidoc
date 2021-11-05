@@ -23,8 +23,7 @@ There is a script in order to automate the Azure DevOps setup, you can find this
 *Script Execute:*
 
 1. Create `pat_token.txt` for storing sensitive data (PAT Token).
-2. Edit *account_create.sh* file to change the organization name `Organization={{Organization-org}}` and project name `project={{project}}`.
-3. Execute the script `./account_create.sh`
+2. Execute the script `./account_create.sh 'organizationName' 'projectName'`
 4. Check your logs for Configured list.
 
 
