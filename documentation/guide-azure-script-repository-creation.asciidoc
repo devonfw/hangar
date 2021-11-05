@@ -15,7 +15,8 @@ NOTE: Here you will see two types of repository, git repositories and Azure repo
 
 == Using the script to create your repository
 
-There is a script called create_repo.bash (located in the folder scripts\repositories\azure-devops of the repository ).
+There is a script called create_repo.bash (located in the folder scripts\repositories\azure-devops of the repository).
+
 
 In this part we will explain how to use the script to create your repository.
 
