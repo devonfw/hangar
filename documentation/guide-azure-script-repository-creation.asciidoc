@@ -68,7 +68,8 @@ Use the 3rd case if you already worked on local but have not pushed online your 
 
 For the `-d`: The path can be relative or absolute. +
 
-For the -o: Be careful, this parameter is not the name of your organisation, but the URL of it.
+For the `-o`: Be careful, this parameter is not the name of your organization, but the URL of it.
+
 
 === Examples:
 
