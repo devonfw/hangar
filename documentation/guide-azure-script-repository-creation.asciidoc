@@ -1,7 +1,7 @@
 :imagesdir: ./images/guide-azure-script-repository-creation
 = Create a repository on Azure DevOps
 
-This Guide is made to be able to create repository with command line and automatically, if you prefer using the Azure web interface, you can follow this guide.
+This Guide is made to be able to create repository with command line and automatically, if you prefer using the Azure web interface, you can follow this guide link:tutorial-azure-manual-repository-creation.asciidoc[].
 
 
 == Prerequisites
@@ -78,7 +78,7 @@ For the `-o`: Be careful, this parameter is not the name of your organization, b
 ==== 1st case a: +
   /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure
 
-This command creates a repository on Azure and clones it into our local directory, then it creates the necessary branches and branch policies (see *Branches and policies* for more informations).
+This command creates a repository on Azure and clones it into our local directory, then it creates the necessary branches and branch policies (see <<Branches and policies>> for more informations).
 
 ==== 1st case b: +
   /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure -s true
@@ -110,12 +110,12 @@ We created 3 branches:
 
 ==== "develop"
 
-This is the branch containing all finished development waiting for validation, every time you work on a new feature (or bug fix), you need to create a new branch, this branch must be created from *develop*, once your development is over, you can merge it into *develop* where validation tests will play on it. If these tests are successful *develop* will be merged into *master*.
+This is the branch containing all finished development waiting for validation, every time you work on a new feature (or bug fix), you need to create a new branch, this branch must be created from *develop*, once your development is over, you can merge it into *develop* where validation tests will play on it. If these tests are successful, *develop* will be merged into *master*.
 
 
 ==== "master"
 
-This branch contains every validated development ready to be released. It is from this branch where we create release branches.
+This branch contains every validated development ready to be released. It is from this branch we create release branches.
 
 
 ==== "feature/TEAM/featureName"
