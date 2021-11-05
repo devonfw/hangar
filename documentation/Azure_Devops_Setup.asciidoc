@@ -11,7 +11,7 @@
 
 == *Setup Azure DevOps  using Azure CLI*
 
-Automated the Azure Devops setup using script, you can find Script in this folder `/Scripts/account-setup/account_create.sh`.
+There is a script in order to automate the Azure DevOps setup, you can find this script in `/scripts/account-setup/account_create.sh`.
 
 1. Install the Azure DevOps Extension to manage Azure DevOps Services from the command line .
 2. Create Personal Access Tokens (PAT) to authorization header to access REST APIs. and Set Secret values under `pat_token.txt`.
