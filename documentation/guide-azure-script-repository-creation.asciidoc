@@ -37,7 +37,8 @@ Use the 2nd case if you already started your code and already pushed it into git
 Use the 3rd case if you already worked on local but have not pushed online your modifications or use it as an alternative for the second case (instead of using the URL we use the configuration on your computer).
 
 
-=== Syntax: +
+=== Syntax +
+
 ```
   create_a_repo.ps1
       [-a <String>]
