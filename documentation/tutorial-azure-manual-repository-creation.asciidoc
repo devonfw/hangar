@@ -221,7 +221,8 @@ image::P2_A_1_create.PNG[]
 
 If you tick the 'Add a README' box, it will create your repository and initialize it with a main branch exactly as seen in I.D.
 
-If you untick this box, it will create an empty repository, in this case you can follow the steps of A, B, C or D of the part I. because your repository will be in the same state as what we saw previously.
+If you untick this box, it will create an empty repository, in this case you can follow the steps of A, B, C or D of part I. because your repository will be in the same state as what we saw previously.
+
 
 === C. Import an already existing git repository
 
