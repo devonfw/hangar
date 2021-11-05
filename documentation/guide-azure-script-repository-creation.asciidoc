@@ -82,7 +82,7 @@ This command creates a repository on Azure and clone it into our local directory
 ==== 1st case b: +
   `\path\to\script\create_a_repo.ps1 -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure -s true` +
 
-This command has created a repository on Azure, it imported a sample repository of an application and then created the branches and policies.
+This command creates a repository on Azure and imports a sample repository, it then creates the branches and policies.
 
 ==== 2nd case: +
   `\path\to\script\create_a_repo.ps1 -action 'import' -directory "C:\GIT_STORE" -organization  \https://dev.azure.com/azure_organization -project azure_project -name repository_import -giturl \https://github.com/elastic/examples.git` +
