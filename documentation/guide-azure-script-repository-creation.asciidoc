@@ -71,7 +71,8 @@ For the `-d`: The path can be relative or absolute. +
 For the `-o`: Be careful, this parameter is not the name of your organization, but the URL of it.
 
 
-=== Examples:
+== Usage
+
 
 ==== 1st case a: +
   `\path\to\script\create_a_repo.ps1 -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure` +
