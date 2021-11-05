@@ -90,7 +90,7 @@ Steps: +
 ==== 1st case b: +
   `\path\to\script\create_repo.bash -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure -s true` +
 
-This command has created a repository on Azure, it imported a sample repository of an application and then created the branches and policies.
+This command creates a repository on Azure and imports a sample repository, it then creates the branches and policies.
 
 Steps: +
   Create the Azure repository online inside the project *azure_project* of the organization *azure_organization* . +
