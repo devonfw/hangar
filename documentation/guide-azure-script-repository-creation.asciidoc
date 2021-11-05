@@ -77,7 +77,7 @@ For the `-o`: Be careful, this parameter is not the name of your organization, b
 ==== 1st case a: +
   `\path\to\script\create_a_repo.ps1 -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure` +
 
-This command has created a repository on Azure and also cloned this repository into the current directory. It then created branches and branches policies (see after for information about it).
+This command creates a repository on Azure and clone it into our local directory, then it creates the necessary branches and branch policies (see after for more information).
 
 ==== 1st case b: +
   `\path\to\script\create_a_repo.ps1 -action 'create' -directory . -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_azure -s true` +
