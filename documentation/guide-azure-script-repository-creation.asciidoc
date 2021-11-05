@@ -24,7 +24,8 @@ It can be used in three different ways:
 
   - 1st case: Create an empty repository with just a README file and clone it to your computer into the directory you set (you can also use a sample application instead of an empty repository).
 
-  - 2nd case: import an already existing git repository into your project (Note: all modifications made into your Azure repository will not apply into your git repository. As modification made into your git repository will not apply in your Azure repo), then clone this repo on your computer into the directory you set.
+  - 2nd case: Import an existing git repository into your project (Note: all modifications made into your Azure repository will not apply into your git repository. As modification made into your git repository will not apply in your Azure repo), then clone this repo on your computer into the directory you set.
+
   - 3rd case: Convert one of your local folder into a git repository, then push this repository to your Azure project, works also if your folder is already a git repository, if it is just a local git repository it will add the remote origin url, if your git repository already have one configured, it will ask a confirmation to change it
 
 NOTE: For the first case, and the third case if your directory was not a git repository, the repository is created with already some branches and branches policies. You can of course personalize them if needed.
