@@ -174,7 +174,8 @@ Then you can import it in your azure project
 
 image::2_3_2_import_to_azure.png[]
 
-You can now see the that all your branches and files have been imported
+You can now see the that all your branches and files have been imported.
+
 
 image::2_3_3_repository_after.PNG[]
 
