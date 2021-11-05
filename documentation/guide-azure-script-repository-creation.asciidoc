@@ -50,7 +50,8 @@ Use the 3rd case if you already worked on local but have not pushed online your 
       [-s {true/false}]
 ```
 
-=== Arguments: +
+=== Arguments +
+
 ```
   -a (for action) :       (mandatory) The value of this will tell in which case the script must be executed, can be 'create' (1st case), 'import'(2nd case), 'push'(3rd case)
   -n (for name) :         (mandatory if the value of 'action' is 'create') Name the Azure repository will have
