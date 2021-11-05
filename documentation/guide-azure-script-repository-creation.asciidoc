@@ -1,7 +1,8 @@
 :imagesdir: ./images/guide-azure-script-repository-creation
 = Create a repository on Azure DevOps
 
-This Guide is made to be able to create repository with command line and automatically, if you prefer using the Azure web interface, you can follow the guide under the name: *'tutorial-azure-manual-repository-creation'*
+This Guide is made to be able to create repository with command line and automatically, if you prefer using the Azure web interface, you can follow this guide.
+
 
 == Prerequisites
 For this part we suppose you have git and Azure CLI installed on your computer.
@@ -109,11 +110,13 @@ We created 3 branches:
 
 ==== "develop"
 
-This is the branch containing all finished development waiting for validation, everytime you work on a new feature (or bug fix), you need to create a new branch, this branch must be created from *develop*, once your development is over, you can merge it into *develop* where validation tests will play on it. If these tests are succesful *develop* will be merged into *master*
+This is the branch containing all finished development waiting for validation, every time you work on a new feature (or bug fix), you need to create a new branch, this branch must be created from *develop*, once your development is over, you can merge it into *develop* where validation tests will play on it. If these tests are successful *develop* will be merged into *master*.
+
 
 ==== "master"
 
-This branch contains every validated development ready to be released. This is from this branch that we create release.
+This branch contains every validated development ready to be released. It is from this branch where we create release branches.
+
 
 ==== "feature/TEAM/featureName"
 

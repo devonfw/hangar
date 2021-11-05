@@ -8,17 +8,23 @@ All the actions will be done manually with the web interface, if you want to use
 
 == I. Your project is new and your repository is empty
 
-When you create a new project, an empty repository already exists. +
-To acces it, click on `Repos` on the left pannel of the home page and will get this page:
+When you create a new project, an empty repository is created. +
+
+To access it, click on `Repos` on the left panel of the home page and will get this page:
+
 
 image:select_repo2.png[] | image:2_empty_repo.png[800,600]
 
-Now you are on this page, 4 possibilities are available.
+Now that you are on this page, 4 possibilities are available.
+
 
   A: You can clone the empty repository on you computer to start the modification.
-  B: You can push an existing local repository to your project
-  C: You can import an existing online repository with the url
-  D: You can initialize your repository with a 'main' branch
+  B: You can push an existing local repository to your project.
+
+  C: You can import an existing online repository with the url.
+
+  D: You can initialize your repository with a 'main' branch.
+
 
 === A. Clone it to your computer
 
@@ -128,7 +134,8 @@ $ git commit -m "first commit"
  create mode 100644 code.java
 ```
 
-Your folder has now been converted into a git repository and you have your first branch
+Your folder has now been converted into a git repository and you have your first branch.
+
 
 ==== 2. Push it to your azure project
 
@@ -164,13 +171,16 @@ image::2_3_0.PNG[]
 
 You can import the content of an existing git repository.
 
-WARNING: As it just imports the content, modification made on your azure repository will not affect the initial git repository you imported
+WARNING: As it just imports the content, modifications made on your azure repository will not affect the initial git repository you imported.
 
-First you need to get the url of your repository (here is an example with a repository from github)
+
+First you need to get the url of your repository (here is an example with a repository from github).
+
 
 image::2_3_1_github_repo.PNG[]
 
-Then you can import it in your azure project
+Then  import it in your azure project.
+
 
 image::2_3_2_import_to_azure.png[]
 
