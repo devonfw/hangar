@@ -79,39 +79,16 @@ For the `-o`: Be careful, this parameter is not the name of your organization, b
 
 This command creates a repository on Azure and clones it into our local directory, then it creates the necessary branches and branch policies (see *Branches and policies* for more informations).
 
-Steps: +
-  Creates the Azure repository online inside the project *azure_project* of the organization *azure_organization* . +
-  Clones the repository on local into your folder */path/to/directory*. +
-  Creates the branch *master*. +
-  Adds the `README.md` file. +
-  Commits and push the `README.md` file online. +
-  Creates the rest of branches. +
-  Pushes these branches online. +
-  Sets develop as default branch. +
-  Creates the policies for develop and master. +
-
 ==== 1st case b: +
   /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure -s true
 
-This command has created a repository on Azure, it imported a sample repository of an application and then created the branches and policies.
-
-Steps: +
-  Creates the Azure repository online inside the project *azure_project* of the organization *azure_organization*. +
-  Imports the sample directory into the new repository. +
-  Clones the repository on local into your folder */path/to/directory*. +
-  Sets develop as default branch. +
-  Creates the policies for develop and master. +
+This command creates a repository on Azure and clones it into our local directory, then it creates the necessary branches and branch policies (see after for more information).
 
 ==== 2nd case: +
   /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git
 
 It will import all the content of the repository stored at that url `\https://github.com/user/repository.git` under the name *repository_import*, if no name would have been set, the repository would have been imported under the name *repository* (it uses the url to know the name). +
 Then the repository is cloned inside the folder */path/to/directory*. +
-
-Steps: +
-  Creates the Azure repository online inside the project *azure_project* of the organization *azure_organization*. +
-  Imports the repository *repository*. +
-  Clones the repository on local into your folder */path/to/directory*. +
 
 NOTE: Importing a git repository into Azure just import the content (branchs, files ...), but once the repository is imported there is no link between them , any modification made on the original repo will not apply on your Azure project (and the other way around is also true). +
 
@@ -122,20 +99,6 @@ If your folder */path/to/directory/repository_push* is just a folder, it will co
 If your folder is a local git repository, it will just push it to your Azure project. +
 If your folder is an online git repository, it will change the url so that next commits will be pushed into your Azure repository but not on the one already configured, and it will push all your branches at the new URL. +
 
-Steps: +
-  Creates the Azure repository online inside the project *azure_project* of the organization *azure_organization*. +
-  If */path/to/directory/repository_push* is a regular folder: +
-      - Initializes the folder as git repository. +
-      - Creates *master* branch. +
-  Ifend. +
-  Sets the URL of the Azure repository just created. (If a remote URL is already configured, it updates it). +
-  Pushes all branches online. +
-  If */path/to/directory/repository_push* was a regular folder at the beginning of the script: +
-      - Creates the rest of branches. +
-      - Pushes the branches just created. +
-      - Set the branch policies. +
-  Ifend. +
-  
 == Branches and policies
 
 To ensure the quality of development, you will need to have a clean git workflow. For a new repository or when pushing a regular folder as your azure repository, we created a git workflow.
