@@ -34,7 +34,8 @@ NOTE: For the first case, and the third case if your directory was not a git rep
 
 Use the 1st case if this is a brand new repository. +
 Use the 2nd case if you already started your code and already pushed it into git, for example if you are migrating to Azure. +
-use the 3rd case if you already worked on local but have not pushed online your modification or use it as an alternative from the second case (instead of using the URL we use the configuration on your computer).
+Use the 3rd case if you already worked on local but have not pushed online your modifications or use it as an alternative for the second case (instead of using the URL we use the configuration on your computer).
+
 
 === Syntax: +
 ```
