@@ -95,7 +95,8 @@ NOTE: Importing a git repository into Azure just import the content (branchs, fi
 ==== 3rd case: +
   `\path\to\script\create_a_repo.ps1 -action 'push' -directory .\repository_push -organization \https://dev.azure.com/azure_organization -project azure_project -name repository_push` +
 
-If your folder .\repository_push is just a folder, it will convert it into a git repository, push it to your Azure project then create branches and branches policies (see after for information about it) +
+If your folder .\repository_push is just a folder, it will convert it into a git repository, push it to your Azure project and create branches and branch policies (see after for more information). +
+
 If your folder is a local git repository, it will just push it to your Azure project. +
 If your folder is an online git repository, it will change the url so that next commits will be pushed into your Azure repository but not on the one already configured, and it will push all your branches at the new URL. +
 
