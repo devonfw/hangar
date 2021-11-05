@@ -230,7 +230,8 @@ Instead of 'New repository' you can choose 'Import a repository'.
 
 image:P2_B_0_import.png[]
 
-Then you just need to put the URL of the repository you want to import qnd choose the name of the repository that will be created.
+Then you just need to put the URL of the repository you want to import and choose the name of the repository that will be created.
+
 
 image:P2_C_URL_name.PNG[]
 
