@@ -82,7 +82,7 @@ This command creates a repository on Azure and clones it into our local director
 ==== 1st case b: +
   /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure -s true
 
-This command creates a repository on Azure and clones it into our local directory, then it creates the necessary branches and branch policies (see after for more information).
+This command creates a repository on Azure and imports a sample repository, it then creates the branches and policies.
 
 ==== 2nd case: +
   /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git
