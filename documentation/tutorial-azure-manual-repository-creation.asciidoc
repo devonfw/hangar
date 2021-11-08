@@ -4,7 +4,7 @@
 
 In this documentation we will see how repositories works on azure, we will see how to create one when it is a brand new project,  but also how to do it when your project already has a repository +
 
-All the actions will be done manually with the web interface, if you want to use command line or a script that automatize these steps, check this documentation: *'guide-azure-script-repository-creation'*
+All the actions will be done manually with the web interface, if you want to use command line or a script that automatize these steps, check this documentation: link:guide-azure-script-repository-creation.asciidoc[]
 
 == I. Your project is new and your repository is empty
 
