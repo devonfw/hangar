@@ -8,7 +8,7 @@ This script either creates a new pipeline from scratch or creates a new pipeline
 
 === Syntax
 ```
-    build_pipeline_generator.sh
+   build_pipeline_generator.sh
         [-n <String>]
         [-r <String>]
         [-b <String>]
@@ -16,7 +16,7 @@ This script either creates a new pipeline from scratch or creates a new pipeline
 
 ```
 
-=== Arguments 
+=== Arguments
 ```
     -n    [Required] Name that will be set to the build pipeline.
     -r    [Required] URL of the repository where the code is located.
