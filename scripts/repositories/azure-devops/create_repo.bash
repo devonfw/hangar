@@ -52,7 +52,7 @@ do
   case "${flag}" in
     a) action=${OPTARG};;
     n) name=${OPTARG};;
-    d) directory=${OPTARG};;
+    d) directory_tmp=${OPTARG};;
     o) organization=${OPTARG};;
     p) project=${OPTARG};;
     g) giturl=${OPTARG};;
@@ -62,6 +62,7 @@ done
 
 #We save the path from where the script is executing to cd there back at the end of the script
 old_path=$(pwd)
+[ "$directory_tmp" != "" ] && directory=$(echo $directory_tmp | sed 's/\\/\//g')
 [ "$directory" != "" ] && cd $directory
 directory_name=$(basename $(pwd))
 folder_of_script=$(dirname $0)
@@ -111,7 +112,8 @@ then
     cd $old_path
     exit 1
   else
-    [ "$name" = "" ] && name_tmp=${giturl##*/}; name=$(basename $name_tmp ".git")
+    echo $name
+    [ "$name" = "" ] && echo "ok" && name_tmp=${giturl##*/} && name=$(basename $name_tmp ".git")
   fi
 elif [ "$action" = "push" ]
 then
@@ -133,6 +135,7 @@ fi
 
 echo "Creating repo $name"
 #We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
+echo "az repos create --name $name --organization ${organization} --project $project"
 az repos create --name $name --organization ${organization} --project $project > ./tmp_json_repo
 MSG_ERROR "Creating repo $name" $?
 repo_id=$(cat  ./tmp_json_repo | grep '"id"' -m1 | cut -d: -f2 | cut -d, -f1 | tr -d \")
