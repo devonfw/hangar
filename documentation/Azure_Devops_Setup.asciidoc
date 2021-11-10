@@ -41,13 +41,13 @@ Execute the script to create new project from scratch `bash account_create.sh -p
  
 
 
-2.   Edit all the parameters as desired to create an Azure DevOps project.
+1.   Edit all the parameters as desired to create an Azure DevOps project.
 
-    a. Replace '$projectname' with Project Name
-    b. Replace '$description' with Description
-    c.  Replace '$organization' with organization Name
-    d.  Replace '$visibility' with visibility
-    e.  Replace '$pat_token' with pat_token
+    .. Replace '$projectname' with Project Name
+    .. Replace '$description' with Description
+    ..  Replace '$organization' with organization Name
+    ..  Replace '$visibility' with visibility
+    ..  Replace '$pat_token' with pat_token
 
 
 
