@@ -1,23 +1,52 @@
 #!/bin/bash
 
-# Install the Azure DevOps extension for cli use
-az extension add --name azure-devops
+helpFunction()
+{
+   echo ""
+   echo "Usage: $0 -p projectname -d description -o organization -v visibility -t pat_token "
+   echo -e "\t-p Description of what is projectname"
+   echo -e "\t-d Description of what is description"
+   echo -e "\t-o Description of what is organization"
+   echo -e "\t-v Description of what is visibility"
+   echo -e "\t-t Description of what is pat_token"
+   exit 1 # Exit script after printing help
+}
 
-# Login to Azure Devops With PAT Token
-echo "You can Login by using PAT."
-cat pat_token.txt | az devops login
+while getopts "p:d:o:v:t:" opt
+do
+   case "$opt" in
+      p ) projectname="$OPTARG" ;;
+      d ) description="$OPTARG" ;;
+      o ) organization="$OPTARG" ;;
+	  v ) visibility="$OPTARG" ;;
+	  t ) pat_token="$OPTARG" ;;
+	  ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+   esac
+done
 
-#cat pat_token.txt | az devops login --organization https://dev.azure.com/Orgalization-org/
-
-# Configured the Organizations and project
-echo "Configure Organizations and project"
-
-az devops configure --defaults organization=https://dev.azure.com/{{organization-org}}
-
-az devops configure --defaults project={{project name}}
+# Print helpFunction in case parameters are empty
+if [ -z "$projectname" ] || [ -z "$description" ] || [ -z "$organization" ] || [ -z "$visibility" ] || [ -z "$pat_token" ] 
+then
+   echo "Some or all of the parameters are empty";
+   helpFunction
+fi
 
 
-# List of Configured Organizations
-echo "Configure list"
+	echo "Install the Azure DevOps extension for cli use"
+	az extension add --name azure-devops
 
-az devops configure --list
+	echo "Login to Azure Devops With PAT Token"
+	echo $pat_token | az devops login
+
+	echo "Create project"
+	az devops project create --name $projectname --description $description --organization https://dev.azure.com/$organization --visibility $visibility
+
+	echo "project list"
+	az devops project list  --organization https://dev.azure.com/$organization
+
+	echo "Configure Organizations and project"
+	az devops configure --defaults organization=https://dev.azure.com/$organization project=$projectname  #"$organization" #prathibhapadma-org
+
+	echo "List of Configured Organizations list"
+	az devops configure --list
+
