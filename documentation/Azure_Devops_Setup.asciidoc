@@ -6,12 +6,12 @@ we will create Azure devops project. We can create in two ways:
 :url-az-CLI:  https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
 
 
-1. create Azure devops project manually by {url-az-project}[Following] instructions. 
-2. Other way using Script to automate the Azure DevOps project setup, you can find this script in `/scripts/account-setup/account_create.sh`.
+1. Create an Azure DevOps project manually by {url-az-project}[Following] instructions. 
+2. Create an Azure DevOps project using an automated script, you can find this script in `/scripts/account-setup/account_create.sh`. 
 
-== *Setup Azure DevOps  using Script*
+== *Setup Azure DevOps using Script*
 
-This script is to creates a new project or Configure already existed project. Follow below instructions for further details.
+This script will enable you to create a new project or configure an existing one. Follow the instructions below for more details.
 
 == Syntax
 
@@ -24,38 +24,32 @@ This script is to creates a new project or Configure already existed project. Fo
         [-t <String>]
 
 ```
-Arguments
+== Arguments
 
 ```
-
-   	-p    [Required] Name of the new project.
+    -p    [Required] Name of the new project.
     -d    [Required] Description for the new project.
     -o    [Required] Name of the organization  for which the project will be configured.
-    -v    accepted values: private, public.
-    -t    PAT token to login Azure Devops
+    -v    Accepted values: private, public.
+    -t    PAT token to login Azure DevOps.
 
 ```
 
-*Script Usage*
+== *Script Usage*
 
 Execute the script to create new project from scratch `bash account_create.sh -p '$projectname' -d '$description' -o '$organization' -v '$visibility' -t '$pat_token'`
  
-1. Install the Azure DevOps Extension to manage Azure DevOps Services from the command line .
-2. Create Personal Access Tokens (PAT) to authorization header to access REST APIs. and Set Secret values under `pat_token.txt`.
 
-3. Login to Azure Devops `az devops login` by using PAT token.
 
-4. Create Azure Devops Project. 
+2.  Create Azure Devops Project. Edit all steps as desired to create Azure Devops project
 
     a. Replace '$projectname' with Project Name
     b. Replace '$description' with Description
     c.  Replace '$organization' with organization Name
     d.  Replace '$visibility' with visibility
     e.  Replace '$pat_token' with pat_token
-5. Edit all steps as desired to create Azure Devops project
-6. List all project which you are created
-7. Configure Organization and project for further process (Ex: to create Azure Devops pipeline)
-5.  Check your logs for Configured list.
+
+
 
 
 
