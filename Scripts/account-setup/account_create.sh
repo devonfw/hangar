@@ -3,12 +3,12 @@
 helpFunction()
 {
    echo ""
-   echo "Usage: $0 -p projectname -d description -o organization -v visibility -t pat_token "
-   echo -e "\t-p Description of what is projectname"
-   echo -e "\t-d Description of what is description"
-   echo -e "\t-o Description of what is organization"
-   echo -e "\t-v Description of what is visibility"
-   echo -e "\t-t Description of what is pat_token"
+   echo "Usage: $0 -p projectname -d description -o organization -v visibility -t pat_token. "
+   echo -e "\t-p [Required] Name of the new project."
+   echo -e "\t-d [Required] Description for the new project."
+   echo -e "\t-o [Required] Name of the organization  for which the project will be configured."
+   echo -e "\t-v [Required] Visibility accepted values: private or public."
+   echo -e "\t-t [Required] PAT token to login Azure DevOps."
    exit 1 # Exit script after printing help
 }
 
@@ -27,26 +27,26 @@ done
 # Print helpFunction in case parameters are empty
 if [ -z "$projectname" ] || [ -z "$description" ] || [ -z "$organization" ] || [ -z "$visibility" ] || [ -z "$pat_token" ] 
 then
-   echo "Some or all of the parameters are empty";
+   echo "ERROR: Some required parameters are missing.";
    helpFunction
 fi
 
 
-	echo "Install the Azure DevOps extension for cli use"
+	echo "Installing Azure DevOps extension for CLI use..."
 	az extension add --name azure-devops
 
-	echo "Login to Azure Devops With PAT Token"
+	echo "Logging in to Azure DevOps with PAT token..."
 	echo $pat_token | az devops login
 
-	echo "Create project"
+    echo "Creating project..."
 	az devops project create --name $projectname --description $description --organization https://dev.azure.com/$organization --visibility $visibility
 
-	echo "project list"
+	echo "Project list:"
 	az devops project list  --organization https://dev.azure.com/$organization
 
-	echo "Configure Organizations and project"
+	echo "Configuring default organization and project..."
 	az devops configure --defaults organization=https://dev.azure.com/$organization project=$projectname  #"$organization" #prathibhapadma-org
 
-	echo "List of Configured Organizations list"
+	echo "List of configured organization:"
 	az devops configure --list
 
