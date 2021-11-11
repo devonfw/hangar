@@ -38,7 +38,7 @@ fi
 	echo "Logging in to Azure DevOps with PAT token..."
 	echo $pat_token | az devops login
 
-    echo "Creating project..."
+        echo "Creating project..."
 	az devops project create --name $projectname --description $description --organization https://dev.azure.com/$organization --visibility $visibility
 
 	echo "Project list:"
