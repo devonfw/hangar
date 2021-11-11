@@ -1,8 +1,7 @@
-while getopts n:r:l:d: flag
+while getopts n:l:d: flag
 do
     case "${flag}" in
         n) name=${OPTARG};;
-        r) repository=${OPTARG};;
         l) language=${OPTARG};;
         d) directory=${OPTARG};;
     esac
@@ -14,14 +13,13 @@ then
     echo ""
     echo "Arguments:"
     echo "  -n    [Required] Name that will be set to the build pipeline."
-    echo "  -r    [Required] URL of the repository where the code is located."
     echo "  -l    [Required] Language in which your project is programmed."
     echo "  -d    [Required] Local directory of your project (the path should be using '/' and not '\')."
     exit
 fi
 
 # Argument check
-if test -z "$name" || test -z "$repository" || test -z "$language" || test -z "$directory"
+if test -z "$name" || test -z "$directory"
 then
     echo "Missing parameters, all the flags are mandatory."
     echo "Use -h flag to display help."
@@ -44,4 +42,4 @@ git push -u origin --all
 
 # Creation of the pipeline
 echo "Generating the pipeline from the yml template..."
-az pipelines create --name $name --repository $repository --yaml-path $yamlFile
+az pipelines create --name $name --yaml-path $yamlFile
