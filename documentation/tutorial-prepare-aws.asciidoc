@@ -1,0 +1,5 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+= Document Title
