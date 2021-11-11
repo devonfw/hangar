@@ -45,7 +45,7 @@ fi
 	az devops project list  --organization https://dev.azure.com/$organization
 
 	echo "Configuring default organization and project..."
-	az devops configure --defaults organization=https://dev.azure.com/$organization project=$projectname  #"$organization" #prathibhapadma-org
+	az devops configure --defaults organization=https://dev.azure.com/$organization project=$projectname  
 
 	echo "List of configured organization:"
 	az devops configure --list
