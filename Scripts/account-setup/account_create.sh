@@ -18,9 +18,9 @@ do
       p ) projectname="$OPTARG" ;;
       d ) description="$OPTARG" ;;
       o ) organization="$OPTARG" ;;
-	  v ) visibility="$OPTARG" ;;
-	  t ) pat_token="$OPTARG" ;;
-	  ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+      v ) visibility="$OPTARG" ;;
+      t ) pat_token="$OPTARG" ;;
+      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
 done
 
