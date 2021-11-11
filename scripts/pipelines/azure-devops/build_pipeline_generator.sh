@@ -1,10 +1,10 @@
-while getopts n:r:b:y: flag
+while getopts n:r:b:l: flag
 do
     case "${flag}" in
         n) name=${OPTARG};;
         r) repository=${OPTARG};;
         b) branch=${OPTARG};;
-        y) yamlPath=${OPTARG};;
+        l) language=${OPTARG};;
     esac
 done
 
@@ -27,11 +27,13 @@ then
     exit
 fi
 
-if test -z "$yamlPath"
+yamlFile="${language}-build-pipeline.yml"
+
+if test -z "$language"
 then
     echo "Generating build pipeline from scratch..."
     az pipelines create --name $name --repository $repository --branch $branch
 else
     echo "Generating build pipelie from the given yaml file..."
-    az pipelines create --name $name --repository $repository --branch $branch --yaml-path $yamlPath
+    az pipelines create --name $name --repository $repository --branch $branch --yaml-path $yamlFile
 fi
