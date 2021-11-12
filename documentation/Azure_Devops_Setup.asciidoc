@@ -1,5 +1,5 @@
 == Activate and prepare Azure DevOps
-Here we will create Azure devops Organization and Azure Devops Project.
+
 
 :url-az-devops: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#choose-your-sign-up-option
 
@@ -7,16 +7,22 @@ Here we will create Azure devops Organization and Azure Devops Project.
 
 :url-az-CLI:  https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
 
-:url-az-board: 
+:url-az-board: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/plan-track-work?view=azure-devops&tabs=agile-process
 
-1. Create an Azure DevOps organization to start planning and tracking work. Sign-up process for {url-az-devops}[Azure Devops]. 
 
-2. create an Azure devops project, They are two ways to create an Azure devops project:
+*Prerequisites:*
 
-.. Create an Azure DevOps project manually by {url-az-project}[Following] instructions. 
+... You need to be Sign up for an {url-az-devops}[Azure Devops] in order to follow the steps of this guide.
+... Install the Azure CLI.
+
+Here we will create an Azure DevOps Project.
+
+1. Create an Azure DevOps project, There are two ways to create an Azure DevOps project:
+
+..  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide].  
 .. Create an Azure DevOps project using an automated script, you can find this script in `/scripts/account-setup/account_create.sh`. 
 
-3. Plan and track your work by creating items in {url-az-devops}[Azure Boards], You can follow these instructions when you want to accomplish the followingtasks for best process.
+3. Plan and track your work by creating items in {url-az-board}[Azure Boards], You can follow these instructions when you want to accomplish the followingtasks for best process.
 
 
 == *Setup Azure DevOps using Script*
@@ -47,17 +53,18 @@ This script will enable you to create a new project or configure an existing one
 
 == *Script Usage*
 
-Execute the script to create new project from scratch `bash account_create.sh -p '$projectname' -d '$description' -o '$organization' -v '$visibility' -t '$pat_token'`
+Execute the script to create new project from scratch 
  
 
 
 1.  Edit all the parameters as desired to create an Azure DevOps project.
 
-    .. Replace '$projectname' with Project Name
-    .. Replace '$description' with Description
-    .. Replace '$organization' with organization Name
-    .. Replace '$visibility' with visibility
-    .. Replace '$pat_token' with pat_token
+== *Example:*
+I want to create an devon4java project in `devon-hangar` organization.
+
+`bash account_create.sh -p 'devon4java' -d 'devon4java_Application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
+
+   
 
 
 
