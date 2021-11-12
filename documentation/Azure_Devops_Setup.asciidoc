@@ -50,17 +50,11 @@ This script will enable you to create a new project or configure an existing one
     -t    [Required] PAT token to login Azure DevOps.
 
 ```
-
-== *Script Usage*
-
-Execute the script to create new project from scratch 
- 
-
-
-1.  Edit all the parameters as desired to create an Azure DevOps project.
-
 == *Example:*
-I want to create an devon4java project in `devon-hangar` organization.
+I want to create an devon4java project in `devon-hangar` organization. Edit all the parameters as desired to create an Azure DevOps project.
+
+Execute the script: 
+
 
 `bash account_create.sh -p 'devon4java' -d 'devon4java_Application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
