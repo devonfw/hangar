@@ -2,9 +2,9 @@
 
 = How to create your repository
 
-In this documentation we will see how repositories works on azure, we will see how to create one when it is a brand new project,  but also how to do it when your project already has a repository +
+In this documentation we will see how repositories works on Azure, we will see how to create one when it is a brand new project,  but also how to do it when your project already has a repository +
 
-All the actions will be done manually with the web interface, if you want to use command line or a script that automatize these steps, check this documentation: link:guide-azure-script-repository-creation.asciidoc[]
+All the actions will be done manually with the web interface, if you want to use command line or a script that automatize these steps, check this documentation: link:setup-repository-script.asciidoc[]
 
 == I. Your project is new and your repository is empty
 
@@ -29,11 +29,11 @@ Now that you are on this page, 4 possibilities are available.
 === A. Clone it to your computer
 
 image:
-You can clone the repository on your computer to create content inside it, in this example we will use git bash (of course git bash is not the only client you can use).
+You can clone the repository on your computer to create content inside it, in this example we will use Git bash (of course Git bash is not the only client you can use).
 
 First you need to copy the URL of the repository.
 
-Then open a git bash prompt in the folder you want, and use the `git clone <URL>` command. +
+Then open a Git bash prompt in the folder you want, and use the `git clone <URL>` command. +
 image:2_1_0.PNG[]
 
 ```
@@ -84,7 +84,7 @@ To https://organisation@dev.azure.com/organisation/project/_git/repository
  * [new branch]      master -> master
 ```
 
-Once it is pushed, we can now see that the branch and its content are available on azure.
+Once it is pushed, we can now see that the branch and its content are available on Azure.
 
 image::2_1_3_azure_repo_after_push.PNG[]
 
@@ -92,16 +92,16 @@ image::2_1_3_azure_repo_after_push.PNG[]
 
 image::2_2_0.PNG[]
 
-if you have a local git directory, you can push it as your azure repository. (this works only if you have never pushed this repository online)
+if you have a local Git directory, you can push it as your Azure repository. (this works only if you have never pushed this repository online)
 
-==== 1. initialize your folder as git repository (if your folder is not a git repository, if it is go to 2.)
+==== 1. initialize your folder as Git repository (if your folder is not a Git repository, if it is go to 2.)
 
-First let's see how to create a local git repository. +
-If you have a folder with all your code already but that folder is not a git repository, example:
+First let's see how to create a local Git repository. +
+If you have a folder with all your code already but that folder is not a Git repository, example:
 
 image::2_2_1_directory.PNG[]
 
-open git command line at the root of this folder (in this example it will be git bash)
+open Git command line at the root of this folder (in this example it will be Git bash)
 
 `cd <root_of_your_folder>`  +
 example:
@@ -114,15 +114,15 @@ code.java
 ```
 
 
-Use the `git init .` command to convert your simple folder into a git repository. +
+Use the `git init .` command to convert your simple folder into a Git repository. +
 example:
 ```
 $ git init .
 Initialized empty Git repository in C:/path/to/folder/test_azureB/.git/
 ```
 
-Now you have a local git repository. You can now add every files and folders in your first commit:
-`git add -A` it will select all the files inside your git repository +
+Now you have a local Git repository. You can now add every files and folders in your first commit:
+`git add -A` it will select all the files inside your Git repository +
 `git commit -m "first commit"` it will commit your files (-m is for adding a message to your commit)+
 example:
 
@@ -134,12 +134,12 @@ $ git commit -m "first commit"
  create mode 100644 code.java
 ```
 
-Your folder has now been converted into a git repository and you have your first branch.
+Your folder has now been converted into a Git repository and you have your first branch.
 
 
-==== 2. Push it to your azure project
+==== 2. Push it to your Azure project
 
-You can use the command shown on the azure interface: +
+You can use the command shown on the Azure interface: +
 `git remote add origin <your_project_url>` this will create the repository remotely +
 `git push -u origin --all` this will push your branches to that remote repository +
 example:
@@ -160,26 +160,26 @@ Branch 'master' set up to track remote branch 'master' from 'origin'.
 
 ```
 
-You can now see on your azure project that the repository is available
+You can now see on your Azure project that the repository is available
 
 image::2_2_6_repon_end.PNG[]
 
 
-=== C. Import a existing git repository
+=== C. Import a existing Git repository
 
 image::2_3_0.PNG[]
 
-You can import the content of an existing git repository.
+You can import the content of an existing Git repository.
 
-WARNING: As it just imports the content, modifications made on your azure repository will not affect the initial git repository you imported.
+WARNING: As it just imports the content, modifications made on your Azure repository will not affect the initial Git repository you imported.
 
 
-First you need to get the url of your repository (here is an example with a repository from github).
+First you need to get the url of your repository (here is an example with a repository from Github).
 
 
 image::2_3_1_github_repo.PNG[]
 
-Then  import it in your azure project.
+Then  import it in your Azure project.
 
 
 image::2_3_2_import_to_azure.png[]
@@ -234,7 +234,7 @@ If you tick the 'Add a README' box, it will create your repository and initializ
 If you untick this box, it will create an empty repository, in this case you can follow the steps of A, B, C or D of part I. because your repository will be in the same state as what we saw previously.
 
 
-=== C. Import an already existing git repository
+=== C. Import an already existing Git repository
 
 Instead of 'New repository' you can choose 'Import a repository'.
 
