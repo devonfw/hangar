@@ -1,0 +1,14 @@
+
+== Sonarqube instance in aws 
+This repository will show you how to deploy a aws instance with sonarqube on it. 
+
+== Getting Started
+=== Prerequisites
+* terraform
+* aws cli
+
+After downlaoding aws cli use aws configuration on your command promt. write down youe key values usw.
+
+== Modules available
+
+== Usage
