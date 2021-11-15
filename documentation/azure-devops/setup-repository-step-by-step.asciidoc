@@ -2,7 +2,7 @@
 
 = How to create your repository
 
-In this documentation we will see how repositories works on Azure, we will see how to create one when it is a brand new project,  but also how to do it when your project already has a repository +
+In this documentation we will see how repositories works on Azure DevOps, we will see how to create one when it is a brand new project,  but also how to do it when your project already has a repository +
 
 All the actions will be done manually with the web interface, if you want to use command line or a script that automatize these steps, check this documentation: link:setup-repository-script.asciidoc[]
 
@@ -84,7 +84,7 @@ To https://organisation@dev.azure.com/organisation/project/_git/repository
  * [new branch]      master -> master
 ```
 
-Once it is pushed, we can now see that the branch and its content are available on Azure.
+Once it is pushed, we can now see that the branch and its content are available on Azure DevOps.
 
 image::2_1_3_azure_repo_after_push.PNG[]
 
@@ -92,7 +92,7 @@ image::2_1_3_azure_repo_after_push.PNG[]
 
 image::2_2_0.PNG[]
 
-if you have a local Git directory, you can push it as your Azure repository. (this works only if you have never pushed this repository online)
+if you have a local Git directory, you can push it as your Azure DevOps repository. (this works only if you have never pushed this repository online)
 
 ==== 1. initialize your folder as Git repository (if your folder is not a Git repository, if it is go to 2.)
 
@@ -137,9 +137,9 @@ $ git commit -m "first commit"
 Your folder has now been converted into a Git repository and you have your first branch.
 
 
-==== 2. Push it to your Azure project
+==== 2. Push it to your Azure DevOps project
 
-You can use the command shown on the Azure interface: +
+You can use the command shown on the Azure DevOps interface: +
 `git remote add origin <your_project_url>` this will create the repository remotely +
 `git push -u origin --all` this will push your branches to that remote repository +
 example:
@@ -160,7 +160,7 @@ Branch 'master' set up to track remote branch 'master' from 'origin'.
 
 ```
 
-You can now see on your Azure project that the repository is available
+You can now see on your Azure DevOps project that the repository is available
 
 image::2_2_6_repon_end.PNG[]
 
@@ -171,7 +171,7 @@ image::2_3_0.PNG[]
 
 You can import the content of an existing Git repository.
 
-WARNING: As it just imports the content, modifications made on your Azure repository will not affect the initial Git repository you imported.
+WARNING: As it just imports the content, modifications made on your Azure DevOps repository will not affect the initial Git repository you imported.
 
 
 First you need to get the url of your repository (here is an example with a repository from Github).
@@ -179,7 +179,7 @@ First you need to get the url of your repository (here is an example with a repo
 
 image::2_3_1_github_repo.PNG[]
 
-Then  import it in your Azure project.
+Then  import it in your Azure DevOps project.
 
 
 image::2_3_2_import_to_azure.png[]
