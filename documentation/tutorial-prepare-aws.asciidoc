@@ -3,37 +3,39 @@ toc::[]
 :idprefix:
 :idseparator: -
 = Prepare AWS account for deployment with Azure DevOps
-The scope of this section is to prepare an AWS account to be ready for deployment from Azure DevOps to AWS EKS.
-This tutorial is divided into two sections depending on the access you have to AWS.
+The scope of this section is to prepare an AWS account to be ready for deployment from Azure DevOps to AWS EKS. A new user with the required permissions will be created.
 
-== (AWS Administrator) Create an AWS user that is able to deploy to EKS
-Follow this section if you are an AWS administrator with user creation permissions.
-
-In this section it is going to be created a new user and a new group. Necessary policies to allow permissions will be attached to this group and the user will be added to it.
-
-=== Prerequisites
-* Be an AWS Administrator with IAM user creation permission
-
-=== Preparing environment
+== Preparing environment
 First of all, install AWS CLI for your OS: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+Just in case you do not have permission to create new AWS users, request an IAM user to your AWS administrator with the below policies attached. Then jump to 
+xref:configure-aws-cli[Configure AWS Cli section].
+```
+AmazonEKSClusterPolicy
+AmazonEKSWorkerNodePolicy
+AmazonEKSServicePolicy
+AmazonEKS_CNI_Policy
+AmazonEKSVPCResourceController
+```
+
+== Using the script to create the user
+
+The script located at `/scripts/create-user/aws/create-user.sh` will automatically create the user and the group, attach the required policies to the group and finally add the user to it.
 
 In case you do not have AWS access key (needed to authenticate through API), follow this guide to create it: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey
 
-=== Using the script
-The script located at `/scripts/create-user/aws/create-user.sh` will automatically create the user and the group, attach the necessary policies to the group and finally add the user to it.
-
-==== Syntax
+=== Syntax
 ```
 create-user.sh
     [-u <String>]
     [-g <String>]
 ```
-==== Arguments
+=== Arguments
 ```
 -u      [Required] Username given to the user created by the script
 -g      [Required] Group name given to the group created by the script
 ```
-==== Usage
+=== Usage
 Execute the script, for example:
 ```
 ./create-user.sh -u deployeruser -g deploygroup
@@ -52,24 +54,7 @@ Secret access key: <secretAccessKey>
 ```
 IMPORTANT: It is mandatory to store the access key ID and the secret access key securely, *it won't be shown again*.
 
-Now you have your AWS account ready to use.
-
-== (Non privileged user) Request to AWS administrator a user to deploy
-Follow this section if you don't have permission to create users in AWS.
-
-=== Preparing environment
-First of all, install AWS CLI for your OS: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-
-=== Request a user to your AWS administrator
-Request a IAM user to your AWS administrator with the following policies attached:
-```
-AmazonEKSClusterPolicy
-AmazonEKSWorkerNodePolicy
-AmazonEKSServicePolicy
-AmazonEKS_CNI_Policy
-AmazonEKSVPCResourceController
-```
-=== Configure AWS CLI
+== Configure AWS Cli
 Finally, when you have been provided with a user, set up the AWS CLI using the following command:
 ```
 aws configure
