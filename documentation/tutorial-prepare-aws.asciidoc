@@ -9,7 +9,7 @@ This tutorial is divided into two sections depending on the access you have to A
 == (AWS Administrator) Create an AWS user that is able to deploy to EKS
 Follow this section if you are an AWS administrator with user creation permissions.
 
-In this section it is going to be created a new user and a new group. Necessary policies to allow permissions will be attached to this group and the user will be added to it.
+In this section a new user and an new group will be created. The user will be added to this group and the necessary policies to allow permissions will be attached.
 
 === Prerequisites
 * Be an AWS Administrator with IAM user creation permission
