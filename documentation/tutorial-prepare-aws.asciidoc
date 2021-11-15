@@ -40,15 +40,15 @@ Execute the script, for example:
 ```
 You will be prompted to introduce your AWS credentials as follows:
 ```
-AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
-AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+AWS Access Key ID [None]: <accessKeyID>
+AWS Secret Access Key [None]: <secretAccessKey>
 Default region name [None]: us-west-2
 Default output format [None]: json
 ```
 After introducing the credentials, the script will create the user and everything needed. Finally, the newly created user access data will be shown in screen:
 ```
-Access key ID: AKIAIOSFODNN2EXAMPL2
-Secret access key: JwalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKE2
+Access key ID: <accessKeyID>
+Secret access key: <secretAccessKey>
 ```
 IMPORTANT: It is mandatory to store the access key ID and the secret access key securely, *it won't be shown again*.
 
@@ -76,8 +76,8 @@ aws configure
 ```
 Fill the prompted fields with your data. For example:
 ```
-AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
-AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+AWS Access Key ID [None]: <accessKeyID>
+AWS Secret Access Key [None]: <secretAccessKey>
 Default region name [None]: us-west-2
 Default output format [None]: json
 ```
