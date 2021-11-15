@@ -56,7 +56,7 @@ I want to create an devon4java project in `devon-hangar` organization. Edit all 
 Execute the script: 
 
 
-`bash account_create.sh -p 'my_project' -d 'This_is_an_sample_project' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
+`bash account_create.sh -p 'my_project' -d 'This_is_an_sample_project' -o 'organization-org' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
    
 
