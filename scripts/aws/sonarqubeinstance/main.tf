@@ -141,7 +141,7 @@ output "elastic-IP" {
 resource "aws_instance" "sq-server"{
     ami             = "ami-0629230e074c580f2" #Ubuntu 20.04
     #ami             = "ami-020db2c14939a8efb" #Ubuntu 18.04
-    instance_type   = "t3.micro"
+    instance_type   = "t3a.small"
     key_name = "sonarqube"
 
 
