@@ -8,6 +8,7 @@ The scope of this section is to prepare an AWS account to be ready for deploymen
 == Preparing environment
 First of all, install AWS CLI for your OS: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
+
 Just in case you do not have permission to create new AWS users, request an IAM user to your AWS administrator with the below policies attached. Then jump to 
 xref:configure-aws-cli[Configure AWS Cli section].
 ```
