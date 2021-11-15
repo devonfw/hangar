@@ -12,8 +12,8 @@
 
 *Prerequisites:*
 
-... You need to be Sign up for an {url-az-devops}[Azure Devops] in order to follow the steps of this guide.
-... Install the Azure CLI.
+... Sign up into {url-az-devops}[Azure DevOps] in order to follow the steps of this guide.
+... Install the Azure {url-az-CLI}[CLI].
 
 Here we will create an Azure DevOps Project.
 
@@ -22,7 +22,7 @@ Here we will create an Azure DevOps Project.
 ..  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide].  
 .. Create an Azure DevOps project using an automated script, you can find this script in `/scripts/account-setup/account_create.sh`. 
 
-3. Plan and track your work by creating items in {url-az-board}[Azure Boards], You can follow these instructions when you want to accomplish the followingtasks for best process.
+2. Plan and track your work by creating items in {url-az-board}[Azure Boards], You can follow these instructions when you want to accomplish the following tasks for best process.
 
 
 == *Setup Azure DevOps using Script*
@@ -56,7 +56,7 @@ I want to create an devon4java project in `devon-hangar` organization. Edit all 
 Execute the script: 
 
 
-`bash account_create.sh -p 'devon4java' -d 'devon4java_Application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
+`bash account_create.sh -p 'my_project' -d 'This_is_an_sample_project' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
    
 
