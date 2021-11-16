@@ -51,7 +51,7 @@ This script will enable you to create a new project or configure an existing one
 
 ```
 == *Example:*
-I want to create an devon4java project in `devon-hangar` organization. Edit all the parameters as desired to create an Azure DevOps project.
+I want to create an my_project in `organization-org` organization. Edit all the parameters as desired to create an Azure DevOps project.
 
 Execute the script: 
 
