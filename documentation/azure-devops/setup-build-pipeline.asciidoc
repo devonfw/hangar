@@ -13,22 +13,20 @@ This script will copy the corrsponding yml template into your local repository a
 ```
     -n    [Required] Name that will be set to the build pipeline.
     -l    [Required] Language or framework of the project.
-    -d    [Required] Local directory of your project (the path should be using '/' and not '\'). 
+    -d    [Required] Local directory of your project (the path should always be using '/' and not '\'). 
 ```
 
 === Usage
-
-Executing the script: +
 
 ```
     ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path>
 ```
 
-Case study:  +
+=== Examples
 
-I have a quarkus project in C:/Users/<my_user>/Desktop/quarkus-project and in my Azure DevOps repository, and I want to generate a build pipeline in order to build my project.
+==== Quarkus project
 
 ```
-    ./build_pipeline_generator.sh -n 'quarkus-project-build' -l 'quarkus' -d C:/Users/<my_user>/Desktop/quarkus-project
+    ./build_pipeline_generator.sh -n 'quarkus-project-build' -l 'quarkus' -d C:/Users/$USERNAME/Desktop/quarkus-project
 ```
-WARNING: Remember to write the path to the local repository with '/' and not '\'.
+CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
