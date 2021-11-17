@@ -8,13 +8,6 @@ This script will copy the corrsponding yml template into your local repository a
 
 == The script
 
-=== Syntax
-```
-   build_pipeline_generator.sh
-        [-n <String>]
-        [-l <String>]
-        [-d <String>] 
-```
 
 === Arguments
 ```
