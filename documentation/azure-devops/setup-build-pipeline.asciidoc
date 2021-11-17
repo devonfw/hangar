@@ -27,6 +27,6 @@ This script will copy the corrsponding yml template into your local repository a
 ==== Quarkus project
 
 ```
-    ./build_pipeline_generator.sh -n 'quarkus-project-build' -l 'quarkus' -d C:/Users/$USERNAME/Desktop/quarkus-project
+    ./build_pipeline_generator.sh -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project
 ```
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
