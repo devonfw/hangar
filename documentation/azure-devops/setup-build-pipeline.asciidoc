@@ -19,7 +19,7 @@ This script will copy the corrsponding yml template into your local repository a
 === Arguments
 ```
     -n    [Required] Name that will be set to the build pipeline.
-    -l    [Required] Language in which your project is programmed.
+    -l    [Required] Language or framework of the project.
     -d    [Required] Local directory of your project (the path should be using '/' and not '\'). 
 ```
 
