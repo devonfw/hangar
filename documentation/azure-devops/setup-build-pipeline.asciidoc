@@ -28,7 +28,7 @@ This script will copy the corrsponding yml template into your local repository a
 Executing the script: +
 
 ```
-    ./build_pipeline_generator.sh -n 'my_build_pipeline' -l 'programming_language' -d <path_to_local_directory>
+    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path>
 ```
 
 Case study:  +
