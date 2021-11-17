@@ -4,11 +4,39 @@ This repository will show you how to deploy a aws instance with sonarqube on it.
 
 == Getting Started
 === Prerequisites
-* terraform
-* aws cli
+* https://learn.hashicorp.com/collections/terraform/aws-get-started?utm_source=terraform_io&utm_content=terraform_io_footer[terraform]
 
-After downlaoding aws cli use aws configuration on your command promt. write down youe key values usw.
+* https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html[aws cli]
 
-== Modules available
+== available scripts
 
-== Usage
+* `main.tf` the main script wich is deploying the aws Infrastruktur
+* `datascript.sh` install docker on your ec2, an deploy an container wich is runnig sonarqube
+* `variables.tf` here are the Variable for the main.tf
+* `terraform.tfvars` parameters for the variables (changeable)
+
+== Using the script
+
+Downloade the files from `...scripts/terrafom/aws/sonarqube`. Open the file `terraform.tfvars` and edit the changes of the parameter you need. 
+
+IMPORTANT: If you don´t want to chang the Parameters, you will need a Keypair withe the name `sonarqube`.
+
+Run the following commads on your comand promt.
+
+```
+terraform init
+```
+This command is used to initialize a working directory containing Terraform configuration files.
+```
+terraform plan
+```
+This command creat an execution plan
+```
+terraform apply --auto-approve
+```
+This command run the script and creat ec2 instance with Ubuntu in aws and deploy a docker container with a sonarqube image on it. In the comand promter you will see the Ip-Adress of the ec2 instance.
+
+After the succesfull deployment type in your Brwoser `+http://localhost:9000+`(replace localhost with the ec2 instance IP-Adress from the output on the comand promt) and you will have acces to sonarqube. The default values are :
+
+CAUTION: username:   *admin* +
+ password:   *admin*

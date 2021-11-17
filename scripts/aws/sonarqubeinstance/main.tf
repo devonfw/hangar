@@ -1,11 +1,11 @@
 provider "aws" {
-  region = "us-east-2"
+  region = var.aws_region
 
 }
 
 #create VPC
 resource "aws_vpc" "sq_vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cdir_block
 
 
   tags = {
@@ -26,17 +26,6 @@ resource "aws_internet_gateway" "sq_gateway" {
 resource "aws_route_table" "sqrouttable" {
   vpc_id = aws_vpc.sq_vpc.id
 
-  # route = [
-  #   {
-  #     cidr_block = "0.0.0.0/0"
-  #     gateway_id = aws_internet_gateway.sq_gateway.id
-  #   },
-  #   {
-  #     ipv6_cidr_block        = "::/0"
-  #     gateway_id             = aws_internet_gateway.sq_gateway.id
-  #   }
-  # ]
-
   tags = {
     Name = "sqrouttable"
   }
@@ -53,7 +42,7 @@ resource "aws_route" "sqroute" {
 #create subnet
 resource "aws_subnet" "subnet_sq" {
   vpc_id     = aws_vpc.sq_vpc.id
-  cidr_block = "10.0.1.0/24"
+  cidr_block = var.subnet_cdir_block
 
 
   tags = {
@@ -121,12 +110,10 @@ resource "aws_security_group" "allow_web_sq" {
 #networkinterface
 resource "aws_network_interface" "sqnic" {
   subnet_id       = aws_subnet.subnet_sq.id
-  private_ips     = ["10.0.1.50"] #Ip Adress from the  
+  private_ips     = [var.nic_privat_ip]   
   security_groups = [aws_security_group.allow_web_sq.id]
 
-  #   attachment {
-  #     instance     = aws_instance.test.id
-  #     device_index = 1
+
   tags = {
     Name = "sqnic"
   }
@@ -136,16 +123,15 @@ resource "aws_network_interface" "sqnic" {
 resource "aws_eip" "one" {
   vpc                       = true
   network_interface         = aws_network_interface.sqnic.id
-  associate_with_private_ip = "10.0.1.50" #Ip Adressrange NIC
+  associate_with_private_ip = var.nic_privat_ip 
   depends_on                = [aws_internet_gateway.sq_gateway]
 }
 
 #ubuntu server
 resource "aws_instance" "sq-server" {
-  ami = "ami-0629230e074c580f2" #Ubuntu 20.04
-  #ami             = "ami-020db2c14939a8efb" #Ubuntu 18.04
-  instance_type = "t3a.small"
-  key_name      = "sonarqube"
+  ami = var.aim_ubuntu_20_04 
+  instance_type = var.instance_type
+  key_name      = var.key_name
 
 
   network_interface {
@@ -156,28 +142,14 @@ resource "aws_instance" "sq-server" {
 
   #auto script for instalation docker
   user_data = file("./datascript.sh")
-  # user_data = <<-EOF
-  #               #! /bin/bash
-  #               echo "script start"
-  #               sudo apt-get update
-  #               sudo apt-get install docker.io
-  #               sudo sysctl -w vm.max_map_count=262144
-  #               sudo sysctl -w fs.file-max=65536
-  #               ulimit -n 65536
-  #               ulimit -u 4096 
-  #               sudo docker pull sonarqube:lts
-  #               docker volume create sonarqube-conf 
-  #               docker volume create sonarqube-data
-  #               docker volume create sonarqube-logs
-  #               docker volume create sonarqube-extensions
-  #               docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 -v sonarqube-conf:/opt/sonarqube/conf -v sonarqube-data:/opt/sonarqube/data -v sonarqube-logs:/opt/sonarqube/logs -v sonarqube-extensions:/opt/sonarqube/extensions sonarqube:lts
-  #               echo "skript end"
-  #               EOF
+ 
   tags = {
     Name = "sqserver"
   }
 }
 
+
+#outputs
 output "elastic-IP" {
   value = aws_eip.one.public_ip
 }
