@@ -9,7 +9,7 @@ This script will copy the corrsponding yml template into your local repository a
 == The script
 
 
-=== Arguments
+=== Flags
 ```
     -n    [Required] Name that will be set to the build pipeline.
     -l    [Required] Language or framework of the project.
