@@ -50,7 +50,8 @@ Use the 2nd case if you already started your code. +
   -o (for organization) : URL of your Azure DevOps organization (mandatory)
   -p (for project) :      (Mandatory) name of you Azure DevOps project
   -g (for giturl) :       URL of the Git repository you want to clone
-  -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import' with an URL, instead of importing the whole repository (with the already existing branches and policies), it will just import the content of the branch you gave and create the branches and policies based on a template.
+  -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
+  -f (for force) :        If you set this flag it will automatically say yes to every step where user confirmation is required.
 ```
 
 ==== Additional information
@@ -81,7 +82,7 @@ NOTE: Importing a Git repository into Azure DevOps just imports the content (bra
 ==== 2nd case b: +
   /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git -b master
 
-It will import the content of the branch *master* of the repository stored at that url `\https://github.com/user/repository.git` under the name *repository_import*, if no name would have been set, the repository would have been imported under the name *repository* (it uses the url to know the name). As we set the -b flag, it creates the branches and policies we defined in <<Branches and policies>>. +
+It will import the content of the branch *master* of the repository stored at that url `\https://github.com/user/repository.git` under the name *repository_import*, if no name would have been set, the repository would have been imported under the name *repository* (it uses the url to know the name). As we set the -b flag, it creates the branches (using *master* as reference) and policies we defined in <<Branches and policies>>. +
 Then the repository is cloned inside the folder */path/to/directory*. +
 
 ==== 2nd case c: +
@@ -90,6 +91,13 @@ Then the repository is cloned inside the folder */path/to/directory*. +
 If your folder */path/to/directory/repository_push* is just a folder, it will convert it into a Git repository, push it to your Azure DevOps project and create branches and branch policies. +
 If your folder is a local Git repository, it will just push it to your Azure DevOps project. +
 If your folder is an online Git repository, it will change the url so that next commits will be pushed into your Azure DevOps repository but not on the one already configured, and it will push all your branches at the new URL. +
+
+==== 2nd case d: +
+  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory/repository_push -o https://dev.azure.com/azure_organization -p azure_project -n repository_push -b reference
+
+If your folder */path/to/directory/repository_push* is just a folder, it will act the exact same way as *2nd case c*. +
+If your folder is a local Git repository, it will use the branch *reference* to create *develop* and *master* (it will replace them if they already exists), then it will just push it to your Azure DevOps project and create the policies defined below. +
+If your folder is an online Git repository, the branch *develop* and *master* will be created the same way as if it was a local git repository, then it will change the URL so that next commits will be pushed into your Azure DevOps repository but not on the one already configured, after that it will push all your branches at the new URL. Finally it will create the policies defined below. +
 
 ==== Sample application
 
