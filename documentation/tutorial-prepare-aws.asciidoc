@@ -30,9 +30,6 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 -g      [Required] Group name for the group to be created or used
 ```
 === Usage
-```
-./create-user.sh -u deployeruser -g deploygroup
-```
 You will be prompted to introduce your AWS credentials as follows:
 ```
 AWS Access Key ID [None]: <accessKeyID>
