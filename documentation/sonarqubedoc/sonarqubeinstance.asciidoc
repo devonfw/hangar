@@ -1,6 +1,6 @@
 
 == Sonarqube instance in aws 
-This repository will show you how to deploy a aws instance with sonarqube on it. 
+This repository will show you how to deploy a aws instance with sonarqube on it. This script lauch a sonarqube with an embedded database.
 
 == Getting Started
 === Prerequisites
