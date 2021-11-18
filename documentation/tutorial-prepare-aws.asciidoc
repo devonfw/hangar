@@ -3,7 +3,7 @@ toc::[]
 :idprefix:
 :idseparator: -
 = Prepare AWS account for deployment with Azure DevOps
-The scope of this section is to prepare an AWS account to be ready for deployment from Azure DevOps to AWS EKS. By the end of this guide a new user with the required permissions will be created.
+The scope of this section is to prepare an AWS account to be ready for deployment from Azure DevOps to AWS EKS. By the end of this guide, a new user with the required permissions will be created.
 
 == Preparing environment
 First of all, install AWS CLI for your OS: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
