@@ -9,18 +9,18 @@ done
 
 if [ "$1" == "-h" ];
 then
-    echo "Creates a new user which is added to a new group attached to the necessary permissions to deploy on AWS EKS"
+    echo "Creates an IAM user, also enrolling it in a newly created group with the provided policies attached."
     echo ""
     echo "Arguments:"
     echo "  -u     [Required] Username for the new user."
-    echo "  -g     [Required] Group name for the new group."
+    echo "  -g     [Required] Group name for the group to be created or used."
     exit
 fi
 
 #Argument check
 if [ -z "$username" ] || [ -z "$groupname" ];
 then
-    echo "Missing parameters, the flags -u and -g are mandatory"
+    echo "Missing parameters, -u and -g flags are mandatory."
     echo "Use -h flag to display help."
     exit
 fi
@@ -55,7 +55,7 @@ aws iam attach-group-policy --group-name $groupname --policy-arn arn:aws:iam::aw
 echo "Adding user "$username" to group "$groupname" .."
 aws iam add-user-to-group --group-name $groupname --user-name $username
 
-echo $username" is ready. Please store the following access data securely:"
+echo "User $username is ready. Please store the following access data securely:"
 echo "Access key ID: "$accessKeyId
 echo "Secret access key: "$secretAccessKey
 

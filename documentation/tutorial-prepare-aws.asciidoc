@@ -24,19 +24,12 @@ The script located at `/scripts/accounts/aws/create-user.sh` will assist you in 
 
 In case you do not have an AWS access key (needed to authenticate through API), follow [this guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey) to create it.
 
-=== Syntax
+=== Flags
 ```
-create-user.sh
-    [-u <String>]
-    [-g <String>]
-```
-=== Arguments
-```
--u      [Required] Username given to the user created by the script
--g      [Required] Group name given to the group created by the script
+-u      [Required] Username for the new user
+-g      [Required] Group name for the group to be created or used
 ```
 === Usage
-Execute the script, for example:
 ```
 ./create-user.sh -u deployeruser -g deploygroup
 ```
@@ -44,26 +37,26 @@ You will be prompted to introduce your AWS credentials as follows:
 ```
 AWS Access Key ID [None]: <accessKeyID>
 AWS Secret Access Key [None]: <secretAccessKey>
-Default region name [None]: us-west-2
+Default region name [None]: eu-west-1
 Default output format [None]: json
 ```
-After introducing the credentials, the script will create the user and everything needed. Finally, the newly created user access data will be shown in screen:
+On success, the newly created user access data will be shown as output:
 ```
 Access key ID: <accessKeyID>
 Secret access key: <secretAccessKey>
 ```
-IMPORTANT: It is mandatory to store the access key ID and the secret access key securely, *it won't be shown again*.
+IMPORTANT: It is mandatory to store the access key ID and the secret access key securely at this point, as *the will not be retrievable again*.
 
-== Configure AWS Cli [[configure-cli]]
-Finally, when you have been provided with a user, set up the AWS CLI using the following command:
+== Configure AWS CLI [[configure-cli]]
+Once you have been provided with a IAM user, setup the AWS CLI using the following command:
 ```
 aws configure
 ```
-Fill the prompted fields with your data. For example:
+Fill the prompted fields with your data:
 ```
 AWS Access Key ID [None]: <accessKeyID>
 AWS Secret Access Key [None]: <secretAccessKey>
-Default region name [None]: us-west-2
+Default region name [None]: eu-west-1
 Default output format [None]: json
 ```
-Now you have your AWS account ready to use.
+Now you have AWS CLI ready to use.
