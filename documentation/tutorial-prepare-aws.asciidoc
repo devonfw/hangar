@@ -22,7 +22,7 @@ AmazonEKSVPCResourceController
 
 The script located at `/scripts/accounts/aws/create-user.sh` will assist you in the creation of a user, also enrolling it in a newly created group with the required policies attached.
 
-In case you do not have AWS access key (needed to authenticate through API), follow this guide to create it: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey
+In case you do not have an AWS access key (needed to authenticate through API), follow [this guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey) to create it.
 
 === Syntax
 ```
