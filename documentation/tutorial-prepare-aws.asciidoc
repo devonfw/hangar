@@ -9,7 +9,7 @@ The scope of this section is to prepare an AWS account to be ready for deploymen
 First of all, install AWS CLI for your OS: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
 
-Just in case you do not have permission to create new AWS users, request an IAM user to your AWS administrator with the below policies attached. Then jump to <<configure-cli>>.
+In case you do not have permission to create new IAM users, request it to your AWS administrator asking for the following policies attached. Then go to <<configure-cli>>.
 ```
 AmazonEKSClusterPolicy
 AmazonEKSWorkerNodePolicy
