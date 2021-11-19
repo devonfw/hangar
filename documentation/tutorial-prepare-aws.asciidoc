@@ -28,15 +28,12 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 ```
 -u      [Required] Username for the new user
 -g      [Required] Group name for the group to be created or used
+-p      [Optional] Policies to be attached to the group, splitted by comma
+-a      [Optional] AWS administrator access key
+-s      [Optional] AWS administrator secret key
+-r      [Optional] AWS region
 ```
 === Usage
-You will be prompted to introduce your AWS credentials as follows:
-```
-AWS Access Key ID [None]: <accessKeyID>
-AWS Secret Access Key [None]: <secretAccessKey>
-Default region name [None]: eu-west-1
-Default output format [None]: json
-```
 On success, the newly created user access data will be shown as output:
 ```
 Access key ID: <accessKeyID>
