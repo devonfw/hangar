@@ -66,6 +66,7 @@ do
 esac
 done
 
+project_convertido=$(echo $project | sed 's/\ /%20/g')
 function MSG_ERROR {
  if [ $2 != 0 ]
  then
@@ -94,13 +95,13 @@ folder_of_script=$(dirname $0)
 function create_repo {
   # $1 = name (of the repo)
   # $2 = organization
-  # $3 = project
+  # $3 = 'project'
   echo "--"
   echo -e "${blue}Creating repo $1. ${white}"
   echo ""
   #We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
-  echo "az repos create --name $1 --organization $2 --project $3"
-  az repos create --name $1 --organization ${2} --project $3 > ./tmp_json_repo
+  echo "az repos create --name $1 --organization $2 --project "$3""
+  az repos create --name $1 --organization ${2} --project "$3" > ./tmp_json_repo
   MSG_ERROR "Creating repo $1" $?
   repo_id=$(cat  ./tmp_json_repo | grep '"id"' -m1 | cut -d: -f2 | cut -d, -f1 | tr -d \")
   echo ""
@@ -127,13 +128,13 @@ function set_default_branch_and_policies {
   echo "--"
   echo -e "${blue}Setting 'develop' as default branch${white}"
   echo ""
-  az repos update --organization ${1} --project $2 --repository "$4" --default-branch $5 > /dev/null
+  az repos update --organization ${1} --project "$2" --repository "$4" --default-branch $5 > /dev/null
   MSG_ERROR "Setting 'develop' branch as default branch" $?
   echo ""
   echo -e "${blue}Setting policies for the repository. ${white}"
   echo ""
-  policyMaster=$(az repos policy merge-strategy create --blocking true --branch master --enabled true --repository-id $3 --allow-no-fast-forward false --allow-rebase false --allow-rebase-merge false --allow-squash true --branch-match-type exact --project ${2} --organization ${1})
-  policydevelop=$(az repos policy merge-strategy create --blocking true --branch develop --enabled true --repository-id $3 --allow-no-fast-forward true --allow-rebase false --allow-rebase-merge true  --allow-squash true --branch-match-type exact --project ${2} --organization ${1})
+  policyMaster=$(az repos policy merge-strategy create --blocking true --branch master --enabled true --repository-id $3 --allow-no-fast-forward false --allow-rebase false --allow-rebase-merge false --allow-squash true --branch-match-type exact --project "${2}" --organization ${1})
+  policydevelop=$(az repos policy merge-strategy create --blocking true --branch develop --enabled true --repository-id $3 --allow-no-fast-forward true --allow-rebase false --allow-rebase-merge true  --allow-squash true --branch-match-type exact --project "${2}" --organization ${1})
   echo -e "${blue}As your repository is brand new (it is an empty repository, the sample repository or you just push a regular directory):"
   echo -e "${white}We created a master branch: which is supposed to contain only finished and validated developpement ready to be in production."
   echo -e "We created a develop branch: which is supposed to contain finished development ready to be validate, every feature branch should be created from this branch."
@@ -153,7 +154,7 @@ function import_repo {
   # $4 = name (of repository)
   echo "--"
   echo -e "${blue}Importing the repo located at $1. ${white}"
-  az repos import create --git-url $1 --organization ${2} --project $3 --repository $4 > /dev/null
+  az repos import create --git-url $1 --organization ${2} --project "$3" --repository $4 > /dev/null
   MSG_ERROR  "Importing sample repository"  $?
   echo "--"
 }
@@ -183,7 +184,8 @@ function push_existing_directory {
   # $2 = project
   # $3 = name (of the repo)
   # $4 = repo_id
-  # (optional) $5 = branch of reference
+  # $5 = project with spaces converted
+  # (optional) $6 = branch of reference
   #We check if the directory is already a git repository or not
   echo "--"
   echo -e "${blue}Start of the function to import a directory/repository.${white}"
@@ -194,7 +196,7 @@ function push_existing_directory {
   then
     echo "$(pwd) is already a git repository, skipping git init and first commit"
     echo ""
-    if [ "$5" != "" ]
+    if [ "$6" != "" ]
     then
       echo "You gave a branch with -b flag, that means we are going to take this branch as reference and create develop and master from this one, if they already exist they will be deleted to be created again."
       if [ $force = "false" ]
@@ -205,8 +207,8 @@ function push_existing_directory {
 
       if [ "$force" = "true" ] || [ "$user_input_branch" = 'Y' ]
       then
-        replace_branch_with_reference develop $5
-        replace_branch_with_reference master $5
+        replace_branch_with_reference develop $6
+        replace_branch_with_reference master $6
       else
         exit
       fi
@@ -240,8 +242,8 @@ function push_existing_directory {
     done
     if [ "$user_input_remote_url" = 'Y' ]
     then
-      echo "      git remote set-url --add --push origin ${1}/${2}/_git/$3"
-      git remote set-url --add --push origin ${1}/${2}/_git/$3
+      echo "      git remote set-url --add --push origin ${1}/${5}/_git/$3"
+      git remote set-url --add --push origin ${1}/${5}/_git/$3
     else
       cd $old_path
       exit
@@ -249,7 +251,7 @@ function push_existing_directory {
   else
     echo ""
     echo "Adding remote URL as no URL was previously set."
-    git remote add origin ${1}/${2}/_git/$3
+    git remote add origin ${1}/${5}/_git/$3
     echo ""
   fi
   if [ $isGitRepo -ne 0 ]
@@ -264,9 +266,9 @@ function push_existing_directory {
   echo ""
   git push -u origin --all
   echo ""
-  if [ $isGitRepo -ne 0 ] || [ "$5" != "" ]
+  if [ $isGitRepo -ne 0 ] || [ "$6" != "" ]
   then
-    set_default_branch_and_policies ${1} $2 $4 $3 "develop"
+    set_default_branch_and_policies ${1} "$2" $4 $3 "develop"
   fi
   echo "--"
 }
@@ -307,19 +309,19 @@ else
   exit 1
 fi
 
-create_repo $name $organization $project
+create_repo $name $organization "$project"
 
 if [ "$action" = "import" ]
 then
   if [ "$giturl_argument" = "" ]
   then
-    push_existing_directory $organization $project $name $repo_id $branch
+    push_existing_directory $organization "$project" $name $repo_id $project_convertido $branch
   else
     if [ "$branch" = "" ]
     then
       echo "You have not given a branch name so the repository will be imported as it is"
-      import_repo $giturl_argument $organization $project $name
-      git clone ${organization}/${project}/_git/$name
+      import_repo $giturl_argument $organization "$project" $name
+      git clone ${organization}/${project_convertido}/_git/$name
     else
       echo -e "${yellow}You have given a branch name so only the content of this branch will be imported and we will use our branches policy.${white}"
       echo "Cloning the repository using only the branch $branch"
@@ -330,12 +332,12 @@ then
       # echo "Deleting the .git folder so that we can initialize this repository with our branches"
       # rm -rf .git
       # MSG_ERROR "Deleting the .git folder so that we can initialize this repository with our branches" $?
-      push_existing_directory $organization $project $name $repo_id $branch
+      push_existing_directory $organization "$project" $name $repo_id $project_convertido $branch
     fi
   fi
 elif [ "$action" = "create" ]
 then
-  git clone ${organization}/${project}/_git/$name
+  git clone ${organization}/${project_convertido}/_git/$name
   cd $name
   git checkout -b master
   cp $folder_of_script/README.md .
@@ -344,7 +346,7 @@ then
   git checkout -b develop
   git checkout -b feature/TEAM/featureName
   git push -u origin --all
-  set_default_branch_and_policies ${organization} $project $repo_id $name "develop"
+  set_default_branch_and_policies ${organization} "$project" $repo_id $name "develop"
 fi
 
 cd $old_path
