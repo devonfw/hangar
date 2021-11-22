@@ -10,19 +10,22 @@
 :url-az-board: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/plan-track-work?view=azure-devops&tabs=agile-process
 
 
-*Prerequisites:*
+== *Prerequisites:*
 
-... Sign up into {url-az-devops}[Azure DevOps] in order to follow the steps of this guide.
-... Install the Azure {url-az-CLI}[CLI].
+. Sign up into {url-az-devops}[Azure DevOps].
+. Install the Azure {url-az-CLI}[CLI].
 
-Here we will create an Azure DevOps Project.
+== *Creating the Azure DevOps project*
 
-1. Create an Azure DevOps project, There are two ways to create an Azure DevOps project:
+The scope of this section is to prepare and activate an Azure DevOps account.
 
-..  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide].  
-.. Create an Azure DevOps project using an automated script, you can find this script in `/scripts/account-setup/account_create.sh`. 
+There  are two ways to create an Azure DevOps project:
 
-2. Plan and track your work by creating items in {url-az-board}[Azure Boards], You can follow these instructions when you want to accomplish the following tasks for best process.
+.  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide].  
+
+. Create an Azure DevOps project using an automated script, you can find this script in `/scripts/account-setup/account_create.sh`. 
+
+Additionally you are able to plan and track your work by creating items in {url-az-board}[Azure Boards], you can follow these instructions when you want to accomplish the following tasks for best practices.
 
 
 == *Setup Azure DevOps using Script*
@@ -50,13 +53,18 @@ This script will enable you to create a new project or configure an existing one
     -t    [Required] PAT token to login Azure DevOps.
 
 ```
-== *Example:*
-I want to create an my_project in `organization-org` organization. Edit all the parameters as desired to create an Azure DevOps project.
 
-Execute the script: 
+*Executing the script:*
+
+`bash account_create.sh -p 'my_project' -d 'This_is_a_sample_project' -o 'organization-org' -v 'public' -t 'xxxxxxxxxxxxxx'`
+
+*Case study:*
+
+I want to create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
+
+`bash account-create.sh -p 'devon4quarkus' -d 'This_is_a_quarkus_application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
 
-`bash account_create.sh -p 'my_project' -d 'This_is_an_sample_project' -o 'organization-org' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
    
 
