@@ -1,13 +1,14 @@
 = Setting up a Build Pipeline on Azure DevOps
 
-In this section we will create a build pipeline for compiling project code. The script located at `\scripts\pipelines\azure-devops\build_pipeline_generator.sh` will automatically create a build pipeline based on a yml template.
+In this section we will create a build pipeline for compiling project code. This pipeline will be configured in order to be triggered every time a commit to the Azure DevOps repository is done, regardless of which branch it is made on.
+
+The script located at `\scripts\pipelines\azure-devops\build_pipeline_generator.sh` will automatically create a build pipeline based on a YAML template appropiate for the project programming language or framework.
 
 == Prerequisites
 
-This script will copy the corrsponding yml template into your local repository and push into Azure DevOps, so it is necessary that you have in your local repository all the changes done in your Azure DevOps repository. In order to have all the changes execute `git pull` inside your local repository.
+This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
 
 == The script
-
 
 === Flags
 ```

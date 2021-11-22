@@ -27,19 +27,32 @@ then
 fi
 
 yamlFile="${language}-build-pipeline.yml"
+pipelinesDirectory="${directory}/.pipelines"
+oldPath=$(pwd)
+
+cd ${directory}
+# Check if there is a .pipelines directory in the projects's directory. 
+if test ! -d "$pipelinesDirectory"
+then
+    # Creates a folder called .pipelines to store the pipelines.
+    mkdir pipelines
+    mv pipelines .pipelines
+fi
 
 # Copy the yml template into the local repository
 echo "Copying the YAML template into the repository..."
+cd ${oldPath}
 cd ../../../templates
-cp ${yamlFile} ${directory}
+
+cp ${yamlFile} ${pipelinesDirectory}
 
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
 echo "Committing and pushing to Git remote..."
 cd ${directory}
-git add ${yamlFile}
+git add ${pipelinesDirectory}
 git commit -m "Adding build pipeline source YAML"
 git push -u origin --all
 
 # Creation of the pipeline
 echo "Generating the pipeline from the YAML template..."
-az pipelines create --name $name --yaml-path $yamlFile
+az pipelines create --name $name --yaml-path ".pipelines/$yamlFile"
