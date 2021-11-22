@@ -27,10 +27,7 @@ Run the following commands on your command prompt.
 terraform init
 ```
 This command is used to initialize a working directory containing Terraform configuration files.
-```
-terraform plan
-```
-This command creat an execution plan
+
 ```
 terraform apply --auto-approve
 ```
