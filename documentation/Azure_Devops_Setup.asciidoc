@@ -43,7 +43,7 @@ This script will enable you to create a new project or configure an existing one
         [-t <String>]
 
 ```
-== Arguments
+== Flags
 
 ```
     -p    [Required] Name of the new project.
@@ -54,13 +54,15 @@ This script will enable you to create a new project or configure an existing one
 
 ```
 
-*Executing the script:*
+== Usage
 
 `bash account_create.sh -p 'my_project' -d 'This_is_a_sample_project' -o 'organization-org' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
-*Case study:*
+== Examples
 
-I want to create a devon4quarkus project with the description This is a `quarkus` application in an organization called `devon-hangar`.
+I want to create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
+
+=== Quarkus project
 
 `bash account-create.sh -p 'devon4quarkus' -d 'This_is_a_quarkus_application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
