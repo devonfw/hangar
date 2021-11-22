@@ -60,7 +60,6 @@ This script will enable you to create a new project or configure an existing one
 
 == Examples
 
-I want to create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
 
 === Quarkus project
 
