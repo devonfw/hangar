@@ -64,7 +64,9 @@ I want to create a devon4quarkus project with the description 'This is a quarkus
 
 === Quarkus project
 
-`bash account-create.sh -p 'devon4quarkus' -d 'This_is_a_quarkus_application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
+I want to create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
+
+`bash account-create.sh -p 'devon4quarkus' -d 'This is a quarkus application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
 
 
