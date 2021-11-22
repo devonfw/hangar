@@ -34,6 +34,12 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 -s      [Optional] AWS administrator secret key
 -r      [Optional] AWS region
 ```
+
+=== Example
+```
+./create-user.sh -u "Bob" -g "DevOps" -p "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy,arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy,arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess,arn:aws:iam::aws:policy/AmazonEKSServicePolicy,arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy,arn:aws:iam::aws:policy/AmazonEKSVPCResourceController" -a "<accessKeyAWS>" -s "<secretKeyAWS>" -r "eu-west-1" 
+```
+
 === Usage
 On success, the newly created user access data will be shown as output:
 ```
