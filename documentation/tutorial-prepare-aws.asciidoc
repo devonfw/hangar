@@ -9,6 +9,7 @@ The scope of this section is to prepare an AWS account to be ready for deploymen
 First of all, https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[install AWS CLI for your OS]. 
 
 
+
 In case you do not have permission to create new IAM users, request it to your AWS administrator asking for the following policies attached. Then go to <<configure-cli>>.
 ```
 AmazonEKSClusterPolicy
@@ -20,7 +21,7 @@ AmazonEKSVPCResourceController
 
 == Using the script to create the user
 
-The script located at `/scripts/accounts/aws/create-user.sh` will assist you in the creation of a user, also enrolling it in a newly created group with the required policies attached.
+The script located at `/scripts/accounts/aws/create-user.sh` will automatically create a user, also enrolling it in a newly created group with the required policies attached.
 
 In case you do not have an AWS access key (needed to authenticate through API), follow https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey[this guide] to create it.
 
