@@ -3,7 +3,7 @@ toc::[]
 :idprefix:
 :idseparator: -
 
-= Container Registry
+= Container Registry / Repository
 == What is a Container Registry?
 * Docker registry is a service that is storing our docker images.
 * Docker registry could be hosted by a third party, as public or private registry.
