@@ -39,13 +39,13 @@ fi
 	echo $pat_token | az devops login
 
         echo "Creating project..."
-	az devops project create --name $projectname --description $description --organization https://dev.azure.com/$organization --visibility $visibility
+	az devops project create --name "$projectname" --description "$description" --organization https://dev.azure.com/$organization --visibility "$visibility"
 
 	echo "Project list:"
 	az devops project list  --organization https://dev.azure.com/$organization
 
 	echo "Configuring default organization and project..."
-	az devops configure --defaults organization=https://dev.azure.com/$organization project=$projectname  
+	az devops configure --defaults organization=https://dev.azure.com/$organization project="$projectname"  
 
 	echo "List of configured organization:"
 	az devops configure --list
