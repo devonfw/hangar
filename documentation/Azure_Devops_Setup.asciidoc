@@ -9,11 +9,13 @@
 
 :url-az-board: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/plan-track-work?view=azure-devops&tabs=agile-process
 
+:url-pat-token: https://docs.searchunify.com/Content/Content-Sources/Azure-Generate-Personal-Access-Token.htm
 
 == *Prerequisites:*
 
 . Sign up into {url-az-devops}[Azure DevOps].
 . Install the Azure {url-az-CLI}[CLI].
+. Create a  {url-pat-token}[Personal Access Token (PAT)] in Azure DevOps.
 
 == *Creating the Azure DevOps project*
 
