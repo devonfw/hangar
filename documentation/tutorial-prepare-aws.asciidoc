@@ -50,7 +50,7 @@ Secret access key: <secretAccessKey>
 IMPORTANT: It is mandatory to store the access key ID and the secret access key securely at this point, as *the will not be retrievable again*.
 
 == Configure AWS CLI [[configure-cli]]
-Once you have been provided with a IAM user, setup the AWS CLI using the following command:
+Once you have been provided with an IAM user, setup the AWS CLI using the following command:
 ```
 aws configure
 ```
