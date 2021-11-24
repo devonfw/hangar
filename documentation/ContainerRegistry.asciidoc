@@ -39,3 +39,22 @@ toc::[]
 * Users looking for a zero maintenance, ready-to-go solution are encouraged to head-over to the Docker Hub.
 * Docker Hub provides a free-to-use, hosted Registry, plus additional features (organization accounts, automated builds, and more).
 * The Registry is compatible with Docker engine version 1.6.0 or higher.
+
+== How to use Docker Hub?
+* We will demonstrate how to pull an image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
+* Step#1 - You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
+* Step#2 - Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
+* Step#3 - Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
+  - sudo docker login -u <username>
+  - Ex: sudo docker login -u sundharakanthan
+* Step#4 - Use the following command to pull the docker container image from Docker Hub to local machine.
+  - sudo docker pull hello-world
+  - Ex: sudo docker pull sundharakanthan/nodejssampleprj
+* Step#5 - Use the following command to push an image to private repository.
+  - sudo docker push <username>/<imagename>
+  - Ex: 
+	- sudo docker images
+	- sudo docker tag nodejssampleprj sundharakanthan/nodejssampleprj:v1.1.1.1
+	- sudo docker images
+	- sudo docker pull sundharakanthan/nodejssampleprj:v1.1.1.1
+* Going back to our Docker Hub account, we can see the new tag is stored in our private repository [https://hub.docker.com/u/sundharakanthan].
