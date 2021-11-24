@@ -30,6 +30,7 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 -u      [Required] Username for the new user
 -g      [Required] Group name for the group to be created or used
 -p      [Optional] Policies to be attached to the group, splitted by comma
+-f      [Optional] Path to a file containing the policies to be attached to the group
 -a      [Optional] AWS administrator access key
 -s      [Optional] AWS administrator secret key
 -r      [Optional] AWS region
@@ -37,10 +38,10 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 
 === Example
 ```
-./create-user.sh -u "Bob" -g "DevOps" -p "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy,arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy,arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess,arn:aws:iam::aws:policy/AmazonEKSServicePolicy,arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy,arn:aws:iam::aws:policy/AmazonEKSVPCResourceController" -a "<accessKeyAWS>" -s "<secretKeyAWS>" -r "eu-west-1" 
+./create-user.sh -u "Bob" -g "DevOps" -f "./policies.txt" -a "<accessKeyAWS>" -s "<secretKeyAWS>" -r "eu-west-1" 
 ```
 
-=== Usage
+=== After execution
 On success, the newly created user access data will be shown as output:
 ```
 Access key ID: <accessKeyID>

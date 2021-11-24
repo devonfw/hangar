@@ -1,10 +1,11 @@
 #!/bin/bash
-while getopts u:g:p:a:s:r: flag
+while getopts u:g:p:f:a:s:r: flag
 do
     case "${flag}" in
         u) username=${OPTARG};;
         g) groupname=${OPTARG};;
         p) policies=${OPTARG};;
+        f) policies_file=${OPTARG};;
         a) access_key=${OPTARG};;
         s) secret_key=${OPTARG};;
         r) region=${OPTARG};;
@@ -19,6 +20,7 @@ then
     echo "  -u     [Required] Username for the new user."
     echo "  -g     [Required] Group name for the group to be created or used."
     echo "  -p     [Optional] Policies to be attached to the group, splitted by comma."
+    echo "  -f     [Optional] Path to a file containing the policies to be attached to the group."   
     echo "  -a     [Optional] AWS administrator access key"
     echo "  -s     [Optional] AWS administrator secret key"
     echo "  -r     [Optional] AWS region"
@@ -34,7 +36,7 @@ then
 fi
 
 #AWS credentials setup
-if ! [ -z "$access_key" ]  && ! [ -z "$secret_key" ];
+if [ -n "$access_key" ]  && [ -n "$secret_key" ];
 then
     echo "Setting up your AWS credentials.."
     export AWS_ACCESS_KEY_ID=$access_key
@@ -42,11 +44,10 @@ then
 fi
 
 #AWS region
-if ! [ -z "$region" ];
+if [ -n "$region" ];
 then
     echo "Setting up your AWS region.."
     export AWS_DEFAULT_REGION=$region
-
 fi
 
 #AWS default output
@@ -74,14 +75,25 @@ secretAccessKey=$(echo "$output" | python -c  "import sys, json; print(json.load
 echo "Checking if "$groupname" group exists. If not, it will be created.."
 aws iam create-group --group-name $groupname &> /dev/null
 
-#Attach policies to group
-if ! [ -z "$policies" ];
+#Attach policies to group (From command line)
+if [ -n "$policies" ];
 then
     echo "Attaching provided policies to group.."
     IFS=',' read -ra policies_array <<< "$policies"
     for i in "${policies_array[@]}"; do
         aws iam attach-group-policy --group-name $groupname --policy-arn $i
+    done
+fi
 
+#Attach policies to group (From file)
+if [ -n "$policies_file" ];
+then
+    echo "Attaching provided policies in file to group.."
+
+    IFS=$'\r\n' GLOBIGNORE='*' command eval  'policies_file_array=($(cat ${policies_file}))'
+    for i in "${policies_file_array[@]}"
+    do
+        aws iam attach-group-policy --group-name $groupname --policy-arn "${i}"
     done
 fi
 
