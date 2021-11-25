@@ -1,124 +1,78 @@
+== Activate and prepare Azure DevOps
 
-== Provision an Aks Cluster with Terraform
 
-:url-az-account: https://portal.azure.com/#home
+:url-az-devops: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#choose-your-sign-up-option
+
+:url-az-project:  https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#create-a-project
 
 :url-az-CLI:  https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
 
-:url-az-kubectl: https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster?tabs=azure-cli
+:url-az-board: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/plan-track-work?view=azure-devops&tabs=agile-process
 
-:url-helm:  https://helm.sh/docs/intro/install/
-
-:url-terraform: https://learn.hashicorp.com/tutorials/terraform/install-cli
-
-:url-repo-code:  https://github.com/devon4quarkus-reference/azure-terraform
-
-The Azure Kubernetes Service (AKS) is a fully managed Kubernetes service for deploying, managing and scaling containerized applications on Azure.
+:url-pat-token: https://docs.searchunify.com/Content/Content-Sources/Azure-Generate-Personal-Access-Token.htm
 
 == *Prerequisites:*
 
-. Sign up into {url-az-account}[Azure Account].
+. Sign up into {url-az-devops}[Azure DevOps].
 . Install the Azure {url-az-CLI}[CLI].
-. Install the {url-az-kubectl}[kubectl].
-. Install the {url-helm}[Helm].
-. Install the {url-terraform}[Terraform].
+. Create a  {url-pat-token}[Personal Access Token (PAT)] in Azure DevOps.
 
-*Setup using Script*
+== *Creating the Azure DevOps project*
 
-Install all Prerequisites using an automated script, you can find this script in `https://github.com/devon4quarkus-reference/azure-terraform/initial_setup_script.sh`
+The scope of this section is to prepare and activate an Azure DevOps account.
 
-*Usage*
+There  are two ways to create an Azure DevOps project:
 
-`bash initial_setup_script.sh`
+.  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide].  
 
-== *Login to Azure Account*
+. Create an Azure DevOps project using an automated script, you can find this script in `/scripts/account-setup/account_create.sh`. 
 
-Before the terraform implementation we need to login Azure account through `Azure CLI`.
+Additionally you are able to plan and track your work by creating items in {url-az-board}[Azure Boards], you can follow these instructions when you want to accomplish the following tasks for best practices.
+
+
+== *Setup Azure DevOps using Script*
+
+This script will enable you to create a new project or configure an existing one. Follow the instructions below for more details.
+
+== Syntax
+
 ```
-az login
-az account set --subscription $SUBSCRIPTION
+   account_create.sh
+        [-p <String>]
+        [-d <String>]
+        [-o <String>]
+        [-v <String>]
+        [-t <String>]
+
 ```
+== Flags
 
-== *Set-Up And Initialize Terraform Workspace*
+```
+    -p    [Required] Name of the new project.
+    -d    [Required] Description for the new project.
+    -o    [Required] Name of the organization  for which the project will be configured.
+    -v    [Required] Visibility accepted values: private or public.
+    -t    [Required] PAT token to login Azure DevOps.
 
-In your terminal, clone the following {url-repo-code}[repository] code.
-
-`$ git clone https://github.com/devon4quarkus-reference`
-
-You can explore this repository by changing the directories.
-
-`cd azure-terraform/terraform-aks-setup`
-
-List of the files used to provision the AKS Cluster.
-
-. `aks-cluster.tf` provisions a Resource Group and AKS Cluster. The default node pool defines the number of VMs and the VM type cluster uses.
-
-. `variables.tf` declares the variables to terraform, It can use reference to its configuration.
-
-. `terraform.tfvars` defines the variables values to terraform.
-
-. `outputs.tf` declares values that can be useful to interact with your Aks Cluster.
-
-. `versions.tf` set the Terraform version and defines the required provider block.
-
-== *Initialize Terraform*
-After you have saved your customized variables file, Initialize your Terraform workspace, which will download the provider and initialize it with the values provided in your terraform.tfvars file.
-
-`$ terraform init`
-
-== *Terraform plan*
-Terraform plan creates an execution of plan and evaluates a Terraform configuration to determine the desired state of all the resources it declares.
-
-`$terraform plan`
-
-== *Terraform apply*
-Terraform apply will review the planned actions, your terminal output should indicate the plan is running and what resources will be created.
-
-`$ terraform apply`
-
-You can see this terraform apply will provision an Azure Resource Group and Aks Cluster. Confirm the apply with a yes.
-
-== *Deploy Helm-charts with the Helm Provider*
-
-The Terraform Helm provider allows you to deploy and manage your Kubernetes applications dynamically and securely. Create the Helm Provider in `helm_release.tf` and configure the helm-charts repository location.
-
-Change the directory in to `Helm Release Provider`.
-
-`cd azure-terraform/terraform-helm-deploy`
-
-Here we need to follow same steps as above process to deploy helm charts in to AKS cluster (Example: terraform init and terraform apply).
-
-== Terraform initialize and apply using Script
-
-Install all Prerequisites using an automated script, you can find this script in `https://github.com/devon4quarkus-reference/azure-terraform/script_execute.sh`
+```
 
 == Usage
 
-`bash script_execute.sh`
+`bash account_create.sh -p 'my_project' -d 'This_is_a_sample_project' -o 'organization-org' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
-== *Configure kubectl*
+== Examples
 
-Now that you've provisioned your AKS Cluster, you need to configure kubectl.
 
-Run the following command to retrieve the access credentials for your cluster and automatically configure kubectl.
+=== Quarkus project
 
-`az aks get-credentials --resource-group $(terraform output -raw resource_group_name) --name $(terraform output -raw kubernetes_cluster_name)`
+I want to create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
 
-The Resource Group name and Kubernetes cluster name correspond to the output variables showed after the successful Terraform run.
+`bash account-create.sh -p 'devon4quarkus' -d 'This is a quarkus application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
-== *Access Kubernetes Dashboard*
-Run the following command to generate the Azure portal link.
+   
 
-`az aks browse --resource-group $(terraform output -raw resource_group_name) --name $(terraform output -raw kubernetes_cluster_name)`
 
-Go to the URL in your preferred browser to view the Kubernetes resource view.
 
-== *Clean up your workspace*
-Run the destroy command and confirm with yes in your terminal.
 
-`$ terraform destroy`
 
-```
-Note: terraform destroy can clean your Aks Cluster but not Resource Group, Because we are not authorized to perform RG deletion. For that we need to raise ticket for IT Group.
-```
 
