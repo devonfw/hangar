@@ -59,29 +59,29 @@ toc::[]
 	- sudo docker pull sundharakanthan/nodejssampleprj:v1.1.1.1
 * Going back to our Docker Hub account, we can see the new tag is stored in our private repository [https://hub.docker.com/u/sundharakanthan].
 
-Docker Pull/Push Commands 
+== Docker Pull/Push Commands 
 * docker pull HOSTNAME/PROJECT-ID/IMAGE
 * docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
 * docker push HOSTNAME/PROJECT-ID/IMAGE
 
-AWS Elastic Container Registry
+== AWS Elastic Container Registry
 * aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
 * docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
 * docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
 * docker push aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
 
-Azure Container Registry
+== Azure Container Registry
 * az acr login --name mycontainerregistry
 * docker pull mcr.microsoft.com/hello-world
 * docker tag mcr.microsoft.com/hello-world mycontainerregistry.azurecr.io/hello-world:v1.1.2
 * docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
 
-Google Container Registry
+== Google Container Registry
 * docker pull gcr.io/google-samples/hello-app:1.0
 * docker tag gcr.io/google-samples/hello-app:1.0 gcr.io/PROJECT_ID/quickstart-image:tag1
 * docker push gcr.io/PROJECT_ID/quickstart-image:tag1
 
-GitHub Container Registry
+== GitHub Container Registry
 * docker login ghcr.io -u USERNAME --password-stdin
 * docker pull ghcr.io/OWNER/IMAGE_NAME:1.14.1
 * docker push ghcr.io/OWNER/IMAGE_NAME:latest
