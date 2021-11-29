@@ -17,7 +17,7 @@
 
 . Sign up into {url-az-devops}[Azure DevOps].
 . Install the Azure {url-az-CLI}[CLI].
-. Create a  {url-pat-token}[Personal Access Token (PAT)] in Azure DevOps.
+. Create an Azure Devops {url-pat-token}[Personal Access Token (PAT)] by following Microsoft official guide.
 
 == *Creating the Azure DevOps project*
 
@@ -39,10 +39,10 @@ This script will enable you to create a new project or configure an existing one
 == Syntax
 
 ```
-   account_create.sh
+   project_create.sh
         [-p <String>]
+		[-o <String>]
         [-d <String>]
-        [-o <String>]
         [-v <String>]
         [-t <String>]
 
@@ -60,7 +60,14 @@ This script will enable you to create a new project or configure an existing one
 
 == Usage
 
-`bash account_create.sh -p 'my_project' -d 'This_is_a_sample_project' -o 'organization-org' -v 'public' -t 'xxxxxxxxxxxxxx'`
+```
+bash project_create.sh \
+	-p 'my_project' \
+	-o 'organization-org' \
+	-d 'This_is_a_sample_project' \
+	-v 'public' \
+	-t 'xxxxxxxxxxxxxx'
+```
 
 == Examples
 
@@ -69,7 +76,7 @@ This script will enable you to create a new project or configure an existing one
 
 create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
 
-`bash account-create.sh -p 'devon4quarkus' -d 'This is a quarkus application' -o 'devon-hangar' -v 'public' -t 'xxxxxxxxxxxxxx'`
+`bash project_create.sh -p 'devon4quarkus' -o 'devon-hangar' -d 'This is a quarkus application' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
    
 
