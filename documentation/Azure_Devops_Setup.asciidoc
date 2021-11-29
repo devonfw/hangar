@@ -11,7 +11,7 @@
 
 :url-pat-token: https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page#create-a-pat
 
-:url-script-url: https://github.com/prathibhapadma/hangar/Feature/block-1/Scripts/account-setup/project_create.sh
+:url-script-url: https://github.com/prathibhapadma/hangar/blob/Feature/block-1/Scripts/account-setup/project_create.sh
 
 == *Prerequisites:*
 
