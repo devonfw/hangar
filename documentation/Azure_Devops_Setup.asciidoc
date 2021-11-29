@@ -41,7 +41,7 @@ This script will enable you to create a new project or configure an existing one
 ```
    project_create.sh
         [-p <String>]
-		[-o <String>]
+	[-o <String>]
         [-d <String>]
         [-v <String>]
         [-t <String>]
