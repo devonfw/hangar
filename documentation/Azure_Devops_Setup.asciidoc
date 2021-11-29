@@ -9,7 +9,9 @@
 
 :url-az-board: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/plan-track-work?view=azure-devops&tabs=agile-process
 
-:url-pat-token: https://docs.searchunify.com/Content/Content-Sources/Azure-Generate-Personal-Access-Token.htm
+:url-pat-token: https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page#create-a-pat
+
+:url-script-url: https://github.com/hangar/blob/Feature/block-1/Scripts/account-setup/project_create.sh
 
 == *Prerequisites:*
 
@@ -25,7 +27,7 @@ There  are two ways to create an Azure DevOps project:
 
 .  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide].  
 
-. Create an Azure DevOps project using an automated script, you can find this script in `/scripts/account-setup/account_create.sh`. 
+. Create an Azure DevOps project using an automated script, you can find this script in {url-script-url}[`/scripts/account-setup/project_create.sh`]. 
 
 Additionally you are able to plan and track your work by creating items in {url-az-board}[Azure Boards], you can follow these instructions when you want to accomplish the following tasks for best practices.
 
