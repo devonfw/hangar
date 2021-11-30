@@ -12,7 +12,7 @@
 #             -b:        If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
 #             -r:       You need to set the -b flag to use this one (it will be ignored if not), when you give a branch as reference when importing a repo, it will delete all other branches.
 #                           (of course nothing happens when creating a new repository or importing a simple directory)
-#             -s:       Set this flag if you want the script to create branches policies with the template this script uses.
+#             -s:       Set this flag if you want the script to create branch policies with the template this script uses.
 #                           (when importing an already existing git repository you have to set the -b flag, if not, the -s flag is simply ignored).
 #             -f :       If you set this flag it will automatically say yes to every step where user confirmation is required.
 #
@@ -42,7 +42,7 @@ function help {
   echo "  -g (for giturl) :       (Mandatory if you choose the action import) URL of the git repository you want to clone."
   echo "  -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop."
   echo "  -r (for remove) :       You need to set the -b flag to use this one (it will be ignored if not), when you give a branch as reference when importing a repo, it will delete all other branches. (of course nothing happens when creating a new repository or importing a simple directory)"
-  echo "  -s (for strategy) :     Set this flag if you want the script to create branches policies with the template this script uses. (when importing an already existing git repository you have to set the -b flag, if not, the -s flag is simply ignored)."
+  echo "  -s (for strategy) :     Set this flag if you want the script to create branch policies with the template this script uses. (when importing an already existing git repository you have to set the -b flag, if not, the -s flag is simply ignored)."
   echo "  -f (for force) :        If you set this flag it will automatically say yes to every step where user confirmation is required."
   exit
 }
@@ -114,7 +114,6 @@ function create_repo {
   az repos create --name $1 --organization ${2} --project "$3" > ./tmp_json_repo
   MSG_ERROR "Creating repo $1" $?
   repo_id=$(cat  ./tmp_json_repo | grep '"id"' -m1 | cut -d: -f2 | cut -d, -f1 | tr -d \")
-  echo "repo_id: $repo_id"
   echo ""
   echo -e "${blue}Here are all the information about the repository you just created, you can save it in a json file if you feel the need."
   cat ./tmp_json_repo

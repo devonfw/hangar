@@ -55,7 +55,7 @@ Use the 2nd case if you already started your code. +
   -g (for giturl) :       URL of the Git repository you want to clone
   -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
   -r (for remove) :       If you gave a branch as reference when importing an existing git repository, it will delete all other branches.
-  -s (for strategy) :     Set this flag if you want the script to create branches policies with the template this script uses.
+  -s (for strategy) :     Set this flag if you want the script to create branch policies with the template this script uses.
   -f (for force) :        If you set this flag it will automatically say yes to every step where user confirmation is required.
 ```
 
