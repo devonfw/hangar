@@ -42,7 +42,7 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 ```
 ./create-user.sh -u "Bob" -g "DevOps" -f "./policies.txt" -a "<accessKeyAWS>" -s "<secretKeyAWS>" -r "eu-west-1" 
 ```
-
+NOTE: If the "DevOps" group does not exist, it will be created.
 === After execution
 On success, the newly created user access data will be shown as output:
 ```
