@@ -2,15 +2,17 @@
 toc::[]
 :idprefix:
 :idseparator: -
-= Prepare AWS account for deployment with Azure DevOps
-The scope of this section is to prepare an AWS account to be ready for deployment from Azure DevOps to AWS EKS. By the end of this guide, a new user with the required permissions will be created.
+= Setup AWS account IAM for deployment in EKS
+The scope of this section is to prepare an AWS account to be ready for deploying in AWS EKS. By the end of this guide, a new IAM user belonging to a group with the required permissions will be created.
 
 == Preparing environment
 First of all, https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[install AWS CLI for your OS]. 
 
+==Prerequisites
 
+* An AWS account with IAM full access permission.
 
-In case you do not have permission to create new IAM users, request it to your AWS administrator asking for the following policies attached. Then go to <<configure-cli>>.
+In case you do not have an account or permission to create new IAM users, request it to your AWS administrator asking for the following policies attached. Then go to <<configure-cli>>.
 ```
 AmazonEKSClusterPolicy
 AmazonEKSWorkerNodePolicy
@@ -19,7 +21,7 @@ AmazonEKS_CNI_Policy
 AmazonEKSVPCResourceController
 ```
 
-== Using the script to create the user
+== Creating IAM user using provided script
 
 The script located at `/scripts/accounts/aws/create-user.sh` will automatically create a user, also enrolling it in a newly created group with the required policies attached.
 
@@ -47,7 +49,7 @@ On success, the newly created user access data will be shown as output:
 Access key ID: <accessKeyID>
 Secret access key: <secretAccessKey>
 ```
-IMPORTANT: It is mandatory to store the access key ID and the secret access key securely at this point, as *the will not be retrievable again*.
+IMPORTANT: It is mandatory to store the access key ID and the secret access key securely at this point, as *they will not be retrievable again*.
 
 == Configure AWS CLI [[configure-cli]]
 Once you have been provided with an IAM user, setup the AWS CLI using the following command:
