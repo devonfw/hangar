@@ -38,6 +38,9 @@ Use the 2nd case if you already started your code. +
       [-p <String>]
       [-g <String>]
       [-b <string>]
+      [-r]
+      [-s]
+      [-f]
 ```
 
 === Arguments +
@@ -51,6 +54,8 @@ Use the 2nd case if you already started your code. +
   -p (for project) :      (Mandatory) name of you Azure DevOps project
   -g (for giturl) :       URL of the Git repository you want to clone
   -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
+  -r (for remove) :       If you gave a branch as reference when importing an existing git repository, it will delete all other branches.
+  -s (for strategy) :     Set this flag if you want the script to create branches policies with the template this script uses.
   -f (for force) :        If you set this flag it will automatically say yes to every step where user confirmation is required.
 ```
 
@@ -63,15 +68,30 @@ For the `-o`: Be careful, this parameter is not the name of your organization, b
 
 When you use the second case, If the `-g` flag is set it will import the Git repository with the URL and clone your repository inside the path set with the `-d` flag, if the `-g` flag is not set it will import the directory set with the `-d` flag.
 
+For the `-r` flag, it will be ignored if you choose the action create, or you when try to import a local directory (because there is no existing branches before the execution of the script). +
+The flag will also be ignored if you did not mention a reference branch with the `-b` flag.
+
+The `-s` flag is ignored if you re trying to import an existing git repository and you did not set a branch with the `-b` flag.
+
 === Usage
 
 
-==== 1st case: +
+==== 1st case: Creating a new repo +
+
+===== Subcase a +
   /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure
 
-This command creates a repository on Azure DevOps and clones it into our local directory, then it creates the necessary branches and policies (see <<Branches and policies>> for more informations).
+This command creates a repository on Azure DevOps and clones it into our local directory, the creates *develop* and *master* branch.
 
-==== 2nd case a: +
+===== Subcase b +
+  /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure -s
+
+This command creates the repository and clones it the same way the subcase a does it, then it creates the branch policies (see <<Branches and policies>> for more informations).
+
+==== 2nd case: Importing a directory or a repository +
+For the 2nd case, we will not give an exhaustive list of every combination of argument it is possible to use, but the list we give you will allow you to understand what you can do with them.
+
+===== Subcase a +
   /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git
 
 It will import all the content of the repository stored at that url `\https://github.com/user/repository.git` under the name *repository_import*, if no name would have been set, the repository would have been imported under the name *repository* (it uses the url to know the name). +
@@ -79,25 +99,26 @@ Then the repository is cloned inside the folder */path/to/directory*. +
 
 NOTE: Importing a Git repository into Azure DevOps just imports the content (branchs, files ...), but once the repository is imported there is no link between them , any modification made on the original repo will not apply on your Azure DevOps project (and the other way around is also true). +
 
-==== 2nd case b: +
-  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git -b master
+===== Subcase b +
+  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git -b reference -s -r
 
-It will import the content of the branch *master* of the repository stored at that url `\https://github.com/user/repository.git` under the name *repository_import*, if no name would have been set, the repository would have been imported under the name *repository* (it uses the url to know the name). As we set the -b flag, it creates the branches (using *master* as reference) and policies we defined in <<Branches and policies>>. +
-Then the repository is cloned inside the folder */path/to/directory*. +
+It will first import the repository stored at the url given the same way as it would in subcase a, then as a reference branch is given, it will create (or replace if they already exist) *master* and *develop* from this *reference* branch, then as the `-s` flag is set it will create the branch policies detailed here <<Branches and policies>>. As the `-r` flag is set, all branches except *reference*, *master* and *develop* will be deleted.
 
-==== 2nd case c: +
+===== Subcase c: +
   /path/to/script/create_repo.bash -a 'import' -d /path/to/directory/repository_push -o https://dev.azure.com/azure_organization -p azure_project -n repository_push
 
 If your folder */path/to/directory/repository_push* is just a folder, it will convert it into a Git repository, push it to your Azure DevOps project and create branches and branch policies. +
 If your folder is a local Git repository, it will just push it to your Azure DevOps project. +
 If your folder is an online Git repository, it will change the url so that next commits will be pushed into your Azure DevOps repository but not on the one already configured, and it will push all your branches at the new URL. +
 
-==== 2nd case d: +
-  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory/repository_push -o https://dev.azure.com/azure_organization -p azure_project -n repository_push -b reference
+===== Subcase d: +
+  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory/repository_push -o https://dev.azure.com/azure_organization -p azure_project -n repository_push -b reference -r -s
 
 If your folder */path/to/directory/repository_push* is just a folder, it will act the exact same way as *2nd case c*. +
-If your folder is a local Git repository, it will use the branch *reference* to create *develop* and *master* (it will replace them if they already exists), then it will just push it to your Azure DevOps project and create the policies defined below. +
-If your folder is an online Git repository, the branch *develop* and *master* will be created the same way as if it was a local git repository, then it will change the URL so that next commits will be pushed into your Azure DevOps repository but not on the one already configured, after that it will push all your branches at the new URL. Finally it will create the policies defined below. +
+If your folder is a local Git repository, it will use the branch *reference* to create *develop* and *master* (it will replace them if they already exists), delete all other branches that the 3 given before (`-r` is set), then it will just push it to your Azure DevOps project and create the policies defined below (`-s` is set). +
+If your folder is an online Git repository, the branch *develop* and *master* will be created the same way as if it was a local git repository, other branches that *master*, *develop* and *reference* will be deleted (`-r`), then it will change the URL so that next commits will be pushed into your Azure DevOps repository but not on the one already configured, after that it will push all your branches at the new URL. Finally it will create the policies defined below(`-s`). +
+
+NOTE: `-r` and `-s` and independent, you can use one without the other it will not affect their use, but they are both dependent to `-b`.
 
 ==== Sample application
 

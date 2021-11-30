@@ -4,16 +4,12 @@
 #
 # Arguments:  -a:        Type of action you want to do: import, create
 #             -n:        name of the repository you want to create (mandatory in the case you choose create,
-#                           in other case if not set it will be the name of the directory given without the path or the name of the repository in the URL
+#                             in other case if not set it will be the name of the directory given without the path or the name of the repository in the URL
 #             -d:        path to the directory where you want to clone your repository or directory you want to push/import in your azure project
 #             -o:        url of your azure organization
 #             -p:        name of you azure project
 #             -g:        URL of the git repository you want to clone (only if you choose the action import)
 #             -b:        If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
-#             -r:       You need to set the -b flag to use this one (it will be ignored if not), when you give a branch as reference when importing a repo, it will delete all other branches.
-#                           (of course nothing happens when creating a new repository or importing a simple directory)
-#             -s:       Set this flag if you want the script to create branches policies with the template this script uses.
-#                           (when importing an already existing git repository you have to set the -b flag, if not, the -s flag is simply ignored).
 #             -f :       If you set this flag it will automatically say yes to every step where user confirmation is required.
 #
 ######################################################################################################
@@ -41,8 +37,6 @@ function help {
   echo "  -p (for project) :      (mandatory) name of you azure project."
   echo "  -g (for giturl) :       (Mandatory if you choose the action import) URL of the git repository you want to clone."
   echo "  -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop."
-  echo "  -r (for remove) :       You need to set the -b flag to use this one (it will be ignored if not), when you give a branch as reference when importing a repo, it will delete all other branches. (of course nothing happens when creating a new repository or importing a simple directory)"
-  echo "  -s (for strategy) :     Set this flag if you want the script to create branches policies with the template this script uses. (when importing an already existing git repository you have to set the -b flag, if not, the -s flag is simply ignored)."
   echo "  -f (for force) :        If you set this flag it will automatically say yes to every step where user confirmation is required."
   exit
 }
@@ -57,9 +51,7 @@ blue='\e[1;34m'
 [ "$*" = "" ] && help
 #We read every arguments given
 force="false"
-remove="false"
-strategy="false"
-while getopts "a:n:d:o:p:g:b:hfrs" flag
+while getopts "a:n:d:o:p:g:b:hf" flag
 do
   case "${flag}" in
     a) action=${OPTARG};;
@@ -70,9 +62,7 @@ do
     g) giturl_argument=${OPTARG};;
     b) branch=${OPTARG};;
     h) help;;
-    f) force="true";;
-    r) remove="true";;
-    s) strategy="true";;
+    f) force="true"
 esac
 done
 
@@ -114,12 +104,19 @@ function create_repo {
   az repos create --name $1 --organization ${2} --project "$3" > ./tmp_json_repo
   MSG_ERROR "Creating repo $1" $?
   repo_id=$(cat  ./tmp_json_repo | grep '"id"' -m1 | cut -d: -f2 | cut -d, -f1 | tr -d \")
-  echo "repo_id: $repo_id"
   echo ""
   echo -e "${blue}Here are all the information about the repository you just created, you can save it in a json file if you feel the need."
   cat ./tmp_json_repo
   rm -f ./tmp_json_repo
   echo -e "--${white}"
+}
+
+function branch_policy {
+  # $1 = repository_id
+  # $2 = project
+  # $3 = organization
+  echo "--"
+
 }
 
 function set_default_branch_and_policies {
@@ -138,7 +135,7 @@ function set_default_branch_and_policies {
   echo ""
   policyMaster=$(az repos policy merge-strategy create --blocking true --branch master --enabled true --repository-id $3 --allow-no-fast-forward false --allow-rebase false --allow-rebase-merge false --allow-squash true --branch-match-type exact --project "${2}" --organization ${1})
   policydevelop=$(az repos policy merge-strategy create --blocking true --branch develop --enabled true --repository-id $3 --allow-no-fast-forward true --allow-rebase false --allow-rebase-merge true  --allow-squash true --branch-match-type exact --project "${2}" --organization ${1})
-  echo -e "${blue}As you put the 's' flag we set the branch policies."
+  echo -e "${blue}As your repository is brand new (it is an empty repository, the sample repository or you just push a regular directory):"
   echo -e "${white}We created a master branch: which is supposed to contain only finished and validated developpement ready to be in production."
   echo -e "We created a develop branch: which is supposed to contain finished development ready to be validate, every feature branch should be created from this branch."
   echo -e "We created a feature branch, this branch is only for the template we use for the name of feature branches."
@@ -182,28 +179,6 @@ function replace_branch_with_reference {
   echo "--"
 }
 
-function delete_branches_not_in {
-  # delete every branches not given in argument
-  # no limit of arguments, you just need to give a reference branch as first argument,
-  # because we cannot delete the branch we are currently in, so wee need to checkout to a branch we want to keep
-  echo "--"
-  echo -e "${blue}Deleting all branches except: $@ ${white}"
-  git checkout $1
-  branch_list=$(git branch -a |  sed 's/\*//g')
-  for i in $branch_list
-  do
-    echo $i
-    if [[ "$@" == *"$i"* ]]
-    then
-      echo "Branch $i given in argument, skipping delete."
-    else
-      echo "Deleting Branch $i"
-      # git branch -d $i
-      MSG_ERROR "Deleting branch $i" $?
-    fi
-  done
-}
-
 function push_existing_directory {
   # $1 = organization
   # $2 = project
@@ -232,8 +207,6 @@ function push_existing_directory {
 
       if [ "$force" = "true" ] || [ "$user_input_branch" = 'Y' ]
       then
-        echo "remove: $remove"
-        [ "$remove" = "true" ] && delete_branches_not_in develop master $6
         replace_branch_with_reference develop $6
         replace_branch_with_reference master $6
       else
@@ -293,15 +266,9 @@ function push_existing_directory {
   echo ""
   git push -u origin --all
   echo ""
-  if [ "$strategy" = "true" ]
+  if [ $isGitRepo -ne 0 ] || [ "$6" != "" ]
   then
-    if [ $isGitRepo -eq 0 ] && [ "$6" = "" ]
-    then
-      echo -e "${yellow}You gave the '-s' flag but without a branch ('-b' flag) and your directory was already a git repository, we skipped the setting of branch policies.${white}"
-    else
-      echo "set_default_branch_and_policies ${1} \"$2\" $4 $3 \"develop\""
-      set_default_branch_and_policies ${1} "$2" $4 $3 "develop"
-    fi
+    set_default_branch_and_policies ${1} "$2" $4 $3 "develop"
   fi
   echo "--"
 }
@@ -329,7 +296,7 @@ then
   else
     if [ "$giturl_argument" = "" ]
     then
-      echo -e "${yellow}No Giturl has been given, the directory $directory will be imported then ${white}"
+      echo -e "${yellow}No Giturl has been given, the directory $directory will be import then ${white}"
       [ "$name" = "" ] && name=$directory_name && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
     else
       [ "$name" = "" ]  && name_tmp=${giturl_argument##*/} && name=$(basename $name_tmp ".git") && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
@@ -346,7 +313,6 @@ create_repo $name $organization "$project"
 
 if [ "$action" = "import" ]
 then
-  ls -l
   if [ "$giturl_argument" = "" ]
   then
     push_existing_directory $organization "$project" $name $repo_id $project_convertido $branch
@@ -359,18 +325,8 @@ then
     else
       echo -e "${yellow}You have given a branch name so only the content of this branch will be imported and we will use our branches policy.${white}"
       echo "Cloning the repository using only the branch $branch"
-      if [ "$remove" = "true" ]
-      then
-        echo "The flag '-r' is detected, cloning only the reference branch: $5."
-        ls -l
-        git clone --branch $branch $giturl_argument $name
-        MSG_ERROR "Cloning the repository using only the branch $branch" $?
-      else
-        echo "The flag '-r' has not been set, cloning the whole repository."
-        ls -l
-        git clone $giturl_argument $name
-        MSG_ERROR "Cloning the repository" $?
-      fi
+      git clone --branch $branch $giturl_argument $name
+      MSG_ERROR "Cloning the repository using only the branch $branch" $?
       cd $name
       MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$pwd'" $?
       # echo "Deleting the .git folder so that we can initialize this repository with our branches"
@@ -390,10 +346,7 @@ then
   git checkout -b develop
   git checkout -b feature/TEAM/featureName
   git push -u origin --all
-  if [ "$strategy" = "true" ]
-  then
-    set_default_branch_and_policies ${organization} "$project" $repo_id $name "develop"
-  fi
+  set_default_branch_and_policies ${organization} "$project" $repo_id $name "develop"
 fi
 
 cd $old_path
