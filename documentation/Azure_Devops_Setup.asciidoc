@@ -1,6 +1,6 @@
 == Activate and prepare Azure DevOps
 
-By the end of this guide, a new project in Azure DevOps will be created.
+By the end of this guide a new project in Azure DevOps will be created.
 
 :url-az-devops: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#sign-up-with-a-personal-microsoft-account
 
