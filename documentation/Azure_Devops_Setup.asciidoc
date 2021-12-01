@@ -1,6 +1,6 @@
 == Activate and prepare Azure DevOps
 
-In this section you will create a new Azure DevOps project.
+By the end of this guide, a new project in Azure DevOps will be created.
 
 :url-az-devops: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#sign-up-with-a-personal-microsoft-account
 
@@ -16,11 +16,7 @@ In this section you will create a new Azure DevOps project.
 
 == *Prerequisites:*
 
-Before you create the project you need an Azure Devops Account, Azure CLI installed and configure, Azure Devops PAT.
-
-If you don't have, create by following the instructions.
-
-. Sign up into {url-az-devops}[Azure DevOps].
+. Sign up into {url-az-devops}[Azure DevOps] (just follow the section `Sign up with a personal Microsoft account`).
 . Install the Azure {url-az-CLI}[CLI].
 . Create an Azure Devops {url-pat-token}[Personal Access Token (PAT)].
 
@@ -67,9 +63,9 @@ bash project_create.sh \
 
 === Quarkus project
 
-create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
+Create a devon4quarkus project with the description 'This is a quarkus application' in an organization called `devon-hangar`.
 
-`bash project_create.sh -p 'devon4quarkus' -o 'devon-hangar' -d 'This is a quarkus application' -v 'public' -t 'xxxxxxxxxxxxxx'`
+`./project_create.sh -p 'devon4quarkus' -o 'devon-hangar' -d 'This is a quarkus application' -v 'public' -t 'xxxxxxxxxxxxxx'`
 
    
 
