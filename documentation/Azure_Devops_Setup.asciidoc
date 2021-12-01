@@ -1,7 +1,8 @@
 == Activate and prepare Azure DevOps
 
+In this section you will create a new Azure DevOps project.
 
-:url-az-devops: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#choose-your-sign-up-option
+:url-az-devops: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#sign-up-with-a-personal-microsoft-account
 
 :url-az-project:  https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#create-a-project
 
@@ -15,9 +16,13 @@
 
 == *Prerequisites:*
 
+Before you create the project you need an Azure Devops Account, Azure CLI installed and configure, Azure Devops PAT.
+
+If you don't have, create by following the instructions.
+
 . Sign up into {url-az-devops}[Azure DevOps].
 . Install the Azure {url-az-CLI}[CLI].
-. Create an Azure Devops {url-pat-token}[Personal Access Token (PAT)] by following Microsoft official guide.
+. Create an Azure Devops {url-pat-token}[Personal Access Token (PAT)].
 
 == *Creating the Azure DevOps project*
 
@@ -25,28 +30,16 @@ The scope of this section is to prepare and activate an Azure DevOps account.
 
 There  are two ways to create an Azure DevOps project:
 
-.  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide].  
+.  Create an Azure DevOps project manually with the web interface following Microsoft's official {url-az-project}[guide]. 
 
-. Create an Azure DevOps project using an automated script, you can find this script in {url-script-url}[`/scripts/account-setup/project_create.sh`]. 
+.. When you create an Azure DevOps project manually, you will need to create its workflow. Learn more about this in the following {url-az-board}[guide].
 
-Additionally you are able to plan and track your work by creating items in {url-az-board}[Azure Boards], you can follow these instruction when you want to accomplish the following task for best practices.
-
+. Create an Azure DevOps project using an automated script, you can find this script in {url-script-url}[`/scripts/account-setup/project_create.sh`] 
 
 == *Setup Azure DevOps using Script*
 
 This script will enable you to create a new project or configure an existing one. Follow the instruction below for more details.
 
-== Syntax
-
-```
-   project_create.sh
-        [-p <String>]
-	[-o <String>]
-        [-d <String>]
-        [-v <String>]
-        [-t <String>]
-
-```
 == Flags
 
 ```
