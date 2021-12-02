@@ -27,6 +27,11 @@ The script located at `/scripts/accounts/aws/create-user.sh` will automatically 
 
 In case you do not have an AWS access key (needed to authenticate through API), follow https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey[this guide] to create it.
 
+=== Usage
+```
+./create-user.sh -u <username> -g <group> [-p <policies...>] [-f <policies file path>] [-a "<AWS access key>"] [-s "<AWS secret key>"] [-r <region>] 
+```
+
 === Flags
 ```
 -u      [Required] Username for the new user
@@ -40,7 +45,7 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 
 === Example
 ```
-./create-user.sh -u "Bob" -g "DevOps" -f "./policies.txt" -a "<accessKeyAWS>" -s "<secretKeyAWS>" -r "eu-west-1" 
+./create-user.sh -u "Bob" -g "DevOps" -f "./policies.txt" -a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
 ```
 NOTE: If the "DevOps" group does not exist, it will be created.
 === After execution
