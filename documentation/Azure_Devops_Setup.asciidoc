@@ -18,7 +18,7 @@ By the end of this guide a new project in Azure DevOps will be created.
 
 . Sign up into {url-az-devops}[Azure DevOps] (just follow the section `Sign up with a personal Microsoft account`).
 . Install the Azure {url-az-CLI}[CLI].
-. Create an Azure Devops {url-pat-token}[Personal Access Token (PAT)].
+. Create an Azure DevOps {url-pat-token}[Personal Access Token (PAT)].
 
 == *Creating the Azure DevOps project*
 
