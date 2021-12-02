@@ -29,7 +29,7 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 
 === Usage
 ```
-./create-user.sh -u <username> -g <group> [-p <policies...>] [-f <policies file path>] [-a "<AWS access key>"] [-s "<AWS secret key>"] [-r <region>] 
+create-user.sh -u <username> -g <group> [-p <policies...>] [-f <policies file path>] [-a "<AWS access key>"] [-s "<AWS secret key>"] [-r <region>] 
 ```
 
 === Flags
