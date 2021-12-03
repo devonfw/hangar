@@ -1,0 +1,16 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    displayName: Build
+    steps:
+    - template: .templates/{language}-build.yml
+    

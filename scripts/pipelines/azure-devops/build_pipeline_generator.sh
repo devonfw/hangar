@@ -9,6 +9,7 @@ done
 
 if test "$1" = "-h"
 then
+    echo ""
     echo "Generates a build pipeline on Azure DevOps from a YAML template according to the project programming language or framework."
     echo ""
     echo "Arguments:"
@@ -18,41 +19,39 @@ then
     exit
 fi
 
-# Argument check
-if test -z "$name" || test -z "$directory"
+white='\e[1;37m'
+green='\e[1;32m'
+
+# Argument check.
+if test -z "$name" || test -z "$language" || test -z "$directory"
 then
     echo "Missing parameters, all flags are mandatory."
     echo "Use -h flag to display help."
     exit
 fi
 
-yamlFile="${language}-build-pipeline.yml"
+cd ../../..
 pipelinesDirectory="${directory}/.pipelines"
-oldPath=$(pwd)
+pipelineFile="${pipelinesDirectory}/azure-pipelines.yml"
 
-cd ${directory}
-# Check if there is a .pipelines directory in the projects's directory. 
-if test ! -d "$pipelinesDirectory"
-then
-    # Creates a folder called .pipelines to store the pipelines.
-    mkdir pipelines
-    mv pipelines .pipelines
-fi
+# Copy .pipelines and .templates into directory.
+echo -e "${green}Copying .pipelines and .templates folder into your directory..."
+echo -e ${white}
+cp -r .pipelines ${directory}
+cp -r .templates ${pipelinesDirectory}
 
-# Copy the yml template into the local repository
-echo "Copying the YAML template into the repository..."
-cd ${oldPath}
-cd ../../../templates
-
-cp ${yamlFile} ${pipelinesDirectory}
+# Especify the corresponding template.
+sed -i "s/{language}/${language}/g" ${pipelineFile}
 
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
-echo "Committing and pushing to Git remote..."
+echo -e "${green}Committing and pushing to Git remote..."
+echo -e ${white}
 cd ${directory}
-git add ${pipelinesDirectory}
+git add .pipelines -f
 git commit -m "Adding build pipeline source YAML"
 git push -u origin --all
 
-# Creation of the pipeline
-echo "Generating the pipeline from the YAML template..."
-az pipelines create --name $name --yaml-path ".pipelines/$yamlFile"
+# Creation of the pipeline.
+echo -e "${green}Generating the pipeline from the YAML template..."
+echo -e ${white}
+az pipelines create --name $name --yaml-path ".pipelines/azure-pipelines.yml"

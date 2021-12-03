@@ -1,0 +1,6 @@
+steps:
+- task: Bash@3
+  displayName: "Build"
+  inputs:
+    targetType: 'inline'
+    script: 'mvn package'
