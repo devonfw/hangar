@@ -12,6 +12,8 @@ By the end of this guide a new project in Azure DevOps will be created.
 
 :url-pat-token: https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page#create-a-pat
 
+:url-az-workflows: https://docs.microsoft.com/en-us/azure/devops/boards/work-items/guidance/choose-process?view=azure-devops&tabs=basic-process#choose-a-basic-agile-scrum-and-cmmi-process
+
 == *Prerequisites:*
 
 . Sign up into {url-az-devops}[Azure DevOps] (Just follow the section `Sign up with a personal Microsoft account`).
@@ -27,6 +29,8 @@ There are two ways of creating an Azure DevOps project :
 * When done manually, you will need to choose a workflow. Learn more about the different options in the {url-az-board}[official documentation].
 
 . Create it in an automated way using the provided script, as shown below.
+
+* When done with the script, you can add the flag `-p` to specify the workflow, if this flag is not set then the "Basic" workflow will be chosen. For more information about the different workflows see the following {url-az-workflows}[link].
  
 == *Creating Azure DevOps project using provided script*
 
@@ -36,27 +40,29 @@ The script located at `scripts/accounts/azure-devops/create-project.sh` enables 
 
 ```
 bash create-project.sh \
-	-p 'my_project' \
+	-n 'my_project' \
 	-o 'organization-org' \
 	-d 'This_is_a_sample_project' \
 	-v 'public' \
 	-t 'xxxxxxxxxxxxxx'
+        -p 'workflow'
 ```
 
 == Flags
 
 ```
-    -p    [Required] Name of the new project.
+    -n    [Required] Name of the new project.
     -d    [Required] Description for the new project.
     -o    [Required] Name of the organization  for which the project will be configured.
-    -v    [Required] Visibility accepted values: private or public.
+    -v    [Required] Visibility. Accepted values: private or public.
     -t    [Required] PAT token to login Azure DevOps.
+    -p               Process that will be used. Accepted values: basic, agile, scrum, cmmi.
 
 ```
 
 == Example
 
-`./create-project.sh -p "Hello World" -d 'This is a sample application' -o "devon-hangar" -v 'public' -t 'myToken'`
+`./create-project.sh -p "Hello World" -d 'This is a sample application' -o "devon-hangar" -v 'public' -t 'myToken' -p agile`
    
 
 
