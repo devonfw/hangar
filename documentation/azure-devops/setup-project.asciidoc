@@ -62,7 +62,7 @@ bash create-project.sh \
 
 == Example
 
-`./create-project.sh -p "Hello World" -d 'This is a sample application' -o "devon-hangar" -v 'public' -t 'myToken' -p agile`
+`./create-project.sh -n "Hello World" -d 'This is a sample application' -o "devon-hangar" -v 'public' -t 'myToken' -p agile`
    
 
 
