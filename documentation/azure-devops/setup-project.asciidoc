@@ -22,9 +22,9 @@ By the end of this guide a new project in Azure DevOps will be created.
 
 == *Creating the Azure DevOps project*
 
-There are two ways of creating an Azure DevOps project :
-
-.  Create it manually using the web interface following {url-az-project}[Microsoft official guide]. 
+There are two ways of creating an Azure DevOps project:
+[loweralpha]
+.  Create it manually using the web interface following {url-az-project}[Microsoft official guide]
 
 * When done manually, you will need to choose a workflow. Learn more about the different options in the {url-az-board}[official documentation].
 
@@ -39,30 +39,30 @@ The script located at `scripts/accounts/azure-devops/create-project.sh` enables 
 == Usage
 
 ```
-bash create-project.sh \
-	-n 'my_project' \
-	-o 'organization-org' \
-	-d 'This_is_a_sample_project' \
-	-v 'public' \
-	-t 'xxxxxxxxxxxxxx'
-        -p 'workflow'
+create-project.sh \
+  -n <name> \
+  -d <description> \
+  -o <organization> \
+  -v <visibility> \
+  -t <PAT> \
+  [-p <workflow>]
 ```
 
 == Flags
 
 ```
-    -n    [Required] Name of the new project.
-    -d    [Required] Description for the new project.
-    -o    [Required] Name of the organization  for which the project will be configured.
-    -v    [Required] Visibility. Accepted values: private or public.
-    -t    [Required] PAT token to login Azure DevOps.
-    -p               Process that will be used. Accepted values: basic, agile, scrum, cmmi.
+-n    [Required] Name of the new project.
+-d    [Required] Description for the new project.
+-o    [Required] Name of the organization  for which the project will be configured.
+-v    [Required] Visibility. Accepted values: private or public.
+-t    [Required] PAT token to login Azure DevOps.
+-p               Process that will be used. Accepted values: basic, agile, scrum, cmmi.
 
 ```
 
 == Example
 
-`./create-project.sh -n "Hello World" -d 'This is a sample application' -o "devon-hangar" -v 'public' -t 'myToken' -p agile`
+`./create-project.sh -n "Hello World" -d "This is a sample application" -o 'devon-hangar' -v 'public' -t 'myToken' -p 'agile'`
    
 
 

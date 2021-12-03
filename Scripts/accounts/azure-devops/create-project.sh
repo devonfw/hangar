@@ -3,7 +3,7 @@
 helpFunction()
 {
    echo ""
-   echo "Usage: $0 -p projectName -d description -o organization -v visibility -t pat_token. "
+   echo "Usage: $0 -n projectName -d description -o organization -v visibility -t pat_token. "
    echo -e "\t-n [Required] Name of the new project."
    echo -e "\t-d [Required] Description for the new project."
    echo -e "\t-o [Required] Name of the organization for which the project will be configured."
