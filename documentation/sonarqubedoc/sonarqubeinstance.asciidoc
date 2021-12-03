@@ -21,17 +21,16 @@ Download the files from `...scripts/terrafom/aws/sonarqube`. Open the file `terr
 
 IMPORTANT: If you do not want to change the parameters, you will need a Keypair with the name `sonarqube`.
 
-Run the following commands on your command prompt.
+Run the following script on your command prompt. 
 
 ```
-terraform init
+execute.sh
 ```
-This command is used to initialize a working directory containing Terraform configuration files.
-
+For inserting new parameters they have to be *Value_name=Parameter* behind execute.sh like in the example below.
 ```
-terraform apply --auto-approve
+exaple:  execute.sh var1=par1 var2=par2 ...
 ```
-This command run the script and creat ec2 instance with Ubuntu in aws and deploy a docker container with a sonarqube image on it. In the comand promter you will see the Ip-Adress of the ec2 instance.
+This script will write the new custom paramaters to the `terraform.tfvars` file. According to this, it will create an ec2 instance with Ubuntu in aws and deploy a Docker container with a sonarqube image on it.  On the command line, you will see the IP address of the ec2 instance.
 
 Once the deployment has finished type `+http://localhost:9000+`(replace localhost with the ec2 instance IP-Address from the output on the command prompt) in your browser and you will have access to your SonarQube. The default values are :
 
