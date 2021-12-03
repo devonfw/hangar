@@ -25,7 +25,7 @@ do
 done
 
 # Print helpFunction in case parameters are empty
-if [ -z "$projectName" ] || [ -z "$description" ] || [ -z "$organization" ] || [ -z "$visibility" ] || [ -z "$pat_token" ] 
+if [ -z "$projectname" ] || [ -z "$description" ] || [ -z "$organization" ] || [ -z "$visibility" ] || [ -z "$pat_token" ] 
 then
    echo "ERROR: Some required parameters are missing.";
    helpFunction
