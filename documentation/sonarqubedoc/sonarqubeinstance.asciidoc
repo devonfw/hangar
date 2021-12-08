@@ -4,7 +4,7 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 
 == Getting Started
 === Prerequisites
-* https://learn.hashicorp.com/collections/terraform/aws-get-started?utm_source=terraform_io&utm_content=terraform_io_footer[Install Terraform].
+* https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started[Install Terraform].
 
 * https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html[Install the AWS CLI].
 
