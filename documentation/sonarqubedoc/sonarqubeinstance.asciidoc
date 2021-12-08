@@ -8,7 +8,7 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 
 * https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
 
-== The scripts
+== Relevant files
 
 * `main.tf` this script will deploy the AWS infrastructure.
 * `datascript.sh` this script will install Docker on your EC2 instance, and deploy a container running SonarQube.
