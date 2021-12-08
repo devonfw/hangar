@@ -12,7 +12,7 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 
 * `main.tf` contains declarative definition written in HCL of AWS infrastructure.
 * `datascript.sh` this script will install Docker on your EC2 instance, and deploy a container running SonarQube.
-* `variables.tf` this script contains the variables for the script main.tf.
+* `variables.tf` contains variable definition for `main.tf`.
 * `terraform.tfvars` this script contains the parameters for the variables (changeable).
 
 == Usage
