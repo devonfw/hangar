@@ -4,16 +4,16 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 
 == Getting Started
 === Prerequisites
-* https://learn.hashicorp.com/collections/terraform/aws-get-started?utm_source=terraform_io&utm_content=terraform_io_footer[Install Terraform].
+* https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started[Install Terraform].
 
-* https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html[Install the AWS CLI].
+* https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
 
-== The scripts
+== Relevant files
 
-* `main.tf` this script will deploy the AWS infrastructure.
-* `datascript.sh` this script will install Docker on your EC2 instance, and deploy a container running SonarQube.
-* `variables.tf` this script contains the variables for the script main.tf.
-* `terraform.tfvars` this script contains the parameters for the variables (changeable).
+* `main.tf` contains declarative definition written in HCL of AWS infrastructure.
+* `setup_sonarqube.sh` script to be run on EC2 instance that installs and deploys a container running SonarQube.
+* `variables.tf` contains variable definition for `main.tf`.
+* `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
 
 == Usage
 
