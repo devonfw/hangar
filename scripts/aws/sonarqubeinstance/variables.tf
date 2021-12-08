@@ -23,7 +23,7 @@ variable "instance_type" {
   description = "instance_type"
 }
 
-variable "aim_ubuntu_20_04" {
+variable "ami_ubuntu_20_04" {
   type = string
   description = "deploy Ubuntu 20.04 LTS"
 }
