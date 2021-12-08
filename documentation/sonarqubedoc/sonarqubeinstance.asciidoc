@@ -1,6 +1,6 @@
 
 = Setting up a SonarQube instance in AWS
-The scope of this section is to deploy an AWS instance with SonarQube. A script has been created in order to assist you in the launching of a SonarQube instance with an embedded database.
+The scope of this section is to deploy an AWS EC2 instance running SonarQube. A script has been created in order to assist you in the launching of a SonarQube instance with an embedded database.
 
 == Getting Started
 === Prerequisites
