@@ -13,7 +13,7 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 * `main.tf` contains declarative definition written in HCL of AWS infrastructure.
 * `setup_sonarqube.sh` script to be run on EC2 instance that installs and deploys a container running SonarQube.
 * `variables.tf` contains variable definition for `main.tf`.
-* `terraform.tfvars` this script contains the parameters for the variables (changeable).
+* `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
 
 == Usage
 
