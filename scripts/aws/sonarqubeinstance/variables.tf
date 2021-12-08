@@ -28,11 +28,6 @@ variable "ami_ubuntu_20_04" {
   description = "deploy Ubuntu 20.04 LTS"
 }
 
-variable "aim_ubuntu_18_04" {
-  type = string
-  description = "deploy Ubuntu 18.04 LTS"
-}
-
 variable "key_name" {
   type = string
   description = "Name of the key"
