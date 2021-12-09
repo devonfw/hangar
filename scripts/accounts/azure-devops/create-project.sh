@@ -9,7 +9,7 @@ helpFunction()
    echo -e "\t-o [Required] Name of the organization for which the project will be configured."
    echo -e "\t-v [Required] Visibility. Accepted values: private, public."
    echo -e "\t-t [Required] PAT token to login Azure DevOps."
-   echo -e "\t-p            Process that will be used. Accepted values: basic, agile, scrum, cmmi."
+   echo -e "\t-w            Process workflow that will be used. Accepted values: basic, agile, scrum, cmmi. Default: basic."
    exit 1 # Exit script after printing help.
 }
 
