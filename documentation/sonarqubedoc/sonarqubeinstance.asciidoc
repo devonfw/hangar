@@ -14,25 +14,30 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 * `setup_sonarqube.sh` script to be run on EC2 instance that installs and deploys a container running SonarQube.
 * `variables.tf` contains variable definition for `main.tf`.
 * `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
+* `addparameter.sh` add values to the terraform.tfvars.
+* `execute.sh` creat the AWS instance with a Docker container wich run SonarQube. 
 
 == Usage
 
-Download the files from `...scripts/terrafom/aws/sonarqube`. Open the file `terraform.tfvars` and edit the needed parameters. 
+Download the files from `...scripts/terrafom/aws/sonarqube`. Open the file `terraform.tfvars` and edit the needed parameters. +
+For inserting new parameters you can also use `addparameter.sh` followed by a parameter name and value *"--Value_name=Parameter"* like in the example below. +
+
+*EXAMPLE:*
+```
+addparameter.sh --var1=par1 --var2=par2 ...
+```
+This script will write the new custom parameters to the `terraform.tfvars` file.  
 
 IMPORTANT: If you do not want to change the parameters, you will need a Keypair with the name `sonarqube`.
 
-Run the following script on your command prompt. 
+Run the following script on your command prompt to deploy SonarQube Instance. 
 
 ```
 execute.sh
 ```
-For inserting new parameters they have to be *Value_name=Parameter* behind execute.sh like in the example below.
-```
-exaple:  execute.sh var1=par1 var2=par2 ...
-```
-This script will write the new custom paramaters to the `terraform.tfvars` file. According to this, it will create an ec2 instance with Ubuntu in aws and deploy a Docker container with a sonarqube image on it.  On the command line, you will see the IP address of the ec2 instance.
+According to this, it will create an ec2 instance with Ubuntu in aws and deploy a Docker container with a SonarQube image on it.  On the command line, you will see the IP address of the EC2 instance.
 
-Once the deployment has finished type `+http://localhost:9000+`(replace localhost with the ec2 instance IP-Address from the output on the command prompt) in your browser and you will have access to your SonarQube. The default values are :
+Once the deployment has finished type `+http://localhost:9000+`(replace localhost with the EC2 instance IP-Address from the output on the command prompt) in your browser and you will have access to your SonarQube. The default login values are:
 
 CAUTION: username:   *admin* +
  password:   *admin*

@@ -5,7 +5,7 @@ provider "aws" {
 
 #create VPC
 resource "aws_vpc" "sq_vpc" {
-  cidr_block = var.vpc_cdir_block
+  cidr_block = var.vpc_cidr_block
 
 
   tags = {
@@ -42,7 +42,7 @@ resource "aws_route" "sqroute" {
 #create subnet
 resource "aws_subnet" "subnet_sq" {
   vpc_id     = aws_vpc.sq_vpc.id
-  cidr_block = var.subnet_cdir_block
+  cidr_block = var.subnet_cidr_block
 
 
   tags = {
@@ -110,7 +110,7 @@ resource "aws_security_group" "allow_web_sq" {
 #networkinterface
 resource "aws_network_interface" "sqnic" {
   subnet_id       = aws_subnet.subnet_sq.id
-  private_ips     = [var.nic_privat_ip]   
+  private_ips     = [var.nic_private_ip]   
   security_groups = [aws_security_group.allow_web_sq.id]
 
 
@@ -123,13 +123,13 @@ resource "aws_network_interface" "sqnic" {
 resource "aws_eip" "one" {
   vpc                       = true
   network_interface         = aws_network_interface.sqnic.id
-  associate_with_private_ip = var.nic_privat_ip 
+  associate_with_private_ip = var.nic_private_ip 
   depends_on                = [aws_internet_gateway.sq_gateway]
 }
 
 #ubuntu server
 resource "aws_instance" "sq-server" {
-  ami = var.aim_ubuntu_20_04 
+  ami = var.ami_ubuntu_20_04 
   instance_type = var.instance_type
   key_name      = var.key_name
 

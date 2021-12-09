@@ -1,20 +1,20 @@
 variable "aws_region" {
   type = string
-  description = "wich reson you want to deploy on aws"
+  description = "location of the aws infrastructure deployment"
 }
 
-variable "vpc_cdir_block" {
+variable "vpc_cidr_block" {
   type = string
-  description = "defin your cdir_block"
+  description = "define your vpc cidr block"
 }
 
-variable "subnet_cdir_block" {
+variable "subnet_cidr_block" {
   type = string
-  description = "subnet cdir block"
+  description = "define your subnet cidr block"
 }
-variable "nic_privat_ip" {
+variable "nic_private_ip" {
     type = string
-    description = "privat ip in the range from the subnet cdir "
+    description = "the private ip needs to be within the subnet cidr range "
   
 }
 
