@@ -22,13 +22,10 @@ By the end of this guide a new project in Azure DevOps will be created.
 
 There are two ways of creating an Azure DevOps project:
 [loweralpha]
-.  Create it manually using the web interface following {url-az-project}[Microsoft official guide]
-
-* When done manually, you will need to choose a workflow. Learn more about the different options in the {url-az-board}[official documentation].
-
+. Create it manually using the web interface following {url-az-project}[Microsoft official guide]
 . Create it in an automated way using the provided script, as shown below.
 
-* When done with the script, you can add the flag `-p` to specify the workflow, if this flag is not set then the "Basic" workflow will be chosen. For more information about the different workflows see the following {url-az-workflows}[link].
+NOTE:  Both when done manually and when using the script with `-p` flag, you will need to choose a process workflow. Learn more about the different options in the {url-az-workflows}[official documentation]. By default, "Basic" workflow is chosen.
  
 == *Creating Azure DevOps project using provided script*
 
