@@ -54,7 +54,7 @@ create-project.sh \
 -n    [Required] Name of the new project.
 -d    [Required] Description for the new project.
 -o    [Required] Name of the organization  for which the project will be configured.
--v    [Required] Visibility. Accepted values: private or public.
+-v    [Required] Visibility. Accepted values: private, public.
 -t    [Required] PAT token to login Azure DevOps.
 -p               Process that will be used. Accepted values: basic, agile, scrum, cmmi.
 
