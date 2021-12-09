@@ -40,7 +40,7 @@ create-project.sh \
   -o <organization> \
   -v <visibility> \
   -t <PAT> \
-  [-p <workflow>]
+  [-w <process workflow>]
 ```
 
 == Flags
