@@ -20,7 +20,7 @@ By the end of this guide a new project in Azure DevOps will be created.
 . Install the {url-az-CLI}[Azure CLI].
 . Create an Azure DevOps {url-pat-token}[Personal Access Token (PAT)].
 
-== *Creating the Azure DevOps project*
+== Creating the Azure DevOps project
 
 There are two ways of creating an Azure DevOps project:
 [loweralpha]
