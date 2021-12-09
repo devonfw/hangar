@@ -21,7 +21,7 @@ do
       o ) organization="$OPTARG" ;;
       v ) visibility="$OPTARG" ;;
       t ) pat_token="$OPTARG" ;;
-      p ) process="$OPTARG" ;;
+      w ) process="$OPTARG" ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
    esac
 done
