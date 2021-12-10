@@ -5,7 +5,6 @@ matrix:
     d: en_US
   sources:
   - documentation/*.asciidoc
-  - documentation/*.md
   dictionary:
     wordlists:
     - en-devonfw.dict
