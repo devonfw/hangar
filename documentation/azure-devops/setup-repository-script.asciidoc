@@ -6,9 +6,10 @@ In this section we will create a repository on Azure DevOps in an automated way 
 NOTE: Here you will see two types of repository, Git repositories and Azure DevOps repositories, it is important to know that Azure DevOps repositories are still Git repositories, but in this documentation we will use Azure DevOps repository to talk about the one we want to create, and Git repository is about any other Git repository (it can be host on Github, on your local computer, on another Azure DevOps project ...)
 
 == Prerequisites
-In this part of the guide, we assume you have setup the Azure DevOps project and have Azure CLI installed and configured. If it is not the case, please go back and do so.
+. Install the https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest[Azure CLI].
 
-Additionally, you will need Git. In case you don't have it already installed, please refer to the https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[official installation documentation].
+. Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
+
 
 == Using the script to create the repository
 
@@ -16,16 +17,13 @@ The script is located at `scripts/repositories/azure-devops/create_repo.bash`.
 
 It can be used in different ways:
 
-  - 1. Create an empty repository with just a README file and clone it to your computer into the directory you set.
+. Create an empty repository with just a README file and clone it to your computer into the directory you set (use this case if you want to create a brand new repository).
 
-  - 2. Import an already existing directory or Git repository into your project giving a path or an URL.
+Import an already existing directory or Git repository into your project giving a path or an URL (use this case if you already have a project and want to import it into Azure DevOps).
 
 
 NOTE: For the first case, and the second case if your directory was not a Git repository, the repository is created with already some branches and branch policies. You can of course personalize them if needed.
 
-
-Use the 1st case if this is a brand new repository. +
-Use the 2nd case if you already started your code. +
 
 === Syntax +
 
@@ -61,17 +59,16 @@ Use the 2nd case if you already started your code. +
 
 ==== Additional information
 
-For the `-d`: The path can be relative or absolute.  +
-You can use paths defined with backslashes because they will be converted into forward slashes, but be careful to write the path inside simple quote (or bash will try to interpret the backslashes).
+* For the `-d`: The path can be relative or absolute. You can use paths defined with backslashes because they will be converted into forward slashes, but be careful to write the path inside simple quote (or bash will try to interpret the backslashes).
 
-For the `-o`: Be careful, this parameter is not the name of your organization, but the URL of it.
+* For the `-o`: Be careful, this parameter is not the name of your organization, but the URL of it.
 
-When you use the second case, If the `-g` flag is set it will import the Git repository with the URL and clone your repository inside the path set with the `-d` flag, if the `-g` flag is not set it will import the directory set with the `-d` flag.
+* When you use the second case, If the `-g` flag is set it will import the Git repository with the URL and clone your repository inside the path set with the `-d` flag, if the `-g` flag is not set it will import the directory set with the `-d` flag.
 
-For the `-r` flag, it will be ignored if you choose the action create, or you when try to import a local directory (because there is no existing branches before the execution of the script). +
-The flag will also be ignored if you did not mention a reference branch with the `-b` flag.
+* The `-r` flag will be ignored if you choose the action create, or when trying to import a local directory (because there is no existing branches before the execution of the script). The flag will also be ignored if you did not mention a reference branch with the `-b` flag.
 
-The `-s` flag is ignored if you re trying to import an existing git repository and you did not set a branch with the `-b` flag.
+* The `-s` flag is ignored if you are trying to import an existing git repository and you did not set a branch with the `-b` flag.
+
 
 === Usage
 
@@ -79,12 +76,15 @@ The `-s` flag is ignored if you re trying to import an existing git repository a
 ==== 1st case: Creating a new repo +
 
 ===== Subcase a +
-  /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure
+  ./create_repo.bash -a 'create' -d <path to directory> -o https://dev.azure.com/<organization> -p <azure project> -n <repository name>
 
-This command creates a repository on Azure DevOps and clones it into our local directory, the creates *develop* and *master* branch.
+
+This command creates a repository on Azure DevOps and clones it into our local directory, it creates *develop* and *master* branches.
+
 
 ===== Subcase b +
-  /path/to/script/create_repo.bash -a 'create' -d /path/to/directory -o https://dev.azure.com/azure_organization -p azure_project -n repository_azure -s
+  ./create_repo.bash -a 'create' -d <path to directory> -o https://dev.azure.com/<organization> -p <azure project> -n <repository name> -s
+
 
 This command creates the repository and clones it the same way the Subcase *a* does it, then it creates the branch policies (see <<Branches and policies>> for more informations).
 
@@ -92,37 +92,36 @@ This command creates the repository and clones it the same way the Subcase *a* d
 For the 2nd case, we will not give an exhaustive list of every combination of argument it is possible to use, but the list we give you will allow you to understand what you can do with them.
 
 ===== Subcase a +
-  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git
+  ./create_repo.bash -a 'import' -d <path to directory> -o  https://dev.azure.com/<organization> -p <project name> -n <repository name> -g <git url>
 
-It will import all the content of the repository stored at that url `\https://github.com/user/repository.git` under the name *repository_import*, if no name would have been set, the repository would have been imported under the name *repository* (it uses the url to know the name). +
-Then the repository is cloned inside the folder */path/to/directory*. +
+This will import all the content of the repository stored at that URL `<git url>` under the name *<repository name>*, if no name is set, the repository will be imported under the name *repository* (it uses the URL to know the name). +
+Then the repository is cloned inside the folder *<path to directory>*. +
 
-NOTE: Importing a Git repository into Azure DevOps just imports the content (branchs, files ...), but once the repository is imported there is no link between them , any modification made on the original repo will not apply on your Azure DevOps project (and the other way around is also true). +
+NOTE: Importing a Git repository into Azure DevOps just imports the content (branchs, files ...), but once the repository is imported there is no link between them, any modification made on the original repo will not apply on your Azure DevOps project (and the other way around is also true). +
+
 
 ===== Subcase b +
-  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory -o  https://dev.azure.com/azure_organization -p azure_project -n repository_import -g https://github.com/user/repository.git -b reference -s -r
+  ./create_repo.bash -a 'import' -d <path to directory>-o  https://dev.azure.com/<organization> -p <project name> -n <repository name> -g <git url> -b <reference branch> -s -r
 
-It will first import the repository stored at the url given the same way as it would in Subcase *a*, then as a reference branch is given, it will create (or replace if they already exist) *master* and *develop* from this *reference* branch, then as the `-s` flag is set it will create the branch policies detailed here <<Branches and policies>>. As the `-r` flag is set, all branches except *reference*, *master* and *develop* will be deleted.
+This will first import the repository stored in the given URL the same way as it would in subcase *a*, then as a reference branch is given, it will create (or replace if they already exist) *master* and *develop* from this *<reference branch>*, then as the `-s` flag is set it will create the branch policies detailed here <<Branches and policies>>. As the `-r` flag is set, all branches except *<reference branch>*, *master* and *develop* will be deleted.
+
 
 ===== Subcase c: +
-  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory/repository_push -o https://dev.azure.com/azure_organization -p azure_project -n repository_push
+  ./create_repo.bash -a 'import' -d <path to directory> -o https://dev.azure.com/<organization> -p <project name> -n <repository name>
 
-If your folder */path/to/directory/repository_push* is just a folder, it will convert it into a Git repository, push it to your Azure DevOps project and create *master* and *develop*. +
+If your folder *<path to directory>* is just a folder, it will convert it into a Git repository, push it to your Azure DevOps project and create *master* and *develop* branches. +
 If your folder is a local Git repository, it will just push it to your Azure DevOps project. +
-If your folder is an online Git repository, it will change the url so that next commits will be pushed into your Azure DevOps repository but not on the one already configured, and it will push all your branches at the new URL. +
+If your folder is an online Git repository, it will change the remote URL so that future commits will be pushed into your Azure DevOps repository but not on the one already configured, and it will push all your branches at the new URL. +
+
 
 ===== Subcase d: +
-  /path/to/script/create_repo.bash -a 'import' -d /path/to/directory/repository_push -o https://dev.azure.com/azure_organization -p azure_project -n repository_push -b reference -r -s
+  ./create_repo.bash -a 'import' -d <path to directory> -o https://dev.azure.com/<organization> -p <project name> -n <repository name> -b <reference branch> -r -s
 
-If your folder */path/to/directory/repository_push* is just a folder, it will act the exact same way as *2nd case c*. +
-If your folder is a local Git repository, it will use the branch *reference* to create *develop* and *master* (it will replace them if they already exists), delete all other branches that the 3 given before (`-r` is set), then it will just push it to your Azure DevOps project and create the policies defined below (`-s` is set). +
-If your folder is an online Git repository, the branch *develop* and *master* will be created the same way as if it was a local git repository. Any other branch than *master*, *develop* and *reference* will be deleted (`-r`), then it will change the URL so that next commits will be pushed into your Azure DevOps repository but not on the one already configured, after that it will push all your branches at the new URL. Finally it will create the policies defined below(`-s`). +
+If your folder *<path to directory>* is just a folder, it will act the exact same way as *2nd case c*. +
+If your folder is a local Git repository, it will use *<reference branch>* to create *develop* and *master* (it will replace them if they already exists), delete all other branches that the 3 given before (`-r` is set), then it will just push it to your Azure DevOps project and create the policies defined below (`-s` is set). +
+If your folder is an online Git repository, the branch *develop* and *master* will be created the same way as if it was a local git repository. Any other branch than *master*, *develop* and *<reference branch>* will be deleted (`-r`), then it will change the URL so that future commits will be pushed into your Azure DevOps repository but not on the one already configured, after that it will push all your branches at the new URL. Finally it will create the policies defined below (`-s`). +
 
-NOTE: `-r` and `-s` and independent, you can use one without the other it will not affect their use, but they are both dependent to `-b`.
-
-==== Sample application
-
-A repository containing a sample application exists, if you want to import it to your project, use the `2nd case a` with the URL: https://github.com/devonfw-sample/devon4quarkus-reference .
+NOTE: `-r` and `-s` are independent, you can use one without the other it will not affect their use, but they are both dependent to `-b`.
 
 == Branches and policies
 
