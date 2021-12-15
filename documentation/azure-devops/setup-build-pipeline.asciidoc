@@ -2,6 +2,8 @@
 
 In this section we will create a build pipeline for compiling project code. This pipeline will be configured in order to be triggered every time a commit to the Azure DevOps repository is done, regardless of which branch it is made on.
 
+The creation of the pipeline will follow the projets worklfow, with what a new branch called `feature/build-pipeline`will be created and the YAML file for the pipeline will be pushed to  this branch.
+
 The script located at `/scripts/pipelines/azure-devops/build_pipeline_generator.sh` will automatically create a build pipeline based on a YAML template appropiate for the project programming language or framework.
 
 == Prerequisites

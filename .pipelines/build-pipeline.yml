@@ -1,0 +1,14 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Bash@3
+  displayName: "Build"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/.scripts/build.sh'
+    
