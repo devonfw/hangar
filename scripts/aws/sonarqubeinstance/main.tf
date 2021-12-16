@@ -13,7 +13,7 @@ resource "aws_vpc" "sq_vpc" {
   }
 }
 
-#creat internet gateway
+#create internet gateway
 resource "aws_internet_gateway" "sq_gateway" {
   vpc_id = aws_vpc.sq_vpc.id
 
@@ -49,7 +49,7 @@ resource "aws_subnet" "subnet_sq" {
     Name = "sqsubnet"
   }
 }
-#routtable assoiation
+#route table association
 resource "aws_route_table_association" "a" {
   subnet_id      = aws_subnet.subnet_sq.id
   route_table_id = aws_route_table.sqrouttable.id

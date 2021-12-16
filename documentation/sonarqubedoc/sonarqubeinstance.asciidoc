@@ -1,5 +1,6 @@
 
 = Setting up a SonarQube instance in AWS
+
 The scope of this section is to deploy an AWS EC2 instance running SonarQube. A script has been created in order to assist you in the launching of a SonarQube instance with an embedded database.
 
 == Getting Started
@@ -15,7 +16,7 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 * `variables.tf` contains variable definition for `main.tf`.
 * `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
 * `addparameter.sh` add values to the terraform.tfvars.
-* `execute.sh` creat the AWS instance with a Docker container wich run SonarQube. 
+* `execute.sh` create the AWS EC2 instance with a Docker container which run SonarQube. 
 
 == Usage
 
@@ -35,7 +36,7 @@ Run the following script on your command prompt to deploy SonarQube Instance.
 ```
 execute.sh
 ```
-According to this, it will create an ec2 instance with Ubuntu in aws and deploy a Docker container with a SonarQube image on it.  On the command line, you will see the IP address of the EC2 instance.
+According to this, it will create an EC2 instance with Ubuntu in AWS and deploy a Docker container with a SonarQube image on it.  On the command line, you will see the IP address of the EC2 instance.
 
 Once the deployment has finished type `+http://localhost:9000+`(replace localhost with the EC2 instance IP-Address from the output on the command prompt) in your browser and you will have access to your SonarQube. The default login values are:
 
