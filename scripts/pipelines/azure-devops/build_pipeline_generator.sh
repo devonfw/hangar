@@ -35,7 +35,7 @@ fi
 cd ../../..
 pipelinesDirectory="${directory}/.pipelines"
 pipelineFile="${pipelinesDirectory}/build-pipeline.yml"
-scriptsDirectory="${pipelinesDirectory}/.scripts"
+scriptsDirectory="${pipelinesDirectory}/scripts"
 hangarPath=$(pwd)
 
 # Create the new branch.
@@ -51,7 +51,7 @@ echo -e ${white}
 cp -r .pipelines ${directory}
 
 cd ${directory}/.pipelines
-mkdir .scripts
+mkdir scripts
 cd ${hangarPath}/.scripts
 cp "${language}-build.sh" "${scriptsDirectory}/build.sh"
 

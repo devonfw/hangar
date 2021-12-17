@@ -3,6 +3,9 @@ trigger:
     include:
     - '*'
 
+variables:
+  targetPath: target
+
 pool:
   vmImage: ubuntu-latest
 
@@ -10,5 +13,8 @@ steps:
 - task: Bash@3
   displayName: "Build"
   inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/.scripts/build.sh'
-    
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/build.sh'
+
+- publish: $(Build.Repository.LocalPath)/$(targetPath)
+  displayName: "Publish Artifact"
+  artifact: build
