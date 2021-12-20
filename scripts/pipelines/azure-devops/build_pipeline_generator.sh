@@ -34,7 +34,6 @@ fi
 
 cd ../../..
 pipelinesDirectory="${directory}/.pipelines"
-pipelineFile="${pipelinesDirectory}/build-pipeline.yml"
 scriptsDirectory="${pipelinesDirectory}/scripts"
 hangarPath=$(pwd)
 
@@ -45,13 +44,15 @@ cd ${directory}
 git checkout -b feature/build-pipeline
 cd ${hangarPath}
 
-# Copy .pipelines and .scripts into directory.
-echo -e "${green}Copying .pipelines and .scripts folder into your directory..."
+# Copy the corresponding YAML and script into the directory.
+echo -e "${green}Copying the corresponding YAML and script into your directory..."
 echo -e ${white}
-cp -r .pipelines ${directory}
-
-cd ${directory}/.pipelines
+cd ${directory}
+mkdir .pipelines
+cd ${pipelinesDirectory}
 mkdir scripts
+cd ${hangarPath}/.pipelines
+cp "build-pipeline.yml" "${pipelinesDirectory}/build-pipeline.yml"
 cd ${hangarPath}/.scripts
 cp "${language}-build.sh" "${scriptsDirectory}/build.sh"
 
