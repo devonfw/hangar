@@ -81,7 +81,7 @@ NOTE: At least one policies flag (-p or -f) is required.
 ```
 ./verify-account-policies.sh -u "Bob" -f "./policies.txt" -a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
 ```
-After execution, provided policies will be shown preceded by an "OK" or "FAILED" depending on the attachment status.
+After execution, provided policies will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
 
 == Configure AWS CLI [[configure-cli]]
 Once you have been provided with an IAM user, setup the AWS CLI using the following command:

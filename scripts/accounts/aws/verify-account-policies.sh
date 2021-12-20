@@ -34,6 +34,7 @@ then
     exit
 fi
 
+
 #AWS credentials setup
 if [ -n "$access_key" ]  && [ -n "$secret_key" ];
 then
@@ -78,6 +79,10 @@ echo "Getting user-specific policies.."
 user_policies=($(aws iam list-attached-user-policies --user-name $username --query 'AttachedPolicies[].[PolicyArn]' --output text))
 all_policies=( "${groups_policies[@]}" "${user_policies[@]}")
 
+green='\e[1;32m'
+red='\e[0;31m'
+white='\e[1;37m'
+
 #Inline policies check
 if [ -n "$policies" ];
 then
@@ -88,10 +93,12 @@ then
         policy_exists=$(printf '%s\n' "${all_policies[@]}" | grep "$policy_to_check")
         if [ -n "$policy_exists" ];
         then
-            echo "OK        $policy_to_check"
+            echo -e "${green}OK        $policy_to_check"
         else
-            echo "FAILED        $policy_to_check"
+            echo -e "${red}FAILED        $policy_to_check"
+            exit 1;
         fi
+        echo -e ${white}
     done
 fi
 
@@ -106,10 +113,12 @@ then
         policy_exists=$(printf '%s\n' "${all_policies[@]}" | grep "$policy_to_check")
         if [ -n "$policy_exists" ];
         then
-            echo "OK        $policy_to_check"
+            echo -e "${green}OK        $policy_to_check"
         else
-            echo "FAILED        $policy_to_check"
+            echo -e "${red}FAILED        $policy_to_check"
+            exit 1;
         fi
+        echo -e ${white}
     done
 fi
 
