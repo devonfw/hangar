@@ -129,7 +129,7 @@ resource "aws_eip" "one" {
 
 #ubuntu server
 resource "aws_instance" "sq-server" {
-  ami = var.ami_ubuntu_20_04 
+  ami = data.aws_ami.ubuntu_20_04.id 
   instance_type = var.instance_type
   key_name      = var.key_name
 
@@ -148,6 +148,27 @@ resource "aws_instance" "sq-server" {
   }
 }
 
+#Get Ubuntu 20.04 AMI for EC Instanz
+data "aws_ami" "ubuntu_20_04" {
+    most_recent = true
+ 
+    filter {
+        name   = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    }
+ 
+    filter {
+        name   = "virtualization-type"
+        values = ["hvm"]
+    }
+ 
+    filter {
+        name   = "architecture"
+        values = ["x86_64"]
+    }
+ 
+    owners = ["099720109477"] # Canonical official
+}
 
 #outputs
 output "elastic-IP" {
