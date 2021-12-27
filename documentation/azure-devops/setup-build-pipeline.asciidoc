@@ -1,34 +1,41 @@
 = Setting up a Build Pipeline on Azure DevOps
 
-In this section we will create a build pipeline for compiling project code. The script located at `\scripts\pipelines\azure-devops\build_pipeline_generator.sh` will automatically create a build pipeline based on a yml template.
+In this section we will create a build pipeline for compiling project code. This pipeline will be configured in order to be triggered every time there is a commit to the Azure DevOps repository, regardless of which branch it is made on.
+
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
+
+Following the project workflow, a Pull Request will be created in order to merge this new branch (`feature/build-pipeline`) into the specified branch using the `-b` flag.
+
+The script located at `/scripts/pipelines/azure-devops/build_pipeline_generator.sh` will automatically create thi snew branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework and create the Pull Request.
 
 == Prerequisites
 
-This script will copy the corrsponding yml template into your local repository and push into Azure DevOps, so it is necessary that you have in your local repository all the changes done in your Azure DevOps repository. In order to have all the changes execute `git pull` inside your local repository.
+This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
 
 == The script
-
 
 === Flags
 ```
     -n    [Required] Name that will be set to the build pipeline.
     -l    [Required] Language or framework of the project.
-    -d    [Required] Local directory of your project (the path should be using '/' and not '\'). 
+    -d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    -b    [Required] Name of the branch for which the Pull Request will be created.
+```
+
+=== Usage
+
+```
+    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path> -b <branch>
 ```
 
 === Examples
 
-Executing the script: +
+==== Quarkus project
 
 ```
-    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path>
+    ./build_pipeline_generator.sh -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop
 ```
 
-Case study:  +
+CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
-I have a quarkus project in C:/Users/<my_user>/Desktop/quarkus-project and in my Azure DevOps repository, and I want to generate a build pipeline in order to build my project.
-
-```
-    ./build_pipeline_generator.sh -n 'quarkus-project-build' -l 'quarkus' -d C:/Users/<my_user>/Desktop/quarkus-project
-```
-WARNING: Remember to write the path to the local repository with '/' and not '\'.
+CAUTION: After the execution you will have a new Pull Request in your Azure DevOps project (`Repos > Pull requests`), remember to accept this Pull Request in order to merge the changes into the desired branch. 
