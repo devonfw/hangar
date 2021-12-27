@@ -8,31 +8,57 @@ toc::[]
 * Step#1 - You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
 * Step#2 - Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
 * Step#3 - Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
-  - `sudo docker login -u <username>`
-  - Ex: `sudo docker login -u sundharakanthan`
-* Step#4 - Use the following command to pull the docker container image from Docker Hub to local machine.
-  - `sudo docker pull hello-world`
-  - Ex: `sudo docker pull sundharakanthan/nodejssampleprj`
-* Step#5 - Use the following command to push an image to private repository.
-  - `sudo docker push <username>/<imagename>`
-  - Ex: 
 [source,ruby]
 ----
-	sudo docker images
-	sudo docker tag nodejssampleprj sundharakanthan/nodejssampleprj:v1.1.1.1
-	sudo docker images
-	sudo docker pull sundharakanthan/nodejssampleprj:v1.1.1.1
+   sudo docker login -u <username>
+----
+   - Ex: 
+[source,ruby]
+----
+   sudo docker login -u sundharakanthan
+----
+* Step#4 - Use the following command to pull the docker container image from Docker Hub to local machine.
+[source,ruby]
+----
+   sudo docker pull hello-world
+----
+   - Ex: 
+[source,ruby]
+----
+   sudo docker pull sundharakanthan/nodejssampleprj
+----
+* Step#5 - Use the following command to push an image to private repository.
+[source,ruby]
+----
+   sudo docker push <username>/<imagename>
+----
+- Ex: 
+[source,ruby]
+----
+   sudo docker images
+   sudo docker tag nodejssampleprj sundharakanthan/nodejssampleprj:v1.1.1.1
+   sudo docker images
+   sudo docker pull sundharakanthan/nodejssampleprj:v1.1.1.1
 ----
 * Going back to our Docker Hub account, we can see the new tag is stored in our private repository [https://hub.docker.com/u/sundharakanthan].
 
-== Docker Pull/Push Commands 
+== Docker Pull/Push Commands
+* Here are some optional commands which we would follow in any of our projects.
+
+1. To pull the hello-world container to our local (or server from where we run this command), use *docker pull*.
+2. After making the necessary code changes, we need to tag the container using *docker tag* command (before pushing it to the regitry).
+3. After tagging the container, use *docker push* command to push the code changes to the registry.
+
 [source,ruby]
 ----
 docker pull HOSTNAME/PROJECT-ID/IMAGE
 docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
 docker push HOSTNAME/PROJECT-ID/IMAGE
 ----
+
 == AWS Elastic Container Registry
+* First step, we need to login to our AWS Account using the following command (please replace *aws_account_id* and *region* as appliable).
+
 [source,ruby]
 ----
 aws ecr get-login-password \
@@ -62,6 +88,15 @@ aws ecr create-repository \
 }
 ----
 
-* `docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
-* `docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
-* `docker push aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
+* Here are some optional commands which we would follow in any of our projects.
+[source,ruby]
+----
+#To pull the hello-world container to our local (or server from where we run this command), use this.
+    docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
+    
+#After making the necessary code changes, we need to tag the container using this command (before pushing it to the regitry).
+    docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
+    
+#After tagging the container, use this command to push the code changes to the registry.
+    docker push aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
+----
