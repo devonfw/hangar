@@ -1,45 +1,41 @@
-= Setting up a Test Pipeline on Azure DevOps
+= Setting up a Build Pipeline on Azure DevOps
 
-In this section we will create a Azure DevOps Test pipeline for testing project test cases.
+In this section we will create a build pipeline for compiling project code. This pipeline will be configured in order to be triggered every time there is a commit to the Azure DevOps repository, regardless of which branch it is made on.
 
-== *Prerequisites:*
-Before executing the script be sure your local repository is upto date, pull latest changes with `git pull`.
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
-== *Creating Azure DevOps Test Pipeline using provided script*
+Following the project workflow, a Pull Request will be created in order to merge this new branch (`feature/build-pipeline`) into the specified branch using the `-b` flag.
 
-The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.sh` will automatically create a test pipeline based on a YAML template, follow below instructions to execute script.
-[loweralpha]
-. During the execution of this script, a new git branch with name `feature/test-pipeline` will be created and the `.pipeline` YAML files will be pushed to the same branch.
+The script located at `/scripts/pipelines/azure-devops/build_pipeline_generator.sh` will automatically create thi snew branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework and create the Pull Request.
 
-:hardbreaks-option:
-*Note*: If any test pipeline failed, check the logs for the specific pipeline summary. In more actions you can download complete logs which include additional diagnostic information or you can store application logs in user specifed path.
+== Prerequisites
 
-== Usage
+This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
+
+== The script
+
+=== Flags
+```
+    -n    [Required] Name that will be set to the build pipeline.
+    -l    [Required] Language or framework of the project.
+    -d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    -b    [Required] Name of the branch for which the Pull Request will be created.
+```
+
+=== Usage
 
 ```
-./test_pipeline_generator.sh -n <pipeline-name> -l <language or framework> -d <project local path>
+    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path> -b <branch>
 ```
-== Flags
 
-```
--n    [Required] Name of the test pipeline.
--l    [Required] Language or framework of the project.
--d    [Required] Local directory of your project (the path should always be using '/' and not '\').
-```
-=== Example
+=== Examples
 
 ==== Quarkus project
 
 ```
-./test_pipeline_generator.sh -n quarkus_project_test -l quarkus -d  C:/Users/$USERNAME/Desktop/quarkus-project
-``` 
-NOTE: Dynamic variables is configured in `pipeline_configuration.cfg` file and parse in current script file(exp: repository, branch, yaml files path, etc..).
+    ./build_pipeline_generator.sh -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop
+```
 
+CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
- 
-
-
-
-
-
-
+CAUTION: After the execution you will have a new Pull Request in your Azure DevOps project (`Repos > Pull requests`), remember to accept this Pull Request in order to merge the changes into the desired branch. 
