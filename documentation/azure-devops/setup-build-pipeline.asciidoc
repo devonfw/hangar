@@ -26,7 +26,7 @@ This script will commit and push the corresponding YAML template into your repos
 === Usage
 
 ```
-    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path> -b <branch> -p <true>|<false>
+    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path> -b <branch> -p <true or false>
 ```
 
 === Examples
