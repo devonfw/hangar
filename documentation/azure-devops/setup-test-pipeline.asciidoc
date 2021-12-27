@@ -1,0 +1,45 @@
+= Setting up a Test Pipeline on Azure DevOps
+
+In this section we will create a Azure DevOps Test pipeline for testing project test cases.
+
+== *Prerequisites:*
+Before executing the script be sure your local repository is upto date, pull latest changes with `git pull`.
+
+== *Creating Azure DevOps Test Pipeline using provided script*
+
+The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.sh` will automatically create a test pipeline based on a YAML template, follow below instructions to execute script.
+[loweralpha]
+. During the execution of this script, a new git branch with name `feature/test-pipeline` will be created and the `.pipeline` YAML files will be pushed to the same branch.
+
+:hardbreaks-option:
+*Note*: If any test pipeline failed, check the logs for the specific pipeline summary. In more actions you can download complete logs which include additional diagnostic information or you can store application logs in user specifed path.
+
+== Usage
+
+```
+./test_pipeline_generator.sh -n <pipeline-name> -l <language or framework> -d <project local path>
+```
+== Flags
+
+```
+-n    [Required] Name of the test pipeline.
+-l    [Required] Language or framework of the project.
+-d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+```
+=== Example
+
+==== Quarkus project
+
+```
+./test_pipeline_generator.sh -n quarkus_project_test -l quarkus -d  C:/Users/$USERNAME/Desktop/quarkus-project
+``` 
+NOTE: Dynamic variables is configured in `pipeline_configuration.cfg` file and parse in current script file(exp: repository, branch, yaml files path, etc..).
+
+
+ 
+
+
+
+
+
+

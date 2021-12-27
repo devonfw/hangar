@@ -1,0 +1,22 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Test
+  jobs:
+  - job: Test
+    displayName: Test
+    steps:
+    - task: Bash@3
+      inputs:
+        filePath: '.pipelines/.scripts/test.sh'
+        
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
