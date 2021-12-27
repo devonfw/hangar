@@ -16,35 +16,51 @@ toc::[]
 * Step#5 - Use the following command to push an image to private repository.
   - `sudo docker push <username>/<imagename>`
   - Ex: 
-	- `sudo docker images`
-	- `sudo docker tag nodejssampleprj sundharakanthan/nodejssampleprj:v1.1.1.1`
-	- `sudo docker images`
-	- `sudo docker pull sundharakanthan/nodejssampleprj:v1.1.1.1`
+[source,ruby]
+----
+	sudo docker images
+	sudo docker tag nodejssampleprj sundharakanthan/nodejssampleprj:v1.1.1.1
+	sudo docker images
+	sudo docker pull sundharakanthan/nodejssampleprj:v1.1.1.1
+----
 * Going back to our Docker Hub account, we can see the new tag is stored in our private repository [https://hub.docker.com/u/sundharakanthan].
 
 == Docker Pull/Push Commands 
-* `docker pull HOSTNAME/PROJECT-ID/IMAGE`
-* `docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE`
-* `docker push HOSTNAME/PROJECT-ID/IMAGE`
-
+[source,ruby]
+----
+docker pull HOSTNAME/PROJECT-ID/IMAGE
+docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
+docker push HOSTNAME/PROJECT-ID/IMAGE
+----
 == AWS Elastic Container Registry
-* `aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com`
-
+[source,ruby]
+----
+aws ecr get-login-password \
+    --region region | docker login \
+    --username AWS \
+    --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
+----
 * To create a repository
 
 The following create-repository example creates a repository inside the specified namespace in the default registry for an account.
 
-`aws ecr create-repository repository-name project-a/nginx-web-app`
-
+[source,ruby]
+----
+aws ecr create-repository \ 
+    --repository-name project-a/nginx-web-app \ 
+    --region us-west-2
+----
 * Output:
-
-`{
-    "repository": {
+[source,ruby]
+----
+{
+    "repository": { 
         "registryId": "123456789012",
         "repositoryName": "sample-repo",
         "repositoryArn": "arn:aws:ecr:us-west-2:123456789012:repository/project-a/nginx-web-app"
     }
-}`
+}
+----
 
 * `docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
 * `docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
