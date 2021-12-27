@@ -4,7 +4,7 @@ In this section we will create a build pipeline for compiling project code. This
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
-Following the project workflow, a Pull Request will be created in order to merge this new branch (`feature/build-pipeline`) into the specified branch using the `-b` flag. The Pull Request will merge successfully if the project policies are met, if the merge is not possible you can either choose to have the Pull Reqest URL prompted in the console or open it in your web browser with the `-d` flag.
+Following the project workflow, a Pull Request will be created in order to merge this new branch (`feature/build-pipeline`) into the specified branch using the `-b` flag. The Pull Request will merge successfully if the project policies are met, if the merge is not possible you can either choose to have the Pull Reqest URL prompted in the console or open it in your web browser with the `-p` flag.
 
 The script located at `/scripts/pipelines/azure-devops/build_pipeline_generator.sh` will automatically create this new branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request and if it is possible merge this new branch into the specified branch.
 
