@@ -4,9 +4,9 @@ In this section we will create a build pipeline for compiling project code. This
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
-Following the project workflow, a Pull Request will be created in order to merge this new branch (`feature/build-pipeline`) into the specified branch using the `-b` flag.
+Following the project workflow, a Pull Request will be created in order to merge this new branch (`feature/build-pipeline`) into the specified branch using the `-b` flag. The Pull Request will merge successfully if the project policies are met, if the merge is not possible you can either choose to have the Pull Reqest URL prompted in the console or open it in your web browser with the `-d` flag.
 
-The script located at `/scripts/pipelines/azure-devops/build_pipeline_generator.sh` will automatically create thi snew branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework and create the Pull Request.
+The script located at `/scripts/pipelines/azure-devops/build_pipeline_generator.sh` will automatically create this new branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request and if it is possible merge this new branch into the specified branch.
 
 == Prerequisites
 
@@ -20,12 +20,13 @@ This script will commit and push the corresponding YAML template into your repos
     -l    [Required] Language or framework of the project.
     -d    [Required] Local directory of your project (the path should always be using '/' and not '\').
     -b    [Required] Name of the branch for which the Pull Request will be created.
+    -p               Open the Pull Request on the web browser if the merging fails. Accepted values: true, false.
 ```
 
 === Usage
 
 ```
-    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path> -b <branch>
+    ./build_pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path> -b <branch> -p <true>|<false>
 ```
 
 === Examples
@@ -33,9 +34,7 @@ This script will commit and push the corresponding YAML template into your repos
 ==== Quarkus project
 
 ```
-    ./build_pipeline_generator.sh -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop
+    ./build_pipeline_generator.sh -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -true
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
-
-CAUTION: After the execution you will have a new Pull Request in your Azure DevOps project (`Repos > Pull requests`), remember to accept this Pull Request in order to merge the changes into the desired branch. 

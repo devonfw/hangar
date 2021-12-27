@@ -18,6 +18,8 @@ then
     echo "  -n    [Required] Name that will be set to the build pipeline."
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -b               Name of the branch for which the Pull Request will be created."
+    echo "  -p               Open the Pull Request on the web browser if the merging fails. Accepted values: true, false."
     exit
 fi
 
@@ -70,3 +72,51 @@ git push -u origin feature/build-pipeline
 echo -e "${green}Generating the pipeline from the YAML template..."
 echo -e ${white}
 az pipelines create --name $name --yaml-path ".pipelines/build-pipeline.yml"
+
+# PR creation.
+if test -z "$branch"
+then
+    # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
+    echo -e "${green}No branch specified to do the Pull Request, changes left in the feature/build-pipeline branch."
+    echo -e $white
+    exit
+else
+    # Create the Pull Request to merge iinto the specified branch
+    echo -e "${green}Creating a Pull Request..."
+    echo -e ${white}
+    pr=$(az repos pr create --source-branch feature/build-pipeline --target-branch $branch --title "Build Merge" --auto-complete true)
+    # Obtain the PR id.
+    id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
+    # Obtain the PR status.
+    showOutput=$(az repos pr show --id $id)
+    status=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['status'])")
+    # Check if the Pull Request merge has succeeded.
+    if test "$status" = "completed"
+    then
+        # Pull Request merged successfully.
+        echo -e "${green}Pull Request merged into $branch branch successfully."
+        echo -e ${white}
+        exit
+    else
+        # Obtain the PR URL.
+        url=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['repository']['webUrl'])")
+        prURL="$url/pullrequest/$id"
+        # Check if the -p is activated.
+        if test -z "$openPR" || test "$openPR" = false
+        then
+            # -p flag is not activated and the URL to the Pull Request is shown in the console.
+            echo -e "${green}Pull Request successfully created."
+            echo -e "${green}To review the Pull Request and accept it, click on the following link:"
+            echo -e ${white}
+            echo ${prURL}
+            exit
+        else
+            # -p flag is activated and a page with the corresponding Pull Request is opened in the web browser.
+            echo -e "${green}Pull Request successfully created."
+            echo -e "${green}Opening the Pull Request on the web browser..."
+            echo -e ${white}
+            az repos pr show --id $id --open > /dev/null
+            exit
+        fi
+    fi
+fi
