@@ -29,6 +29,23 @@ toc::[]
 
 == AWS Elastic Container Registry
 * `aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com`
+
+* To create a repository
+
+The following create-repository example creates a repository inside the specified namespace in the default registry for an account.
+
+`aws ecr create-repository repository-name project-a/nginx-web-app`
+
+* Output:
+
+`{
+    "repository": {
+        "registryId": "123456789012",
+        "repositoryName": "sample-repo",
+        "repositoryArn": "arn:aws:ecr:us-west-2:123456789012:repository/project-a/nginx-web-app"
+    }
+}`
+
 * `docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
 * `docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
 * `docker push aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest`
