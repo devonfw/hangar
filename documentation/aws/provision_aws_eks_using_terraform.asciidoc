@@ -31,5 +31,5 @@ This script will provision an AWS EKS cluster. Once the terraform script has com
 
 To interact with your cluster, run this command in your terminal:
 ```
-aws eks --region eu-west-1 update-kubeconfig --name eks-cluster
+aws eks --region eu-west-1 update-kubeconfig --name hangar-eks-cluster
 ```
