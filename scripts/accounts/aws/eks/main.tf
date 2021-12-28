@@ -21,16 +21,16 @@ provider "kubernetes" {
 data "aws_availability_zones" "available" {
 
 }
-
 locals {
-  cluster_name = "eks-cluster"
+  cluster_name = var.cluster_name
 }
+
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   
   name                 = "k8s-vpc"
-  cidr                 = "172.16.0.0/16"
+  cidr                 = var.vpc_cidr_block
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["172.16.1.0/24", "172.16.2.0/24", "172.16.3.0/24"]
   public_subnets       = ["172.16.4.0/24", "172.16.5.0/24", "172.16.6.0/24"]
@@ -39,12 +39,12 @@ module "vpc" {
   enable_dns_hostnames = true
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/elb"                      = "1"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = "1"
   }
 }
@@ -52,7 +52,7 @@ module "vpc" {
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   
-  cluster_name    = local.cluster_name
+  cluster_name    = var.cluster_name
   cluster_version = "1.21"
   subnets         = module.vpc.private_subnets
 
