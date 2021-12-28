@@ -23,7 +23,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 ----
    docker push <username>/<imagename>
 ----
-- Ex: 
+- Example: 
 [source,shell]
 ----
    docker images
