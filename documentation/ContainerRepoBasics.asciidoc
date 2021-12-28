@@ -42,37 +42,37 @@
 2. After making the necessary code changes, we need to tag the container using *docker tag* command (before pushing it to the regitry).
 3. After tagging the container, use *docker push* command to push the code changes to the registry.
 
-[source,ruby]
+[source,shell]
 ----
-docker pull HOSTNAME/PROJECT-ID/IMAGE
-docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
-docker push HOSTNAME/PROJECT-ID/IMAGE
+   docker pull HOSTNAME/PROJECT-ID/IMAGE
+   docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
+   docker push HOSTNAME/PROJECT-ID/IMAGE
 ----
 
 * The above commands are pretty much same for any container image repo / registries like DockerHub, AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
 * Only the logging in commands could be different for different image repo.
 
 == Azure Container Registry
-[source,ruby]
+[source,shell]
 ----
-az acr login --name mycontainerregistry
-docker pull mcr.microsoft.com/hello-world
-docker tag mcr.microsoft.com/hello-world mycontainerregistry.azurecr.io/hello-world:v1.1.2
-docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
+   az acr login --name mycontainerregistry
+   docker pull mcr.microsoft.com/hello-world
+   docker tag mcr.microsoft.com/hello-world mycontainerregistry.azurecr.io/hello-world:v1.1.2
+   docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
 ----
 
 == Google Container Registry
-[source,ruby]
+[source,shell]
 ----
-docker pull gcr.io/google-samples/hello-app:1.0
-docker tag gcr.io/google-samples/hello-app:1.0 gcr.io/PROJECT_ID/quickstart-image:tag1
-docker push gcr.io/PROJECT_ID/quickstart-image:tag1
+   docker pull gcr.io/google-samples/hello-app:1.0
+   docker tag gcr.io/google-samples/hello-app:1.0 gcr.io/PROJECT_ID/quickstart-image:tag1
+   docker push gcr.io/PROJECT_ID/quickstart-image:tag1
 ----
 
 == GitHub Container Registry
-[source,ruby]
+[source,shell]
 ----
-docker login ghcr.io -u USERNAME --password-stdin
-docker pull ghcr.io/OWNER/IMAGE_NAME:1.14.1
-docker push ghcr.io/OWNER/IMAGE_NAME:latest
+   docker login ghcr.io -u USERNAME --password-stdin
+   docker pull ghcr.io/OWNER/IMAGE_NAME:1.14.1
+   docker push ghcr.io/OWNER/IMAGE_NAME:latest
 ----
