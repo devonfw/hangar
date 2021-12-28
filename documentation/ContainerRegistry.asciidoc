@@ -6,19 +6,19 @@ toc::[]
 == How to use Docker Hub?
 Docker Hub is a container registry/repository which is used to save container/docker images. We will also demonstrate how to pull an image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
 
-* Step#1 - You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
-* Step#2 - Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
-* Step#3 - Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
+* *Step#1* - You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
+* *Step#2* - Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
+* *Step#3* - Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
 [source,shell]
 ----
    docker login -u <username>
 ----
-* Step#4 - Use the following command to pull the docker container image from Docker Hub to local machine.
+* *Step#4* - Use the following command to pull the docker container image from Docker Hub to local machine.
 [source,shell]
 ----
    docker pull <username>/hello-world
 ----
-* Step#5 - Use the following command to push an image to private repository.
+* *Step#5* - Use the following command to push an image to private repository.
 [source,shell]
 ----
    docker push <username>/<imagename>
@@ -48,14 +48,14 @@ docker push HOSTNAME/PROJECT-ID/IMAGE
 ----
 
 == AWS Elastic Container Registry
-* First step, we need to login to our AWS Account using the following command (please replace *aws_account_id* and *region* as appliable).
+* First step, we need to login to our AWS Account using the following command (please replace *<aws_account_id>* and *<region>* as appliable).
 
 [source,shell]
 ----
 aws ecr get-login-password \
-    --region region | docker login \
+    --region <region> | docker login \
     --username AWS \
-    --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
+    --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
 ----
 * To create a repository
 
@@ -79,19 +79,19 @@ aws ecr create-repository \
 }
 ----
 
-* Here are some optional commands which we would follow in any of our Docker projects.
+Here are some optional commands which we would follow in any of our Docker projects.
 * To pull the hello-world container to our local (or server from where we run this command), use this.
 [source,shell]
 ----
-    docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
+    docker pull <aws_account_id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
 ----
 * After making the necessary code changes, we need to tag the container using this command (before pushing it to the regitry).
 [source,shell]
 ----
-    docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
+    docker tag hello-world:latest <aws_account_id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
 ----
 * After tagging the container, use this command to push the code changes to the registry.
 [source,shell]
 ----
-    docker push aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
+    docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
 ----
