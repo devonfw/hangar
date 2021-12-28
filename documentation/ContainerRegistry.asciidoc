@@ -42,9 +42,9 @@ Docker Hub is a container registry/repository which is used to save container/do
 
 [source,shell]
 ----
-docker pull HOSTNAME/PROJECT-ID/IMAGE
-docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
-docker push HOSTNAME/PROJECT-ID/IMAGE
+   docker pull HOSTNAME/PROJECT-ID/IMAGE
+   docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
+   docker push HOSTNAME/PROJECT-ID/IMAGE
 ----
 
 == AWS Elastic Container Registry
@@ -52,10 +52,10 @@ docker push HOSTNAME/PROJECT-ID/IMAGE
 
 [source,shell]
 ----
-aws ecr get-login-password \
-    --region <region> | docker login \
-    --username AWS \
-    --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+   aws ecr get-login-password \
+       --region <region> | docker login \
+       --username AWS \
+       --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
 ----
 * To create a repository
 
@@ -63,20 +63,20 @@ The following create-repository example creates a repository inside the specifie
 
 [source,shell]
 ----
-aws ecr create-repository \ 
-    --repository-name project-a/nginx-web-app \ 
-    --region us-west-2
+   aws ecr create-repository \ 
+       --repository-name project-a/nginx-web-app \ 
+       --region us-west-2
 ----
 * Output:
 [source,json]
 ----
-{
-    "repository": { 
-        "registryId": "123456789012",
-        "repositoryName": "sample-repo",
-        "repositoryArn": "arn:aws:ecr:us-west-2:123456789012:repository/project-a/nginx-web-app"
-    }
-}
+   {
+       "repository": { 
+           "registryId": "123456789012",
+           "repositoryName": "sample-repo",
+           "repositoryArn": "arn:aws:ecr:us-west-2:123456789012:repository/project-a/nginx-web-app"
+       }
+   }
 ----
 
 Here are some optional commands which we would follow in any of our Docker projects.
