@@ -1,11 +1,11 @@
-while getopts n:l:d:b:p: flag
+while getopts n:l:d:b:w: flag
 do
     case "${flag}" in
         n) name=${OPTARG};;
         l) language=${OPTARG};;
         d) directory=${OPTARG};;
         b) branch=${OPTARG};;
-        p) openPR=${OPTARG};;
+        w) webBrowser=${OPTARG};;
     esac
 done
 
@@ -19,7 +19,7 @@ then
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
     echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -p               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     exit
 fi
 
@@ -101,21 +101,22 @@ else
         # Obtain the PR URL.
         url=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['repository']['webUrl'])")
         prURL="$url/pullrequest/$id"
-        # Check if the -p is activated.
-        if test -z "$openPR" || test "$openPR" = false
+        # Check if the -w is activated.
+        flags=$*
+        if [[ "$flags" == *" -w"* ]]
         then
-            # -p flag is not activated and the URL to the Pull Request is shown in the console.
-            echo -e "${green}Pull Request successfully created."
-            echo -e "${green}To review the Pull Request and accept it, click on the following link:"
-            echo -e ${white}
-            echo ${prURL}
-            exit
-        else
-            # -p flag is activated and a page with the corresponding Pull Request is opened in the web browser.
+            # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
             echo -e "${green}Pull Request successfully created."
             echo -e "${green}Opening the Pull Request on the web browser..."
             echo -e ${white}
             az repos pr show --id $id --open > /dev/null
+            exit
+        else
+            # -w flag is not activated and the URL to the Pull Request is shown in the console.
+            echo -e "${green}Pull Request successfully created."
+            echo -e "${green}To review the Pull Request and accept it, click on the following link:"
+            echo -e ${white}
+            echo ${prURL}
             exit
         fi
     fi
