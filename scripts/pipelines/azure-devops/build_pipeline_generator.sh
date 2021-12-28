@@ -18,8 +18,8 @@ then
     echo "  -n    [Required] Name that will be set to the build pipeline."
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -b               Name of the branch for which the Pull Request will be created."
-    echo "  -p               Open the Pull Request on the web browser if the merging fails. Accepted values: true, false."
+    echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
+    echo "  -p               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     exit
 fi
 
@@ -30,10 +30,10 @@ red='\e[0;31m'
 # Argument check.
 if test -z "$name" || test -z "$language" || test -z "$directory"
 then
-    echo -e "${red}Missing parameters, all flags are mandatory."
+    echo -e "${red}Missing parameters, some flags are mandatory."
     echo -e "${red}Use -h flag to display help."
     echo -e ${white}
-    exit
+    exit 2
 fi
 
 cd ../../..
@@ -84,7 +84,7 @@ else
     # Create the Pull Request to merge iinto the specified branch
     echo -e "${green}Creating a Pull Request..."
     echo -e ${white}
-    pr=$(az repos pr create --source-branch feature/build-pipeline --target-branch $branch --title "Build Merge" --auto-complete true)
+    pr=$(az repos pr create --source-branch feature/build-pipeline --target-branch $branch --title "Build Pipeline" --auto-complete true)
     # Obtain the PR id.
     id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
     # Obtain the PR status.
