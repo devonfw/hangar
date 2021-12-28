@@ -49,7 +49,8 @@ docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
 docker push HOSTNAME/PROJECT-ID/IMAGE
 ----
 
-* The above commands are pretty much same for other container image repo / registries like AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
+* The above commands are pretty much same for any container image repo / registries like DockerHub, AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
+* Only the logging in commands could be different for different image repo.
 
 == Azure Container Registry
 [source,ruby]
