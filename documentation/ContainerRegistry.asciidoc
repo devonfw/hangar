@@ -34,7 +34,7 @@ Docker Hub is a container registry/repository which is used to save container/do
    sudo docker push <username>/<imagename>
 ----
 - Ex: 
-[source,ruby]
+[source,bash]
 ----
    sudo docker images
    sudo docker tag nodejssampleprj sundharakanthan/nodejssampleprj:v1.1.1.1
@@ -50,7 +50,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 2. After making the necessary code changes, we need to tag the container using *docker tag* command (before pushing it to the regitry).
 3. After tagging the container, use *docker push* command to push the code changes to the registry.
 
-[source,ruby]
+[source,bash]
 ----
 docker pull HOSTNAME/PROJECT-ID/IMAGE
 docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
