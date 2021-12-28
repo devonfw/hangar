@@ -91,22 +91,19 @@ aws ecr create-repository \
 
 * Here are some optional commands which we would follow in any of our Docker projects.
 
-* To pull the hello-world container to our local (or server from where we run this command), use this.
-
+1. To pull the hello-world container to our local (or server from where we run this command), use this.
 [source,shell]
 ----
     docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
 ----
 
-* After making the necessary code changes, we need to tag the container using this command (before pushing it to the regitry).
-
+2. After making the necessary code changes, we need to tag the container using this command (before pushing it to the regitry).
 [source,shell]
 ----
     docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
 ----
 
-* After tagging the container, use this command to push the code changes to the registry.
-
+3. After tagging the container, use this command to push the code changes to the registry.
 [source,shell]
 ----
     docker push aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
