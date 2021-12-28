@@ -9,32 +9,32 @@ Docker Hub is a container registry/repository which is used to save container/do
 * Step#1 - You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
 * Step#2 - Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
 * Step#3 - Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
-[source,ruby]
+[source,shell]
 ----
    sudo docker login -u <username>
 ----
    - Ex: 
-[source,ruby]
+[source,shell]
 ----
    sudo docker login -u sundharakanthan
 ----
 * Step#4 - Use the following command to pull the docker container image from Docker Hub to local machine.
-[source,ruby]
+[source,shell]
 ----
    sudo docker pull hello-world
 ----
    - Ex: 
-[source,ruby]
+[source,shell]
 ----
    sudo docker pull sundharakanthan/nodejssampleprj
 ----
 * Step#5 - Use the following command to push an image to private repository.
-[source,ruby]
+[source,shell]
 ----
    sudo docker push <username>/<imagename>
 ----
 - Ex: 
-[source,bash]
+[source,shell]
 ----
    sudo docker images
    sudo docker tag nodejssampleprj sundharakanthan/nodejssampleprj:v1.1.1.1
@@ -50,7 +50,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 2. After making the necessary code changes, we need to tag the container using *docker tag* command (before pushing it to the regitry).
 3. After tagging the container, use *docker push* command to push the code changes to the registry.
 
-[source,bash]
+[source,shell]
 ----
 docker pull HOSTNAME/PROJECT-ID/IMAGE
 docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
@@ -60,7 +60,7 @@ docker push HOSTNAME/PROJECT-ID/IMAGE
 == AWS Elastic Container Registry
 * First step, we need to login to our AWS Account using the following command (please replace *aws_account_id* and *region* as appliable).
 
-[source,ruby]
+[source,shell]
 ----
 aws ecr get-login-password \
     --region region | docker login \
@@ -71,14 +71,14 @@ aws ecr get-login-password \
 
 The following create-repository example creates a repository inside the specified namespace in the default registry for an account.
 
-[source,ruby]
+[source,shell]
 ----
 aws ecr create-repository \ 
     --repository-name project-a/nginx-web-app \ 
     --region us-west-2
 ----
 * Output:
-[source,ruby]
+[source,json]
 ----
 {
     "repository": { 
@@ -89,15 +89,25 @@ aws ecr create-repository \
 }
 ----
 
-* Here are some optional commands which we would follow in any of our projects.
-[source,ruby]
+* Here are some optional commands which we would follow in any of our Docker projects.
+
+* To pull the hello-world container to our local (or server from where we run this command), use this.
+
+[source,shell]
 ----
-#To pull the hello-world container to our local (or server from where we run this command), use this.
     docker pull aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
-    
-#After making the necessary code changes, we need to tag the container using this command (before pushing it to the regitry).
+----
+
+* After making the necessary code changes, we need to tag the container using this command (before pushing it to the regitry).
+
+[source,shell]
+----
     docker tag hello-world:latest aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
-    
-#After tagging the container, use this command to push the code changes to the registry.
+----
+
+* After tagging the container, use this command to push the code changes to the registry.
+
+[source,shell]
+----
     docker push aws_account_id.dkr.ecr.region.amazonaws.com/hello-world:latest
 ----
