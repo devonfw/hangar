@@ -1,0 +1,28 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+== Provision AWS EKS using Terraform
+This guide helps you to provision AWS EKS using Terraform.
+
+=== Prerequisites
+* https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started[Install Terraform].
+* https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
+
+=== Usage
+
+Download the files from `...scripts/terrafom/aws/eks`. Open the file `terraform.tfvars` and edit the needed parameters.
+
+Run the following command on your command prompt.
+
+```
+terraform init 
+```
+Before running the `terraform apply` you may also run `terraform plan` to know the changes that will be applied.
+
+```
+terraform apply --auto-approve 
+```
+The terraform apply command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. 
+
+This script will provision an AWS EKS cluster. Once the terraform script has completed its execution, please login to AWS console to find the EKS cluster provisioned for you.
