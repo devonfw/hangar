@@ -9,7 +9,7 @@ This guide helps you to provision AWS EKS using Terraform.
 * https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started[Install Terraform].
 * https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
 * https://kubernetes.io/docs/tasks/tools/[Install kubectl]
-* Check your IAM User has EKS access
+* https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/iam-permissions.md[IAM User has EKS access]
 
 === Usage
 
