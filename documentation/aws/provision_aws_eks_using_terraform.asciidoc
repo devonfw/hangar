@@ -28,3 +28,8 @@ terraform apply --auto-approve
 The terraform apply command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. 
 
 This script will provision an AWS EKS cluster. Once the terraform script has completed its execution, please login to AWS console to find the EKS cluster provisioned for you.
+
+To interact with your cluster, run this command in your terminal:
+```
+aws eks --region eu-west-1 update-kubeconfig --name eks-cluster
+```
