@@ -35,6 +35,22 @@
 * Docker Hub provides a free-to-use, hosted Registry, plus additional features (organization accounts, automated builds, and more).
 * The Registry is compatible with Docker engine version 1.6.0 or higher.
 
+== Docker Pull/Push Commands
+* Here are some optional commands which we would follow in any of our projects.
+
+1. To pull the hello-world container to our local (or server from where we run this command), use *docker pull*.
+2. After making the necessary code changes, we need to tag the container using *docker tag* command (before pushing it to the regitry).
+3. After tagging the container, use *docker push* command to push the code changes to the registry.
+
+[source,ruby]
+----
+docker pull HOSTNAME/PROJECT-ID/IMAGE
+docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
+docker push HOSTNAME/PROJECT-ID/IMAGE
+----
+
+* The above commands are pretty much same for other container image repo / registries like AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
+
 == Azure Container Registry
 * `az acr login --name mycontainerregistry`
 * `docker pull mcr.microsoft.com/hello-world`
