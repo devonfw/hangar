@@ -50,7 +50,7 @@
 ----
 
 * The above commands are pretty much same for any container image repo / registries like DockerHub, AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
-* Only the logging in commands could be different for different image repo.
+* Only the logging-in commands may be different for different image repo.
 
 == Azure Container Registry
 [source,shell]
@@ -64,6 +64,7 @@
 == Google Container Registry
 [source,shell]
 ----
+   gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://HOSTNAME
    docker pull gcr.io/google-samples/hello-app:1.0
    docker tag gcr.io/google-samples/hello-app:1.0 gcr.io/PROJECT_ID/quickstart-image:tag1
    docker push gcr.io/PROJECT_ID/quickstart-image:tag1
@@ -74,5 +75,6 @@
 ----
    docker login ghcr.io -u USERNAME --password-stdin
    docker pull ghcr.io/OWNER/IMAGE_NAME:1.14.1
+   docker tag ghcr.io/OWNER/IMAGE_NAME:1.14.1 ghcr.io/OWNER/IMAGE_NAME:tag1
    docker push ghcr.io/OWNER/IMAGE_NAME:latest
 ----
