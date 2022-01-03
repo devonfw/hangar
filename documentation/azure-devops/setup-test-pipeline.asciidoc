@@ -19,7 +19,7 @@ The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.s
 == Usage
 
 ```
-./test_pipeline_generator.sh -n <pipeline-name> -l <language or framework> -d <project local path> -b <branch> [-w]
+./test_pipeline_generator.sh -n <pipeline-name> -l <language or framework> -d <project local path> -c <configuration file path> -b <branch> [-w]
 ```
 == Flags
 
@@ -27,6 +27,7 @@ The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.s
 -n    [Required] Name of the test pipeline.
 -l    [Required] Language or framework of the project.
 -d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+-c    [Required] Configuration file for parameter containing all the variables.
 -b    [Required] Name of the branch Pull Request target branch, PR won't create without flag .
 -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -35,7 +36,7 @@ The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.s
 ==== Quarkus project
 
 ```
-./test_pipeline_generator.sh -n quarkus_project_test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b master -w
+./test_pipeline_generator.sh -n quarkus_project_test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -c pipeline_configuration.cfg -b master -w
 ``` 
 NOTE: Dynamic variables is configured in `pipeline_configuration.cfg` file and parse in current script file(exp: repository, branch, yaml files path, etc..).
 
