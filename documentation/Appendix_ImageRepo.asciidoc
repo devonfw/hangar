@@ -53,6 +53,10 @@
 * Only the logging-in commands may be different for different image repo.
 
 == Azure Container Registry
+* https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud.
+* Azure CLI commands start with "az" which is shown below for login
+* Docker commands can be used for pulling, tagging and pushing container images as shown below
+
 [source,shell]
 ----
    az acr login --name mycontainerregistry
@@ -63,6 +67,10 @@
 ----
 
 == Google Container Registry
+* https://cloud.google.com/container-registry/docs/overview[GCR] is a private registry service from Google Cloud.
+* Google Cloud CLI commands start with "gcr" which is shown below for login
+* Docker commands can be used for pulling, tagging and pushing container images as shown below
+
 [source,shell]
 ----
    gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://HOSTNAME
@@ -73,6 +81,9 @@
 ----
 
 == GitHub Container Registry
+* https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry[GHCR] is a private registry service from GitHub.
+* Docker commands can be used for logging into registry and for pulling, tagging, pushing container images as shown below
+
 [source,shell]
 ----
    docker login ghcr.io -u USERNAME --password-stdin
