@@ -31,7 +31,7 @@ Docker Hub is a container registry/repository which is used to save container/do
    docker images
    docker pull <username>/nodejssampleprj:v1.1.1.1
 ----
-* Going back to our Docker Hub account, we can see the new tag is stored in our private repository [https://hub.docker.com/u/sundharakanthan].
+* Going back to our Docker Hub account, we can see the new tag is stored in our private repository [https://hub.docker.com/u/devonfw].
 
 == Docker Pull/Push Commands
 * Here are some optional commands which we would follow in any of our projects.
