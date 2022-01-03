@@ -1,12 +1,13 @@
 #!/bin/bash
 
-while getopts n:l:d:c:b:w: flag
+source pipeline_configuration.sh
+
+while getopts n:l:d:b:w: flag
 do
     case "${flag}" in
         n) name=${OPTARG};;
         l) language=${OPTARG};;
         d) directory=${OPTARG};;
-        c) configuration_file=${OPTARG};;
         b) targetbranch=${OPTARG};;
         w) webBrowser=${OPTARG};;
                   
@@ -22,7 +23,6 @@ then
     echo "  -n    [Required] Name that will be set to the test pipeline."
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -c    [Required] Configuration file Path containing all the variables."
     echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w               Open the Pull Request on the web browser if it can not be automatically merged. Requires -b flag."
     
@@ -51,21 +51,21 @@ hangarPath=$(pwd)
 echo -e "${green}Creating the new branch: feature/test-pipeline..."
 echo -e ${white}
 cd ${directory}
-git checkout -b ${sourcebranch[test_pipeline]}
+git checkout -b ${sourcebranch}
 cd ${hangarPath}
 
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
 echo -e "${green}Committing and pushing to Git remote..."
 echo -e ${white}
 cd ${directory}
-git add ${pipelines[test_pipeline]} ${scripts[test_pipeline]} -f
+git add ${pipelines} ${scripts} -f
 git commit -m "Adding test pipeline source YAML"
-git push -u origin ${sourcebranch[test_pipeline]}
+git push -u origin ${sourcebranch}
 
 # Create Azure Pipeline
 echo -e "${green}Create Azure Test Pipeline:"
 echo -e ${white}
-az pipelines create --name $name --yml-path ".pipelines/test-pipeline.yml" 
+az pipelines create --name $name --yml-path ${pipelines} 
 
 # PR creation.
 if test -z "$targetbranch"
@@ -78,7 +78,7 @@ else
     # Create the Pull Request to merge into the specified branch
     echo -e "${green}Creating a Pull Request..."
     echo -e ${white}
-    pr=$(az repos pr create --source-branch feature/test-pipeline --target-branch $targetbranch --title "Test new Pipeline" --auto-complete true)
+    pr=$(az repos pr create --source-branch ${sourcebranch} --target-branch $targetbranch --title "Test new Pipeline" --auto-complete true)
     # Obtain the PR id.
     id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
     # Obtain the PR status.
