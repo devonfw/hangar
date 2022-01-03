@@ -1,14 +1,12 @@
 #!/bin/bash
 
-source pipeline_configuration.sh
-
 while getopts n:l:d:b:w: flag
 do
     case "${flag}" in
         n) name=${OPTARG};;
         l) language=${OPTARG};;
         d) directory=${OPTARG};;
-        b) targetbranch=${OPTARG};;
+        b) target_branch=${OPTARG};;
         w) webBrowser=${OPTARG};;
                   
     esac
@@ -42,6 +40,8 @@ then
     exit
 fi
 
+#parse config file for variables
+source $configuration_file
 cd ../../..
 pipelinesDirectory="${directory}/.pipelines"
 scriptsDirectory="${pipelinesDirectory}/.scripts"
@@ -51,7 +51,7 @@ hangarPath=$(pwd)
 echo -e "${green}Creating the new branch: feature/test-pipeline..."
 echo -e ${white}
 cd ${directory}
-git checkout -b ${sourcebranch}
+git checkout -b ${source_branch}
 cd ${hangarPath}
 
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
@@ -60,7 +60,7 @@ echo -e ${white}
 cd ${directory}
 git add ${pipelines} ${scripts} -f
 git commit -m "Adding test pipeline source YAML"
-git push -u origin ${sourcebranch}
+git push -u origin ${source_branch}
 
 # Create Azure Pipeline
 echo -e "${green}Create Azure Test Pipeline:"
@@ -68,7 +68,7 @@ echo -e ${white}
 az pipelines create --name $name --yml-path ${pipelines} 
 
 # PR creation.
-if test -z "$targetbranch"
+if test -z "$target_branch"
 then
     # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
     echo -e "${green}No branch specified to do the Pull Request, changes left in the feature/test-pipeline branch."
@@ -78,7 +78,7 @@ else
     # Create the Pull Request to merge into the specified branch
     echo -e "${green}Creating a Pull Request..."
     echo -e ${white}
-    pr=$(az repos pr create --source-branch ${sourcebranch} --target-branch $targetbranch --title "Test new Pipeline" --auto-complete true)
+    pr=$(az repos pr create --source-branch ${source_branch} --target-branch $target_branch --title "Test new Pipeline" --auto-complete true)
     # Obtain the PR id.
     id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
     # Obtain the PR status.
@@ -88,7 +88,7 @@ else
     if test "$status" = "completed"
     then
         # Pull Request merged successfully.
-        echo -e "${green}Pull Request merged into $targetbranch branch successfully."
+        echo -e "${green}Pull Request merged into $target_branch branch successfully."
         echo -e ${white}
         exit
     else
