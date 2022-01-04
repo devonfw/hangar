@@ -7,11 +7,12 @@ Before executing the script be sure your local repository is upto date, pull lat
 
 == *Creating Azure DevOps Test Pipeline using provided script*
 
-The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.sh` will automatically create a test pipeline based on a YAML template, Configuration file `pipeline_configuration.cfg` as parameter containing all the variables parsing in test_pipeline_generator.sh, follow below instructions to execute script.
+The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.sh` will automatically create a test pipeline based on a YAML template at `path to the pipeline file yaml`. Configuration file `pipeline_configuration.cfg` can be passed as a parameter containing all the variables.
+Please follow below instructions to execute the script:
 [loweralpha]
-. During the execution of this script, a new git branch with name `feature/test-pipeline` will be created and the `.pipeline` YAML files will be pushed to the same branch.
-. Pull Request will be created in order to merge the new branch into the appropriate branch using -b flag. 
-. The PR will be automatically merged if the repository policies are met. If the merge is not possible, PR URL will be shown as output or it will be opened in your web browser using -w flag.
+. The script creates a git branch with name `feature/test-pipeline` and `.pipeline` YAML files will be pushed to it.
+. Pull Request will be created in order to merge the new branch into the appropriate branch using -b flag. Ex. to the master branch. 
+. The PR will be automatically merged if the repository policies are met. If the merge is not possible, PR URL will be shown as output or it will be opened in your web browser if -w flag has been passed.
 
 :hardbreaks-option:
 *Note*: If any test pipeline failed, check the logs for the specific pipeline summary. In more actions you can download complete logs which include additional diagnostic information or you can store application logs in user specifed path.
@@ -38,7 +39,7 @@ The script located at `/scripts/pipelines/azure-devops/test_pipeline_generator.s
 ```
 ./test_pipeline_generator.sh -n quarkus_project_test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -c pipeline_configuration.cfg -b master -w
 ``` 
-NOTE: Dynamic variables is configured in `pipeline_configuration.cfg` file and parse in current script file(exp: repository, branch, yaml files path, etc..).
+NOTE: Pipeline parameters can be modified as needed in `pipeline_configuration.cfg` file such as branch, yaml files path, etc.
 
 
  
