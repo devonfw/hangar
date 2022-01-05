@@ -1,11 +1,12 @@
 #!/bin/bash
 
-while getopts n:l:d:b:w: flag
+while getopts n:l:d:c:b:w: flag
 do
     case "${flag}" in
         n) name=${OPTARG};;
         l) language=${OPTARG};;
         d) directory=${OPTARG};;
+        c) configuration_file=${OPTARG};;
         b) target_branch=${OPTARG};;
         w) webBrowser=${OPTARG};;
                   
@@ -21,9 +22,9 @@ then
     echo "  -n    [Required] Name that will be set to the test pipeline."
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -w               Open the Pull Request on the web browser if it can not be automatically merged. Requires -b flag."
-    
+    echo "  -c    [Required] Configuration file Path."
+    echo "  -b               Name of the target branch to which the Pull Request will target. PR is not created if the flag is not provided."
+    echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag." 
     exit
 fi
 
@@ -42,13 +43,14 @@ fi
 
 #parse config file for variables
 source $configuration_file
+
 cd ../../..
 pipelinesDirectory="${directory}/.pipelines"
 scriptsDirectory="${pipelinesDirectory}/.scripts"
 hangarPath=$(pwd)
 
 # Create the new branch.
-echo -e "${green}Creating the new branch: feature/test-pipeline..."
+echo -e "${green}Creating the new branch: ${source_branch}..."
 echo -e ${white}
 cd ${directory}
 git checkout -b ${source_branch}
@@ -62,16 +64,17 @@ git add ${pipelines} ${scripts} -f
 git commit -m "Adding test pipeline source YAML"
 git push -u origin ${source_branch}
 
+
 # Create Azure Pipeline
 echo -e "${green}Create Azure Test Pipeline:"
 echo -e ${white}
-az pipelines create --name $name --yml-path ${pipelines} 
+az pipelines create --name $name --yml-path ${pipelines}
 
 # PR creation.
 if test -z "$target_branch"
 then
     # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
-    echo -e "${green}No branch specified to do the Pull Request, changes left in the feature/test-pipeline branch."
+    echo -e "${green}No branch specified to do the Pull Request, changes left in the ${source_branch} branch."
     echo -e $white
     exit
 else
@@ -115,9 +118,6 @@ else
         fi
     fi
 fi
-
-
-
 
 
 
