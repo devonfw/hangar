@@ -22,7 +22,7 @@ then
     echo "  -n    [Required] Name that will be set to the test pipeline."
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -c    [Required] Configuration file Path."
+    echo "  -c    [Required] Configuration file for parameter containing all the variables."
     echo "  -b               Name of the target branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag." 
     exit
@@ -45,8 +45,6 @@ fi
 source $configuration_file
 
 cd ../../..
-pipelinesDirectory="${directory}/.pipelines"
-scriptsDirectory="${pipelinesDirectory}/.scripts"
 hangarPath=$(pwd)
 
 # Create the new branch.
@@ -63,7 +61,6 @@ cd ${directory}
 git add ${pipelines} ${scripts} -f
 git commit -m "Adding test pipeline source YAML"
 git push -u origin ${source_branch}
-
 
 # Create Azure Pipeline
 echo -e "${green}Create Azure Test Pipeline:"
