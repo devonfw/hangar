@@ -63,7 +63,7 @@ The script located at `/scripts/accounts/aws/verify-account-policies.sh` will ch
 
 === Usage
 ```
-verify-account-policies.sh -u <username> [-p <policies...>] [-f <policies file path>] [-a "<AWS access key>"] [-s "<AWS secret key>"] [-r <region>] 
+verify-account-policies.sh -u <username> [-p <policies...>] [-f <policies file path>] [-c <custom policies file path>] [-a "<AWS access key>"] [-s "<AWS secret key>"] [-r <region>] 
 ```
 
 === Flags
@@ -71,6 +71,7 @@ verify-account-policies.sh -u <username> [-p <policies...>] [-f <policies file p
 -u      [Required] Username whose policies will be checked
 -p      [Optional] Policies to be checked, splitted by comma
 -f      [Optional] Path to a file containing the policies to be checked
+-c      [Optional] Path to a file containing the custom policies to be checked
 -a      [Optional] AWS administrator access key
 -s      [Optional] AWS administrator secret key
 -r      [Optional] AWS region

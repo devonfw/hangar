@@ -1,11 +1,12 @@
 #!/bin/bash
 
-while getopts u:p:f:a:s:r: flag
+while getopts u:p:f:c:a:s:r: flag
 do
     case "${flag}" in
         u) username=${OPTARG};;
         p) policies=${OPTARG};;
         f) policies_file=${OPTARG};;
+        c) custom_policies_file=${OPTARG};;
         a) access_key=${OPTARG};;
         s) secret_key=${OPTARG};;
         r) region=${OPTARG};;
@@ -19,7 +20,8 @@ then
     echo "Arguments:"
     echo "  -u     [Required] Username whose policies will be checked."
     echo "  -p     [Optional] Policies to be checked, splitted by comma."
-    echo "  -f     [Optional] Path to a file containing the policies to be checked."   
+    echo "  -f     [Optional] Path to a file containing the policies to be checked."
+    echo "  -c     [Optional] Path to a file containing the custom policies to be checked."  
     echo "  -a     [Optional] AWS administrator access key"
     echo "  -s     [Optional] AWS administrator secret key"
     echo "  -r     [Optional] AWS region"
@@ -27,7 +29,7 @@ then
 fi
 
 #Argument check
-if [ -z "$username" ] || { [ -z "$policies" ] && [ -z "$policies_file" ]; }
+if [ -z "$username" ] || { [ -z "$policies" ] && [ -z "$policies_file" ] && [ -z "$custom_policies_file" ]; }
 then
     echo "Missing parameters, -u and -p or -f flags are mandatory."
     echo "Use -h flag to display help."
@@ -122,3 +124,38 @@ then
     done
 fi
 
+#Custom policies check
+if [ -n "$custom_policies_file" ];
+then
+    echo "Checking custom policies.."
+    #Group custom policies add to var
+    json_custom_policies="["
+    for group in ${user_groups[@]} #Loop all groups
+    do
+        cleangroup=$(echo $group | tr -cd '\11\12\15\40-\176')
+        group_custom_policies=($(aws iam list-group-policies --group-name $cleangroup --query 'PolicyNames[]' --output text))
+        #Loop all custom policies from the group
+        
+        for group_custom_policy in ${group_custom_policies[@]} #Loop all groups
+        do
+            json_custom_policies+=$(aws iam get-group-policy --group-name $cleangroup --policy-name $group_custom_policy)
+            json_custom_policies+=","
+        done
+    done #All group custom policies are included in json_custom_policy var
+
+    #User specific custom policies add to var
+    user_custom_policies=($(aws iam list-user-policies --user-name $username --query 'PolicyNames[]' --output text))
+        for user_custom_policy in ${user_custom_policies[@]} #Loop all groups
+        do
+            json_custom_policies+=$(aws iam get-user-policy --user-name $username --policy-name $user_custom_policy)
+            json_custom_policies+=","
+        done    
+
+    json_custom_policies="${json_custom_policies::-1}"
+    json_custom_policies+="]"
+
+    #Check custom policies
+    python managed-policies-check.py "${json_custom_policies}" $custom_policies_file
+
+
+fi
