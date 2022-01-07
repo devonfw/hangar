@@ -14,7 +14,7 @@ stages:
     steps:
     - task: Bash@3
       inputs:
-        filePath: '.pipelines/.scripts/test.sh'
+        filePath: '.pipelines/scripts/test.sh'
         
     - task: PublishTestResults@2
       inputs:
