@@ -43,7 +43,8 @@ fi
 
 #parse config file for variables
 source $configuration_file
-
+pipelinesDirectory="${directory}/${pipelines}"
+scriptsDirectory="${pipelinesDirectory}/${scripts}"
 cd ../../..
 hangarPath=$(pwd)
 
