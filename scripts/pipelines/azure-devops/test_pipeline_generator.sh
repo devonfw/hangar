@@ -23,7 +23,7 @@ then
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
     echo "  -c    [Required] Configuration file for parameter containing all the variables."
-    echo "  -b               Name of the target branch to which the Pull Request will target. PR is not created if the flag is not provided."
+    echo "  -b    [Required] Name of the target branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag." 
     exit
 fi
