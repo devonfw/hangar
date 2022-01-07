@@ -15,7 +15,6 @@ variable "subnet_cidr_block" {
 variable "nic_private_ip" {
     type = string
     description = "the private ip needs to be within the subnet cidr range "
-  
 }
 
 variable "instance_type" {

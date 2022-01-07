@@ -21,7 +21,7 @@ sudo sysctl -w fs.file-max=65536
 ulimit -n 65536
 ulimit -u 4096
 
-#getting the long term support version of an sonarqube image. Here it is Version 8.9.3
+#getting the long term support version of an sonarqube image.
 echo -e "${green}Pulling the docker image..."
 echo -e ${white}
 sudo docker pull sonarqube:lts

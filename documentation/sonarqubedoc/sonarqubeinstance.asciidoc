@@ -16,7 +16,6 @@ The scope of this section is to deploy an AWS EC2 instance running SonarQube. A 
 * `variables.tf` contains variable definition for `main.tf`.
 * `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
 * `addparameter.sh` add values to the terraform.tfvars.
-* `execute.sh` create the AWS EC2 instance with a Docker container which run SonarQube. 
 
 == Usage
 

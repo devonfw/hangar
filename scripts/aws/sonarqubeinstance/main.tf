@@ -22,17 +22,17 @@ resource "aws_internet_gateway" "sq_gateway" {
   }
 }
 
-#create costum route table
-resource "aws_route_table" "sqrouttable" {
+#create custom route table
+resource "aws_route_table" "sqroutetable" {
   vpc_id = aws_vpc.sq_vpc.id
 
   tags = {
-    Name = "sqrouttable"
+    Name = "sqroutetable"
   }
 }
 
 resource "aws_route" "sqroute" {
-  route_table_id         = aws_route_table.sqrouttable.id
+  route_table_id         = aws_route_table.sqroutetable.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.sq_gateway.id
 
@@ -52,12 +52,12 @@ resource "aws_subnet" "subnet_sq" {
 #route table association
 resource "aws_route_table_association" "a" {
   subnet_id      = aws_subnet.subnet_sq.id
-  route_table_id = aws_route_table.sqrouttable.id
+  route_table_id = aws_route_table.sqroutetable.id
 
   
 }
 
-#create securitygroup
+#create security group
 resource "aws_security_group" "allow_web_sq" {
   name        = "allow_web_traffic"
   description = "Allow web inbound traffic"
@@ -107,7 +107,7 @@ resource "aws_security_group" "allow_web_sq" {
   }
 }
 
-#networkinterface
+#network interface
 resource "aws_network_interface" "sqnic" {
   subnet_id       = aws_subnet.subnet_sq.id
   private_ips     = [var.nic_private_ip]   
@@ -141,14 +141,14 @@ resource "aws_instance" "sq-server" {
 
 
   #auto script for instalation docker
-  user_data = file("./datascript.sh")
+  user_data = file("./setup_sonarqube.sh")
  
   tags = {
     Name = "sqserver"
   }
 }
 
-#Get Ubuntu 20.04 AMI for EC Instanz
+#Get Ubuntu 20.04 AMI for EC Instance
 data "aws_ami" "ubuntu_20_04" {
     most_recent = true
  
