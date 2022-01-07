@@ -56,9 +56,8 @@ cd ${directory}
 mkdir .pipelines
 cd ${pipelinesDirectory}
 mkdir scripts
-cd ${hangarPath}/.pipelines
+cd ${hangarPath}/scripts/pipelines/azure-devops/templates/build
 cp "build-pipeline.yml" "${pipelinesDirectory}/build-pipeline.yml"
-cd ${hangarPath}/.scripts
 cp "${language}-build.sh" "${scriptsDirectory}/build.sh"
 
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
