@@ -67,7 +67,7 @@ cp "${language}-test.sh" "${scriptsDirectory}/test.sh"
 echo -e "${green}Committing and pushing to Git remote..."
 echo -e ${white}
 cd ${directory}
-git add ${pipelines} ${scripts} -f
+git add .pipelines -f
 git commit -m "Adding test pipeline source YAML"
 git push -u origin ${source_branch}
 
