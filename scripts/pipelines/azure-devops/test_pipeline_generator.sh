@@ -35,7 +35,7 @@ red='\e[0;31m'
 # Argument check.
 if test -z "$name" || test -z "$language" || test -z "$directory"
 then
-    echo -e "${red}Missing parameters, all flags are mandatory."
+    echo -e "${red}Missing parameters, some flags are mandatory."
     echo -e "${red}Use -h flag to display help."
     echo -e ${white}
     exit
