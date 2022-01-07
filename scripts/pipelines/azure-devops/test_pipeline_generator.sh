@@ -55,6 +55,14 @@ cd ${directory}
 git checkout -b ${source_branch}
 cd ${hangarPath}
 
+# Copy the corresponding YAML and script into the directory.
+echo -e "${green}Copying the corresponding YAML and script into your directory..."
+echo -e ${white}
+cd ${hangarPath}/.pipelines
+cp "test-pipeline.yml" "${pipelinesDirectory}/test-pipeline.yml"
+cd ${hangarPath}/.scripts
+cp "${language}-test.sh" "${scriptsDirectory}/test.sh"
+
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
 echo -e "${green}Committing and pushing to Git remote..."
 echo -e ${white}
