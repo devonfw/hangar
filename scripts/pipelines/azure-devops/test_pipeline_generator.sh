@@ -33,7 +33,7 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 # Argument check.
-if test -z "$name" || test -z "$language" || test -z "$directory"
+if test -z "$name" || test -z "$language" || test -z "$directory" || test -z "$configuration_file" || test -z "$target_branch"
 then
     echo -e "${red}Missing parameters, some flags are mandatory."
     echo -e "${red}Use -h flag to display help."
