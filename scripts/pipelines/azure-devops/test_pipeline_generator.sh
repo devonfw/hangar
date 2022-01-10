@@ -42,7 +42,7 @@ then
 fi
 
 #parse config file for variables
-source $configuration_file
+source "${configuration_file}"
 pipelinesDirectory="${directory}/.pipelines"
 scriptsDirectory="${pipelinesDirectory}/scripts"
 cd ../../..
@@ -51,7 +51,7 @@ hangarPath=$(pwd)
 # Create the new branch.
 echo -e "${green}Creating the new branch: ${source_branch}..."
 echo -e ${white}
-cd ${directory}
+cd "${directory}"
 git checkout -b ${source_branch}
 
 # Copy the corresponding YAML and script into the directory.
@@ -63,7 +63,7 @@ cp "${hangarPath}/${templates_path}/${language}-${script_file}" "${scriptsDirect
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
 echo -e "${green}Committing and pushing to Git remote..."
 echo -e ${white}
-cd ${directory}
+cd "${directory}"
 git add .pipelines -f
 git commit -m "Adding test pipeline source YAML"
 git push -u origin ${source_branch}
@@ -71,7 +71,7 @@ git push -u origin ${source_branch}
 # Create Azure Pipeline
 echo -e "${green}Create Azure Test Pipeline:"
 echo -e ${white}
-az pipelines create --name $name --yml-path ${yaml_file_path}
+az pipelines create --name $name --yml-path "${yaml_file_path}"
 
 # PR creation.
 if test -z "$target_branch"
