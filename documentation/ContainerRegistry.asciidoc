@@ -6,19 +6,19 @@ toc::[]
 == How to use Docker Hub?
 Docker Hub is a container registry/repository which is used to save container/docker images. We will also demonstrate how to pull an image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
 
-* *Step#1* - You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
-* *Step#2* - Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
-* *Step#3* - Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
+* You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
+* Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
+* Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
 [source,shell]
 ----
    docker login -u <username>
 ----
-* *Step#4* - Use the following command to pull the docker container image from Docker Hub to local machine.
+* Use the following command to pull the docker container image from Docker Hub to local machine.
 [source,shell]
 ----
    docker pull <username>/hello-world
 ----
-* *Step#5* - Use the following command to push an image to private repository.
+* Use the following command to push an image to private repository.
 [source,shell]
 ----
    docker push <username>/<imagename>
