@@ -79,6 +79,8 @@ The following create-repository example creates a repository inside the specifie
    }
 ----
 
+=== Pulling and Pushing images
+
 Here are some optional commands which we would follow in any of our Docker projects.
 
 * To pull the hello-world container to our local (or server from where we run this command), use this.
