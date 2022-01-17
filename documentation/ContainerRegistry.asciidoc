@@ -65,7 +65,7 @@ The following create-repository example creates a repository inside the specifie
 ----
    aws ecr create-repository \ 
        --repository-name project-a/nginx-web-app \ 
-       --region us-west-2
+       --region us-west-1
 ----
 
 Output:
