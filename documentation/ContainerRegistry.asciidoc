@@ -67,7 +67,8 @@ The following create-repository example creates a repository inside the specifie
        --repository-name project-a/nginx-web-app \ 
        --region us-west-2
 ----
-* Output:
+
+Output:
 [source,json]
 ----
    {
