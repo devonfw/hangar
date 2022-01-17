@@ -57,9 +57,8 @@ Docker Hub is a container registry/repository which is used to save container/do
        --username AWS \
        --password-stdin <aws-account-id>.dkr.ecr.<region>.amazonaws.com
 ----
-* To create a repository
 
-The following create-repository example creates a repository inside the specified namespace in the default registry for an account.
+Create a repository inside the specified namespace in the default registry for an account like in the example below:
 
 [source,shell]
 ----
