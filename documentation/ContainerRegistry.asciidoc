@@ -91,7 +91,7 @@ Here are some optional commands which we would follow in any of our Docker proje
 ----
     docker tag hello-world:latest <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
 ----
-* After tagging the container, use this command to push the code changes to the registry.
+* After tagging the container image, use this command to push the changes to the repository.
 [source,shell]
 ----
     docker push <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
