@@ -6,8 +6,8 @@ toc::[]
 == How to use Docker Hub?
 Docker Hub is a container registry/repository which is used to save container/docker images. We will also demonstrate how to pull an image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
 
-* You will need a Docker Hub account. If you dont have one, please create one here - https://hub.docker.com/
-* Once you have a Docker Hub account, you can create a repository in just a few clicks at https://hub.docker.com/repositories. First, click "Create Repository"
+* You will need a Docker Hub account. If you do not have one, please create one https://hub.docker.com/[here]. 
+* Once you have a Docker Hub account, you can create a repository in just a few clicks in the https://hub.docker.com/repositories[link here]. First, click "Create Repository".
 * Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
 [source,shell]
 ----
@@ -48,7 +48,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 ----
 
 == AWS Elastic Container Registry
-* First step, we need to login to our AWS Account using the following command (please replace *<aws-account-id>* and *<region>* as appliable).
+* First step, we need to login to our AWS Account using the following command (please replace *<aws-account-id>* and *<region>* as applicable).
 
 [source,shell]
 ----
