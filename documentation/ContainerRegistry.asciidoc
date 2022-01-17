@@ -68,7 +68,7 @@ The following create-repository example creates a repository inside the specifie
        --region us-west-1
 ----
 
-Output:
+*Output:*
 [source,json]
 ----
    {
