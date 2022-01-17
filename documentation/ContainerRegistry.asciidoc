@@ -37,7 +37,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 * Here are some optional commands which we would follow in any of our projects.
 
 1. To pull the hello-world container to our local (or server from where we run this command), use *docker pull*.
-2. After making the necessary code changes, we need to tag the container using *docker tag* command (before pushing it to the regitry).
+2. After making the necessary code changes, tag the container image using *docker tag* command.
 3. After tagging the container, use *docker push* command to push the code changes to the registry.
 
 [source,shell]
