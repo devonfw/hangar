@@ -23,29 +23,20 @@ Docker Hub is a container registry/repository which is used to save container/do
 ----
    docker push <username>/<imagename>
 ----
-- Example: 
-[source,shell]
-----
-   docker images
-   docker tag nodejssampleprj <username>/nodejssampleprj:v1.1.1.1
-   docker images
-   docker pull <username>/nodejssampleprj:v1.1.1.1
-----
-* Going back to our Docker Hub account, we can see the new tag is stored in our private repository [https://hub.docker.com/u/devonfw].
-
-== Docker Pull/Push Commands
-* Here are some optional commands which we would follow in any of our projects.
-
-1. To pull the hello-world container to our local (or server from where we run this command), use *docker pull*.
-2. After making the necessary code changes, tag the container image using *docker tag* command.
-3. After tagging the container, use *docker push* command to push the code changes to the registry.
+=== Example: 
+In a project we will normally execute the following commands:
 
 [source,shell]
 ----
-   docker pull HOSTNAME/PROJECT-ID/IMAGE
-   docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
-   docker push HOSTNAME/PROJECT-ID/IMAGE
+   docker pull <hostname>/<project-id>/<image>
+   docker tag <source-image> <hostname>/<project-id>/<image>
+   docker push <hostname>/<project-id>/<image>
 ----
+
+* Pull the desired images to our local repository with `docker pull` command.
+* After making the necessary changes, tag the image using the `docker tag` command.
+* After tagging our image, use `docker push` command to push the changes into the Docker Hub.
+* Going back to our Docker Hub account, we can see the new tag stored in our private repository.
 
 == AWS Elastic Container Registry
 * First, login with Docker to AWS ECR registry with the following command:
