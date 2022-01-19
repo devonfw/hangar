@@ -48,7 +48,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 ----
 
 == AWS Elastic Container Registry
-* First step, we need to login to our AWS Account using the following command (please replace *<aws-account-id>* and *<region>* as applicable).
+* First, login with Docker to AWS ECR registry with the following command:
 
 [source,shell]
 ----
@@ -58,7 +58,7 @@ Docker Hub is a container registry/repository which is used to save container/do
        --password-stdin <aws-account-id>.dkr.ecr.<region>.amazonaws.com
 ----
 
-Create a repository inside the specified namespace in the default registry for an account like in the example below:
+* Create a repository inside the specified namespace in the default registry for an account like in the example below:
 
 [source,shell]
 ----
