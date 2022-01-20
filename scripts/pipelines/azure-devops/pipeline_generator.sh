@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts c:n:l:k:i:b:w: flag
+while getopts c:n:l:k:i:b:w:h: flag
 do
     case "${flag}" in
         c) configFile=${OPTARG};;
@@ -9,10 +9,11 @@ do
         i) imageName=${OPTARG};;
         b) targetBranch=${OPTARG};;
         w) webBrowser=${OPTARG};;
+	h) help=${OPTARG};;
     esac
 done
 
-if test "$1" = "-h"
+if test "$help" = "help"
 then
     echo "Generates a pipeline on Azure DevOps based on the parameters set in the configuration file."
     echo ""
@@ -35,7 +36,7 @@ red='\e[0;31m'
 if test -z "$configFile" || test -z "$pipelineName"
 then
     echo -e "${red}Missing parameters, some flags are mandatory."
-    echo -e "${red}Use -h flag to display help."
+    echo -e "${red}Use -h help flag to display help."
     echo -e ${white}
     exit 2
 fi
@@ -47,7 +48,7 @@ do
 	if test -z $arg
 	then
         echo -e "${red}Missing mandatory parameters."
-        echo -e "${red}Use -h flag to display help."
+        echo -e "${red}Use -h help flag to display help."
         echo -e ${white}
         exit 2
 	fi
