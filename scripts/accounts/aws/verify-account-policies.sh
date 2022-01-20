@@ -155,7 +155,13 @@ then
     json_custom_policies+="]"
 
     #Check custom policies
-    python managed-policies-check.py "${json_custom_policies}" $custom_policies_file
+    python custom-policies-check.py "${json_custom_policies}" $custom_policies_file
 
+    #Return correct exit code depending on python script execution
+    ret=$?
+    if [ $ret -ne 0 ]; then
+        #Error
+        exit 1;
+    fi
 
 fi

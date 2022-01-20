@@ -35,5 +35,6 @@ for statement_desired in desired_custom_policies_parsed['Statement']:
         if is_applied:
             print("APPLIED ",effect_desired,": ",action_desired)
         else:
-            print("ERROR: NOT APPLIED ",effect_desired," ",action_desired)
-            exit()
+            print("ERROR: NOT APPLIED ",effect_desired,": ",action_desired)
+            sys.exit(1)
+sys.exit(0)
