@@ -76,7 +76,7 @@ verify-account-policies.sh -u <username> [-p <policies...>] [-f <policies file p
 -s      [Optional] AWS administrator secret key
 -r      [Optional] AWS region
 ```
-NOTE: At least one policies flag (-p or -f) is required.
+NOTE: At least one policies flag (`-p`, `-f` or `-c`) is required.
 
 === Example
 ```
@@ -85,7 +85,7 @@ NOTE: At least one policies flag (-p or -f) is required.
 After execution, provided policies will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
 
 == Configure AWS CLI [[configure-cli]]
-Once you have been provided with an IAM user, setup the AWS CLI using the following command:
+Once you have been provided with an IAM user with the required policies attached, setup the AWS CLI using the following command:
 ```
 aws configure
 ```

@@ -31,7 +31,7 @@ fi
 #Argument check
 if [ -z "$username" ] || { [ -z "$policies" ] && [ -z "$policies_file" ] && [ -z "$custom_policies_file" ]; }
 then
-    echo "Missing parameters, -u and -p or -f flags are mandatory."
+    echo "Missing parameters, -u and -p, -f or -c flags are mandatory."
     echo "Use -h flag to display help."
     exit
 fi
@@ -59,7 +59,7 @@ export AWS_DEFAULT_OUTPUT=json
 aws sts get-caller-identity &> /dev/null
 if ! [ $? -eq 0 ]
 then
-    echo "Invalid AWS credentials. Please use -a -s flags to setup correctly.";
+    echo "Invalid AWS credentials. Please use -a and -s flags to setup correctly.";
     exit 
 fi
 
