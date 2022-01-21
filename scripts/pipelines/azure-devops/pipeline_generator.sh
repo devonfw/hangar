@@ -1,25 +1,26 @@
 #!/bin/bash
-while getopts c:n:l:k:i:b:w:h: flag
+while getopts c:d:n:l:k:i:b:w: flag
 do
     case "${flag}" in
         c) configFile=${OPTARG};;
+        d) localDirectory=${OPTARG};;
         n) pipelineName=${OPTARG};;
         l) language=${OPTARG};;
         k) projectKey=${OPTARG};;
         i) imageName=${OPTARG};;
         b) targetBranch=${OPTARG};;
         w) webBrowser=${OPTARG};;
-	h) help=${OPTARG};;
     esac
 done
 
-if test "$help" = "help"
+if test "$1" = "-h"
 then
     echo "Generates a pipeline on Azure DevOps based on the parameters set in the configuration file."
     echo ""
     echo "Arguments:"
     echo "  -c    [Required] Configuration file containing parameters and variables."
     echo "  -n    [Required] Name that will be set to the quality pipeline."
+    echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
     echo "  -l               Language or framework of the directory. Only required when generating Build and Test pipelines."
     echo "  -k               SonarQube project key. Only required when generating Quality pipelines."
     echo "  -i               Name that will be given to the Docker image. Only required when generating Package pipelines."
@@ -33,22 +34,21 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 #Check if configuration file and pipeline name are passed.
-if test -z "$configFile" || test -z "$pipelineName"
+if test -z "$configFile"
 then
-    echo -e "${red}Missing parameters, some flags are mandatory."
-    echo -e "${red}Use -h help flag to display help."
+    echo -e "${red}Missing configuration file parameter, use -c."
+    echo -e "${red}Use -h flag to display help."
     echo -e ${white}
     exit 2
 fi
-
 source $configFile
 IFS=, read -ra values <<< "$mandatoryFlags"
 for arg in "${values[@]}"
 do
 	if test -z $arg
 	then
-        echo -e "${red}Missing mandatory parameters."
-        echo -e "${red}Use -h help flag to display help."
+        echo -e "${red}Missing parameters, some flags are mandatory."
+        echo -e "${red}Use -h flag to display help."
         echo -e ${white}
         exit 2
 	fi
@@ -77,7 +77,7 @@ then
 fi
 cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
 # Check if -k and -i flags are activated.
-if test -z "$projectKey" & test -z "$imageName"
+if test -z "$projectKey" && test -z "$imageName"
 then
     # -k and -i flags are not activated so it is a build or test pipeline.
     cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
