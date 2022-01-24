@@ -21,7 +21,7 @@ Please follow below instructions to execute the script:
 == Usage
 
 ```
-./pipeline_generator.sh -n <pipeline name> -l <language or framework> -d <project local path> -c <config file path> -b <target branch> [-w]
+./pipeline_generator.sh -c <config file path> -n <pipeline name> -l <language or framework> -d <project local path>  -b <target branch> [-w]
 ```
 == Flags
 
