@@ -40,7 +40,6 @@ Please follow below instructions to execute the script:
 ```
 ./pipeline_generator.sh -n quarkus_project_test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -c test-pipeline-config.cfg -b master -w
 ``` 
-NOTE: Pipeline parameters can be modified as needed in `test-pipeline-config.cfg` file such as pipeline name, branch name, yaml files path, etc.
 
 
  
