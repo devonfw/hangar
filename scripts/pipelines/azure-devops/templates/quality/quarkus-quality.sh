@@ -1,2 +1,4 @@
 #!/bin/bash
-mvn sonar:sonar -Dsonar.host.url=<sonarqube-url> -Dsonar.login=<sonarqube-token> -Dsonar.java.binaries=$1/build/classes
+url=<sonarqube-url>
+login=<sonarqube-token>
+mvn sonar:sonar -Dsonar.host.url=$url -Dsonar.login=$login -Dsonar.java.binaries=$1/build/classes
