@@ -7,7 +7,7 @@ Before executing the script be sure your local repository is up to date, pull la
 
 == *Creating Azure DevOps Test Pipeline using provided script*
 
-The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create a test pipeline based on a YAML template at `templates/test/test-pipeline.yml`. Configuration file `test-pipeline-config.cfg` can be passed mandatory parameter containing all the variables, we can not execute generic pipeline script without providing mandatory flags.
+The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create a test pipeline based on a YAML template at `templates/test/test-pipeline.yml`. Configuration file `test-pipeline-config.cfg` can be passed as a mandatory parameter containing all the variables. Other required parameters needs to be passed for the script to execute. 
 
 Please follow below instructions to execute the script:
 [loweralpha]
@@ -40,7 +40,7 @@ Please follow below instructions to execute the script:
 ```
 ./pipeline_generator.sh -n quarkus_project_test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -c test-pipeline-config.cfg -b master -w
 ``` 
-NOTE: Pipeline parameters can be modified as needed in `test-pipeline-config.cfg` file such as pipeline name, branch, yaml files path, etc.
+NOTE: Pipeline parameters can be modified as needed in `test-pipeline-config.cfg` file such as pipeline name, branch name, yaml files path, etc.
 
 
  
