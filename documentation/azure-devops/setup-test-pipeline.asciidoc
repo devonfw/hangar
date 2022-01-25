@@ -9,7 +9,6 @@ Before executing the script be sure your local repository is up to date, pull la
 
 The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create a test pipeline based on a YAML template at `templates/test/test-pipeline.yml`. Configuration file `test-pipeline-config.cfg` can be passed as a mandatory parameter containing all the variables. Other required parameters needs to be passed for the script to execute. 
 
-Please follow below instructions to execute the script:
 [loweralpha]
 . The script creates a git branch with name `feature/test-pipeline` and `.pipeline` YAML files will be pushed to it.
 . Pull Request will be created in order to merge the new branch into the appropriate branch using -b flag. Ex. to the master branch. 
