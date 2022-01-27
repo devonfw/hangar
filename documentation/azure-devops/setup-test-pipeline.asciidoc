@@ -1,13 +1,12 @@
 = Setting up a Test Pipeline on Azure DevOps
 
-In this section we will create a test pipeline for running project test cases. This pipeline will be configured to be triggered every time there is a commit to the Azure DevOps repository, regardless of which branch it is made on.
+In this section we will create a Azure DevOps Test pipeline for for running project test cases. This pipeline will be configured in order to be triggered every time a commit to the Azure DevOps repository is done, regardless of which branch it is made on.
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
+The creation of this pipeline will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create a test pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
-
+The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create new branch, create a test pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
 == Prerequisites
 
 This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
@@ -17,17 +16,16 @@ This script will commit and push the corresponding YAML template into your repos
 === Flags
 ```
     -c    [Required] Configuration file containing parameters and variables.
-    -n    [Required] Name that will be set to the test pipeline.
-    -l    [Required] Language or framework of the project.
+    -n    [Required] Name that will be set to the pipeline.
     -d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    -l    [Required] Language or framework of the project.
     -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
     -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
-
 === Usage
 
 ```
-    ./pipeline_generator.sh -c <config file path> -n <pipeline name> -l <language or framework> -d <project local path> -b <branch> [-w]
+   ./pipeline_generator.sh -c <config file path> -n <pipeline name> -d <project local path> -l <language or framework> -b <branch> [-w]
 ```
 NOTE: 
 
@@ -40,13 +38,12 @@ NOTE:
 ==== Quarkus project
 
 ```
-    ./pipeline_generator.sh -c test-config.cfg -n quarkus-project -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+  ./pipeline_generator.sh -c ./templates/test/test-config.cfg -n quarkus-project-test -d C:/Users/$USERNAME/Desktop/quarkus-project -l quarkus -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
  
-
 
 
 
