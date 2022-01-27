@@ -25,12 +25,12 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 == Flags
 
 ```
--c    [Required] Configuration file for parameter containing all the variables.
--n    [Required] Name that will be set to the quality pipeline."
--d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
--l               Language or framework of the directory. Only required when generating Test pipelines."
--b               Name of the branch to which the Pull Request will target. PR won't create without flag."
--w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    -c    [Required] Configuration file containing parameters and variables.
+    -n    [Required] Name that will be set to the pipeline.
+    -d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    -l    [Required] Language or framework of the project.
+    -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+    -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 === Example
 
