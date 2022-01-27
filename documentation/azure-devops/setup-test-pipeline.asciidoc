@@ -7,6 +7,7 @@ The creation of this pipeline will follow the project workflow, so a new branch 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
 The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create new branch, create a test pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
+
 == Prerequisites
 
 This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
