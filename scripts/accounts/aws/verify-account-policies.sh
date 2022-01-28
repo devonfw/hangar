@@ -136,7 +136,7 @@ then
         group_custom_policies=($(aws iam list-group-policies --group-name $cleangroup --query 'PolicyNames[]' --output text))
         #Loop all custom policies from the group
         
-        for group_custom_policy in ${group_custom_policies[@]} #Loop all groups
+        for group_custom_policy in "${group_custom_policies[@]}" #Loop all groups
         do
             json_custom_policies+=$(aws iam get-group-policy --group-name $cleangroup --policy-name $group_custom_policy)
             json_custom_policies+=","
@@ -145,7 +145,7 @@ then
 
     #User specific custom policies add to var
     user_custom_policies=($(aws iam list-user-policies --user-name $username --query 'PolicyNames[]' --output text))
-        for user_custom_policy in ${user_custom_policies[@]} #Loop all groups
+        for user_custom_policy in "${user_custom_policies[@]}" #Loop all groups
         do
             json_custom_policies+=$(aws iam get-user-policy --user-name $username --policy-name $user_custom_policy)
             json_custom_policies+=","
