@@ -45,7 +45,7 @@ create-user.sh -u <username> -g <group> [-p <policies...>] [-f <policies file pa
 
 === Example
 ```
-./create-user.sh -u "Bob" -g "DevOps" -f "./policies.txt" -a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
+./create-user.sh -u "Bob" -g "DevOps" -f "./eks-managed-policies.txt" -a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
 ```
 NOTE: If the "DevOps" group does not exist, it will be created.
 
@@ -80,9 +80,11 @@ NOTE: At least one policies flag (`-p`, `-f` or `-c`) is required.
 
 === Example
 ```
-./verify-account-policies.sh -u "Bob" -f "./policies.txt" -a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
+./verify-account-policies.sh -u "Bob" -f "./eks-managed-policies.txt" -c "./eks-custom-policies.json"-a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
 ```
 After execution, provided policies will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
+
+NOTE: Required policies for EKS usage are located at `/scripts/accounts/aws/eks-managed-policies.txt` and `/scripts/accounts/aws/eks-custom-policies.json`
 
 == Configure AWS CLI [[configure-cli]]
 Once you have been provided with an IAM user with the required policies attached, setup the AWS CLI using the following command:
