@@ -19,7 +19,7 @@ then
     echo ""
     echo "Arguments:"
     echo "  -c    [Required] Configuration file containing parameters and variables."
-    echo "  -n    [Required] Name that will be set to the quality pipeline."
+    echo "  -n    [Required] Name that will be set to the pipeline."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
     echo "  -l               Language or framework of the directory. Only required when generating Build and Test pipelines."
     echo "  -k               SonarQube project key. Only required when generating Quality pipelines."
