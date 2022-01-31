@@ -13,7 +13,7 @@ helpFunction()
    exit 1 # Exit script after printing help.
 }
 
-while getopts "n:d:o:v:t:p:" opt
+while getopts "n:d:o:v:t:w:" opt
 do
    case "$opt" in
       n ) projectName="$OPTARG" ;;
