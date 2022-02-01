@@ -12,7 +12,6 @@ Then, a Pull Request (PR) will be created in order to merge the new branch into 
 The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 === Prerequisites
-* 
 * https://kubernetes.io/docs/tasks/tools/[Install kubectl]
 * https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/iam-permissions.md[AWS IAM User has EKS access]
 
