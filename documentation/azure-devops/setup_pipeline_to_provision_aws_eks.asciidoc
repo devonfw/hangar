@@ -15,6 +15,7 @@ The script located at `/scripts/pipelines/azure-devops/provision_aws_eks.sh` wil
 === Prerequisites
 * Service Connection in Azure DevOps 
   - Create a service connection in Azure DevOps https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[here]
+  - Make sure the service connection name to be `AWS-Terraform-Connection`. If you need a specific connection name, please modify the same `script_config.cfg`.
 * AWS S3 Bucket Name and Path
 * https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/iam-permissions.md[AWS IAM User has EKS access]
 * https://kubernetes.io/docs/tasks/tools/[Install kubectl]
