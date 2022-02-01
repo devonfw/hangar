@@ -6,6 +6,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  targetPath: target
+
 stages:
 - stage: Test
   jobs:
@@ -14,8 +17,12 @@ stages:
     steps:
     - task: Bash@3
       inputs:
-        filePath: '.pipelines/scripts/test.sh'
-        
+        filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/test.sh'
+
+    - publish: $(Build.Repository.LocalPath)/$(targetPath)
+      displayName: "Publish Artifact"
+      artifact: $(artifactPath)    
+
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'

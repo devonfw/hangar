@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts c:d:n:l:k:i:b:w: flag
+while getopts c:d:n:l:k:i:b:w:a: flag
 do
     case "${flag}" in
         c) configFile=${OPTARG};;
@@ -10,6 +10,7 @@ do
         i) imageName=${OPTARG};;
         b) targetBranch=${OPTARG};;
         w) webBrowser=${OPTARG};;
+        a) artifactPath=${OPTARG};;
     esac
 done
 
@@ -21,6 +22,7 @@ then
     echo "  -c    [Required] Configuration file containing parameters and variables."
     echo "  -n    [Required] Name that will be set to the quality pipeline."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -a               Published artifacts in user specified path."
     echo "  -l               Language or framework of the directory. Only required when generating Build and Test pipelines."
     echo "  -k               SonarQube project key. Only required when generating Quality pipelines."
     echo "  -i               Name that will be given to the Docker image. Only required when generating Package pipelines."
@@ -98,10 +100,20 @@ git add .pipelines -f
 git commit -m "Adding the source YAML"
 git push -u origin ${sourceBranch}
 
-# Create Azure Pipeline
-echo -e "${green}Generating the pipeline from the YAML template..."
+# Create Azure pipeline
+echo -e "${green}create the pipeline from the YAML template but skip the run..."
 echo -e ${white}
-az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}"
+az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run
+
+#Create variables in Azure pipeline
+echo -e "${green}Create variable in the pipeline from the YAML template..."
+echo -e ${white}
+az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+
+#Run the pipeline
+echo -e "${green}Run the pipeline..."
+echo -e ${white}
+az pipelines run --name $pipelineName
 
 # PR creation
 if test -z "$targetBranch"
