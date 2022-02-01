@@ -22,13 +22,28 @@ Download the files from `...scripts/terrafom/aws/eks`. Open the file `terraform.
 Run the following command on your command prompt.
 ```
 provision-aws-ek.sh
+  -c <configuration file path> \
   -n <name> \
-  -d <description> \
-  -o <organization> \
-  -v <visibility> \
-  -t <PAT> \
-  [-w <process workflow>]
+  -d <directory of local project> \
+  -b <brach name to which PR will target> \
+  -e <AWS EKS clustername> \
+  -s <AWS S3 bucket name> \
 ```
+
+== Flags
+
+```
+-n    [Required] Name that will be set to the pipeline.
+-d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+-c    [Required] Configuration file path.
+-e    [Required] AWS EKS Cluster name
+-s    [Required] AWS S3 Bucket Name(used by Terraform to store remote state).
+-k    [Required] AWS S3 Bucket path(used by Terraform to store remote state file)
+-b    [Required] Name of the branch to which the pull request will target. PR is not created if the flag is not provided.
+-w               Open the pull request on the web browser if it can not be automatically merged. Requires -b flag.
+
+```
+
 To interact with your cluster, run this command in your terminal:
 ```
 aws eks --region <<region_name>> update-kubeconfig --name <<cluster_name>>
