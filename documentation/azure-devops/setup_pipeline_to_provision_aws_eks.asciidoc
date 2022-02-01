@@ -21,7 +21,7 @@ The script located at `/scripts/pipelines/azure-devops/provision_aws_eks.sh` wil
 
 === Usage
 
-Download the files from `...scripts/terrafom/aws/eks`. Open the file `terraform.tfvars` and edit or add the needed parameters.
+Download the files from `...scripts/terrafom/aws/eks`. 
 
 Run the following command on your command prompt.
 ```
@@ -48,6 +48,11 @@ provision-aws-ek.sh
 -w               Open the pull request on the web browser if it can not be automatically merged. Requires -b flag.
 
 ```
+
+=== Terraform Variables
+Open terraform.tfvars and edit or add the needed parameters.
+== VPC
+This script will by default create a new VPC with name `k8s-vpc`. However, if you wish to provision AWS EKS in your existing `VPC` please edit `existing_vpc_id` and `existing_vpc_private_subnets` with respective values.
 
 To interact with your cluster, run this command in your terminal:
 ```
