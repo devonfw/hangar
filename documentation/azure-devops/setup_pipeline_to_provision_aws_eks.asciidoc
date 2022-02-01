@@ -13,8 +13,12 @@ Then, a Pull Request (PR) will be created in order to merge the new branch into 
 The script located at `/scripts/pipelines/azure-devops/provision_aws_eks.sh` will automatically create this new branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 === Prerequisites
-* https://kubernetes.io/docs/tasks/tools/[Install kubectl]
+* Service Connection in Azure DevOps 
+  - Create a service connection in Azure DevOps https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[here]
+* AWS S3 Bucket Name and Path
 * https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/iam-permissions.md[AWS IAM User has EKS access]
+* https://kubernetes.io/docs/tasks/tools/[Install kubectl]
+
 
 === Usage
 
@@ -26,7 +30,7 @@ provision-aws-ek.sh
   -c <configuration file path> \
   -n <name> \
   -d <directory of local project> \
-  -b <brach name to which PR will target> \
+  -b <branch name to which PR will target> \
   -e <AWS EKS clustername> \
   -s <AWS S3 bucket name> \
   
