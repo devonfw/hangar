@@ -100,7 +100,7 @@ else
     # It is a Build, Test or Quality pipeline, copy the script according to its language.
     cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
     # Check if the pipeline is a Quality pipeline.
-    if test ! -z "$buildPipelineName" & test ! -z "$sonarUrl" & test ! -z "$sonarToken"
+    if test ! -z "$buildPipelineName" && test ! -z "$sonarUrl" && test ! -z "$sonarToken"
     then
         sed -i "s/<build-pipeline-name>/$buildPipelineName/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
         sed -i "s,<sonarqube-url>,$sonarUrl,g" "${localDirectory}/${scriptFilePath}/${scriptFile}"
