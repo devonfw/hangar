@@ -2,6 +2,7 @@
 toc::[]
 :idprefix:
 :idseparator: -
+
 == Setup Pipeline to provision AWS EKS using Terraform
 In this section we will create a pipeline to provision AWS EKS cluster using Terraform scripts. This pipeline will be configured to be triggered every time there is a commit to the Azure DevOps repository, regardless of which branch it is made on.
 
@@ -31,7 +32,7 @@ provision-aws-ek.sh
   
 ```
 
-== Flags
+=== Flags
 
 ```
 -n    [Required] Name that will be set to the pipeline.
