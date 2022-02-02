@@ -7,9 +7,8 @@ provider "aws" {
 resource "aws_vpc" "sq_vpc" {
   cidr_block = var.vpc_cidr_block
 
-
   tags = {
-    Name = "sqvpc"
+    Name = "sonarqube_vpc"
   }
 }
 
@@ -18,49 +17,46 @@ resource "aws_internet_gateway" "sq_gateway" {
   vpc_id = aws_vpc.sq_vpc.id
 
   tags = {
-    Name = "sqinternetgateway"
+    Name = "sonarqube_internetgateway"
   }
 }
 
 #create custom route table
-resource "aws_route_table" "sqroutetable" {
+resource "aws_route_table" "sq_routetable" {
   vpc_id = aws_vpc.sq_vpc.id
 
   tags = {
-    Name = "sqroutetable"
+    Name = "sonarqube_routetable"
   }
 }
 
-resource "aws_route" "sqroute" {
-  route_table_id         = aws_route_table.sqroutetable.id
+#create default route
+resource "aws_route" "sq_route" {
+  route_table_id         = aws_route_table.sq_routetable.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.sq_gateway.id
-
-
 }
 
 #create subnet
-resource "aws_subnet" "subnet_sq" {
+resource "aws_subnet" "sq_subnet" {
   vpc_id     = aws_vpc.sq_vpc.id
   cidr_block = var.subnet_cidr_block
 
-
   tags = {
-    Name = "sqsubnet"
+    Name = "sonarqube_subnet"
   }
 }
-#route table association
-resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.subnet_sq.id
-  route_table_id = aws_route_table.sqroutetable.id
 
-  
+#associate route table 
+resource "aws_route_table_association" "sq_route_table_association" {
+  subnet_id      = aws_subnet.sq_subnet.id
+  route_table_id = aws_route_table.sq_routetable.id
 }
 
 #create security group
-resource "aws_security_group" "allow_web_sq" {
-  name        = "allow_web_traffic"
-  description = "Allow web inbound traffic"
+resource "aws_security_group" "sq_securitygroup" {
+  name        = "sonarqube_securitygroup"
+  description = "SonarQube Security Group"
   vpc_id      = aws_vpc.sq_vpc.id
   ingress {
     description = "HTTPS"
@@ -87,9 +83,9 @@ resource "aws_security_group" "allow_web_sq" {
   }
 
   ingress {
-    description = "Port9000"
+    description = "SonarQube"
     from_port   = 9000
-    to_port     = 9092
+    to_port     = 9000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -103,52 +99,49 @@ resource "aws_security_group" "allow_web_sq" {
 
 
   tags = {
-    Name = "sqsecuritygroup"
+    Name = "sonarqube_securitygroup"
   }
 }
 
-#network interface
-resource "aws_network_interface" "sqnic" {
-  subnet_id       = aws_subnet.subnet_sq.id
+#create network interface (NIC)
+resource "aws_network_interface" "sq_nic" {
+  subnet_id       = aws_subnet.sq_subnet.id
   private_ips     = [var.nic_private_ip]   
-  security_groups = [aws_security_group.allow_web_sq.id]
-
+  security_groups = [aws_security_group.sq_securitygroup.id]
 
   tags = {
-    Name = "sqnic"
+    Name = "sonarqube_nic"
   }
 }
 
-#elastic Ip Adress
-resource "aws_eip" "one" {
+#create elastic IP associated to NIC
+resource "aws_eip" "sq_eip" {
   vpc                       = true
-  network_interface         = aws_network_interface.sqnic.id
+  network_interface         = aws_network_interface.sq_nic.id
   associate_with_private_ip = var.nic_private_ip 
   depends_on                = [aws_internet_gateway.sq_gateway]
 }
 
-#ubuntu server
-resource "aws_instance" "sq-server" {
+#create EC2 instance
+resource "aws_instance" "sq_server" {
   ami = data.aws_ami.ubuntu_20_04.id 
   instance_type = var.instance_type
-  key_name      = var.key_name
-
+  key_name      = var.keypair_name
 
   network_interface {
     device_index         = 0
-    network_interface_id = aws_network_interface.sqnic.id
+    network_interface_id = aws_network_interface.sq_nic.id
   }
 
-
-  #auto script for instalation docker
+  #cloud config script for setting up SonarQube
   user_data = file("./setup_sonarqube.sh")
  
   tags = {
-    Name = "sqserver"
+    Name = "sonarqube_server"
   }
 }
 
-#Get Ubuntu 20.04 AMI for EC Instance
+#Get Ubuntu 20.04 AMI for EC2 Instance
 data "aws_ami" "ubuntu_20_04" {
     most_recent = true
  
@@ -171,7 +164,7 @@ data "aws_ami" "ubuntu_20_04" {
 }
 
 #outputs
-output "elastic-IP" {
-  value = aws_eip.one.public_ip
+output "sonarqube_public_ip" {
+  value = aws_eip.sq_eip.public_ip
 }
 
