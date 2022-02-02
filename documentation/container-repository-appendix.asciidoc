@@ -1,7 +1,9 @@
 = Appendix - Container Registry
+
 This section contains the additional content about Container Registry. 
-== What is a Container Registry?
-* Docker registry is a service that is storing our docker images.
+
+== What is a Container Registry?^[1]^^[2]^
+* Docker registry is a service that stores our docker images.
 * Docker registry could be hosted by a third party, as public or private registry.
 * Could be used one of the below:
 * Managed - We can use any of the below mentioned container registry that are managed by the provider.
@@ -19,14 +21,14 @@ This section contains the additional content about Container Registry.
   11. Harbor  (https://goharbor.io/docs/2.3.0/install-config/[link])
   12. Portus  (http://port.us.org/docs/first-steps.html[link])
 
-== What is a Container Repository?
+== What is a Container Repository?^[2]^
 * Docker repository is a collection of different docker images with same name, that have different tags. 
 * Tag is alphanumeric identifier of the image within a repository.
 * For example see https://hub.docker.com/r/library/python/tags/[DockerTagExample]. 
   - There are many different tags for the official python image, these tags are all members of the official python repository on the Docker Hub. 
   - Docker Hub is a Docker Registry hosted by Docker.
   
-== What is Docker Registry and why to use it?
+== What is Docker Registry and why to use it?^[1]^
 * The Registry is a stateless, highly scalable server side application that stores and lets you distribute Docker images. 
 * The Registry is open-source, under the permissive Apache license.
 * You should use the Registry if you want to:
@@ -37,7 +39,7 @@ This section contains the additional content about Container Registry.
 * Docker Hub provides a free-to-use, hosted Registry, plus additional features (organization accounts, automated builds, and more).
 * The Registry is compatible with Docker engine version 1.6.0 or higher.
 
-== Docker Pull/Push Commands
+== Docker Pull/Push Commands^[1]^
 * Here are some optional commands which we would follow in any of our projects.
 
 1. To pull the hello-world container to our local (or server from where we run this command), use *docker pull*.
@@ -54,7 +56,7 @@ This section contains the additional content about Container Registry.
 * The above commands are pretty much same for any container image repo / registries like DockerHub, AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
 * Only the logging-in commands may be different for different image repo.
 
-== Azure Container Registry
+== Azure Container Registry^[3]^
 * https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud.
 * Azure CLI commands start with "az" which is shown below for login
 * Docker commands can be used for pulling, tagging and pushing container images as shown below
@@ -68,7 +70,7 @@ This section contains the additional content about Container Registry.
    docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
 ----
 
-== Google Container Registry
+== Google Container Registry^[4]^
 * https://cloud.google.com/container-registry/docs/overview[GCR] is a private registry service from Google Cloud.
 * Google Cloud CLI commands start with "gcr" which is shown below for login
 * Docker commands can be used for pulling, tagging and pushing container images as shown below
@@ -82,7 +84,7 @@ This section contains the additional content about Container Registry.
    docker push gcr.io/PROJECT_ID/quickstart-image:tag1
 ----
 
-== GitHub Container Registry
+== GitHub Container Registry^[5]^
 * https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry[GHCR] is a private registry service from GitHub.
 * Docker commands can be used for logging into registry and for pulling, tagging, pushing container images as shown below
 
@@ -94,3 +96,10 @@ This section contains the additional content about Container Registry.
    docker tag ghcr.io/OWNER/IMAGE_NAME:1.14.1 ghcr.io/OWNER/IMAGE_NAME:tag1
    docker push ghcr.io/OWNER/IMAGE_NAME:latest
 ----
+
+== References
+* 1. ^Docker (https://docs.docker.com/registry/)
+* 2. ^StackOverflow (https://stackoverflow.com/questions/34004076/)
+* 3. ^Azure
+* 4. ^Google Cloud
+* 5. ^GitHub
