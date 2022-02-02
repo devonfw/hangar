@@ -3,8 +3,17 @@ toc::[]
 :idprefix:
 :idseparator: -
 
+== Setup Container Repository
+In this section, we will see how to create/access Container Registry to pull/tag/push container images.
+
+* A container image is a lightweight, standalone, executable package of software that includes everything needed to run an application - code, runtime, system tools, system libraries and settings.^[1]^
+* A container registry is a repository, or collection of repositories, used to store container images for Kubernetes, DevOps, and container-based application development.^[2]^
+
+== Prerequisites
+Docker Hub account is required to access Docker Hub registry.
+
 == How to use Docker Hub?
-Docker Hub is a container registry/repository which is used to save container/docker images. We will also demonstrate how to pull an image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
+Docker Hub is a container registry/repository which is used to save container/docker images.^[1]^ We will also demonstrate how to pull an image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
 
 * You will need a Docker Hub account. If you do not have one, please create one https://hub.docker.com/[here]. 
 * Once you have a Docker Hub account, you can create a repository in just a few clicks in the https://hub.docker.com/repositories[link here]. First, click "Create Repository".
@@ -39,7 +48,7 @@ In a project we will normally execute the following commands:
 * Going back to our Docker Hub account, we can see the new tag stored in our private repository.
 
 == AWS Elastic Container Registry
-* First, login with Docker to AWS ECR registry with the following command:
+* First, login with Docker to AWS ECR registry^[3]^ with the following command:
 
 [source,shell]
 ----
@@ -89,3 +98,8 @@ Here are some optional commands which we would follow in any of our Docker proje
 ----
     docker push <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
 ----
+
+=== References
+* 1 - ^Docker
+* 2 - ^RedHat
+* 3 - ^AWS
