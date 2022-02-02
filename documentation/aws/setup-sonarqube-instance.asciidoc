@@ -1,4 +1,3 @@
-
 = Setting up a SonarQube instance in AWS
 
 The scope of this section is to deploy an AWS EC2 instance running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
