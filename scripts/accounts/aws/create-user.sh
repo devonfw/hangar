@@ -1,11 +1,12 @@
 #!/bin/bash
-while getopts u:g:p:f:a:s:r: flag
+while getopts u:g:p:f:c:a:s:r: flag
 do
     case "${flag}" in
         u) username=${OPTARG};;
         g) groupname=${OPTARG};;
         p) policies=${OPTARG};;
         f) policies_file=${OPTARG};;
+        c) custom_policies=${OPTARG};;
         a) access_key=${OPTARG};;
         s) secret_key=${OPTARG};;
         r) region=${OPTARG};;
@@ -21,6 +22,7 @@ then
     echo "  -g     [Required] Group name for the group to be created or used."
     echo "  -p     [Optional] Policies to be attached to the group, splitted by comma."
     echo "  -f     [Optional] Path to a file containing the policies to be attached to the group."   
+    echo "  -c     [Optional] Path to a json file containing the custom policies to be attached to the group."
     echo "  -a     [Optional] AWS administrator access key"
     echo "  -s     [Optional] AWS administrator secret key"
     echo "  -r     [Optional] AWS region"
@@ -95,6 +97,14 @@ then
     do
         aws iam attach-group-policy --group-name $groupname --policy-arn "${i}"
     done
+fi
+
+#Create and attach custom policies to group (From json file)
+if [ -n "$custom_policies" ];
+then
+    echo "Creating and attaching custom policies to group.."
+    custom_policies_arn=$(aws iam create-policy --policy-name "${custom_policies%.*}" --policy-document "file://${custom_policies}" --query 'Policy.[Arn]' --output text)
+    aws iam attach-group-policy --group-name $groupname --policy-arn $custom_policies_arn
 fi
 
 #Add user to group
