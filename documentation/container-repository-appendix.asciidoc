@@ -4,8 +4,8 @@ This section contains the additional content about Container Registry.
 
 == What is a Container Registry?^[1]^^[2]^
 * Docker registry is a service that stores our docker images.
-* Docker registry could be hosted by a third party, as public or private registry.
-* Could be used one of the below:
+* Docker registry could be hosted by a third party, as public or private registry (using any of the below - list includes popular ones and does not cover everything).
+
 * Managed - We can use any of the below mentioned container registry that are managed by the provider.
   1. Docker Hub (https://docs.docker.com/docker-hub/repos/[link])
   2. Amazon Elastic Container Registry (https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html[ECR])
