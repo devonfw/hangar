@@ -53,6 +53,10 @@ provision-aws-ek.sh
 * Open terraform.tfvars and edit or add the needed parameters.
 * This script will by default create a new VPC with name `k8s-vpc`. However, if you wish to provision AWS EKS in your existing `VPC` please edit `existing_vpc_id` and `existing_vpc_private_subnets` with respective values.
 
+=== AWS EKS Cluster Configuration Details
+Below is the configuration details of the AWS EKS cluster created:
+
+
 To interact with your cluster, run this command in your terminal:
 ```
 aws eks --region <<region_name>> update-kubeconfig --name <<cluster_name>>
