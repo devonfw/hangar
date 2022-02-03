@@ -22,6 +22,7 @@ IMPORTANT: This will create a public key, directly stored in AWS (current region
 * `setup_sonarqube.sh` script to be run on EC2 instance that installs and deploys a container running SonarQube.
 * `variables.tf` contains variable definition for `main.tf`.
 * `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
+* `terraform.tfstate` contains current state of the created infrastructure. Should be stored securely.
 * `set-config.sh` assists user in setting the values of `terraform.tfvars`.
 
 == Usage
@@ -46,15 +47,23 @@ Finally, deploy SonarQube instance:
 terraform apply --auto-approve 
 ```
 
-NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on. More insights https://www.terraform.io/cli/run[here].
+NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on. *Remember to securely store `terraform.tfstate` file*, othewise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
 
 In particular, this will create an Ubuntu-based EC2 instance in AWS and deploy a Docker container running SonarQube. 
 
 You will get the public IP address of the EC2 instance as output. Take note of it, you will need it later on.
 
-Now you can access SonarQube web interface on `+http://sonarqube_public_ip:9000+` (replace with actual IP) with the following credentials:
+After a few minutes, you will be able to access SonarQube web interface on `+http://sonarqube_public_ip:9000+` (replace with actual IP) with the following credentials:
 
 * Username:   `admin`
 * Password:   `admin`
 
-IMPORTANT: Change the default password as soon as you first login.
+IMPORTANT: Change the default password promptly.
+
+== Appendix: Destroy SonarQube instance
+
+You can easily destroy the SonarQube instance and all associated resources by executing:
+
+```
+terraform destroy
+```
