@@ -101,7 +101,7 @@ git commit -m "Adding the source YAML"
 git push -u origin ${sourceBranch}
 
 # Create Azure pipeline
-echo -e "${green}create the pipeline from the YAML template but skip the run..."
+echo -e "${green}Creating the pipeline from the YAML template..."
 echo -e ${white}
 az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run
 
