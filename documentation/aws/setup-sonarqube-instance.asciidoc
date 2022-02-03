@@ -47,7 +47,7 @@ Finally, deploy SonarQube instance:
 terraform apply --auto-approve 
 ```
 
-NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on. *Remember to securely store `terraform.tfstate` file*, othewise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
+NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on. *Remember to securely store `terraform.tfstate` file*, otherwise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
 
 In particular, this will create an Ubuntu-based EC2 instance in AWS and deploy a Docker container running SonarQube. 
 
