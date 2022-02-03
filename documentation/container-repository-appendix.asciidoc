@@ -48,9 +48,9 @@ This section contains the additional content about Container Registry.
 
 [source,shell]
 ----
-   docker pull HOSTNAME/PROJECT-ID/IMAGE
-   docker tag SOURCE_IMAGE HOSTNAME/PROJECT-ID/IMAGE
-   docker push HOSTNAME/PROJECT-ID/IMAGE
+   docker pull <hostname>/<project-id>/<imagename>
+   docker tag <source-imagename> <hostname>/<project-id>/<imagename>:<tag>
+   docker push <hostname>/<project-id>/<imagename>
 ----
 
 * The above commands are pretty much same for any container image repo / registries like DockerHub, AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
