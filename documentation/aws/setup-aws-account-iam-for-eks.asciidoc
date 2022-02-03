@@ -12,9 +12,11 @@ First of all, https://docs.aws.amazon.com/cli/latest/userguide/getting-started-i
 
 * An AWS account with IAM full access permission.
 
+=== Alternative
+
 In case you do not have an account or permission to create new IAM users, request it to your AWS administrator asking for the following policies being attached. Then go to <<check-iam-user-permissions>>.
 
-=== Required managed policies
+==== Required managed policies
 ```
 AmazonEC2FullAccess
 IAMReadOnlyAccess
@@ -23,7 +25,7 @@ AmazonS3FullAccess
 AmazonEC2ContainerRegistryFullAccess
 ```
 
-=== Required custom policies
+==== Required custom policies
 
 Find them on `/scripts/accounts/aws/eks-custom-policies.json`.
 
