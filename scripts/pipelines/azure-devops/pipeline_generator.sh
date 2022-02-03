@@ -105,10 +105,14 @@ echo -e "${green}Creating the pipeline from the YAML template..."
 echo -e ${white}
 az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
 
-#Create variables in Azure pipeline
-echo -e "${green}Create variable in the pipeline from the YAML template..."
-echo -e ${white}
-az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+# Check if -a flag is activated
+if ! test -z "$artifactPath"
+then
+    # Create variables in Azure pipeline
+    echo -e "${green}Creating variable in the pipeline..."
+    echo -e ${white}
+    az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+fi
 
 #Run the pipeline
 echo -e "${green}Run the pipeline..."
