@@ -32,7 +32,7 @@ This script will commit and push the corresponding YAML template into your repos
 
 NOTE:  The config file for the test pipeline is located at `/scripts/pipelines/azure-devops/templates/test/test-config.cfg`.
 
-NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information or you can store application logs in user specified path.
+NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information or you can store application logs in user specified path by using -a flag.
 
 === Examples
 
