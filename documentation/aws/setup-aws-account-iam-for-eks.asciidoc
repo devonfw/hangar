@@ -14,11 +14,12 @@ First of all, https://docs.aws.amazon.com/cli/latest/userguide/getting-started-i
 
 In case you do not have an account or permission to create new IAM users, request it to your AWS administrator asking for the following policies attached. Then go to <<configure-cli>>.
 ```
-AmazonEKSClusterPolicy
-AmazonEKSWorkerNodePolicy
+AmazonEC2FullAccess
+IAMReadOnlyAccess
 AmazonEKSServicePolicy
-AmazonEKS_CNI_Policy
-AmazonEKSVPCResourceController
+AmazonS3FullAccess
+AmazonEC2ContainerRegistryFullAccess
+eks:*
 ```
 
 == Creating IAM user using provided script
