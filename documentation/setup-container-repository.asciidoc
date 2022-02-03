@@ -40,6 +40,7 @@ Docker Hub is a container registry/repository which is used to save container/do
    docker push <hostname>/<project-id>/<imagename>
 ----
 * Going back to our Docker Hub account, we can see the new tag stored in our private repository.
+* Docker hub has no registry reference (<hostname>) since it is default whereas AWS, Azure, GCP, etc will have references like ecr.io, azr.io, gcr.io, etc.
 
 == AWS Elastic Container Registry
 * First, login with Docker to AWS ECR registry^[3]^ with the following command:
