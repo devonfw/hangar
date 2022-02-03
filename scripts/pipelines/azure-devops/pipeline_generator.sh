@@ -109,7 +109,7 @@ az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}
 if ! test -z "$artifactPath"
 then
     # Create variables in Azure pipeline
-    echo -e "${green}Creating variable in the pipeline..."
+    echo -e "${green}Creating the variable to store test cases logs..."
     echo -e ${white}
     az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
 fi
