@@ -29,7 +29,6 @@ This script will commit and push the corresponding YAML template into your repos
 ```
    ./pipeline_generator.sh -c <config file path> -n <pipeline name> -d <project local path> -l <language or framework> -a <artifactPath> -b <branch> [-w]
 ```
-NOTE: 
 
 . The config file for the test pipeline is located at `/scripts/pipelines/azure-devops/templates/test/test-config.cfg`.
 
