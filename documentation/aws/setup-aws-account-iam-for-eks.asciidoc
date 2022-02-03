@@ -12,15 +12,20 @@ First of all, https://docs.aws.amazon.com/cli/latest/userguide/getting-started-i
 
 * An AWS account with IAM full access permission.
 
-In case you do not have an account or permission to create new IAM users, request it to your AWS administrator asking for the following policies attached. Then go to <<configure-cli>>.
+In case you do not have an account or permission to create new IAM users, request it to your AWS administrator asking for the following policies being attached. Then go to <<check-iam-user-permissions>>.
+
+=== Required managed policies
 ```
 AmazonEC2FullAccess
 IAMReadOnlyAccess
 AmazonEKSServicePolicy
 AmazonS3FullAccess
 AmazonEC2ContainerRegistryFullAccess
-eks:*
 ```
+
+=== Required custom policies
+
+Find them on `/scripts/accounts/aws/eks-custom-policies.json`.
 
 == Creating IAM user using provided script
 
@@ -70,9 +75,9 @@ Secret access key: <secretAccessKey>
 
 IMPORTANT: It is mandatory to store the access key ID and the secret access key securely at this point, as *they will not be retrievable again*.
 
-== Check user permissions
+== Check IAM user permissions
 
-The script located at `/scripts/accounts/aws/verify-account-policies.sh` will check that policies were correctly attached to the user.
+The script located at `/scripts/accounts/aws/verify-account-policies.sh` will check that the necessary policies were attached to the IAM user.
 
 === Usage
 ```
