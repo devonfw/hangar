@@ -103,7 +103,7 @@ git push -u origin ${sourceBranch}
 # Create Azure pipeline
 echo -e "${green}Creating the pipeline from the YAML template..."
 echo -e ${white}
-az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run
+az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
 
 #Create variables in Azure pipeline
 echo -e "${green}Create variable in the pipeline from the YAML template..."
