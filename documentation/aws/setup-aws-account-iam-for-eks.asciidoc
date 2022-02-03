@@ -6,7 +6,7 @@ toc::[]
 The scope of this section is to prepare an AWS account to be ready for deploying in AWS EKS. By the end of this guide, a new IAM user belonging to a group with the required permissions will be created.
 
 == Preparing environment
-First of all, https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[install AWS CLI for your OS]. 
+First of all, install https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[AWS CLI] and https://www.python.org/downloads/[Python] for your OS.
 
 == Prerequisites
 
@@ -107,7 +107,7 @@ NOTE: At least one policies flag (`-p`, `-f` or `-c`) is required.
 
 === Example
 ```
-./verify-account-policies.sh -u Bob -f ./eks-managed-policies.txt -c ./eks-custom-policies.json-a "myAccessKey" -s "mySecretKey" -r eu-west-1
+./verify-account-policies.sh -u Bob -f ./eks-managed-policies.txt -c ./eks-custom-policies.json -a "myAccessKey" -s "mySecretKey" -r eu-west-1
 ```
 After execution, provided policies will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
 

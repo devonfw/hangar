@@ -40,7 +40,7 @@ fi
 #AWS credentials setup
 if [ -n "$access_key" ]  && [ -n "$secret_key" ];
 then
-    echo "Setting up your AWS credentials.."
+    echo "Setting up your AWS credentials..."
     export AWS_ACCESS_KEY_ID=$access_key
     export AWS_SECRET_ACCESS_KEY=$secret_key
 fi
@@ -48,12 +48,24 @@ fi
 #AWS region
 if [ -n "$region" ];
 then
-    echo "Setting up your AWS region.."
+    echo "Setting up your AWS region..."
     export AWS_DEFAULT_REGION=$region
 fi
 
 #AWS default output
 export AWS_DEFAULT_OUTPUT=json
+
+#Check if AWS CLI is installed
+if ! [ -x "$(command -v aws)" ]; then
+  echo 'Error: AWS CLI is not installed.' >&2
+  exit 1
+fi
+
+#Check if Python is installed
+if ! [ -x "$(command -v python)" ]; then
+  echo 'Error: Python is not installed.' >&2
+  exit 1
+fi
 
 #Check if AWS credentials are valid
 aws sts get-caller-identity &> /dev/null
@@ -64,11 +76,11 @@ then
 fi
 
 #Get user groups
-echo "Getting user groups.."
+echo "Getting user groups..."
 user_groups=($(aws iam list-groups-for-user --user-name $username --query 'Groups[].[GroupName]' --output text))
 
 #Loop user groups and get policies from them
-echo "Getting policies attached to user groups.."
+echo "Getting policies attached to user groups..."
 groups_policies=()
 for group in ${user_groups[@]}
 do
@@ -77,7 +89,7 @@ do
 done
 
 #Get user-specific policies
-echo "Getting user-specific policies.."
+echo "Getting user-specific policies..."
 user_policies=($(aws iam list-attached-user-policies --user-name $username --query 'AttachedPolicies[].[PolicyArn]' --output text))
 all_policies=( "${groups_policies[@]}" "${user_policies[@]}")
 
@@ -88,7 +100,7 @@ white='\e[1;37m'
 #Inline policies check
 if [ -n "$policies" ];
 then
-    echo "Checking inline provided policies.."
+    echo "Checking inline provided policies..."
     IFS=',' read -ra policies_array <<< "$policies"
     for policy_to_check in "${policies_array[@]}"; do
         policy_to_check=$(echo $policy_to_check | tr -cd '\11\12\15\40-\176')
@@ -107,7 +119,7 @@ fi
 #File policies check
 if [ -n "$policies_file" ];
 then
-    echo "Checking file provided policies.."
+    echo "Checking file provided policies..."
     IFS=$'\r\n' GLOBIGNORE='*' command eval  'policies_file_array=($(cat ${policies_file}))'
     for policy_to_check in "${policies_file_array[@]}"
     do
@@ -127,7 +139,7 @@ fi
 #Custom policies check
 if [ -n "$custom_policies_file" ];
 then
-    echo "Checking custom policies.."
+    echo "Checking custom policies..."
     #Group custom policies add to var
     json_custom_policies="["
     for group in ${user_groups[@]} #Loop all groups
