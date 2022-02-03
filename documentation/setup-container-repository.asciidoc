@@ -23,28 +23,22 @@ Docker Hub is a container registry/repository which is used to save container/do
    docker login -u <username>
 ----
 * Use the following command to pull the docker container image from Docker Hub to local machine.
+* Pull the desired images to our local repository with `docker pull` command.
 [source,shell]
 ----
-   docker pull <username>/hello-world
+   docker pull <hostname>/<project-id>/<imagename>
+----
+* After making the necessary changes, tag the image using the `docker tag` command.
+* After tagging our image, use `docker push` command to push the changes into the Docker Hub.
+[source,shell]
+----   
+   docker tag <source-image> <hostname>/<project-id>/<image>
 ----
 * Use the following command to push an image to private repository.
 [source,shell]
 ----
-   docker push <username>/<imagename>
+   docker push <hostname>/<project-id>/<imagename>
 ----
-=== Example: 
-In a project we will normally execute the following commands:
-
-[source,shell]
-----
-   docker pull <hostname>/<project-id>/<image>
-   docker tag <source-image> <hostname>/<project-id>/<image>
-   docker push <hostname>/<project-id>/<image>
-----
-
-* Pull the desired images to our local repository with `docker pull` command.
-* After making the necessary changes, tag the image using the `docker tag` command.
-* After tagging our image, use `docker push` command to push the changes into the Docker Hub.
 * Going back to our Docker Hub account, we can see the new tag stored in our private repository.
 
 == AWS Elastic Container Registry
