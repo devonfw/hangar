@@ -96,6 +96,6 @@ Here are some optional commands which we would follow in any of our Docker proje
 ----
 
 === References
-* 1 - ^Docker
-* 2 - ^RedHat
-* 3 - ^AWS
+* 1 - ^Docker (https://docs.docker.com/docker-hub/)
+* 2 - ^RedHat (https://www.redhat.com/en/topics/cloud-native-apps/what-is-a-container-registry)
+* 3 - ^AWS (https://docs.aws.amazon.com/ecr/)
