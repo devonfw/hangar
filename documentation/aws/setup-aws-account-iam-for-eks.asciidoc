@@ -55,7 +55,7 @@ create-user.sh \
 
 === Example
 ```
-./create-user.sh -u "Bob" -g "DevOps" -f "./eks-managed-policies.txt" -c "eks-custom-policies.json" -a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
+./create-user.sh -u Bob -g DevOps -f ./eks-managed-policies.txt -c ./eks-custom-policies.json -a "myAccessKey" -s "mySecretKey" -r eu-west-1
 ```
 NOTE: If the "DevOps" group does not exist, it will be created.
 
@@ -100,7 +100,7 @@ NOTE: At least one policies flag (`-p`, `-f` or `-c`) is required.
 
 === Example
 ```
-./verify-account-policies.sh -u "Bob" -f "./eks-managed-policies.txt" -c "./eks-custom-policies.json"-a "myAccessKey" -s "mySecretKey" -r "eu-west-1" 
+./verify-account-policies.sh -u Bob -f ./eks-managed-policies.txt -c ./eks-custom-policies.json-a "myAccessKey" -s "mySecretKey" -r eu-west-1
 ```
 After execution, provided policies will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
 
