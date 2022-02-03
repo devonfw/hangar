@@ -62,7 +62,7 @@ IMPORTANT: Change the default password promptly.
 
 == Appendix: Destroy SonarQube instance
 
-You can easily destroy the SonarQube instance and all associated resources by executing:
+As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can easily destroy it and all associated resources by executing:
 
 ```
 terraform destroy
