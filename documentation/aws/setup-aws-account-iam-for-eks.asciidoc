@@ -29,7 +29,15 @@ In case you do not have an AWS access key (needed to authenticate through API), 
 
 === Usage
 ```
-create-user.sh -u <username> -g <group> [-p <policies...>] [-f <policies file path>] [-c "<custom policies file>"] [-a "<AWS access key>"] [-s "<AWS secret key>"] [-r <region>] 
+create-user.sh \
+  -u <username> \
+  -g <group> \
+  [-p <policies...>] \
+  [-f <policies file path>] \
+  [-c <custom policies file path>] \
+  [-a <AWS access key>] \
+  [-s <AWS secret key>] \
+  [-r <region>] 
 ```
 
 === Flags
@@ -38,7 +46,7 @@ create-user.sh -u <username> -g <group> [-p <policies...>] [-f <policies file pa
 -g      [Required] Group name for the group to be created or used
 -p      [Optional] Policies to be attached to the group, splitted by comma
 -f      [Optional] Path to a file containing the policies to be attached to the group
--c     [Optional] Path to a json file containing the custom policies to be attached to the group.
+-c      [Optional] Path to a json file containing the custom policies to be attached to the group.
 -a      [Optional] AWS administrator access key
 -s      [Optional] AWS administrator secret key
 -r      [Optional] AWS region
@@ -50,6 +58,8 @@ create-user.sh -u <username> -g <group> [-p <policies...>] [-f <policies file pa
 ```
 NOTE: If the "DevOps" group does not exist, it will be created.
 
+NOTE: Required policies for EKS usage are located at `/scripts/accounts/aws/eks-managed-policies.txt` and `/scripts/accounts/aws/eks-custom-policies.json`
+
 === After execution
 On success, the newly created user access data will be shown as output:
 ```
@@ -59,15 +69,20 @@ Secret access key: <secretAccessKey>
 
 IMPORTANT: It is mandatory to store the access key ID and the secret access key securely at this point, as *they will not be retrievable again*.
 
-NOTE: Required policies for EKS usage are located at `/scripts/accounts/aws/eks-managed-policies.txt` and `/scripts/accounts/aws/eks-custom-policies.json`
-
 == Check user permissions
 
 The script located at `/scripts/accounts/aws/verify-account-policies.sh` will check that policies were correctly attached to the user.
 
 === Usage
 ```
-verify-account-policies.sh -u <username> [-p <policies...>] [-f <policies file path>] [-c <custom policies file path>] [-a "<AWS access key>"] [-s "<AWS secret key>"] [-r <region>] 
+verify-account-policies.sh \
+  -u <username> \
+  [-p <policies...>] \
+  [-f <policies file path>] \
+  [-c <custom policies file path>] \
+  [-a <AWS access key>] \
+  [-s <AWS secret key>] \
+  [-r <region>] 
 ```
 
 === Flags
