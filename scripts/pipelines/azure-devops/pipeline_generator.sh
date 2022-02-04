@@ -17,28 +17,28 @@ done
 
 if test "$1" = "-h"
 then
-    echo "Generates a pipeline on Azure DevOps based on the parameters set in the configuration file."
+    echo "Generates a pipeline on Azure DevOps based on the given definition."
     echo ""
-    echo "Global arguments:"
-    echo "  -c    [Required] Configuration file containing parameters and variables."
+    echo "Common flags:"
+    echo "  -c    [Required] Configuration file containing pipeline definition."
     echo "  -n    [Required] Name that will be set to the pipeline."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
     echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
-    echo "Build arguments:"
+    echo "Build pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
     echo ""
-    echo "Test arguments:"
+    echo "Test pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
     echo ""
-    echo "Quality arguments:"
+    echo "Quality pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
     echo "  -p    [Required] Build pipeline name."
     echo "  -u    [Required] Sonarqube URL."
     echo "  -t    [Required] Sonarqube token."
     echo ""
-    echo "Package arguments:"
+    echo "Package pipeline flags:"
     echo "  -i    [Required] Name that will be given to the Docker image."
     exit
 fi
@@ -52,8 +52,8 @@ IFS=, read -ra flags <<< "$mandatoryFlags"
 # Check if a config file was supplied.
 if test -z "$configFile"
 then
-    echo -e "${red}Please indicate the path to a configuration file."
-    echo -e ${white}
+    echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
+    echo -e ${white} >&2
     exit 2
 fi
 # Check if the required flags in the config file have been activated.
@@ -61,12 +61,33 @@ for flag in "${flags[@]}"
 do
     if test -z $flag
     then
-        echo -e "${red}Missing parameters, some flags are mandatory."
-        echo -e "${red}Use -h flag to display help."
-        echo -e ${white}
+        echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
+        echo -e ${white} >&2
         exit 2
     fi
 done
+
+# Check if Git is installed
+if ! [ -x "$(command -v git)" ]; then
+  echo -e "${red}Error: Git is not installed." >&2
+  echo -e ${white} >&2
+  exit 127
+fi
+
+# Check if Azure CLI is installed
+if ! [ -x "$(command -v az)" ]; then
+  echo -e "${red}Error: Azure CLI is not installed." >&2
+  echo -e ${white} >&2
+  exit 127
+fi
+
+# Check if Python is installed
+if ! [ -x "$(command -v python)" ]; then
+  echo -e "${red}Error: Python is not installed." >&2
+  echo -e ${white} >&2
+  exit 127
+fi
 
 cd ../../..
 hangarPath=$(pwd)

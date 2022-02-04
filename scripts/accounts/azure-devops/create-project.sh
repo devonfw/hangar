@@ -34,9 +34,16 @@ red='\e[0;31m'
 if [ -z "$projectName" ] || [ -z "$description" ] || [ -z "$organization" ] || [ -z "$visibility" ] || [ -z "$pat_token" ] 
 then
    echo ""
-   echo -e "${red}ERROR: Some required parameters are missing.";
-   echo -e ${white}
+   echo -e "${red}Error: Some required parameters are missing." >&2
+   echo -e ${white} >&2
    helpFunction
+fi
+
+# Check if Azure CLI is installed
+if ! [ -x "$(command -v az)" ]; then
+  echo -e "${red}Error: Azure CLI is not installed." >&2
+  echo -e ${white} >&2
+  exit 127
 fi
 
 # Install the Azure DevOps extension.
