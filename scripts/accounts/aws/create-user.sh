@@ -116,8 +116,7 @@ if [ -n "$custom_policies" ];
 then
     echo "Creating and attaching custom policies to group..."
     custom_policies_basename="$(basename -- $custom_policies)"
-    custom_policies_arn=$(aws iam create-policy --policy-name "${custom_policies_basename%.*}" --policy-document "file://${custom_policies}" --query 'Policy.[Arn]' --output text)
-    aws iam attach-group-policy --group-name $groupname --policy-arn $custom_policies_arn
+    aws iam put-group-policy --group-name $groupname --policy-name "${custom_policies_basename%.*}" --policy-document "file://${custom_policies}" &> /dev/null
 fi
 
 #Add user to group
