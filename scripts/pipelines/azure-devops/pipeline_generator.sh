@@ -114,11 +114,6 @@ then
     az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
 fi
 
-#Run the pipeline
-echo -e "${green}Run the pipeline..."
-echo -e ${white}
-az pipelines run --name $pipelineName
-
 # PR creation
 if test -z "$targetBranch"
 then
