@@ -125,6 +125,7 @@ then
     do
         policy_to_check=$(echo $policy_to_check | tr -cd '\11\12\15\40-\176')
         policy_exists=$(printf '%s\n' "${all_policies[@]}" | grep "$policy_to_check")
+
         if [ -n "$policy_exists" ];
         then
             echo -e "${green}OK        $policy_to_check"
@@ -132,14 +133,13 @@ then
             echo -e "${red}FAILED        $policy_to_check"
             exit 1;
         fi
-        echo -e ${white}
     done
 fi
 
 #Custom policies check
 if [ -n "$custom_policies_file" ];
 then
-    echo "Checking custom policies..."
+    echo -e "${white}Checking custom policies..."
     #Group custom policies add to var
     json_custom_policies="["
     for group in ${user_groups[@]} #Loop all groups
