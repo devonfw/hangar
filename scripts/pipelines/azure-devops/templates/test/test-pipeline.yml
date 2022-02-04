@@ -10,9 +10,10 @@ stages:
 - stage: Test
   jobs:
   - job: Test
-    displayName: Test
+    displayName: Test 
     steps:
     - task: Bash@3
+      displayName: Executing the test cases
       inputs:
         targetType: 'inline'
         script: |
@@ -20,10 +21,11 @@ stages:
           bash $(Build.Repository.LocalPath)/.pipelines/scripts/test.sh | tee $(Build.Repository.LocalPath)/TEST_$(Build.BuildNumber).log 
   
     - publish: $(Build.Repository.LocalPath)/TEST_$(Build.BuildNumber).log  
-      displayName: "Publish Test result to Artifact"
+      displayName: "Publish logs to artifact"
       artifact: $(artifactPath) 
 
     - task: PublishTestResults@2
+      displayName: "Publish test result"
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-*.xml'
