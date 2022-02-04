@@ -1,0 +1,69 @@
+= Setting up a SonarQube instance in AWS
+
+The scope of this section is to deploy an AWS EC2 instance running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
+
+== Getting Started
+=== Prerequisites
+* https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started[Install Terraform].
+
+* https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
+
+* Have a SSH keypair for the SonarQube instance. You can use an existing one or create a new one with the following command:
+
+```
+aws ec2 create-key-pair --key-name sonarqube --query 'KeyMaterial' --output text > sonarqube.pem
+```
+
+IMPORTANT: This will create a public key, directly stored in AWS (current region only), and a private key stored in the `sonarqube.pem` file, that will be necessary if you ever need to access the instance, so be sure you store it securely.
+
+=== Relevant files
+
+* `main.tf` contains declarative definition written in HCL of AWS infrastructure.
+* `setup_sonarqube.sh` script to be run on EC2 instance that installs and deploys a container running SonarQube.
+* `variables.tf` contains variable definition for `main.tf`.
+* `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
+* `terraform.tfstate` contains current state of the created infrastructure. Should be stored securely.
+* `set-config.sh` assists user in setting the values of `terraform.tfvars`.
+
+== Usage
+
+First, you need to initialize the working directory containing Terraform configuration files (located at `/scripts/sonarqube`) and install any required plugins:
+
+```
+terraform init 
+```
+
+Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-config.sh` script, which allows you to create or update values for the required variables, passing them as flags. As a full example:
+
+```
+./set-config.sh --aws_region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
+```
+
+WARNING: Unless changed, the keypair name expected by default is `sonarqube`.
+
+Finally, deploy SonarQube instance:
+
+```
+terraform apply --auto-approve 
+```
+
+NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on. *Remember to securely store `terraform.tfstate` file*, otherwise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
+
+In particular, this will create an Ubuntu-based EC2 instance in AWS and deploy a Docker container running SonarQube. 
+
+You will get the public IP address of the EC2 instance as output. Take note of it, you will need it later on.
+
+After a few minutes, you will be able to access SonarQube web interface on `+http://sonarqube_public_ip:9000+` (replace with actual IP) with the following credentials:
+
+* Username:   `admin`
+* Password:   `admin`
+
+IMPORTANT: Change the default password promptly.
+
+== Appendix: Destroy SonarQube instance
+
+As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can easily destroy it and all associated resources by executing:
+
+```
+terraform destroy
+```

@@ -1,0 +1,5 @@
+arn:aws:iam::aws:policy/AmazonEC2FullAccess
+arn:aws:iam::aws:policy/IAMReadOnlyAccess
+arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+arn:aws:iam::aws:policy/AmazonS3FullAccess
+arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
