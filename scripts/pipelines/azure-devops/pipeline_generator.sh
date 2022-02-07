@@ -103,7 +103,7 @@ git push -u origin ${sourceBranch}
 # Create Azure pipeline
 echo -e "${green}Creating the pipeline from the YAML template..."
 echo -e ${white}
-az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}"
 
 # Check if -a flag is activated
 if ! test -z "$artifactPath"
