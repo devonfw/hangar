@@ -1,0 +1,30 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Package_pipeline
+  jobs:
+  - job: Job
+    displayName: 'Download artifact then Docker build and push of the image'
+    steps:
+
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download last artifact from build pipeline'
+      inputs:
+        source: 'specific'
+        project: '$(System.TeamProject)'
+        pipeline: $(BuildPipeline)
+        runVersion: 'latestFromBranch'
+        runBranch: 'refs/heads/master'
+        downloadPath: $(Pipeline.Workspace)
+
+    - task: Bash@3
+      displayName: 'Build and Push the image to the registry'
+      inputs:
+        targetType: 'inline'
+        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(imageName):$(Build.BuildId) -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry)'
