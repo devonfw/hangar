@@ -27,4 +27,4 @@ stages:
       displayName: 'Build and Push the image to the registry'
       inputs:
         targetType: 'inline'
-        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(imageName):$(Build.BuildId) -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry)'
+        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.BuildId) -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName):'

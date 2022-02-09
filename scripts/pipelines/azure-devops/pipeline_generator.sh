@@ -14,8 +14,6 @@ do
         i) imageName=${OPTARG};;
 		a) dockerUser=${OPTARG};;
         s) dockerPassword=${OPTARG};;
-        # r) registry=${OPTARG};;
-        # f) dockerfile=${OPTARG};;
     esac
 done
 
@@ -43,12 +41,11 @@ then
     echo "  -t    [Required] Sonarqube token."
     echo ""
     echo "Package arguments:"
-    echo "  -i    [Required] Name that will be given to the Docker image."
-	# echo "	-f    [Required] Path of the dockerfile (relative path in the repo)"
-	echo "	-a	  [Required] User to connect to your docker registry"
-	echo "	-s	  [Required] Password of the user to connect to your docker registry"
-	# echo "	-r	  [Required] Registry where the image needs to be push"
-	echo "	-p	  [Required] Name of the pipeline that build the artifact"
+    echo "  -i    [Required] Name that will be given to the Docker image. It must contain the name of the registry and the name or path of the repository inside the registry."
+	echo "	Ex: docker.io/user/application_name"
+	echo "	-a	  [Required] User to connect to your docker registry."
+	echo "	-s	  [Required] Password of the user to connect to your docker registry."
+	echo "	-p	  [Required] Name of the pipeline that build the artifact."
 	echo "  -l    [Required] Language or framework of the project."
     exit
 fi
@@ -111,7 +108,6 @@ then
 fi
 cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
 # Check if the pipeline is a Package pipeline.
-echo "$configFile"
 echo $configFile | grep "package-config.cfg" > /dev/null
 if [ $? = 0 ]
 then
