@@ -29,12 +29,16 @@ then
     exit
 fi
 
+white='\e[1;37m'
+green='\e[1;32m'
+red='\e[0;31m'
+
 #Argument check
 if [ -z "$username" ] || [ -z "$groupname" ];
 then
-    echo "Missing parameters, -u and -g flags are mandatory."
-    echo "Use -h flag to display help."
-    exit
+    echo -e "${red}Error: Missing parameters, -u and -g flags are mandatory." >&2
+    echo -e "${red}Use -h flag to display help." >&2
+    exit 2
 fi
 
 #AWS credentials setup
@@ -57,22 +61,22 @@ export AWS_DEFAULT_OUTPUT=json
 
 #Check if AWS CLI is installed
 if ! [ -x "$(command -v aws)" ]; then
-  echo 'Error: AWS CLI is not installed.' >&2
-  exit 1
+  echo -e "${red}Error: AWS CLI is not installed." >&2
+  exit 127
 fi
 
 #Check if Python is installed
 if ! [ -x "$(command -v python)" ]; then
-  echo 'Error: Python is not installed.' >&2
-  exit 1
+  echo -e "${red}Error: Python is not installed." >&2
+  exit 127
 fi
 
 #Check if AWS credentials are valid
 aws sts get-caller-identity &> /dev/null
 if ! [ $? -eq 0 ]
 then
-    echo "Invalid AWS credentials. Please use -a -s flags to setup correctly.";
-    exit 
+    echo -e "${red}Error: Invalid AWS credentials. Please use -a and -s flags to set them correctly." >&2
+    exit 2
 fi
 
 #Create user

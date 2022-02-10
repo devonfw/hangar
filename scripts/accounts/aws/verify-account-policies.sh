@@ -28,12 +28,16 @@ then
     exit
 fi
 
+green='\e[1;32m'
+red='\e[0;31m'
+white='\e[1;37m'
+
 #Argument check
 if [ -z "$username" ] || { [ -z "$policies" ] && [ -z "$policies_file" ] && [ -z "$custom_policies_file" ]; }
 then
-    echo "Missing parameters, -u and -p, -f or -c flags are mandatory."
-    echo "Use -h flag to display help."
-    exit
+    echo -e "${red}Error: Missing parameters, -u and -p, -f or -c flags are mandatory." >&2
+    echo -e "${red}Use -h flag to display help." >&2
+    exit 2
 fi
 
 
@@ -57,22 +61,22 @@ export AWS_DEFAULT_OUTPUT=json
 
 #Check if AWS CLI is installed
 if ! [ -x "$(command -v aws)" ]; then
-  echo 'Error: AWS CLI is not installed.' >&2
-  exit 1
+  echo -e "${red}Error: AWS CLI is not installed." >&2
+  exit 127
 fi
 
 #Check if Python is installed
 if ! [ -x "$(command -v python)" ]; then
-  echo 'Error: Python is not installed.' >&2
-  exit 1
+  echo -e "${red}Error: Python is not installed." >&2
+  exit 127
 fi
 
 #Check if AWS credentials are valid
 aws sts get-caller-identity &> /dev/null
 if ! [ $? -eq 0 ]
 then
-    echo "Invalid AWS credentials. Please use -a and -s flags to setup correctly.";
-    exit 
+    echo -e "${red}Error: Invalid AWS credentials. Please use -a and -s flags to set them correctly." >&2
+    exit 2
 fi
 
 #Get user groups
@@ -92,10 +96,6 @@ done
 echo "Getting user-specific policies..."
 user_policies=($(aws iam list-attached-user-policies --user-name $username --query 'AttachedPolicies[].[PolicyArn]' --output text))
 all_policies=( "${groups_policies[@]}" "${user_policies[@]}")
-
-green='\e[1;32m'
-red='\e[0;31m'
-white='\e[1;37m'
 
 #Inline policies check
 if [ -n "$policies" ];
