@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts c:n:d:b:w:l:p:u:t:i:a: flag
+while getopts c:n:d:b:w:l:p:u:t:k:i:a: flag
 do
     case "${flag}" in
         c) configFile=${OPTARG};;
@@ -11,6 +11,7 @@ do
         p) buildPipelineName=${OPTARG};;
         u) sonarUrl=${OPTARG};;
         t) sonarToken=${OPTARG};;
+        k) projectKey=${OPTARG};;
         i) imageName=${OPTARG};;       
         a) artifactPath=${OPTARG};;
     esac
@@ -30,6 +31,7 @@ then
     echo "  -p    [Required] Build pipeline name."
     echo "  -u    [Required] Sonarqube URL."
     echo "  -t    [Required] Sonarqube token."   
+    echo "  -k               SonarQube project key. Only required when generating Quality pipelines."
     echo "  -i    [Required] Name that will be given to the Docker image."
     echo "  -a               Published artifacts in user specified path."
     exit
@@ -100,7 +102,6 @@ then
     mkdir scripts
 fi
 cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
-
 # Check if the pipeline is a Package pipeline.
 if test -z "$language"
 then
