@@ -1,15 +1,17 @@
 #!/bin/bash
-while getopts c:d:n:l:k:i:b:w:a: flag
+while getopts c:n:d:b:w:l:p:u:t:i:a: flag
 do
     case "${flag}" in
         c) configFile=${OPTARG};;
-        d) localDirectory=${OPTARG};;
         n) pipelineName=${OPTARG};;
-        l) language=${OPTARG};;
-        k) projectKey=${OPTARG};;
-        i) imageName=${OPTARG};;
+        d) localDirectory=${OPTARG};;
         b) targetBranch=${OPTARG};;
         w) webBrowser=${OPTARG};;
+        l) language=${OPTARG};;
+        p) buildPipelineName=${OPTARG};;
+        u) sonarUrl=${OPTARG};;
+        t) sonarToken=${OPTARG};;
+        i) imageName=${OPTARG};;       
         a) artifactPath=${OPTARG};;
     esac
 done
@@ -22,12 +24,14 @@ then
     echo "  -c    [Required] Configuration file containing parameters and variables."
     echo "  -n    [Required] Name that will be set to the pipeline."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -a               Published artifacts in user specified path."
-    echo "  -l               Language or framework of the directory. Only required when generating Build and Test pipelines."
-    echo "  -k               SonarQube project key. Only required when generating Quality pipelines."
-    echo "  -i               Name that will be given to the Docker image. Only required when generating Package pipelines."
     echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    echo "  -l               Language or framework of the directory. Only required when generating Build and Test pipelines."
+    echo "  -p    [Required] Build pipeline name."
+    echo "  -u    [Required] Sonarqube URL."
+    echo "  -t    [Required] Sonarqube token."   
+    echo "  -i    [Required] Name that will be given to the Docker image."
+    echo "  -a               Published artifacts in user specified path."
     exit
 fi
 
@@ -35,26 +39,44 @@ white='\e[1;37m'
 green='\e[1;32m'
 red='\e[0;31m'
 
+source $configFile
+IFS=, read -ra values <<< "$mandatoryFlags"
 #Check if configuration file and pipeline name are passed.
 if test -z "$configFile"
 then
-    echo -e "${red}Missing configuration file parameter, use -c."
-    echo -e "${red}Use -h flag to display help."
-    echo -e ${white}
+    echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
     exit 2
 fi
-source $configFile
-IFS=, read -ra values <<< "$mandatoryFlags"
-for arg in "${values[@]}"
+# Check if the required flags in the config file have been activated.
+for flag in "${flags[@]}"
 do
-	if test -z $arg
+	if test -z $flag
 	then
-        echo -e "${red}Missing parameters, some flags are mandatory."
-        echo -e "${red}Use -h flag to display help."
+        echo -e "${red}Missing parameters, some flags are mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
         echo -e ${white}
         exit 2
 	fi
 done
+
+# Check if Git is installed
+if ! [ -x "$(command -v git)" ]; then
+  echo -e "${red}Error: Git is not installed." >&2
+  exit 127
+fi
+
+# Check if Azure CLI is installed
+if ! [ -x "$(command -v az)" ]; then
+  echo -e "${red}Error: Azure CLI is not installed." >&2
+  exit 127
+fi
+
+# Check if Python is installed
+if ! [ -x "$(command -v python)" ]; then
+  echo -e "${red}Error: Python is not installed." >&2
+  exit 127
+fi
+
 cd ../../..
 hangarPath=$(pwd)
 
@@ -78,17 +100,21 @@ then
     mkdir scripts
 fi
 cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
-# Check if -k and -i flags are activated.
-if test -z "$projectKey" && test -z "$imageName"
+
+# Check if the pipeline is a Package pipeline.
+if test -z "$language"
 then
-    # -k and -i flags are not activated so it is a build or test pipeline.
-    cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+    # It is a Package pipeline, copy the script.
+    cp "${hangarPath}/${templatesPath}/${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
 else
-    # Check if -i flag is activated.
-    if test -z "$imageName"
+    # It is a Build, Test or Quality pipeline, copy the script according to its language.
+    cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+    # Check if the pipeline is a Quality pipeline.
+    if test ! -z "$buildPipelineName" && test ! -z "$sonarUrl" && test ! -z "$sonarToken"
     then
-        # -i flag is not activated so it is a quality pipeline.
-        sed -i "s/<Project-key>/$projectKey/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
+        sed -i "s/<build-pipeline-name>/$buildPipelineName/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
+        sed -i "s,<sonarqube-url>,$sonarUrl,g" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+        sed -i "s/<sonarqube-token>/$sonarToken/g" "${localDirectory}/${scriptFilePath}/${scriptFile}"
     fi
 fi
 
