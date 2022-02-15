@@ -16,7 +16,7 @@ This script will commit and push the corresponding YAML template into your repos
 
 === Usage
 ```
-./pipeline_generator.sh \
+pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -l <language or framework> \

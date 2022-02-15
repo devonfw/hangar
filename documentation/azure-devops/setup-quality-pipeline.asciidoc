@@ -17,7 +17,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 === Usage
 ```
-./pipeline_generator.sh \
+pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -l <language or framework> \
