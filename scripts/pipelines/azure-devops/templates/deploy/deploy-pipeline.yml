@@ -1,0 +1,16 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+variables:
+  targetPath: target
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Bash@3
+  displayName: "Deploy"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/deploy.sh'

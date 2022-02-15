@@ -1,0 +1,46 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+
+= Setting up a Maven feed using Azure DevOps and consuming it
+
+In this section you will create a maven repo in azure devops, upload a library and consume it from the main project.
+
+== Create library repo
+
+Follow the steps from the create repository section * include link to block3 preparing repo guide, not merged yet * to create a repository and upload the library.
+
+== Create a feed
+
+Follow the _Create a feed_ section from Azure DevOps official guide to link:https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops#create-a-feed[Create a feed]
+
+== Create maven deploy pipeline
+
+Follow the steps from the link:setup-quality-pipeline.asciidoc[Setup build pipeline section] to create the build pipeline. Use the config file located at `scripts/pipelines/azure-devops/templates/deploy/deploy-config.cfg`
+
+=== Example
+
+```
+./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n maven-deploy-pipeline -l quarkus -d C:/projects/library/
+```
+
+== Connect library to feed
+
+Follow the _Set up authentication_ section from Azure Devops official guide to link:https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops#set-up-authentication[Connect library to feed]
+
+IMPORTANT: The settings.xml file must be put in `.pipelines/scripts/` folder inside the Azure DevOps repo instead of the local .m2 folder.
+
+== Consume library from the main project
+
+In Azure Artifacts, browse to the artifact that you want to install and copy the contents of the <dependency> element and paste it inside the <dependencies> element of your pom.xml file.
+
+Then, go to _Set up authentication_ section from Azure Devops official guide to link:https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops#set-up-authentication[Connect to feed]
+
+IMPORTANT: Ignore the settings.xml part as is not necessary to consume an artifact.
+
+
+
+
+
+
