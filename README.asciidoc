@@ -12,7 +12,7 @@
 *** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Setting up a Quality Pipeline]
 ** Package
-*** Prerequite: https://github.com/devonfw/hangar/blob/f31b1027172b7f8dd0bc674c5e1248d6063509d8/documentation/setup-container-repository.asciidoc[Setup Container Repository] [WIP]
+*** Prerequisite: https://github.com/devonfw/hangar/blob/f31b1027172b7f8dd0bc674c5e1248d6063509d8/documentation/setup-container-repository.asciidoc[Setup Container Repository] [WIP]
 *** https://github.com/devonfw/hangar/pull/37/files?short_path=cb8a27b#diff-cb8a27bd6b3910f0777c3268bf5a5598b71226b8704202f131db37cdd5609a44[Setting up a Package Pipeline] [WIP]
 ** Setup Kubernetes deploying environment pipeline
 *** Setup EKS provisioning pipeline [WIP, https://github.com/devonfw/hangar/pull/32[PR #32]]
