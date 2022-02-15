@@ -1,0 +1,18 @@
+# devonfw Hangar
+
+### Use case: Quarkus-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
+
+* https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
+* https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
+* https://github.com/devonfw/hangar/blob/9b7bc5bba0c8ae14f77043b32b0b674273dd3110/documentation/azure-devops/setup-repository-script.asciidoc[Setting up a repository] [WIP]
+* Setup Azure DevOps Pipelines:
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Setting up a Build Pipeline]
+** https://github.com/devonfw/hangar/pull/31/files#diff-a40632bb2f36a4df78f19d87034a6acc61611e5cb3581ae7f119c096a42d3388[Setting up a Test Pipeline] [WIP, almost finished]
+** Quality
+*** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Setting up a Quality Pipeline]
+** https://github.com/devonfw/hangar/pull/37/files?short_path=cb8a27b#diff-cb8a27bd6b3910f0777c3268bf5a5598b71226b8704202f131db37cdd5609a44[Setting up a Package Pipeline] [WIP]
+** Setup Kubernetes deploying environment pipeline
+*** Setup EKS provisioning pipeline [WIP, https://github.com/devonfw/hangar/pull/32[PR #32]]
+*** Setup AKS provisioning pipeline [WIP]
+** Setting up Deploy Pipeline [WIP]
