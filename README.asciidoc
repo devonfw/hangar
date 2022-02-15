@@ -20,3 +20,4 @@
 *** Setup EKS provisioning pipeline [WIP, https://github.com/devonfw/hangar/pull/32[PR #32]]
 *** Setup AKS provisioning pipeline [WIP]
 ** Setting up Deploy Pipeline [WIP]
+** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
