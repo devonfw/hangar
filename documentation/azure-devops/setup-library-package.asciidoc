@@ -22,7 +22,7 @@ Follow the steps from the link:setup-quality-pipeline.asciidoc[Setup build pipel
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n maven-deploy-pipeline -l quarkus -d C:/projects/library/
+./pipeline_generator.sh -c ./templates/library-deploy/deploy-config.cfg -n maven-deploy-pipeline -l quarkus -d C:/projects/library/
 ```
 
 == Connect library to feed
