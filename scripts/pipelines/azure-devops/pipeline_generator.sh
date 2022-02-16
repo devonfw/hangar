@@ -117,7 +117,7 @@ then
 else
     # It is a Build, Test or Quality pipeline, copy the script according to its language.
     cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
-    # Check if it is a Test pipeline and has the -a flag activated.
+    # Check if the -a flag activated.
     if ! test -z "$artifactPath"
     then
         # Add the extra step to the YAML.
