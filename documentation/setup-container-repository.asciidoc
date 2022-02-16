@@ -13,7 +13,7 @@ In this section, we will see how to create/access Container Registry to pull/tag
 Docker Hub account is required to access Docker Hub registry.
 
 == How to use Docker Hub?
-Docker Hub is a container registry/repository which is used to save container/docker images.^[1]^ We will also demonstrate how to pull an image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
+Docker Hub is a container registry/repository which is used to save container images.^[1]^ We will also demonstrate how to pull a container image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
 
 * You will need a Docker Hub account. If you do not have one, please create one https://hub.docker.com/[here]. 
 * Once you have a Docker Hub account, you can create a repository in just a few clicks in the https://hub.docker.com/repositories[link here]. First, click "Create Repository".
@@ -22,19 +22,19 @@ Docker Hub is a container registry/repository which is used to save container/do
 ----
    docker login -u <username>
 ----
-* Use the following command to pull the docker container image from Docker Hub to local machine.
-* Pull the desired images to our local repository with `docker pull` command.
+* Use the following command to pull the container image from Docker Hub to local machine.
+* Pull the desired container images to our local repository with `docker pull` command.
 [source,shell]
 ----
    docker pull <hostname>/<project-id>/<imagename>
 ----
-* After making the necessary changes, tag the image using the `docker tag` command.
-* After tagging our image, use `docker push` command to push the changes into the Docker Hub.
+* After making the necessary changes, tag the container image using the `docker tag` command.
+* After tagging our container image, use `docker push` command to push the changes into the Docker Hub.
 [source,shell]
 ----   
    docker tag <source-image> <hostname>/<project-id>/<image>
 ----
-* Use the following command to push an image to private repository.
+* Use the following command to push a container image to private repository.
 [source,shell]
 ----
    docker push <hostname>/<project-id>/<imagename>
@@ -43,7 +43,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 * Docker hub has no registry reference (<hostname>) since it is default whereas AWS, Azure, GCP, etc will have references like ecr.io, azr.io, gcr.io, etc.
 
 == AWS Elastic Container Registry
-* First, login with Docker to AWS ECR registry^[3]^ with the following command:
+* First, login to AWS ECR registry^[3]^ with the following command:
 
 [source,shell]
 ----
@@ -77,7 +77,7 @@ Docker Hub is a container registry/repository which is used to save container/do
 
 === Pulling and Pushing images
 
-Here are some optional commands which we would follow in any of our Docker projects.
+Here are some optional commands which we would follow in any of our container projects.
 
 * To pull the hello-world container to our local (or server from where we run this command), use this.
 [source,shell]
