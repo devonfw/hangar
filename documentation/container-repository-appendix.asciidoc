@@ -24,7 +24,7 @@ This section contains additional content about container registries, container r
 == What is a Container Repository?^[2]^
 * Docker repository is a collection of different docker images with same name, that have different tags. 
 * Tag is alphanumeric identifier of the image within a repository.
-* For example see https://hub.docker.com/r/library/python/tags/[DockerTagExample]. 
+* For example see https://hub.docker.com/r/library/python/tags/[python image tags at Docker Hub]. 
   - There are many different tags for the official python image, these tags are all part of the official python repository on Docker Hub. 
   - Docker Hub is a container registry hosted by _Docker, Inc_.
   
