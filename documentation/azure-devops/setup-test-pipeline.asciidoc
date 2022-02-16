@@ -30,7 +30,7 @@ pipeline_generator.sh \
 
 NOTE:  The config file for the test pipeline is located at `/scripts/pipelines/azure-devops/templates/test/test-config.cfg`.
 
-NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
+NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the "additional pipeline output" artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
 
 === Flags
 ```
