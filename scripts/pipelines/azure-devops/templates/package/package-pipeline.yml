@@ -3,6 +3,9 @@ trigger:
     include:
     - '*'
 
+variables:
+- group: registry_info
+
 pool:
   vmImage: ubuntu-latest
 
@@ -27,4 +30,4 @@ stages:
       displayName: 'Build and Push the image to the registry'
       inputs:
         targetType: 'inline'
-        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.BuildId) -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName):'
+        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.BuildId) -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'

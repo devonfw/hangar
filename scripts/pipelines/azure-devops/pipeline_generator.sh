@@ -150,10 +150,12 @@ then
 	registry=$(echo $imageName | cut -d'/' -f1)
 	addPipelineVar BuildPipeline $buildPipelineName false $pipelineName
 	addPipelineVar relativeDockerfilePath $dockerfile false $pipelineName
-	addPipelineVar registry $registry false $pipelineName
-	addPipelineVar docker_username $dockerUser true $pipelineName
-	addPipelineVar imageName $imageName false $pipelineName
-	addPipelineVar docker_password $dockerPassword true $pipelineName
+	az pipelines variable-group create --name registry_info --variable registry="$registry" imagename="$imageName" > ./tmp_group_var
+	group_id=$(cat  ./tmp_group_var | grep '"id"' | cut -d: -f2 | cut -d, -f1 | tr -d \")
+	pwd
+	#rm ./tmp_group_var
+	az pipelines variable-group variable create --group-id $group_id --name docker_username --value "$dockerUser" --secret true
+	az pipelines variable-group variable create --group-id $group_id --name docker_password --value "$dockerPassword" --secret true
 fi
 
 # PR creation
