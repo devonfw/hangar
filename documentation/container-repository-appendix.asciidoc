@@ -26,7 +26,7 @@ This section contains additional content about container registries, container r
 * Tag is alphanumeric identifier of the image within a repository.
 * For example see https://hub.docker.com/r/library/python/tags/[DockerTagExample]. 
   - There are many different tags for the official python image, these tags are all members of the official python repository on the Docker Hub. 
-  - Docker Hub is a Docker Registry hosted by Docker.
+  - Docker Hub is a container registry hosted by _Docker, Inc_.
   
 == What is Docker Registry and why to use it?^[1]^
 * The Registry is a stateless, highly scalable server side application that stores and lets you distribute Docker images. 
