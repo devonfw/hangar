@@ -4,7 +4,7 @@ This section contains additional content about container registries, container r
 
 == What is a Container Registry?^[1]^^[2]^
 * Docker registry is a service that stores our docker images.
-* Docker registry could be hosted by a third party, as public or private registry (using any of the below - list includes popular ones and does not cover everything).
+* A container registry could be hosted by a third party or self-hosted, as public or private registry.
 
 * Managed - We can use any of the below mentioned container registry that are managed by the provider.
   1. Docker Hub (https://docs.docker.com/docker-hub/repos/[link])
