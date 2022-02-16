@@ -7,7 +7,7 @@
 * https://github.com/devonfw/hangar/blob/9b7bc5bba0c8ae14f77043b32b0b674273dd3110/documentation/azure-devops/setup-repository-script.asciidoc[Setting up a repository] [WIP]
 * Setup Azure DevOps Pipelines:
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Setting up a Build Pipeline]
-** https://github.com/devonfw/hangar/pull/31/files?short_path=a40632b#diff-a40632bb2f36a4df78f19d87034a6acc61611e5cb3581ae7f119c096a42d3388[Setting up a Test Pipeline] [WIP, almost finished]
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Setting up a Test Pipeline]
 ** Quality
 *** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Setting up a Quality Pipeline]
