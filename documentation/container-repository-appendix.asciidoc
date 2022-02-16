@@ -3,7 +3,7 @@
 This section contains additional content about container registries, container repositories and managing container images. 
 
 == What is a Container Registry?^[1]^^[2]^
-* Docker registry is a service that stores our docker images.
+* Container registry is a service that stores our container images.
 * A container registry could be hosted by a third party or self-hosted, as public or private registry.
 
 ** Managed. Hosted and provided as a service by a provider, most of the times a cloud vendor.
@@ -24,7 +24,7 @@ This section contains additional content about container registries, container r
   *** http://port.us.org/docs/first-steps.html[Portus]
 
 == What is a Container Repository?^[2]^
-* Docker repository is a collection of different docker images with same name, that have different tags. 
+* Container repository is a collection of different container images with same name, that have different tags. 
 * Tag is alphanumeric identifier of the image within a repository.
 * For example see https://hub.docker.com/r/library/python/tags/[python image tags at Docker Hub]. 
   - There are many different tags for the official python image, these tags are all part of the official python repository on Docker Hub. 
