@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts c:n:d:b:w:l:p:u:t:i: flag
+while getopts c:n:d:b:w:l:a:p:u:t:i: flag
 do
     case "${flag}" in
         c) configFile=${OPTARG};;
@@ -8,6 +8,7 @@ do
         b) targetBranch=${OPTARG};;
         w) webBrowser=${OPTARG};;
         l) language=${OPTARG};;
+        a) artifactPath=${OPTARG};;
         p) buildPipelineName=${OPTARG};;
         u) sonarUrl=${OPTARG};;
         t) sonarToken=${OPTARG};;
@@ -31,6 +32,7 @@ then
     echo ""
     echo "Test pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
+    echo "  -a               Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
     echo ""
     echo "Quality pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
@@ -115,6 +117,12 @@ then
 else
     # It is a Build, Test or Quality pipeline, copy the script according to its language.
     cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+    # Check if the -a flag activated.
+    if ! test -z "$artifactPath"
+    then
+        # Add the extra step to the YAML.
+        cat "${hangarPath}/${templatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+    fi
     # Check if the pipeline is a Quality pipeline.
     if test ! -z "$buildPipelineName" && test ! -z "$sonarUrl" && test ! -z "$sonarToken"
     then
@@ -135,7 +143,14 @@ git push -u origin ${sourceBranch}
 # Create Azure Pipeline
 echo -e "${green}Generating the pipeline from the YAML template..."
 echo -ne ${white}
-az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}"
+az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+
+# Check if the -a flag is activated.
+if ! test -z "$artifactPath"
+then
+    # Create the variable in the pipeline.
+    az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+fi
 
 # PR creation
 if test -z "$targetBranch"
