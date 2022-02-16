@@ -6,26 +6,14 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-stages:
-- stage: Test
-  jobs:
-  - job: Test
-    displayName: Test 
-    steps:
-    - task: Bash@3
-      displayName: Executing the test cases
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Execute test.sh and store test cases log files 
-          bash $(Build.Repository.LocalPath)/.pipelines/scripts/test.sh | tee $(Build.Repository.LocalPath)/TEST_$(Build.BuildNumber).log 
-  
-    - publish: $(Build.Repository.LocalPath)/TEST_$(Build.BuildNumber).log  
-      displayName: "Publish logs to artifact"
-      artifact: $(artifactPath) 
+steps:
+- task: Bash@3
+  displayName: "Test"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/test.sh'
 
-    - task: PublishTestResults@2
-      displayName: "Publish test result"
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-*.xml'
+- task: PublishTestResults@2
+  displayName: "Publish Test Results"
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
