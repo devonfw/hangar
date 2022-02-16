@@ -1,0 +1,4 @@
+
+- publish: $(Build.Repository.LocalPath)/$(artifactPath)
+  displayName: "Publish Artifact"
+  artifact: tests
