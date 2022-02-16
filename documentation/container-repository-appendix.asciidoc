@@ -7,20 +7,21 @@ This section contains additional content about container registries, container r
 * A container registry could be hosted by a third party or self-hosted, as public or private registry.
 
 ** Managed. Hosted and provided as a service by a provider, most of the times a cloud vendor.
-  . Docker Hub (https://docs.docker.com/docker-hub/repos/[link])
-  . Amazon Elastic Container Registry (https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html[ECR])
-  . Google Container Registry (https://cloud.google.com/container-registry/docs/pushing-and-pulling[GCR])
-  . Azure Container Registry (https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli[ACR])
-  . IBM Cloud Container Registry (https://www.ibm.com/cloud/container-registry[link])
-  . Oracle Container Registry (https://docs.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm[link])
-  . Alibaba Cloud Container Registry (https://www.alibabacloud.com/help/doc-detail/198212.htm[link])
-  . GitLab Container Registry (https://docs.gitlab.com/ee/user/packages/container_registry/[link])
- * Hosted. We can host a container registry on our own. Proprietary (commercial) and open source solutions are available.
-  . Official https://docs.docker.com/registry/[Docker Registry]
-  . JFrog Container Registry (https://jfrog.com/container-registry/[link])
-  . Red Hat Quay  (https://quay.io/[link])
-  . Harbor  (https://goharbor.io/docs/2.3.0/install-config/[link])
-  . Portus  (http://port.us.org/docs/first-steps.html[link])
+  *** https://docs.docker.com/docker-hub/repos/[Docker Hub]
+  *** https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html[Amazon Elastic Container Registry (ECR)]
+  *** https://cloud.google.com/container-registry/docs/pushing-and-pulling[Google Container Registry (GCR)]
+  *** https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli[Azure Container Registry (ACR)]
+  *** https://www.ibm.com/cloud/container-registry[IBM Cloud Container Registry]
+  *** https://docs.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm[Oracle Container Registry]
+  *** https://www.alibabacloud.com/help/doc-detail/198212.htm[Alibaba Cloud Container Registry]
+  *** https://docs.gitlab.com/ee/user/packages/container_registry/[GitLab Container Registry]
+  *** https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry[GitHub Container Registry]
+ ** Hosted. We can host a container registry on our own. Proprietary (commercial) and open source solutions are available.
+  *** Official https://docs.docker.com/registry/[Docker Registry]
+  *** https://jfrog.com/container-registry/[JFrog Container Registry]
+  *** https://quay.io/[Red Hat Quay]
+  *** https://goharbor.io/docs/2.3.0/install-config/[Harbor]
+  *** http://port.us.org/docs/first-steps.html[Portus]
 
 == What is a Container Repository?^[2]^
 * Docker repository is a collection of different docker images with same name, that have different tags. 
@@ -121,5 +122,5 @@ Output is similar to the following:
 * 1. ^Docker (https://docs.docker.com/registry/)
 * 2. ^StackOverflow (https://stackoverflow.com/questions/34004076/)
 * 3. ^Azure (https://docs.microsoft.com/en-us/azure/container-registry)
-* 4. ^Google Cloud
-* 5. ^GitHub
+* 4. ^Google Cloud (https://cloud.google.com/container-registry/docs/pushing-and-pulling)
+* 5. ^GitHub (https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
