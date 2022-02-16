@@ -1,6 +1,6 @@
 = Appendix - Container Registry
 
-This section contains the additional content about Container Registry. 
+This section contains additional content about container registries, container repositories and managing container images. 
 
 == What is a Container Registry?^[1]^^[2]^
 * Docker registry is a service that stores our docker images.
