@@ -52,10 +52,3 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
-
- 
-
-
-
-
-
