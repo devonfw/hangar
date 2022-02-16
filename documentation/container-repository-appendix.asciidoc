@@ -28,17 +28,6 @@ This section contains additional content about container registries, container r
 * For example see https://hub.docker.com/r/library/python/tags/[python image tags at Docker Hub]. 
   - There are many different tags for the official python image, these tags are all part of the official python repository on Docker Hub. 
   - Docker Hub is a container registry hosted by _Docker, Inc_.
-  
-== What is Docker Registry and why to use it?^[1]^
-* The Registry is a stateless, highly scalable server side application that stores and lets you distribute Docker images. 
-* The Registry is open-source, under the permissive Apache license.
-* You should use the Registry if you want to:
-  - tightly control where your images are being stored
-  - fully own your images distribution pipeline
-  - integrate image storage and distribution tightly into your in-house development workflow
-* Users looking for a zero maintenance, ready-to-go solution are encouraged to head-over to the Docker Hub.
-* Docker Hub provides a free-to-use, hosted Registry, plus additional features (organization accounts, automated builds, and more).
-* The Registry is compatible with Docker engine version 1.6.0 or higher.
 
 == Docker Pull/Push Commands^[1]^
 * Here are some optional commands which we would follow in any of our projects.
