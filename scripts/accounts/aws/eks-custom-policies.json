@@ -37,7 +37,8 @@
                 "iam:UntagRole",
                 "iam:TagPolicy",
                 "iam:TagInstanceProfile",
-                "iam:UpdateAssumeRolePolicy"
+                "iam:UpdateAssumeRolePolicy",
+                "sts:AssumeRole"
             ],
             "Resource": "*"
         }
