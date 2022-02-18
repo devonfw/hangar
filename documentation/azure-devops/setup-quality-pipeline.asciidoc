@@ -18,14 +18,14 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 === Usage
 ```
 pipeline_generator.sh \
-  -c <config file path> \
-  -n <pipeline name> \
-  -l <language or framework> \
-  -p <build pipeline name> \
-  -u <sonarqube url> \
-  -t <sonarqube token> \
-  -d <project local path> \
-  [-b <branch>] \
+  -c, --config-file <config file path> \
+  -n, --pipeline-name <pipeline name> \
+  -l, --language <language or framework> \
+      --build-pipeline-name <build pipeline name> \
+      --sonar-url <sonarqube url> \
+      --sonar-token <sonarqube token> \
+  -d, --local-directory <project local path> \
+  [-b, --target-branch <branch>] \
   [-w]
 ```
 
@@ -33,15 +33,15 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 
 === Flags
 ```
--c    [Required] Configuration file containing pipeline definition.
--n    [Required] Name that will be set to the pipeline.
--l    [Required] Language or framework of the project.
--p    [Required] Build pipeline name.
--u    [Required] SonarQube URL.
--t    [Required] SonarQube token.
--d    [Required] Local directory of your project (the path should always be using '/' and not '\').
--b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+-c, --config-file            [Required] Configuration file containing pipeline definition.
+-n, --pipeline-name          [Required] Name that will be set to the pipeline.
+-l, --language               [Required] Language or framework of the project.
+    --build-pipeline-name    [Required] Build pipeline name.
+    --sonar-url              [Required] SonarQube URL.
+    --sonar-token            [Required] SonarQube token.
+-d, --local-directory        [Required] Local directory of your project (the path should always be using '/' and not '\').
+-b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
 === Examples
@@ -49,7 +49,7 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-config.cfg -n quarkus-project-quality -l quarkus -p quarkus-project-build -u http://52.17.210.4:9000 -t 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-config.cfg -n quarkus-project-quality -l quarkus --build-pipeline-name quarkus-project-build --sonar-url http://52.17.210.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.

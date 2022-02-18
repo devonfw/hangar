@@ -1,0 +1,37 @@
+trigger:
+  - none
+
+variables:
+  terraformWorkingDirectory: $(System.DefaultWorkingDirectory)/.terraform/aks
+  serviceConnection: aks-connection
+  
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: TerraformInstaller@0
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: latest
+
+- task: TerraformTaskV2@2
+  displayName: 'Terraform - init'
+  inputs:
+    command: 'init'
+    workingDirectory: '$(terraformWorkingDirectory)'
+    backendServiceArm: '$(serviceConnection)'
+    backendAzureRmResourceGroupName: '$(resourceGroupName)'
+    backendAzureRmStorageAccountName: '$(StorageAccountName)'
+    backendAzureRmContainerName: '$(storageContainerName)'
+    backendAzureRmKey: 'terraform.tfstate'
+
+- task: TerraformTaskV2@2
+  displayName: 'Terraform - apply'
+  inputs:
+    command: 'apply'
+    workingDirectory: '$(terraformWorkingDirectory)'
+    environmentServiceNameAzureRm: '$(serviceConnection)'
+
+- publish: $(terraformWorkingDirectory)/kubeconfig
+  displayName: 'Publish Artifact'
+  artifact: kubeconfig
