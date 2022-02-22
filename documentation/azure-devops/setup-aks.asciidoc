@@ -29,7 +29,7 @@ NOTE: Set the same `<resource group name>` and `<location>` as when creating the
 
 Create a storage container:
 ```
-az storage container -n <storage container name> --account-name <storage account name>
+az storage container create -n <storage container name> --account-name <storage account name>
 ```
 
 NOTE: Set the same `<storage account name>` as when creating the storage account.
