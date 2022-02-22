@@ -22,6 +22,7 @@ This script will commit and push the corresponding YAML template into your repos
   -c, --config-file  <config file path> \
   -n, --pipeline-name <pipeline name> \
   -l, --language <language or framework> \
+  --dockerFile, --language <language or framework> \
   -d, --local-directory <project local path> \
   -i, --image-name <image name>
   -u, --user <user>
@@ -38,7 +39,8 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 ```
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
--l, --language           [Required] Language or framework of the project.
+-l, --language           [Required, if dockerfile not set] Language or framework of the project, the dockerFile path is determined with this value.
+--dockerFile             [Required, if language not set] Path to the dockerFile, replace the one set with the language if both flags are given.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
 -i, --image-name         [Required] Name of your image that will be push to a registry, this value must contain the full image name, <registry>/<path_of_repo>.
 -u, --user               [Required] User that will be used to connect to the registry.

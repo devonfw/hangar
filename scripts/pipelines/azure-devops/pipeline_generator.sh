@@ -2,7 +2,7 @@
 
 
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerFile:" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -25,6 +25,7 @@ while true; do
         --s3-bucket)            s3Bucket=$2; shift 2;;
         --s3-key-path)          s3KeyPath=$2; shift 2;;
         --quality-pipeline-name)          qualityPipeline=$2; shift 2;;
+        --dockerFile)          dockerFile=$2; shift 2;;
         --) shift; break;;
     esac
 done
@@ -59,12 +60,14 @@ function help {
     echo "      --sonar-token           [Required] Sonarqube token."
     echo ""
     echo "Package pipeline flags:"
+    echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
+    echo "      --dockerFile            [Required, if language not set] Language or framework of the project."
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "  -i, --image-name            [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
     echo "  -u, --user                  [Required] User to connect to your container registry."
     echo "  -p, --password              [Required] Password of the user to connect to your container registry."
     echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --quality-pipeline-name   [Required] Quality pipeline name."
+    echo "      --quality-pipeline-name [Required] Quality pipeline name."
     echo ""
     echo "Deploy pipeline flags:"
     echo ""
