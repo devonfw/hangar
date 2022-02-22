@@ -23,7 +23,7 @@ stages:
         AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
       inputs:
         targetType: inline
-        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh devon4quarkus-reference-quality 67443ebfbcd537f520f65cfcfa6a2203c23e5c65'
+        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh $(qualityPipeline) $(Build.SourceVersion)'
 
     - bash: 'echo "The quality pipeline executed for this commit has failed, we cannot package your application.";exit 1'
       displayName: 'Quality pipeline failed'
@@ -36,6 +36,14 @@ stages:
     - bash: 'echo "We could not find any execution of the quality pipeline with this commit, we cannot package your application.";exit 1'
       displayName: 'Quality pipeline not found'
       condition: eq(variables['result'], '')
+      
+    - task: Bash@3
+      displayName: 'Getting the last execution of the Build pipeline to download the right artefact'
+      env:
+        AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+      inputs:
+        targetType: inline
+        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh $(BuildPipeline) $(Build.SourceVersion)'
 
     - task: DownloadPipelineArtifact@2
       displayName: 'Download last artifact from build pipeline'
