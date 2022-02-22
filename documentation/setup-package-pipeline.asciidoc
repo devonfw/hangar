@@ -28,7 +28,7 @@ This script will commit and push the corresponding YAML template into your repos
   -p, --password <password>
   --build-pipeline-name <name_of_pipeline>
   --quality-pipeline-name <name_of_pipeline>
-  [-b <branch>] \
+  [-b, --target-branch <branch>] \
   [-w]
 ```
 
@@ -54,7 +54,7 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/build/build-config.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i docker.io/user/image_name -a username -p password  -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-config.cfg -n package-pipeline -l quarkus -d C:/path/to/project/quarkus-project -i docker.io/user/quarkus-project -u username -p password --build-pipeline-name build-pipeline --quality-pipeline-name quality-pipeline  -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
