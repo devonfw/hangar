@@ -68,8 +68,7 @@ IFS=, read -ra flags <<< "$mandatoryFlags"
 # Check if a config file was supplied.
 if test -z "$configFile"
 then
-    echo -e "${red}Please indicate the path to a configuration file."
-    echo -e ${white}
+    echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
     exit 2
 fi
 # Check if the required flags in the config file have been activated.
@@ -77,25 +76,42 @@ for flag in "${flags[@]}"
 do
     if test -z $flag
     then
-        echo -e "${red}Missing parameters, some flags are mandatory."
-        echo -e "${red}Use -h flag to display help."
-        echo -e ${white}
+        echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
         exit 2
     fi
 done
+
+# Check if Git is installed
+if ! [ -x "$(command -v git)" ]; then
+  echo -e "${red}Error: Git is not installed." >&2
+  exit 127
+fi
+
+# Check if Azure CLI is installed
+if ! [ -x "$(command -v az)" ]; then
+  echo -e "${red}Error: Azure CLI is not installed." >&2
+  exit 127
+fi
+
+# Check if Python is installed
+# if ! [ -x "$(command -v python)" ]; then
+  # echo -e "${red}Error: Python is not installed." >&2
+  # exit 127
+# fi
 
 cd ../../..
 hangarPath=$(pwd)
 
 # Create the new branch.
 echo -e "${green}Creating the new branch: ${sourceBranch}..."
-echo -e ${white}
+echo -ne ${white}
 cd ${localDirectory}
 git checkout -b ${sourceBranch}
 
 # Copy the corresponding YAML and script into the directory.
 echo -e "${green}Copying the corresponding files into your directory..."
-echo -e ${white}
+echo -ne ${white}
 # Check if the folders .pipelines and .scripts exist.
 if [ ! -d "${localDirectory}/${pipelinePath}" ]
 then
@@ -116,8 +132,14 @@ then
 else
     # It is a Build, Test or Quality pipeline, copy the script according to its language.
     cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+    # Check if the -a flag activated.
+    if ! test -z "$artifactPath"
+    then
+        # Add the extra step to the YAML.
+        cat "${hangarPath}/${templatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+    fi
     # Check if the pipeline is a Quality pipeline.
-    if test ! -z "$buildPipelineName" & test ! -z "$sonarUrl" & test ! -z "$sonarToken"
+    if test ! -z "$buildPipelineName" && test ! -z "$sonarUrl" && test ! -z "$sonarToken"
     then
         sed -i "s/<build-pipeline-name>/$buildPipelineName/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
         sed -i "s,<sonarqube-url>,$sonarUrl,g" "${localDirectory}/${scriptFilePath}/${scriptFile}"
@@ -127,7 +149,7 @@ fi
 
 # Move into the project's directory and pushing the template into the Azure DevOps repository.
 echo -e "${green}Commiting and pushing into Git remote..."
-echo -e ${white}
+echo -ne ${white}
 cd ${localDirectory}
 git add .pipelines -f
 git commit -m "Adding the source YAML"
@@ -135,8 +157,15 @@ git push -u origin ${sourceBranch}
 
 # Create Azure Pipeline
 echo -e "${green}Generating the pipeline from the YAML template..."
-echo -e ${white}
+echo -ne ${white}
 az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+
+# Check if the -a flag is activated.
+if ! test -z "$artifactPath"
+then
+    # Create the variable in the pipeline.
+    az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+fi
 
 echo $configFile | grep "package-config.cfg" > /dev/null
 if [ $? = 0 ]
@@ -163,12 +192,11 @@ if test -z "$targetBranch"
 then
     # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
     echo -e "${green}No branch specified to do the Pull Request, changes left in the ${sourceBranch} branch."
-    echo -e ${white}
     exit
 else
     # Create teh Pull Request to merge into the specified branch.
     echo -e "${green}Creating a Pull Request..."
-    echo -e ${white}
+    echo -ne ${white}
     pr=$(az repos  pr create --source-branch ${sourceBranch} --target-branch $targetBranch --title "Pipeline" --auto-complete true)
     # Obtain the PR id.
     id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
@@ -180,7 +208,6 @@ else
     then
         # Pull Request merged successfully.
         echo -e "${green}Pull Request merged into $targetBranch branch successfully."
-        echo -e ${white}
         exit
     else
         # Obtain the PR URL.
@@ -193,13 +220,11 @@ else
             # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
             echo -e "${green}Pull Request successfully created."
             echo -e "${green}Opening the Pull Request on the web browser..."
-            echo -e ${white}
             exit
         else
             # -w flag is not activated and the URL to the Pull Request is shown in the console.
             echo -e "${green}Pull Request successfully created."
             echo -e "${green}To review the Pull Request and accept it, click on the following link:"
-            echo -e ${white}
             echo ${prURL}
             exit
         fi

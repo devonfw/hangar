@@ -10,11 +10,32 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
+
 - stage: Package_pipeline
   jobs:
   - job: Job
     displayName: 'Download artifact then Docker build and push of the image'
     steps:
+    
+    - task: Bash@3
+      displayName: 'Getting the last execution of the quality pipeline for the wanted commit'
+      env:
+        AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+      inputs:
+        targetType: inline
+        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh devon4quarkus-reference-quality 67443ebfbcd537f520f65cfcfa6a2203c23e5c65'
+
+    - bash: 'echo "The quality pipeline executed for this commit has failed, we cannot package your application.";exit 1'
+      displayName: 'Quality pipeline failed'
+      condition: eq(variables['result'], 'failed')
+
+    - bash: 'echo "The quality pipeline executed for this commit has been canceled, we cannot package your application.";exit 1'
+      displayName: 'Quality pipeline canceled'
+      condition: eq(variables['result'], 'canceled')
+
+    - bash: 'echo "We could not find any execution of the quality pipeline with this commit, we cannot package your application.";exit 1'
+      displayName: 'Quality pipeline not found'
+      condition: eq(variables['result'], '')
 
     - task: DownloadPipelineArtifact@2
       displayName: 'Download last artifact from build pipeline'
@@ -22,12 +43,13 @@ stages:
         source: 'specific'
         project: '$(System.TeamProject)'
         pipeline: $(BuildPipeline)
-        runVersion: 'latestFromBranch'
-        runBranch: 'refs/heads/master'
+        runVersion: 'specific'
+        runBranch: $(Build.SourceBranch)
         downloadPath: $(Pipeline.Workspace)
+        runId: $(runId)
 
     - task: Bash@3
       displayName: 'Build and Push the image to the registry'
       inputs:
         targetType: 'inline'
-        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.BuildId) -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh ; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
