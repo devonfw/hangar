@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts c:n:d:b:w:l:p:u:t:i:u:s:r:a:f: flag
+while getopts c:n:d:b:w:l:p:u:t:i:e:s: flag
 do
     case "${flag}" in
         c) configFile=${OPTARG};;
@@ -8,42 +8,44 @@ do
         b) targetBranch=${OPTARG};;
         w) webBrowser=${OPTARG};;
         l) language=${OPTARG};;
+        a) artifactPath=${OPTARG};;
         p) buildPipelineName=${OPTARG};;
         u) sonarUrl=${OPTARG};;
         t) sonarToken=${OPTARG};;
         i) imageName=${OPTARG};;
-		a) dockerUser=${OPTARG};;
+	e) dockerUser=${OPTARG};;
         s) dockerPassword=${OPTARG};;
     esac
 done
 
 if test "$1" = "-h"
 then
-    echo "Generates a pipeline on Azure DevOps based on the parameters set in the configuration file."
+    echo "Generates a pipeline on Azure DevOps based on the given definition."
     echo ""
-    echo "Global arguments:"
-    echo "  -c    [Required] Configuration file containing parameters and variables."
+    echo "Common flags:"
+    echo "  -c    [Required] Configuration file containing pipeline definition."
     echo "  -n    [Required] Name that will be set to the pipeline."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
     echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
-    echo "Build arguments:"
+    echo "Build pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
     echo ""
-    echo "Test arguments:"
+    echo "Test pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
+    echo "  -a               Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
     echo ""
-    echo "Quality arguments:"
+    echo "Quality pipeline flags:"
     echo "  -l    [Required] Language or framework of the project."
     echo "  -p    [Required] Build pipeline name."
     echo "  -u    [Required] Sonarqube URL."
     echo "  -t    [Required] Sonarqube token."
     echo ""
-    echo "Package arguments:"
+    echo "Package pipeline flags:"
     echo "  -i    [Required] Name that will be given to the Docker image. It must contain the name of the registry and the name or path of the repository inside the registry."
 	echo "	Ex: docker.io/user/application_name"
-	echo "	-a	  [Required] User to connect to your docker registry."
+	echo "	-e	  [Required] User to connect to your docker registry."
 	echo "	-s	  [Required] Password of the user to connect to your docker registry."
 	echo "	-p	  [Required] Name of the pipeline that build the artifact."
 	echo "  -l    [Required] Language or framework of the project."
@@ -129,6 +131,7 @@ if [ $? = 0 ]
 then
     # It is a Package pipeline, copy the script.
     cp "${hangarPath}/${templatesPath}/${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+	cp "${hangarPath}/${templatesPath}/${scriptFile}" "${localDirectory}/${scriptFilePath}/CheckPipelineExec.sh"
 else
     # It is a Build, Test or Quality pipeline, copy the script according to its language.
     cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
