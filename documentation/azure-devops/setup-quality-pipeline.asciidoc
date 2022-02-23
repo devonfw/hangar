@@ -1,0 +1,55 @@
+= Setting up a Quality Pipeline on Azure DevOps
+
+In this section we will create a quality pipeline for analyzing project code with SonarQube. This pipeline will be configured in order to be triggered every time a commit to the Azure DevOps repository is done, regardless of which branch it is made on.
+
+The creation of this pipeline will follow the project workflow, so a new branch named `feature/quality-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
+
+Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
+
+The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create a quality pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
+
+== Prerequisites
+
+* This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
+* Generate a SonarQube https://docs.sonarqube.org/latest/user-guide/user-token/[token] (just follow the section 'Generating a token`).
+
+== Creating the pipeline using provided script
+
+=== Usage
+```
+pipeline_generator.sh \
+  -c <config file path> \
+  -n <pipeline name> \
+  -l <language or framework> \
+  -p <build pipeline name> \
+  -u <sonarqube url> \
+  -t <sonarqube token> \
+  -d <project local path> \
+  [-b <branch>] \
+  [-w]
+```
+
+NOTE: The config file for the quality pipeline is located at `/scripts/pipelines/azure-devops/templates/quality/quality-config.cfg`.
+
+=== Flags
+```
+-c    [Required] Configuration file containing pipeline definition.
+-n    [Required] Name that will be set to the pipeline.
+-l    [Required] Language or framework of the project.
+-p    [Required] Build pipeline name.
+-u    [Required] SonarQube URL.
+-t    [Required] SonarQube token.
+-d    [Required] Local directory of your project (the path should always be using '/' and not '\').
+-b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+```
+
+=== Examples
+
+==== Quarkus project
+
+```
+./pipeline_generator.sh -c ./templates/quality/quality-config.cfg -n quarkus-project-quality -l quarkus -p quarkus-project-build -u http://52.17.210.4:9000 -t 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+```
+
+CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.

@@ -1,0 +1,60 @@
+== Setup Azure DevOps project
+
+By the end of this guide a new project in Azure DevOps will be created.
+
+:url-az-devops: https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#sign-up-with-a-personal-microsoft-account
+
+:url-az-project:  https://docs.microsoft.com/en-us/azure/devops/boards/get-started/sign-up-invite-teammates?view=azure-devops#create-a-project
+
+:url-az-CLI:  https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
+
+:url-pat-token: https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page#create-a-pat
+
+:url-az-workflows: https://docs.microsoft.com/en-us/azure/devops/boards/work-items/guidance/choose-process?view=azure-devops
+
+== Prerequisites
+
+. Sign up into {url-az-devops}[Azure DevOps] (just follow the section `Sign up with a personal Microsoft account`).
+. Install the {url-az-CLI}[Azure CLI].
+. Create an Azure DevOps {url-pat-token}[Personal Access Token (PAT)].
+
+== Creating the Azure DevOps project
+
+There are two ways of creating an Azure DevOps project:
+[loweralpha]
+. Create it manually using the web interface following {url-az-project}[Microsoft official guide].
+. Create it in an automated way using the provided script, as shown below.
+
+NOTE:  Both when done manually and when using the script with `-p` flag, you will need to choose a process workflow. Learn more about the different options in the {url-az-workflows}[official documentation]. By default, "Basic" workflow is chosen.
+ 
+== Creating Azure DevOps project using provided script
+
+The script located at `scripts/accounts/azure-devops/create-project.sh` enables you to create a new Azure DevOps project or configure an existing one.
+
+== Usage
+
+```
+create-project.sh \
+  -n <name> \
+  -d <description> \
+  -o <organization> \
+  -v <visibility> \
+  -t <PAT> \
+  [-w <process workflow>]
+```
+
+== Flags
+
+```
+-n    [Required] Name of the new project.
+-d    [Required] Description for the new project.
+-o    [Required] Name of the organization for which the project will be configured.
+-v    [Required] Visibility. Accepted values: private, public.
+-t    [Required] PAT token to login Azure DevOps.
+-w               Process workflow that will be used. Accepted values: basic, agile, scrum, cmmi. Default: basic.
+
+```
+
+== Example
+
+`./create-project.sh -n "Hello World" -d "This is a sample application" -o devon-hangar -v public -t myToken -w agile`
