@@ -3,39 +3,37 @@ toc::[]
 :idprefix:
 :idseparator: -
 
-= Setting up a Maven feed using Azure DevOps and consuming it
+= Setting up a Maven library package pipeline using Azure DevOps
 
-In this section you will create a maven repo in azure devops, upload a library and consume it from the main project.
+In this section you will create a library package pipeline for a maven repo in azure devops.
 
-== Create library repo
+== Prerequisites
 
-Follow the steps from the create repository section * include link to block3 preparing repo guide, not merged yet * to create a repository and upload the library.
-
-== Create a feed
-
-Follow the _Create a feed_ section from Azure DevOps official guide to link:https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops#create-a-feed[Create a feed]
+* Library source code repo
 
 == Create maven deploy pipeline
 
-Follow the steps from the link:setup-quality-pipeline.asciidoc[Setup build pipeline section] to create the build pipeline. Use the config file located at `scripts/pipelines/azure-devops/templates/deploy/deploy-config.cfg`
+Follow the steps from the link:setup-quality-pipeline.asciidoc[Setup build pipeline section] to create the pipeline. Use the config file located at `scripts/pipelines/azure-devops/templates/library-deploy/deploy-config.cfg`
 
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/library-deploy/deploy-config.cfg -n maven-deploy-pipeline -l quarkus -d C:/projects/library/
+./pipeline_generator.sh -c templates/library-deploy/deploy-config.cfg -l quarkus -d C:/projects/libraryrepo -n pipeline-name
 ```
 
 == Connect library to feed
 
-Follow the _Set up authentication_ section from Azure Devops official guide to link:https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops#set-up-authentication[Connect library to feed]
+Follow the link:https://docs.microsoft.com/en-us/azure/devops/artifacts/maven/pom-and-settings?view=azure-devops[Set up authentication] article from Azure Devops official guide to connect to feed.
 
-IMPORTANT: The settings.xml file must be put in `.pipelines/scripts/` folder inside the Azure DevOps repo instead of the local .m2 folder.
+IMPORTANT: Ignore the settings.xml part as it is created by the script. Only pom.xml modification is needed.
 
-== Consume library from the main project
+== Appendix
+
+=== Consume library from the main project
 
 In Azure Artifacts, browse to the artifact that you want to install and copy the contents of the <dependency> element and paste it inside the <dependencies> element of your pom.xml file.
 
-Then, go to _Set up authentication_ section from Azure Devops official guide to link:https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops#set-up-authentication[Connect to feed]
+Then, go to link:https://docs.microsoft.com/en-us/azure/devops/artifacts/maven/pom-and-settings?view=azure-devops[Set up authentication] article from Azure Devops official guide to connect to feed.
 
 IMPORTANT: Ignore the settings.xml part as is not necessary to consume an artifact.
 
