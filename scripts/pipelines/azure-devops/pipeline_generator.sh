@@ -125,10 +125,10 @@ function checkInstallations {
     fi
 
     # Check if Python is installed
-    if ! [ -x "$(command -v python)" ]; then
-        echo -e "${red}Error: Python is not installed." >&2
-        exit 127
-    fi
+    # if ! [ -x "$(command -v python)" ]; then
+    #     echo -e "${red}Error: Python is not installed." >&2
+    #     exit 127
+    # fi
 }
 
 function obtainHangarPath {
@@ -164,6 +164,10 @@ function copyYAMLFile {
 
     # Copy the YAML Template into the repository.
     cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
+    sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
+    sed -i "s/<@test-pipeline-name@>/${test}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
+    sed -i "s/<@quality-pipeline-name@>/${qualityPipeline}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
 }
 
 function commitFiles {

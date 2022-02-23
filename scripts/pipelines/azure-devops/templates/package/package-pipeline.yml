@@ -1,7 +1,15 @@
-trigger:
-  branches:
-    include:
-    - '*'
+resources:
+  pipelines:
+  - pipeline: 'Quality-Pipeline'
+    source: '<@quality-pipeline-name@>'
+    trigger:
+      branches:
+        include:
+        - releases/*
+        - develop
+        exclude:
+        - feature/*
+        - master
 
 variables:
 - group: registry_info
@@ -16,7 +24,7 @@ stages:
   - job: Job
     displayName: 'Download artifact then Docker build and push of the image'
     steps:
-    
+
     - task: Bash@3
       displayName: 'Getting the last execution of the quality pipeline for the wanted commit'
       env:
@@ -36,7 +44,7 @@ stages:
     - bash: 'echo "We could not find any execution of the quality pipeline with this commit, we cannot package your application.";exit 1'
       displayName: 'Quality pipeline not found'
       condition: eq(variables['result'], '')
-      
+
     - task: Bash@3
       displayName: 'Getting the last execution of the Build pipeline to download the right artifact'
 
