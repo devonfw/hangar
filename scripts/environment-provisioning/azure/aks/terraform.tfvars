@@ -4,7 +4,7 @@ location = "westeurope"
 
 resource_group_name = "hangar-aks-rg"
 
-instance_type = "Standard_D2_v2"
+instance_type = "Standard_DS2_v2"
 
 worker_node_count = "1"
 
