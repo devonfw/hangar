@@ -18,18 +18,18 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 === Usage
 ```
 pipeline_generator.sh \
-  -c, --config-file <config file path> \
-  -n, --pipeline-name <pipeline name> \
-  -l, --language <language or framework> \
-      --build-pipeline-name <build pipeline name> \
-      --sonar-url <sonarqube url> \
-      --sonar-token <sonarqube token> \
-  -d, --local-directory <project local path> \
-  [-b, --target-branch <branch>] \
+  -c <config file path> \
+  -n <pipeline name> \
+  -l <language or framework> \
+  --build-pipeline-name <build pipeline name> \
+  --sonar-url <sonarqube url> \
+  --sonar-token <sonarqube token> \
+  -d <project local path> \
+  [-b <branch>] \
   [-w]
 ```
 
-NOTE: The config file for the quality pipeline is located at `/scripts/pipelines/azure-devops/templates/quality/quality-config.cfg`.
+NOTE: The config file for the quality pipeline is located at `/scripts/pipelines/azure-devops/templates/quality/quality-pipeline.cfg`.
 
 === Flags
 ```
@@ -49,7 +49,7 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-config.cfg -n quarkus-project-quality -l quarkus --build-pipeline-name quarkus-project-build --sonar-url http://52.17.210.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --build-pipeline-name quarkus-project-build --sonar-url http://52.17.210.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.

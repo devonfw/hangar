@@ -20,7 +20,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
     default_node_pool {
         name = "default"
-        node_count = var.agent_count
+        node_count = var.worker_node_count
         vm_size = var.instance_type
     }
 

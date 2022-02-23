@@ -19,16 +19,16 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 === Usage
 ```
 pipeline_generator.sh \
-  -c, --config-file <config file path> \
-  -n, --pipeline-name <pipeline name> \
-  -l, --language <language or framework> \
-  -d, --local-directory <project local path> \
-  [-a, --artifact-path <artifact source path>] \
-  [-b, --target-branch <branch>] \
+  -c <config file path> \
+  -n  <pipeline name> \
+  -l <language or framework> \
+  -d <project local path> \
+  [-a <artifact source path>] \
+  [-b <branch>] \
   [-w]
 ```
 
-NOTE:  The config file for the test pipeline is located at `/scripts/pipelines/azure-devops/templates/test/test-config.cfg`.
+NOTE:  The config file for the test pipeline is located at `/scripts/pipelines/azure-devops/templates/test/test-pipeline.cfg`.
 
 NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the "additional pipeline output" artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
 
@@ -48,7 +48,7 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-config.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
