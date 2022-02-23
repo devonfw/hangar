@@ -1,6 +1,6 @@
 = Setting up a Package Pipeline on Azure DevOps
 
-In this section we will create a package pipeline to build and push an image into a registry from an artifact we generated with a build pipeline. This pipeline will be configured to be triggered manually or triggered by a quality pipeline depending on the branch.
+In this section we will create a package pipeline to build and push an image into our container registry. This pipeline will be configured to be triggered manually or triggered by a quality pipeline depending on the branch.
 
 
 NOTE: The package pipeline will fail if the quality pipeline executed on the same commit has failed.
@@ -24,13 +24,13 @@ This script will commit and push the corresponding YAML template into your repos
   -c, --config-file  <config file path> \
   -n, --pipeline-name <pipeline name> \
   -l, --language <language or framework> \
-  --dockerFile <dockerFile path> \
+  --dockerfile <dockerfile path> \
   -d, --local-directory <project local path> \
   -i, --image-name <image name>
   -u, --user <user>
   -p, --password <password>
-  --build-pipeline-name <name_of_pipeline>
-  --quality-pipeline-name <name_of_pipeline>
+      --build-pipeline-name <build pipeline name>
+      --quality-pipeline-name <quality pipeline name>
   [-b, --target-branch <branch>] \
   [-w]
 ```
