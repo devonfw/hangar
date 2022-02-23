@@ -2,7 +2,7 @@
 
 
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -25,7 +25,8 @@ while true; do
         --cluster-name)           clusterName=$2; shift 2;;
         --s3-bucket)              s3Bucket=$2; shift 2;;
         --s3-key-path)            s3KeyPath=$2; shift 2;;
-        --quality-pipeline-name)  qualityPipeline=$2; shift 2;;
+        --quality-pipeline-name)  qualityPipelineName=$2; shift 2;;
+        --test-pipeline-name)     testPipelineName=$2; shift 2;;
         --dockerfile)             dockerFile=$2; shift 2;;
         --) shift; break;;
     esac
@@ -53,12 +54,14 @@ function help {
     echo ""
     echo "Test pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo ""
     echo "Quality pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
+    echo "      --test-pipeline-name    [Required] Test pipeline name."
     echo ""
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
@@ -166,7 +169,7 @@ function copyYAMLFile {
     cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
-    sed -i "s/<@test-pipeline-name@>/${test}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
+    sed -i "s/<@test-pipeline-name@>/${testPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
     sed -i "s/<@quality-pipeline-name@>/${qualityPipeline}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
 }
 

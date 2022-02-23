@@ -1,7 +1,15 @@
-trigger:
-  branches:
-    include:
-    - '*'
+resources:
+  pipelines:
+  - pipeline: 'Build-Pipeline'
+    source: '<@build-pipeline-name@>'
+    trigger:
+      branches:
+        include:
+        - releases/*
+        - develop
+        exclude:
+        - feature/*
+        - master
 
 pool:
   vmImage: ubuntu-latest

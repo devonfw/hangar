@@ -47,7 +47,6 @@ stages:
 
     - task: Bash@3
       displayName: 'Getting the last execution of the Build pipeline to download the right artifact'
-
       env:
         AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
       inputs:

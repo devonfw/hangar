@@ -1,7 +1,15 @@
-trigger:
-  branches:
-    include:
-      - '*'
+resources:
+  pipelines:
+  - pipeline: 'Test-Pipeline'
+    source: '<@test-pipeline-name@>'
+    trigger:
+      branches:
+        include:
+        - releases/*
+        - develop
+        exclude:
+        - feature/*
+        - master
 
 variables:
   artifactPath: $(Pipeline.Workspace)
@@ -10,14 +18,24 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+
+- task: Bash@3
+  displayName: 'Getting the last execution of the Build pipeline to download the right artifact'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  inputs:
+    targetType: inline
+    script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh $(BuildPipeline) $(Build.SourceVersion)'
+
 - task: DownloadPipelineArtifact@2
   displayName: "Download Artifact"
   inputs:
     source: 'specific'
     project: '$(System.TeamProject)'
     pipeline: '<build-pipeline-name>'
-    runVersion: 'latest'
+    runVersion: 'specific'
     downloadPath: '$(Pipeline.Workspace)'
+    runId: $(runId)
 
 - task: Bash@3
   displayName: "SonarQube Analysis"
