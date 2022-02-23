@@ -22,7 +22,7 @@ This script will commit and push the corresponding YAML template into your repos
   -c, --config-file  <config file path> \
   -n, --pipeline-name <pipeline name> \
   -l, --language <language or framework> \
-  --dockerFile, --language <language or framework> \
+  --dockerFile <dockerFile path> \
   -d, --local-directory <project local path> \
   -i, --image-name <image name>
   -u, --user <user>
