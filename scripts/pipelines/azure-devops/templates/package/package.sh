@@ -5,10 +5,10 @@ do
         c) context=${OPTARG};;
         u) username=${OPTARG};;
         p) password=${OPTARG};;
-		r) registry=${OPTARG};;
+	r) registry=${OPTARG};;
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
-		t) pomPath=${OPTARG};;
+	t) pomPath=${OPTARG};;
     esac
 done
 tag=$(grep version ${pomPath} | grep -v -e '<?xml'| head -n 1 | sed 's/[[:space:]]//g' | sed -E 's/<.{0,1}version>//g' | awk '{print $1}')
