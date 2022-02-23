@@ -3,11 +3,11 @@
 # This script is used to get the runId and the result of specific execution of a pipeline
 # using the name of the pipeline and the commit on which the pipeline should be executed
 ################################# Arguments #############################################
-# $1 = name of the pipeline
-# $2 = commit on which the execution you are looking for has been played
+# $1 = Name of the pipeline
+# $2 = Commit on which the execution you are looking for has been played
 ################################# Output ################################################
-# runId : the Id of the run, you can use it in your pipeline into any task (for example to dowload an artifact from a build pipeline using this Id)
-# result : the result of the execution you found, it can be 'canceled', 'failed' or 'succeeded'
+# runId : The Id of the run, you can use it in your pipeline into any task (for example to dowload an artifact from a build pipeline using this Id)
+# result : The result of the execution you found, it can be 'canceled', 'failed' or 'succeeded'
 ################################# Additional infos ######################################
 # There is a var called "number_lst", it limits the size of the list of execution,
 # feel free to change this value depending on your project
