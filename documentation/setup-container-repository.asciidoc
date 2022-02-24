@@ -10,7 +10,9 @@ In this section, we will see how to create/access Container Registry to pull/tag
 * A container registry is a repository, or collection of repositories, used to store container images for Kubernetes, DevOps, and container-based application development.^[2]^
 
 == Prerequisites
-Docker Hub account is required to access Docker Hub registry.
+* Docker Hub account is required to access Docker Hub Registry.
+* AWS account and AWS CLI installation are required to access AWS Container Registry.
+* Azure account and Azure CLI installation are required to access Azure Container Registry.
 
 == How to use Docker Hub?
 Docker Hub is a container registry/repository which is used to save container images.^[1]^ We will also demonstrate how to pull a container image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
