@@ -161,7 +161,7 @@ function copyYAMLFile {
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
     sed -i "s/<@test-pipeline-name@>/${testPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
-    sed -i "s/<@quality-pipeline-name@>/${qualityPipeline}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
+    sed -i "s/<@quality-pipeline-name@>/${qualityPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
 }
 
 function copyCommonScript {
