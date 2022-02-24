@@ -2,14 +2,7 @@ resources:
   pipelines:
   - pipeline: 'Build-Pipeline'
     source: '<@build-pipeline-name@>'
-    trigger:
-      branches:
-        include:
-        - releases/*
-        - develop
-        exclude:
-        - feature/*
-        - master
+    trigger: true
 
 pool:
   vmImage: ubuntu-latest

@@ -37,6 +37,9 @@ white='\e[1;37m'
 green='\e[1;32m'
 red='\e[0;31m'
 
+# Common var
+commonTemplatesPath="scripts/pipelines/azure-devops/templates/common"
+
 function help {
     echo ""
     echo "Generates a pipeline on Azure DevOps based on the given definition."
@@ -152,18 +155,8 @@ function copyYAMLFile {
     echo -e "${green}Copying the corresponding files into your directory..."
     echo -ne ${white}
 
-    # Check if the folders .pipelines and scripts exist.
-    if [ ! -d "${localDirectory}/${pipelinePath}" ]
-    then
-        # The folder does not exist.
-        # Create .pipelines folder.
-        cd ${localDirectory}
-        mkdir .pipelines
-
-        # Create scripts folder.
-        cd ${localDirectory}/${pipelinePath}
-        mkdir scripts
-    fi
+    # Create .pipelines and scripts if they do not exist.
+    mkdir -p ${localDirectory}/.pipelines/scripts
 
     # Copy the YAML Template into the repository.
     cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
@@ -171,6 +164,13 @@ function copyYAMLFile {
     sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
     sed -i "s/<@test-pipeline-name@>/${testPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
     sed -i "s/<@quality-pipeline-name@>/${qualityPipeline}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
+}
+
+function copyCommonScript {
+    echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
+    echo -ne ${white}
+
+    cp "${hangarPath}/${commonTemplatesPath}/*" "${localDirectory}/${scriptFilePath}"
 }
 
 function commitFiles {

@@ -2,14 +2,7 @@ resources:
   pipelines:
   - pipeline: 'Test-Pipeline'
     source: '<@test-pipeline-name@>'
-    trigger:
-      branches:
-        include:
-        - releases/*
-        - develop
-        exclude:
-        - feature/*
-        - master
+    trigger: true
 
 variables:
   artifactPath: $(Pipeline.Workspace)
@@ -32,7 +25,7 @@ steps:
   inputs:
     source: 'specific'
     project: '$(System.TeamProject)'
-    pipeline: '<build-pipeline-name>'
+    pipeline: '$(buildPipelinename)'
     runVersion: 'specific'
     downloadPath: '$(Pipeline.Workspace)'
     runId: $(runId)
