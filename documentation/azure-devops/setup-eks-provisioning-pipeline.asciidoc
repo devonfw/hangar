@@ -39,10 +39,10 @@ This script will commit and push the corresponding YAML template into your repos
 == Creating the pipeline using provided script
 
 * The script will by default create a new AWS VPC with name `k8s-vpc`. However, if you wish to provision AWS EKS in your existing `VPC` please edit `existing_vpc_id` and `existing_vpc_private_subnets` with respective values.
-* Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-config.sh` script, which allows you ti create or update values for the required variables, passing them as flags. As a full example
+* Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-config.sh` script, which allows you ti create or update values for the required variables, passing them as flags. As a an example
 
 ```
-./set-config.sh --cluster_name <cluster name> --location <location> --resource_group_name <resource group name> --instance_type <instance type> --worker_node_count <number of worker nodes> --dns_prefix <dns prefix>
+./set-config.sh --cluster_name <cluster name> --region <region name> --instance_type <instance type> --vpc_name <vpc name> --vpc_cidr_block <vpc_cidr_block>
 ```
 
 === Usage
