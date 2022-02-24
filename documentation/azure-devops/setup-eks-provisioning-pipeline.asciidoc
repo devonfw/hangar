@@ -30,7 +30,7 @@ Example: aws s3 mb s3://terraformStateBucket
 Refer https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[here] for more S3 details. You can create a folder inside bucket. Bucket name and the path needs to be passed as parameter to the script while executing. 
 
 ==== 4. AWS IAM User Permissions 
-Verify if the AWS IAM user has required permissions inorder to provision the EKS cluster.
+Verify if the AWS IAM user has required permissions to provision the EKS cluster.
 Refer https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[here] to verify.
 
 ==== 5. Update your local repository
