@@ -1,6 +1,4 @@
 #!/bin/bash
-
-
 ARGS=$*
 FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:" -- "$@")
 
@@ -131,10 +129,10 @@ function checkInstallations {
     fi
 
     # Check if Python is installed
-    # if ! [ -x "$(command -v python)" ]; then
-    #     echo -e "${red}Error: Python is not installed." >&2
-    #     exit 127
-    # fi
+    if ! [ -x "$(command -v python)" ]; then
+        echo -e "${red}Error: Python is not installed." >&2
+        exit 127
+    fi
 }
 
 function obtainHangarPath {
@@ -159,7 +157,7 @@ function copyYAMLFile {
     mkdir -p ${localDirectory}/.pipelines/scripts
 
     # Copy the YAML Template into the repository.
-    cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    cp ${hangarPath}/${templatesPath}/${yamlFile} ${localDirectory}/${pipelinePath}/${yamlFile}
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
     sed -i "s/<@test-pipeline-name@>/${testPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
@@ -170,7 +168,7 @@ function copyCommonScript {
     echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
     echo -ne ${white}
 
-    cp "${hangarPath}/${commonTemplatesPath}/*" "${localDirectory}/${scriptFilePath}"
+    cp ${hangarPath}/${commonTemplatesPath}/* "${localDirectory}/${scriptFilePath}"
 }
 
 function commitFiles {
@@ -264,6 +262,8 @@ obtainHangarPath
 createNewBranch
 
 copyYAMLFile
+
+copyCommonScript
 
 copyScript
 

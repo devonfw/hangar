@@ -1,3 +1,8 @@
+trigger:
+  branches:
+    exclude:
+    - '*'
+
 resources:
   pipelines:
   - pipeline: 'Quality-Pipeline'
@@ -44,6 +49,10 @@ stages:
     - bash: 'echo "We could not find any execution of the quality pipeline with this commit, we cannot package your application.";exit 1'
       displayName: 'Quality pipeline not found'
       condition: eq(variables['result'], '')
+
+    - bash: 'echo "The result of the quality pipeline is not over yet;exit 1'
+      displayName: 'Quality pipeline not over'
+      condition: eq(variables['result'], 'None')
 
     - task: Bash@3
       displayName: 'Getting the last execution of the Build pipeline to download the right artifact'
