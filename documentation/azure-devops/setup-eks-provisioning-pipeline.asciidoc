@@ -23,7 +23,7 @@ An AWS S3 Bucket is required to store the Terraform cluster state file.
 You can create it using the following command in your terminal. 
 
 ```
-aws s3 mb <bucketname> [--options]
+aws s3 mb <bucketname> 
 Example: aws s3 mb s3://terraformStateBucket
 ```
 
