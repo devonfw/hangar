@@ -14,7 +14,7 @@ In this section, we will see how to create/access Container Registry to pull/tag
 * AWS account and AWS CLI installation are required to access AWS Container Registry.
 * Azure account and Azure CLI installation are required to access Azure Container Registry.
 
-== How to use Docker Hub?
+== Docker Hub
 Docker Hub is a container registry/repository which is used to save container images.^[1]^ We will also demonstrate how to pull a container image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
 
 * You will need a Docker Hub account. If you do not have one, please create one https://hub.docker.com/[here]. 
@@ -54,19 +54,17 @@ Docker Hub is a container registry/repository which is used to save container im
        --username AWS \
        --password-stdin <aws-account-id>.dkr.ecr.<region>.amazonaws.com
 ----
-* `<region>` represents AWS Region which is a separate geographic area and the examples are us-east-1, eu-west-1, ap-south-1. 
-* `<aws-account-id>`
-* `<project-id>
+
 * Create a repository inside the specified namespace in the default registry for an account like in the example below:
 
 [source,shell]
 ----
    aws ecr create-repository \ 
-       --repository-name project-a/nginx-web-app \ 
-       --region us-east-1
+       --repository-name <project-id>/<image> \ 
+       --region <region>
 ----
 
-*Output:*
+*Sample Output:*
 [source,json]
 ----
    {
@@ -78,6 +76,11 @@ Docker Hub is a container registry/repository which is used to save container im
    }
 ----
 
+* `<hostname>` : <aws-account-id>.dkr.ecr.<region>.amazonaws.com
+** `<aws-account-id>` : AWS Account ID which is unique for each account.
+** `<region>` : AWS Region which is a separate geographic area and the examples are us-east-1, eu-west-1, ap-south-1. 
+* `<project-id>/<image>` : Repository name given on creation.
+
 * Docker commands can be used for pulling, tagging and pushing container images as shown below.
 
 [source,shell]
@@ -87,8 +90,9 @@ Docker Hub is a container registry/repository which is used to save container im
     docker push <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
 ----
 
-== Azure Container Registry^[4]^
-* https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud.
+
+== Azure Container Registry
+* https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud^[4]^.
 * Azure CLI commands start with "az" which is shown below for login.
 * Registry can be created using the following command.
 
@@ -97,7 +101,7 @@ Docker Hub is a container registry/repository which is used to save container im
    az acr create --resource-group <resourcegroup-name> --name <registry-name> --sku Basic
 ----
 
-*Output:*
+*Sample Output:*
 [source,json]
 ----
 {
@@ -131,7 +135,7 @@ Docker Hub is a container registry/repository which is used to save container im
    docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
 ----
 
-=== References
+== References
 * 1 - ^Docker (https://docs.docker.com/docker-hub/)
 * 2 - ^RedHat (https://www.redhat.com/en/topics/cloud-native-apps/what-is-a-container-registry)
 * 3 - ^AWS (https://docs.aws.amazon.com/ecr/)
