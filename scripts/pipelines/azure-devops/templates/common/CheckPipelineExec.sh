@@ -43,6 +43,7 @@ do
   ((i++))
 done
 
+echo "runId=$runId  ;  result=$result"
 # Those commands are for exporting the value so they can be used in the rest of the pipeline
 echo "##vso[task.setvariable variable=runId;]$runId"
 echo "##vso[task.setvariable variable=result;]$result"
