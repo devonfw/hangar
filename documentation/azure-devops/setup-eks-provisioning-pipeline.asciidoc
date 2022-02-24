@@ -75,7 +75,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 ./pipeline_generator.sh -c ./templates/eks/eks-config.cfg -n eks-provisioning --s3-bucket terraformStateBucket --s3-key-path eks/state -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
 
-=== Appendix: Interacting with the cluster
+== Appendix: Interacting with the cluster
 
 NOTE: Make sure to have https://kubernetes.io/docs/tasks/tools/[kubectl] installed in order to interact with your cluster.
 
