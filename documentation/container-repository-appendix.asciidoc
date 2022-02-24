@@ -47,50 +47,6 @@ This section contains additional content about container registries, container r
 * The above commands are pretty much same for any container image repo / registries like DockerHub, AWS ECR, ACR, GCR, GHCR and so on. Those are given below for reference.
 * Only the logging-in commands may be different for different image repo.
 
-== Azure Container Registry^[3]^
-* https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud.
-* Azure CLI commands start with "az" which is shown below for login.
-* Registry can be created using the following command.
-
-[source,shell]
-----
-   az acr create --resource-group <resourcegroup-name> --name <registry-name> --sku Basic
-----
-
-Output is similar to the following:
-[source,json]
-----
-{
-  "adminUserEnabled": false,
-  "creationDate": "2019-01-08T22:32:13.175925+00:00",
-  "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup/providers/Microsoft.ContainerRegistry/registries/myContainerRegistry007",
-  "location": "eastus",
-  "loginServer": "mycontainerregistry007.azurecr.io",
-  "name": "myContainerRegistry007",
-  "provisioningState": "Succeeded",
-  "resourceGroup": "myResourceGroup",
-  "sku": {
-    "name": "Basic",
-    "tier": "Basic"
-  },
-  "status": null,
-  "storageAccount": null,
-  "tags": {},
-  "type": "Microsoft.ContainerRegistry/registries"
-}
-----
-
-* Docker commands can be used for pulling, tagging and pushing container images as shown below.
-
-[source,shell]
-----
-   az acr login --name <registry-name>
-   
-   docker pull mcr.microsoft.com/hello-world
-   docker tag mcr.microsoft.com/hello-world mycontainerregistry.azurecr.io/hello-world:v1.1.2
-   docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
-----
-
 == Google Container Registry^[4]^
 * https://cloud.google.com/container-registry/docs/overview[GCR] is a private registry service from Google Cloud.
 * Google Cloud CLI commands start with "gcr" which is shown below for login
