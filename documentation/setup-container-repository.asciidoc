@@ -55,7 +55,8 @@ Docker Hub is a container registry/repository which is used to save container im
        --password-stdin <aws-account-id>.dkr.ecr.<region>.amazonaws.com
 ----
 * `<region>` represents AWS Region which is a separate geographic area and the examples are us-east-1, eu-west-1, ap-south-1. 
-
+* `<aws-account-id>`
+* `<project-id>
 * Create a repository inside the specified namespace in the default registry for an account like in the example below:
 
 [source,shell]
@@ -77,23 +78,12 @@ Docker Hub is a container registry/repository which is used to save container im
    }
 ----
 
-=== Pulling and Pushing images
+* Docker commands can be used for pulling, tagging and pushing container images as shown below.
 
-Here are some optional commands which we would follow in any of our container projects.
-
-* To pull the hello-world container to our local (or server from where we run this command), use this.
 [source,shell]
 ----
     docker pull <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
-----
-* After making the necessary code changes, we need to tag the container using this command (before pushing it to the regitry).
-[source,shell]
-----
     docker tag hello-world:latest <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
-----
-* After tagging the container image, use this command to push the changes to the repository.
-[source,shell]
-----
     docker push <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
 ----
 
@@ -107,7 +97,7 @@ Here are some optional commands which we would follow in any of our container pr
    az acr create --resource-group <resourcegroup-name> --name <registry-name> --sku Basic
 ----
 
-Output is similar to the following:
+*Output:*
 [source,json]
 ----
 {
