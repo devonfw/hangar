@@ -17,6 +17,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     location = var.location
     resource_group_name = var.resource_group_name
     dns_prefix = var.dns_prefix
+    http_application_routing_enabled = true
 
     default_node_pool {
         name = "default"
