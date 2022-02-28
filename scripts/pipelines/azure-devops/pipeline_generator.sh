@@ -168,7 +168,7 @@ function copyCommonScript {
     echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
     echo -ne ${white}
 
-    cp ${hangarPath}/${commonTemplatesPath}/* "${localDirectory}/${scriptFilePath}"
+    cp "${hangarPath}/${commonTemplatesPath}"/* "${localDirectory}/${scriptFilePath}"
 }
 
 function commitFiles {
