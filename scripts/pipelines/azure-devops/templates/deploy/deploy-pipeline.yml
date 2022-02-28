@@ -1,0 +1,61 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ## Container registry service connection established during pipeline creation
+  manifests: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/k8smanifests'
+
+stages:
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    displayName: Deploy   
+    steps:   
+    - task: KubectlInstaller@0
+      displayName: 'Install Kubectl latest'
+    
+    - task: Kubernetes@1
+      displayName: 'Create Namespace'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: '$(k8s_service_connection)'
+        command: 'apply'
+        useConfigurationFile: true
+        configurationType: 'inline'
+        inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespace)" }}'
+    
+    - task: Kubernetes@1
+      displayName: 'Kubectl apply'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: '$(k8s_service_connection)'
+        namespace: '$(k8sNamespace)'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '$(manifests)'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Container Registry'
+        dockerRegistryEndpoint: '$(container_reg_connection)'
+    
+    - task: Kubernetes@1
+      displayName: 'List Pods and SVC'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: '$(k8s_service_connection)'
+        namespace: '$(k8sNamespace)'
+        command: 'get'
+        arguments: 'all -n $(k8sNamespace)'
+        outputFormat: 'none'
+    
+    
+        
+             
+   
+              
+    
+    

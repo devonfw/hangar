@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-quarkus
+  labels:
+    app: demo-quarkus
+spec:
+  ports:
+    - name: http-port
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  selector:
+    app: demo-quarkus
+  type: LoadBalancer #ClusterIP
