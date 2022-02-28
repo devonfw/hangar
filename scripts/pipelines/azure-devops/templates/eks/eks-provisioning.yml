@@ -25,14 +25,6 @@ steps:
     backendAWSKey: "$(awsS3KeyPath)"
 
 - task: TerraformTaskV2@2
-  displayName: 'Terraform : plan'
-  inputs:
-    provider: 'aws'
-    command: 'plan'
-    workingDirectory: "$(terraformWorkingDirectory)"
-    environmentServiceNameAWS: "$(awsServiceConnection)"
-
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
   displayName: 'Terraform : apply'
   name: terraformApply
   inputs:

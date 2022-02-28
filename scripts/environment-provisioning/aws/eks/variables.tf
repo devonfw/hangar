@@ -37,13 +37,13 @@ variable "instance_type" {
 
 variable "existing_vpc_id" {
   type = string
-  description = "[Optional] - Your available VPC ID as input to provision AWS EKS in it. Do not pass if not available."
+  description = "[Optional] - Your existing VPC ID as input to provision AWS EKS in it."
   default = "none"
 }
 
 variable "existing_vpc_private_subnets" {
   type = list(string)
-  description = "[Optional] - Your private subnet ids of available VPC. Do not pass if not available."
+  description = "[Optional] - Your existing private subnet ids."
   default = ["none"]
 }
 

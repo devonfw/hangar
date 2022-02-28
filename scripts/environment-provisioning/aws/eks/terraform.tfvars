@@ -15,7 +15,7 @@ private_subnets = ["172.16.1.0/24", "172.16.2.0/24", "172.16.3.0/24"]
 public_subnets = ["172.16.4.0/24", "172.16.5.0/24", "172.16.6.0/24"]
 
 # Instance type for the worker node configuration
-instance_type="t2.small"
+instance_type="t3a.small"
 
 
 # Set this VPC ID only if you already have a VPC available,  
