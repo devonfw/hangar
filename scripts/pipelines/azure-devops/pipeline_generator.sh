@@ -67,7 +67,6 @@ function help {
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --dockerfile            [Required, if language not set] Path to the Dockerfile, replace the one set with the language if both flags are given."
-
     echo "  -i, --image-name            [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
     echo "  -u, --user                  [Required] User to connect to your container registry."
     echo "  -p, --password              [Required] Password of the user to connect to your container registry."
@@ -145,7 +144,8 @@ function createNewBranch {
     echo -ne ${white}
 
     # Create the new branch.
-    cd ${localDirectory}
+    cd "${localDirectory}"
+
     git checkout -b ${sourceBranch}
 }
 
@@ -154,14 +154,17 @@ function copyYAMLFile {
     echo -ne ${white}
 
     # Create .pipelines and scripts if they do not exist.
-    mkdir -p ${localDirectory}/.pipelines/scripts
+    mkdir -p "${localDirectory}/.pipelines/scripts"
+
 
     # Copy the YAML Template into the repository.
-    cp ${hangarPath}/${templatesPath}/${yamlFile} ${localDirectory}/${pipelinePath}/${yamlFile}
+    cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
+
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
-    sed -i "s/<@test-pipeline-name@>/${testPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
-    sed -i "s/<@quality-pipeline-name@>/${qualityPipelineName}/g" ${localDirectory}/${pipelinePath}/${yamlFile}
+    sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    sed -i "s/<@test-pipeline-name@>/${testPipelineName}/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    sed -i "s/<@quality-pipeline-name@>/${qualityPipelineName}/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
+
 }
 
 function copyCommonScript {

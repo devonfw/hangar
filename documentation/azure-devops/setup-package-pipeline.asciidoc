@@ -20,19 +20,20 @@ This script will commit and push the corresponding YAML template into your repos
 
 === Usage
 ```
-./pipeline_generator.sh \
-  -c, --config-file  <config file path> \
-  -n, --pipeline-name <pipeline name> \
-  -l, --language <language or framework> \
+pipeline_generator.sh \
+  -c <config file path> \
+  -n <pipeline name> \
+  -l <language or framework> \
   --dockerfile <dockerfile path> \
-  -d, --local-directory <project local path> \
-  -i, --image-name <image name>
-  -u, --user <user>
-  -p, --password <password>
-      --build-pipeline-name <build pipeline name>
-      --quality-pipeline-name <quality pipeline name>
+  -d <project local path> \
+  -i <image name>
+  -u <user>
+  -p <password>
+  --build-pipeline-name <build pipeline name>
+  --quality-pipeline-name <quality pipeline name>
   [-b, --target-branch <branch>] \
   [-w]
+
 ```
 
 NOTE: The config file for the package pipeline is located at `/scripts/pipelines/azure-devops/templates/package/package-config.cfg`.
