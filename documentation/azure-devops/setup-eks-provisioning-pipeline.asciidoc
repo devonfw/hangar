@@ -14,13 +14,11 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 === Prerequisites
 
-==== 1. Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
-==== 2. Service connection in Azure DevOps. 
-A service connection is required for Azure DevOps to connect to AWS. Please refer https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[here] to create one. Make sure the service connection name is `AWS-Terraform-Connection`. If you already have a service connection available or you need a specific connection name, please update in `eks-pipeline.cfg`.
+* Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
+* Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] (Name this `AWS-Terraform-Connection`). If you already have a service connection available or you need a specific connection name, please update in `eks-pipeline.cfg`.
 
-==== 3. AWS S3 Bucket
-An AWS S3 Bucket is required to store the Terraform cluster state file. 
-You can create it using the following command in your terminal. 
+* Create S3 Bucket 
+You can use existing one or create a new one with the following command:
 
 ```
 aws s3 mb <bucketname> 
@@ -29,12 +27,10 @@ Example: aws s3 mb s3://terraformStateBucket
 
 Refer https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[here] for more S3 details. You can create a folder inside bucket. Bucket name and the path needs to be passed as parameter to the script while executing. 
 
-==== 4. AWS IAM User Permissions 
-Verify if the AWS IAM user has required permissions to provision the EKS cluster.
+* Verify if the AWS IAM user has required permissions to provision the EKS cluster.
 Refer https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[here] to verify.
 
-==== 5. Update your local repository
-This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
+* This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
 == Creating the pipeline using provided script
 
