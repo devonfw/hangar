@@ -36,7 +36,7 @@ pipeline_generator.sh \
 
 ```
 
-NOTE: The config file for the package pipeline is located at `/scripts/pipelines/azure-devops/templates/package/package-config.cfg`.
+NOTE: The config file for the package pipeline is located at `/scripts/pipelines/azure-devops/templates/package/package-pipeline.cfg`.
 
 
 === Flags
@@ -60,7 +60,7 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/package/package-config.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i docker.io/username/quarkus-project -u username -p password --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-name  -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i docker.io/username/quarkus-project -u username -p password --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality  -b develop -w
 
 ```
 
