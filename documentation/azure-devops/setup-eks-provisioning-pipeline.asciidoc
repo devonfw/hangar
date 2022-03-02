@@ -49,7 +49,8 @@ pipeline_generator.sh \
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
   -d <project local path> \
-  -b <branch> \
+  [-b <branch>] \
+  [-w]
 ```
 
 NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/pipelines/azure-devops/templates/eks/eks-pipeline.cfg`.
