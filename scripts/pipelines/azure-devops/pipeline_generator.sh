@@ -145,6 +145,7 @@ function createNewBranch {
 
     # Create the new branch.
     cd "${localDirectory}"
+    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
 
     git checkout -b ${sourceBranch}
 }
