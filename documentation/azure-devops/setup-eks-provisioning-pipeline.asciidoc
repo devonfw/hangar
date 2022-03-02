@@ -4,7 +4,7 @@ toc::[]
 :idseparator: -
 
 = Setting up the AWS EKS provisioning pipeline
-In this section we will setup a pipeline which will provision AWS EKS. This pipeline will be configured to be manually triggered by the user. 
+In this section we will create a pipeline which will provision AWS EKS. This pipeline will be configured to be manually triggered by the user. 
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/eks-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
 
@@ -27,8 +27,8 @@ Example: aws s3 mb s3://terraformStateBucket
 
 Refer https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[here] for more S3 details. You can create a folder inside bucket. Bucket name and the path needs to be passed as parameter to the script while executing. 
 
-* Verify if the AWS IAM user has required permissions to provision the EKS cluster.
-Refer https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[here] to verify.
+* Verify if the AWS IAM user has https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[required permissions] to provision the EKS cluster.
+
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
@@ -49,7 +49,8 @@ pipeline_generator.sh \
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
   -d <project local path> \
-  -b <branch> \
+  [-b <branch>] \
+  [-w]
 ```
 
 NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/pipelines/azure-devops/templates/eks/eks-pipeline.cfg`.
@@ -70,6 +71,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 ```
 ./pipeline_generator.sh -c ./templates/eks/eks-config.cfg -n eks-provisioning --s3-bucket terraformStateBucket --s3-key-path eks/state -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
+CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
 == Appendix: Interacting with the cluster
 
