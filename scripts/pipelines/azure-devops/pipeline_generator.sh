@@ -1,6 +1,6 @@
 #!/bin/bash
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:m:s:r:k --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,manifests-path:,k8s-service-connection:,container-reg-connection:,k8s-namespace:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,k8s-service-connection:,Container-Reg-Connection:,k8s-namespace:" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -22,9 +22,9 @@ while true; do
         --cluster-name)              clusterName=$2; shift 2;;
         --s3-bucket)                 s3Bucket=$2; shift 2;;
         --s3-key-path)               s3KeyPath=$2; shift 2;;
-        --manifests-path)            manifestsPath=$2; shift 2;;
+        --deploy-files)              deployFiles=$2; shift 2;;
         --k8s-service-connection)    k8s_service_connection=$2; shift 2;; 
-        --container-reg-connection)  container-reg-connection=$2; shift 2;;
+        --Container-Reg-Connection)  Container-Reg-Connection=$2; shift 2;;
         --k8s-namespace)             k8sNamespace=$2; shift 2;; 
         --) shift; break;;
     esac
@@ -40,50 +40,51 @@ function help {
     echo "Generates a pipeline on Azure DevOps based on the given definition."
     echo ""
     echo "Common flags:"
-    echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
-    echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
-    echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    echo "  -c, --config-file               [Required] Configuration file containing pipeline definition."
+    echo "  -n, --pipeline-name             [Required] Name that will be set to the pipeline."
+    echo "  -d, --local-directory           [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -a, --artifact-path                        Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
+    echo "  -b, --target-branch                        Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
+    echo "  -w                                         Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
     echo "Build pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -l, --language                  [Required] Language or framework of the project."
     echo ""
     echo "Test pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -l, --language                  [Required] Language or framework of the project."
     echo ""
     echo "Quality pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --sonar-url             [Required] Sonarqube URL."
-    echo "      --sonar-token           [Required] Sonarqube token."
+    echo "  -l, --language                  [Required] Language or framework of the project."
+    echo "      --build-pipeline-name       [Required] Build pipeline name."
+    echo "      --sonar-url                 [Required] Sonarqube URL."
+    echo "      --sonar-token               [Required] Sonarqube token."
     echo ""
     echo "Package pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "  -i, --image-name            [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
-    echo "  -u, --user                  [Required] User to connect to your container registry."
-    echo "  -p, --password              [Required] Password of the user to connect to your container registry."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
+    echo "  -l, --language                  [Required] Language or framework of the project."
+    echo "  -i, --image-name                [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
+    echo "  -u, --user                      [Required] User to connect to your container registry."
+    echo "  -p, --password                  [Required] Password of the user to connect to your container registry."
+    echo "      --build-pipeline-name       [Required] Build pipeline name."
     echo ""
     echo "Deploy pipeline flags:"
+    echo "      --deploy-files              [Required] Path inside the remote repository where the deployment YAML files are located."
+    echo "      --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
+    echo "      --Container-Reg-Connection  [Required] Name of the service connection to container registry."
+    echo "      --k8s-namespace                        Name of the kubernetes Namespace."
     echo ""
     echo "Library deploy pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -l, --language                  [Required] Language or framework of the project."
     echo ""
     echo "AKS pipeline flags:"
-    echo "      --resource-group        [Required] Name of the resource group for the cluster."
-    echo "      --storage-account       [Required] Name of the storage account for the cluster."
-    echo "      --storage-container     [Required] Name of the storage container where the tfstate file of the cluster will be stored."
+    echo "      --resource-group            [Required] Name of the resource group for the cluster."
+    echo "      --storage-account           [Required] Name of the storage account for the cluster."
+    echo "      --storage-container         [Required] Name of the storage container where the tfstate file of the cluster will be stored."
     echo ""
     echo "EKS pipeline flags:"
-    echo "      --cluster-name          [Required] AWS EKS cluster name."
-    echo "      --s3-bucket             [Required] Name of the S3 bucket where the tfstate file of the cluster will be stored."
-    echo "      --s3-key-path           [Required] Path of the S3 bucket where the tfstate file of the cluster will be stored."
-    echo "  -m    [Required] Name of the kubernetes manifest file."
-    echo "  -s    [Required] Name of the service connection to connect kubernetes cluster."
-    echo "  -r    [Required] Name of the service connection to container registry."
-    echo "  -k               Name of the kubernetes Namespace."
+    echo "      --cluster-name              [Required] AWS EKS cluster name."
+    echo "      --s3-bucket                 [Required] Name of the S3 bucket where the tfstate file of the cluster will be stored."
+    echo "      --s3-key-path               [Required] Path of the S3 bucket where the tfstate file of the cluster will be stored."
+    echo ""
     exit
 }
 
