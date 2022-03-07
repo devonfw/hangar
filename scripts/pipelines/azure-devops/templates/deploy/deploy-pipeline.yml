@@ -3,6 +3,19 @@ trigger:
     include:
     - '*'
 
+resources:
+  pipelines:
+  - pipeline: 'Package-Pipeline'
+    source: '<@package-pipeline-name@>'
+    trigger:
+      branches:
+      include:
+          - releases/*
+          - develop
+          exclude:
+          - feature/*
+          - master
+
 pool:
   vmImage: ubuntu-latest
 
@@ -10,16 +23,11 @@ variables:
   # kubernetes deployment files path. 
   manifests: '$(System.DefaultWorkingDirectory)/$(deployFiles)'
 
-stages:
-- stage: Deploy
-  jobs:
-  - job: Deploy
-    displayName: Deploy   
-    steps:   
-    - task: KubectlInstaller@0
-      displayName: 'Install Kubectl latest'
-    
-    - task: Kubernetes@1
+steps:   
+  - task: KubectlInstaller@0
+    displayName: 'Install Kubectl latest'
+
+  - task: Kubernetes@1
       displayName: 'Create Namespace'
       inputs:
         connectionType: 'Kubernetes Service Connection'
@@ -28,19 +36,19 @@ stages:
         useConfigurationFile: true
         configurationType: 'inline'
         inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespace)" }}'
-    
-    - task: Kubernetes@1
-      displayName: 'Kubectl apply'
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: '$(k8s_service_connection)'
-        namespace: '$(k8sNamespace)'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: '$(manifests)'
-        secretType: 'dockerRegistry'
-        containerRegistryType: 'Container Registry'
-        dockerRegistryEndpoint: '$(Container-Reg-Connection)'
+        
+  - task: Kubernetes@1
+    displayName: 'Kubectl apply'
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: '$(k8s_service_connection)'
+      namespace: '$(k8sNamespace)'
+      command: 'apply'
+      useConfigurationFile: true
+      configuration: '$(manifests)'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Container Registry'
+      dockerRegistryEndpoint: '$(Container-Reg-Connection)'
     
     
         
