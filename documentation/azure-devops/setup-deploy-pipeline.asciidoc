@@ -59,7 +59,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --image-name 'azure_devops_image_store:latest' --ingress-dns 'ce54b8033e7c4af0b515.westeurope.aksapp.io' --deploy-files k8smanifests --k8s-service-connection AWS-EKS-Connection --Container-Reg-Connection Container-service-connection --k8s-namespace default --package-pipeline-name package-pipeline-name -b develop -w
+./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --image-name image-repository-name --ingress-dns dns.name --deploy-files k8smanifests --k8s-service-connection AWS-EKS-Connection --Container-Reg-Connection Container-service-connection --k8s-namespace default --package-pipeline-name package-pipeline-name -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
