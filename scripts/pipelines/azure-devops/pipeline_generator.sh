@@ -1,6 +1,6 @@
 #!/bin/bash
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,image-name:,ingress-dns:,deploy-files:,k8s-service-connection:,Container-Reg-Connection:,k8s-namespace:,package-pipeline-name:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,k8s-service-connection:,Container-Reg-Connection:,k8s-namespace:,package-pipeline-name:" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -70,8 +70,6 @@ function help {
     echo "      --build-pipeline-name       [Required] Build pipeline name."
     echo ""
     echo "Deploy pipeline flags:"
-    echo "      --image-name                [Required] Image repository name."
-    echo "      --ingress-dns               [Required] Nginx ingress controller DNS."
     echo "      --deploy-files              [Required] Path inside the remote repository where the deployment YAML files are located."
     echo "      --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
     echo "      --Container-Reg-Connection  [Required] Name of the service connection to container registry."
