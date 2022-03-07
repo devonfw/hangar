@@ -10,15 +10,11 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 == Prerequisites
 
-* Download the `kubeconfig` context from the provision EKS pipeline output 'artifact', and create a service connection to kubernetes (Name this service connection `AWS-EKS-Connection`).
+* Download the `kubeconfig` context service connection name from the provision EKS pipeline output 'artifact'(Connect to the kubernetes cluster by using service connection name). 
 
-* Create a service connection to your container registry (Name this service connection `Container-Reg-Connection`).   
-
-* The DNS name of the nginx ingress controller. You can obtain this by executing the following command:
-
- `kubectl get svc nginx-ingress -n nginx-ingress`
+* Download the DNS name of the nginx ingress controller, and set the DNS name as the host in your ingress YAML file.
  
- Set the DNS name as the host in your ingress YAML file.
+* Create a service connection to your container registry (Name this service connection `Container-Reg-Connection`).   
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
@@ -44,16 +40,16 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 
 === Flags
 ```
--c  --config-file     			       [Required] Configuration file containing pipeline definition.
--n  --pipeline-name  			        [Required] Name that will be set to the pipeline.
--d  --local-directory           [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --image-name                [Required] Image repository name."
-    --ingress-dns               [Required] Nginx ingress controller DNS."
-    --deploy-files       		     [Required] Path inside the remote repository where the deployment YAML files are located.
-    --k8s-service-connection	   [Required] Name of the service connection to connect kubernetes cluster."
+-c  --config-file     [Required] Configuration file containing pipeline definition.
+-n  --pipeline-name   [Required] Name that will be set to the pipeline.
+-d  --local-directory [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --image-name      [Required] Image repository name."
+    --ingress-dns     [Required] Nginx ingress controller DNS."
+    --deploy-files    [Required] Path inside the remote repository where the deployment YAML files are located.
+    --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
     --Container-Reg-Connection  [Required] Name of the service connection to container registry."
-    --k8s-namespace              		        Name of the kubernetes Namespace."
-    --package-pipeline-name     [Required] Package pipeline name."
+    --k8s-namespace                        Name of the kubernetes Namespace."
+    --package-pipeline-name                Package pipeline name."
 -b  --target-branch                	       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                         Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
