@@ -22,13 +22,13 @@ while true; do
         --cluster-name)              clusterName=$2; shift 2;;
         --s3-bucket)                 s3Bucket=$2; shift 2;;
         --s3-key-path)               s3KeyPath=$2; shift 2;;
-		--image-name)                imageName=$2; shift 2;;
+	--image-name)                imageName=$2; shift 2;;
         --ingress-dns)               ingressDns=$2; shift 2;;
         --deploy-files)              deployFiles=$2; shift 2;;
         --k8s-service-connection)    k8s_service_connection=$2; shift 2;; 
         --Container-Reg-Connection)  Container-Reg-Connection=$2; shift 2;;
         --k8s-namespace)             k8sNamespace=$2; shift 2;; 
-		--package-pipeline-name)     packagePipelineName=$2; shift 2;;
+	--package-pipeline-name)     packagePipelineName=$2; shift 2;;
         --) shift; break;;
     esac
 done
@@ -70,13 +70,13 @@ function help {
     echo "      --build-pipeline-name       [Required] Build pipeline name."
     echo ""
     echo "Deploy pipeline flags:"
-	echo "      --image-name                [Required] Image repository name."
+    echo "      --image-name                [Required] Image repository name."
     echo "      --ingress-dns               [Required] Nginx ingress controller DNS."
     echo "      --deploy-files              [Required] Path inside the remote repository where the deployment YAML files are located."
     echo "      --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
     echo "      --Container-Reg-Connection  [Required] Name of the service connection to container registry."
     echo "      --k8s-namespace                        Name of the kubernetes Namespace."
-	echo "      --package-pipeline-name     [Required] Package pipeline name."
+    echo "      --package-pipeline-name                Package pipeline name."
     echo ""
     echo "Library deploy pipeline flags:"
     echo "  -l, --language                  [Required] Language or framework of the project."
