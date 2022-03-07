@@ -22,8 +22,6 @@ while true; do
         --cluster-name)              clusterName=$2; shift 2;;
         --s3-bucket)                 s3Bucket=$2; shift 2;;
         --s3-key-path)               s3KeyPath=$2; shift 2;;
-	--image-name)                imageName=$2; shift 2;;
-        --ingress-dns)               ingressDns=$2; shift 2;;
         --deploy-files)              deployFiles=$2; shift 2;;
         --k8s-service-connection)    k8s_service_connection=$2; shift 2;; 
         --Container-Reg-Connection)  Container-Reg-Connection=$2; shift 2;;
