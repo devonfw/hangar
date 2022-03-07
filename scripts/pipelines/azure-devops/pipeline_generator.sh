@@ -1,6 +1,6 @@
 #!/bin/bash
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,k8s-service-connection:,Container-Reg-Connection:,k8s-namespace:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,image-name:,ingress-dns:,deploy-files:,k8s-service-connection:,Container-Reg-Connection:,k8s-namespace:,package-pipeline-name:" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -22,10 +22,13 @@ while true; do
         --cluster-name)              clusterName=$2; shift 2;;
         --s3-bucket)                 s3Bucket=$2; shift 2;;
         --s3-key-path)               s3KeyPath=$2; shift 2;;
+		--image-name)                imageName=$2; shift 2;;
+        --ingress-dns)               ingressDns=$2; shift 2;;
         --deploy-files)              deployFiles=$2; shift 2;;
         --k8s-service-connection)    k8s_service_connection=$2; shift 2;; 
         --Container-Reg-Connection)  Container-Reg-Connection=$2; shift 2;;
         --k8s-namespace)             k8sNamespace=$2; shift 2;; 
+		--package-pipeline-name)     packagePipelineName=$2; shift 2;;
         --) shift; break;;
     esac
 done
@@ -67,10 +70,13 @@ function help {
     echo "      --build-pipeline-name       [Required] Build pipeline name."
     echo ""
     echo "Deploy pipeline flags:"
+	echo "      --image-name                [Required] Image repository name."
+    echo "      --ingress-dns               [Required] Nginx ingress controller DNS."
     echo "      --deploy-files              [Required] Path inside the remote repository where the deployment YAML files are located."
     echo "      --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
     echo "      --Container-Reg-Connection  [Required] Name of the service connection to container registry."
     echo "      --k8s-namespace                        Name of the kubernetes Namespace."
+	echo "      --package-pipeline-name     [Required] Package pipeline name."
     echo ""
     echo "Library deploy pipeline flags:"
     echo "  -l, --language                  [Required] Language or framework of the project."
