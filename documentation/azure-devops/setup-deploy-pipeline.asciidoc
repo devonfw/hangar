@@ -26,13 +26,11 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
-  --image-name <image-name> \
-  --ingress-dns <ingress-dns> \
   --deploy-files <k8smanifests> \
   --k8s-service-connection <k8s_service_connection> \
   --Container-Reg-Connection <Container-Reg-Connection> \
   --k8s-namespace <k8sNamespace> \
-  --package-pipeline-name <quality-pipeline-name> \
+  --package-pipeline-name <package-pipeline-name> \
   [-b <branch>] \
   [-w]
 ```
@@ -43,8 +41,6 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 -c  --config-file     [Required] Configuration file containing pipeline definition.
 -n  --pipeline-name   [Required] Name that will be set to the pipeline.
 -d  --local-directory [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --image-name      [Required] Image repository name."
-    --ingress-dns     [Required] Nginx ingress controller DNS."
     --deploy-files    [Required] Path inside the remote repository where the deployment YAML files are located.
     --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
     --Container-Reg-Connection  [Required] Name of the service connection to container registry."
@@ -59,7 +55,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --image-name image-repository-name --ingress-dns dns.name --deploy-files k8smanifests --k8s-service-connection AWS-EKS-Connection --Container-Reg-Connection Container-service-connection --k8s-namespace default --package-pipeline-name package-pipeline-name -b develop -w
+./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --deploy-files manifest-path --k8s-service-connection AWS-EKS-Connection --Container-Reg-Connection Container-service-connection --k8s-namespace namespace --package-pipeline-name package-pipeline-name -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
