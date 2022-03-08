@@ -46,9 +46,7 @@ steps:
       command: 'apply'
       useConfigurationFile: true
       configuration: '$(manifests)'
-      secretType: 'dockerRegistry'
-      containerRegistryType: 'Container Registry'
-      dockerRegistryEndpoint: '$(Container-Reg-Connection)'
+      
     
     
         
