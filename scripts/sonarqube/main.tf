@@ -60,17 +60,17 @@ resource "aws_security_group" "sq_securitygroup" {
   vpc_id      = aws_vpc.sq_vpc.id
   ingress {
     description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
+    from_port = 433
+    to_port = 433
+    protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
     description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -92,8 +92,8 @@ resource "aws_security_group" "sq_securitygroup" {
 
   egress {
     from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    to_port     = 65535
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
