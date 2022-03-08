@@ -18,7 +18,7 @@ variable "instance_type" {
     type = string
 }
 
-variable "agent_count" {
+variable "worker_node_count" {
     description = "Number of nodes for the cluster"
     type = string
 }

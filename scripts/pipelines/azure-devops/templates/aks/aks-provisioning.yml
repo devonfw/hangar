@@ -3,7 +3,7 @@ trigger:
 
 variables:
   terraformWorkingDirectory: $(System.DefaultWorkingDirectory)/.terraform/aks
-  serviceConnection: aks-connection
+  organization: $(System.TeamFoundationCollectionUri)
   
 pool:
   vmImage: ubuntu-latest
@@ -13,6 +13,12 @@ steps:
   displayName: 'Install Terraform'
   inputs:
     terraformVersion: latest
+
+- task: HelmInstaller@0
+  displayName: 'Install Helm'
+  inputs:
+    helmVersion: '2.14.1'
+    installKubectl: true
 
 - task: TerraformTaskV2@2
   displayName: 'Terraform - init'
@@ -32,6 +38,36 @@ steps:
     workingDirectory: '$(terraformWorkingDirectory)'
     environmentServiceNameAzureRm: '$(serviceConnection)'
 
+- task: Bash@3
+  displayName: 'Install nginx-ingress controller'
+  inputs:
+    targetType: 'inline'
+    script: |
+      helm repo add nginx-stable https://helm.nginx.com/stable
+
+      helm repo update
+
+      helm install nginx-stable nginx-stable/nginx-ingress --set controller.setAsDefaultIngress=true --namespace nginx-ingress --create-namespace --kubeconfig $(terraformWorkingDirectory)/kubeconfig
+
+- task: Bash@3
+  displayName: 'Wait for the ingress controller IP'
+  inputs:
+    targetType: 'inline'
+    script: 'sleep 60'
+
+- task: AzureCLI@2
+  displayName: 'Obtain DNS name'
+  inputs:
+    azureSubscription: '$(serviceConnection)'
+    scriptType: 'bash'
+    scriptLocation: 'scriptPath'
+    scriptPath: '$(Build.Repository.LocalPath)/.pipelines/scripts/obtain-dns.sh'
+    arguments: $(terraformWorkingDirectory) $(organization)
+
 - publish: $(terraformWorkingDirectory)/kubeconfig
-  displayName: 'Publish Artifact'
+  displayName: 'Publish kubeconfig'
   artifact: kubeconfig
+
+- publish: $(Build.Repository.LocalPath)/$(dns)
+  displayName: 'Publish DNS name'
+  artifact: DNS name
