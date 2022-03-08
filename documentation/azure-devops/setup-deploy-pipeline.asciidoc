@@ -10,11 +10,11 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 == Prerequisites
 
-* Download the `kubeconfig` context service connection name from the provision EKS pipeline output 'artifact'(Connect to the kubernetes cluster by using service connection name). 
+* Use the kubernetes service connection name from the provision EKS pipeline output 'artifact'(Connect to the kubernetes cluster by using service connection name 'AWS-EKS-Connection'). 
 
-* Download the DNS name of the nginx ingress controller, and set the DNS name as the host in your ingress YAML file.
+* The DNS name of the nginx ingress controller, and set the DNS name as the host in your ingress YAML file.
  
-* Create a service connection to your container registry (Name this service connection `Container-Reg-Connection`).   
+* Use the container registry service connection from package pipeline (Connect to the container registry by using service connection name `Container-Reg-Connection`).   
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
