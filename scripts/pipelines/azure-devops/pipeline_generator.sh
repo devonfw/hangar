@@ -1,6 +1,6 @@
 #!/bin/bash
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,k8s-service-connection:,Container-Reg-Connection:,k8s-namespace:,package-pipeline-name:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,k8s-service-connection:,k8s-namespace:,package-pipeline-name:" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -24,9 +24,8 @@ while true; do
         --s3-key-path)               s3KeyPath=$2; shift 2;;
         --deploy-files)              deployFiles=$2; shift 2;;
         --k8s-service-connection)    k8s_service_connection=$2; shift 2;; 
-        --Container-Reg-Connection)  Container-Reg-Connection=$2; shift 2;;
         --k8s-namespace)             k8sNamespace=$2; shift 2;; 
-	--package-pipeline-name)     packagePipelineName=$2; shift 2;;
+		--package-pipeline-name)     packagePipelineName=$2; shift 2;;
         --) shift; break;;
     esac
 done
@@ -70,8 +69,7 @@ function help {
     echo "Deploy pipeline flags:"
     echo "      --deploy-files              [Required] Path inside the remote repository where the deployment YAML files are located."
     echo "      --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
-    echo "      --Container-Reg-Connection  [Required] Name of the service connection to container registry."
-    echo "      --k8s-namespace                        Name of the kubernetes Namespace."
+    echo "      --k8s-namespace             	       Name of the kubernetes Namespace."
     echo "      --package-pipeline-name                Package pipeline name."
     echo ""
     echo "Library deploy pipeline flags:"
