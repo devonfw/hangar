@@ -25,7 +25,7 @@ while true; do
         --deploy-files)              deployFiles=$2; shift 2;;
         --k8s-service-connection)    k8s_service_connection=$2; shift 2;; 
         --k8s-namespace)             k8sNamespace=$2; shift 2;; 
-		--package-pipeline-name)     packagePipelineName=$2; shift 2;;
+	--package-pipeline-name)     packagePipelineName=$2; shift 2;;
         --) shift; break;;
     esac
 done
