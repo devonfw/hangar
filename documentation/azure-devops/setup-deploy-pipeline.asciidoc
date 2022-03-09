@@ -10,11 +10,9 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 == Prerequisites
 
-* In order to interact with kubernetes cluster you need to specify kubernetes cluster service connection name, created by the provision pipeline.
+* In order to interact with kubernetes cluster you need to specify service connection name, created by the provision pipeline.
 
-* Set the nginx ingress controller DNS name as the host in your ingress YAML file, created by the provision pipeline and stored DNS in variable group. 
-
-NOTE: We need to add additional annotation `kubernetes.io/ingress.class: addon-http-application-routing` for AKS cluster.
+* Just for testing we need to set the nginx ingress controller DNS as the host in ingress YAML file, created by the provision pipeline.
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
