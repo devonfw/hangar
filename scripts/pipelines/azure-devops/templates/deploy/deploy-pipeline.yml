@@ -19,39 +19,42 @@ resources:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  # kubernetes deployment files path. 
-  manifests: '$(System.DefaultWorkingDirectory)/$(deployFiles)'
+variables: 
+- group: $(variable_group)
 
 steps:   
   - task: KubectlInstaller@0
     displayName: 'Install Kubectl latest'
 
   - task: Kubernetes@1
-      displayName: 'Create Namespace'
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: '$(k8s_service_connection)'
-        command: 'apply'
-        useConfigurationFile: true
-        configurationType: 'inline'
-        inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespace)" }}'
-        
+    displayName: 'Create Namespace'
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: '$(k8s_service_connection)'
+      command: 'apply'
+      useConfigurationFile: true
+      configurationType: 'inline'
+      inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespace)" }}'
+
   - task: Kubernetes@1
-    displayName: 'Kubectl apply'
     inputs:
       connectionType: 'Kubernetes Service Connection'
       kubernetesServiceEndpoint: '$(k8s_service_connection)'
       namespace: '$(k8sNamespace)'
-      command: 'apply'
-      useConfigurationFile: true
-      configuration: '$(manifests)'
-      
-    
-    
-        
-             
+      command: 'login'
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        export image=$(imagename)
+        kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace)
+        yq eval '.spec.template.spec.containers[0].image = "'$image'"' $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml | kubectl apply -f - --namespace=$(k8sNamespace)
+
+
    
               
+    
+    
     
     
