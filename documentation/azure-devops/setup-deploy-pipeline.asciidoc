@@ -10,9 +10,11 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 == Prerequisites
 
-* Use the kubernetes service connection name from the provision EKS pipeline output 'artifact'(Connect to the kubernetes cluster by using service connection name 'AWS-EKS-Connection'). 
+* In order to interact with your cluster you need to specify kubernetes cluster service connection name, created by the provision pipelines.
 
-* The DNS name of the nginx ingress controller, and set the DNS name as the host in your ingress YAML file.
+* Set the nginx ingress controller DNS name as the host in your ingress YAML file, created by the provision pipeline and stored DNS in variable group. 
+
+NOTE: We need to add additional annotation `kubernetes.io/ingress.class: addon-http-application-routing` for AKS cluster.
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
@@ -26,7 +28,6 @@ pipeline_generator.sh \
   -d <project local path> \
   --deploy-files <k8smanifests> \
   --k8s-service-connection <k8s_service_connection> \
-  --Container-Reg-Connection <Container-Reg-Connection> \
   --k8s-namespace <k8sNamespace> \
   --package-pipeline-name <package-pipeline-name> \
   [-b <branch>] \
@@ -41,7 +42,6 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 -d  --local-directory [Required] Local directory of your project (the path should always be using '/' and not '\').
     --deploy-files    [Required] Path inside the remote repository where the deployment YAML files are located.
     --k8s-service-connection    [Required] Name of the service connection to connect kubernetes cluster."
-    --Container-Reg-Connection  [Required] Name of the service connection to container registry."
     --k8s-namespace                        Name of the kubernetes Namespace."
     --package-pipeline-name                Package pipeline name."
 -b  --target-branch                	       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
@@ -53,7 +53,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --deploy-files manifest-path --k8s-service-connection AWS-EKS-Connection --Container-Reg-Connection Container-service-connection --k8s-namespace namespace --package-pipeline-name package-pipeline-name -b develop -w
+./pipeline_generator.sh -c ./templates/deploy/deploy-config.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --deploy-files manifest-path --k8s-service-connection AWS-EKS-Connection --k8s-namespace namespace --package-pipeline-name package-pipeline-name -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
