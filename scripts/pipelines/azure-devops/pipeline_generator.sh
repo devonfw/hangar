@@ -1,261 +1,197 @@
 #!/bin/bash
-ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:" -- "$@")
-eval set -- "$FLAGS"
-while true; do
-    case "$1" in
-        -c | --config-file)     configFile=$2; shift 2;;
-        -n | --pipeline-name)   pipelineName=$2; shift 2;;
-        -d | --local-directory) localDirectory=$2; shift 2;;
-        -a | --artifact-path)   artifactPath=$2; shift 2;;
-        -b | --target-branch)   targetBranch=$2; shift 2;;
-        -l | --language)        language=$2; shift 2;;
-        --build-pipeline-name)  buildPipelineName=$2; shift 2;;
-        --sonar-url)            sonarUrl=$2; shift 2;;
-        --sonar-token)          sonarToken=$2; shift 2;;
-        -i | --image-name)      imageName=$2; shift 2;;
-        -u | --user)            user=$2; shift 2;;
-        -p | --password)        password=$2; shift 2;;
-        --resource-group)       resourceGroupName=$2; shift 2;;
-        --storage-account)      storageAccountName=$2; shift 2;;
-        --storage-container)    storageContainerName=$2; shift 2;;
-        --cluster-name)         clusterName=$2; shift 2;;
-        --s3-bucket)            s3Bucket=$2; shift 2;;
-        --s3-key-path)          s3KeyPath=$2; shift 2;;
-        --) shift; break;;
+while getopts c:n:d:b:w:l:a:p:u:t:i: flag
+do
+    case "${flag}" in
+        c) configFile=${OPTARG};;
+        n) pipelineName=${OPTARG};;
+        d) localDirectory=${OPTARG};;
+        b) targetBranch=${OPTARG};;
+        w) webBrowser=${OPTARG};;
+        l) language=${OPTARG};;
+        a) artifactPath=${OPTARG};;
+        p) buildPipelineName=${OPTARG};;
+        u) sonarUrl=${OPTARG};;
+        t) sonarToken=${OPTARG};;
+        i) imageName=${OPTARG};;
     esac
 done
 
-# Colours for the messages.
+if test "$1" = "-h"
+then
+    echo "Generates a pipeline on Azure DevOps based on the given definition."
+    echo ""
+    echo "Common flags:"
+    echo "  -c    [Required] Configuration file containing pipeline definition."
+    echo "  -n    [Required] Name that will be set to the pipeline."
+    echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -b               Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
+    echo "  -w               Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    echo ""
+    echo "Build pipeline flags:"
+    echo "  -l    [Required] Language or framework of the project."
+    echo ""
+    echo "Test pipeline flags:"
+    echo "  -l    [Required] Language or framework of the project."
+    echo "  -a               Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
+    echo ""
+    echo "Quality pipeline flags:"
+    echo "  -l    [Required] Language or framework of the project."
+    echo "  -p    [Required] Build pipeline name."
+    echo "  -u    [Required] Sonarqube URL."
+    echo "  -t    [Required] Sonarqube token."
+    echo ""
+    echo "Package pipeline flags:"
+    echo "  -i    [Required] Name that will be given to the Docker image."
+    exit
+fi
+
 white='\e[1;37m'
 green='\e[1;32m'
 red='\e[0;31m'
 
-function help {
-    echo ""
-    echo "Generates a pipeline on Azure DevOps based on the given definition."
-    echo ""
-    echo "Common flags:"
-    echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
-    echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
-    echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
-    echo ""
-    echo "Build pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo ""
-    echo "Test pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo ""
-    echo "Quality pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --sonar-url             [Required] Sonarqube URL."
-    echo "      --sonar-token           [Required] Sonarqube token."
-    echo ""
-    echo "Package pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "  -i, --image-name            [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
-    echo "  -u, --user                  [Required] User to connect to your docker registry."
-    echo "  -p, --password              [Required] Password of the user to connect to your docker registry."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo ""
-    echo "Deploy pipeline flags:"
-    echo ""
-    echo "Library deploy pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo ""
-    echo "AKS pipeline flags:"
-    echo "      --resource-group        [Required] Name of the resource group for the cluster."
-    echo "      --storage-account       [Required] Name of the storage account for the cluster."
-    echo "      --storage-container     [Required] Name of the storage container where the tfstate file of the cluster will be stored."
-    echo ""
-    echo "EKS pipeline flags:"
-    echo "      --cluster-name          [Required] AWS EKS cluster name."
-    echo "      --s3-bucket             [Required] Name of the S3 bucket where the tfstate file of the cluster will be stored."
-    echo "      --s3-key-path           [Required] Path of the S3 bucket where the tfstate file of the cluster will be stored."
-    exit
-}
-
-function importConfigFile {
-    # Import config file.
-    source $configFile
-    IFS=, read -ra flags <<< "$mandatoryFlags"
-
-    # Check if the config file was supplied.
-    if test -z "$configFile"
+source $configFile
+IFS=, read -ra flags <<< "$mandatoryFlags"
+# Check if a config file was supplied.
+if test -z "$configFile"
+then
+    echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
+    exit 2
+fi
+# Check if the required flags in the config file have been activated.
+for flag in "${flags[@]}"
+do
+    if test -z $flag
     then
-        echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
+        echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
         exit 2
     fi
+done
 
-    # Check if the required flags in the config file have been activated.
-    for flag in "${flags[@]}"
-    do
-        if test -z $flag
-        then
-            echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
-            echo -e "${red}Use -h or --help flag to display help." >&2
-            exit 2
-        fi
-    done
-}
+# Check if Git is installed
+if ! [ -x "$(command -v git)" ]; then
+  echo -e "${red}Error: Git is not installed." >&2
+  exit 127
+fi
 
-function checkInstallations {
-    # Check if Git is installed
-    if ! [ -x "$(command -v git)" ]; then
-        echo -e "${red}Error: Git is not installed." >&2
-        exit 127
-    fi
+# Check if Azure CLI is installed
+if ! [ -x "$(command -v az)" ]; then
+  echo -e "${red}Error: Azure CLI is not installed." >&2
+  exit 127
+fi
 
-    # Check if Azure CLI is installed
-    if ! [ -x "$(command -v az)" ]; then
-        echo -e "${red}Error: Azure CLI is not installed." >&2
-        exit 127
-    fi
+# Check if Python is installed
+if ! [ -x "$(command -v python)" ]; then
+  echo -e "${red}Error: Python is not installed." >&2
+  exit 127
+fi
 
-    # Check if Python is installed
-    if ! [ -x "$(command -v python)" ]; then
-        echo -e "${red}Error: Python is not installed." >&2
-        exit 127
-    fi
-}
+cd ../../..
+hangarPath=$(pwd)
 
-function obtainHangarPath {
-    cd ../../..
-    hangarPath=$(pwd)
-}
+# Create the new branch.
+echo -e "${green}Creating the new branch: ${sourceBranch}..."
+echo -ne ${white}
+cd ${localDirectory}
+git checkout -b ${sourceBranch}
 
-function createNewBranch {
-    echo -e "${green}Creating the new branch: ${sourceBranch}..."
-    echo -ne ${white}
-
-    # Create the new branch.
+# Copy the corresponding YAML and script into the directory.
+echo -e "${green}Copying the corresponding files into your directory..."
+echo -ne ${white}
+# Check if the folders .pipelines and .scripts exist.
+if [ ! -d "${localDirectory}/${pipelinePath}" ]
+then
+    # The folder does not exists.
+    # Create the .pipelines folder.
     cd ${localDirectory}
-    git checkout -b ${sourceBranch}
-}
-
-function copyYAMLFile {
-    echo -e "${green}Copying the corresponding files into your directory..."
-    echo -ne ${white}
-
-    # Check if the folders .pipelines and scripts exist.
-    if [ ! -d "${localDirectory}/${pipelinePath}" ]
+    mkdir .pipelines
+    cd ${localDirectory}/${pipelinePath}
+    mkdir scripts
+fi
+cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
+# Check if the pipeline is a Package pipeline.
+if test -z "$language"
+then
+    # It is a Package pipeline, copy the script.
+    cp "${hangarPath}/${templatesPath}/${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+else
+    # It is a Build, Test or Quality pipeline, copy the script according to its language.
+    cp "${hangarPath}/${templatesPath}/${language}-${scriptFile}" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+    # Check if the -a flag activated.
+    if ! test -z "$artifactPath"
     then
-        # The folder does not exist.
-        # Create .pipelines folder.
-        cd ${localDirectory}
-        mkdir .pipelines
-
-        # Create scripts folder.
-        cd ${localDirectory}/${pipelinePath}
-        mkdir scripts
+        # Add the extra step to the YAML.
+        cat "${hangarPath}/${templatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
-
-    # Copy the YAML Template into the repository.
-    cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
-}
-
-function commitFiles {
-    echo -e "${green}Commiting and pushing into Git remote..."
-    echo -ne ${white}
-
-    # Move into the project's directory and pushing the template into the Azure DevOps repository.
-    cd ${localDirectory}
-
-    # Add the YAML files.
-    git add .pipelines -f
-
-    # Check if it is a provisioning pipeline.
-    if test ! -z $resourceGroupName || test ! -z $clusterName
+    # Check if the pipeline is a Quality pipeline.
+    if test ! -z "$buildPipelineName" && test ! -z "$sonarUrl" && test ! -z "$sonarToken"
     then
-        # Add the terraform files.
-        git add .terraform -f
+        sed -i "s/<build-pipeline-name>/$buildPipelineName/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
+        sed -i "s,<sonarqube-url>,$sonarUrl,g" "${localDirectory}/${scriptFilePath}/${scriptFile}"
+        sed -i "s/<sonarqube-token>/$sonarToken/g" "${localDirectory}/${scriptFilePath}/${scriptFile}"
     fi
+fi
 
-    # Git commit and push it into the repository.
-    git commit -m "Adding the source YAML"
-    git push -u origin ${sourceBranch}
-}
+# Move into the project's directory and pushing the template into the Azure DevOps repository.
+echo -e "${green}Commiting and pushing into Git remote..."
+echo -ne ${white}
+cd ${localDirectory}
+git add .pipelines -f
+git commit -m "Adding the source YAML"
+git push -u origin ${sourceBranch}
 
-function createPipeline {
-    echo -e "${green}Generating the pipeline from the YAML template..."
+# Create Azure Pipeline
+echo -e "${green}Generating the pipeline from the YAML template..."
+echo -ne ${white}
+az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+
+# Check if the -a flag is activated.
+if ! test -z "$artifactPath"
+then
+    # Create the variable in the pipeline.
+    az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+fi
+
+# PR creation
+if test -z "$targetBranch"
+then
+    # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
+    echo -e "${green}No branch specified to do the Pull Request, changes left in the ${sourceBranch} branch."
+    exit
+else
+    # Create teh Pull Request to merge into the specified branch.
+    echo -e "${green}Creating a Pull Request..."
     echo -ne ${white}
-
-    # Create Azure Pipeline
-    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
-}
-
-function createPR {
-    # Check if a target branch is supplied.
-    if test -z "$targetBranch"
+    pr=$(az repos  pr create --source-branch ${sourceBranch} --target-branch $targetBranch --title "Pipeline" --auto-complete true)
+    # Obtain the PR id.
+    id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
+    # Obtain the PR status.
+    showOutput=$(az repos pr show --id $id)
+    status=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['status'])")
+    # Check if the Pull  Request merge has succeeded.
+    if test "$status" = "completed"
     then
-        # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
-        echo -e "${green}No branch specified to do the Pull Request, changes left in the ${sourceBranch} branch."
+        # Pull Request merged successfully.
+        echo -e "${green}Pull Request merged into $targetBranch branch successfully."
         exit
     else
-        echo -e "${green}Creating a Pull Request..."
-        echo -ne ${white}
-        # Create the Pull Request to merge into the specified branch.
-        pr=$(az repos  pr create --source-branch ${sourceBranch} --target-branch $targetBranch --title "Pipeline" --auto-complete true)
-
-        # Obtain the PR id.
-        id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
-
-        # Obtain the PR status.
-        showOutput=$(az repos pr show --id $id)
-        status=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['status'])")
-
-        # Check if the Pull Request merge has succeeded.
-        if test "$status" = "completed"
+        # Obtain the PR URL.
+        url=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['repository']['webUrl'])")
+        prURL="$url/pullrequest/$id"
+        # Check if the -w flag is activated.
+        flags=$*
+        if [[ "$flags" == *" -w"* ]]
         then
-            # Pull Request merged successfully.
-            echo -e "${green}Pull Request merged into $targetBranch branch successfully."
+            # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
+            echo -e "${green}Pull Request successfully created."
+            echo -e "${green}Opening the Pull Request on the web browser..."
             exit
         else
-            # Obtain the PR URL.
-            url=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['repository']['webUrl'])")
-            prURL="$url/pullrequest/$id"
-
-            # Check if the -w flag is activated.
-            if [[ "$ARGS" == *" -w"* ]]
-            then
-                # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
-                echo -e "${green}Pull Request successfully created."
-                echo -e "${green}Opening the Pull Request on the web browser..."
-                az repos pr show --id $id --open > /dev/null
-                exit
-            else
-                # -w flag is not activated and the URL to the Pull Request is shown in the console.
-                echo -e "${green}Pull Request successfully created."
-                echo -e "${green}To review the Pull Request and accept it, click on the following link:"
-                echo ${prURL}
-                exit
-            fi
+            # -w flag is not activated and the URL to the Pull Request is shown in the console.
+            echo -e "${green}Pull Request successfully created."
+            echo -e "${green}To review the Pull Request and accept it, click on the following link:"
+            echo ${prURL}
+            exit
         fi
     fi
-}
-
-if [[ "$ARGS" == "-h"  || "$ARGS" == "--help" ]]; then help; fi
-
-importConfigFile
-
-checkInstallations
-
-obtainHangarPath
-
-createNewBranch
-
-copyYAMLFile
-
-copyScript
-
-commitFiles
-
-createPipeline
-
-addPipelineVariables
-
-createPR
+fi
