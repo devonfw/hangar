@@ -31,7 +31,7 @@ The script located at /scripts/pipelines/azure-devops/pipeline_generator.sh will
   [-w]
 ```
 
-NOTE: The config file for the quality pipeline is located at `/scripts/pipelines/azure-devops/templates/library-package/library-package-config.cfg`.
+NOTE: The config file for the quality pipeline is located at `/scripts/pipelines/azure-devops/templates/library-package/library-package-pipeline.cfg`.
 
 === Flags
 
@@ -50,7 +50,7 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 
 ==== Java project
 ```
-./pipeline_generator.sh -c ./templates/library-package/library-package-config.cfg -n library-package-pipeline -l java -d C:/projects/libraryrepo --build-pipeline-name library-build-pipeline --quality-pipeline-name library-quality-pipeline
+./pipeline_generator.sh -c ./templates/library-package/library-package-pipeline.cfg -n library-package-pipeline -l java -d C:/projects/libraryrepo --build-pipeline-name library-build-pipeline --quality-pipeline-name library-quality-pipeline
 ```
 
 == Connect library to maven feed
