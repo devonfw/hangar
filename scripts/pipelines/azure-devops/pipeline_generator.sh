@@ -69,7 +69,7 @@ function help {
     echo "Deploy pipeline flags:"
     echo "      --deploy-files              [Required] Path inside the remote repository where the deployment YAML files are located."
     echo "      --aks-provision-pipeline    [Required] Name of the aks provision pipeline name."
-    echo "      --deploy-cluster            [Required] AKS or EKS cluster name."
+    echo "      --deploy-cluster            [Required] Name of the kubernetes cluster, AKS or EKS cluster name.."
     echo "      --package-pipeline-name     [Required] Package pipeline name."
     echo ""
     echo "Library deploy pipeline flags:"
