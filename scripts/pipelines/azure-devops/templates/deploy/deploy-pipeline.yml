@@ -16,45 +16,54 @@ resources:
           - feature/*
           - master
 
+variables:
+- group: registry_info
+- group: AKS_DNS
+- group: AWS_Credentials
+- group: AWS_DNS
+- name: k8sNamespace
+  value: hangar  
+  
 pool:
   vmImage: ubuntu-latest
 
-variables: 
-- group: registry_info
+steps:
+- task: DownloadPipelineArtifact@2
+  condition: eq(variables.deployCluster, 'AKS')
+  displayName: "Download Kubeconfig"
+  inputs:
+    source: 'specific'
+    project: '$(System.TeamProject)'
+    pipeline: '$(aksProvisionPipeline)'
+    runVersion: 'latest'
+    downloadPath: '$(Pipeline.Workspace)' 
+  
+- task: Bash@3
+  condition: eq(variables.deployCluster, 'AKS')
+  displayName: "Apply AKS"
+  inputs:
+    targetType: 'inline'
+    script: |
+      export image=$(imagename) DNSName=$(DNSName)
+      yq eval '.spec.template.spec.containers[0].image = "'$image'"' -i $(Build.Repository.LocalPath)/k8s/*-deployment.yaml 
+      yq eval '.spec.rules[0].host = "'$DNSName'"' -i $(Build.Repository.LocalPath)/k8s/ingress.yaml
+      kubectl create namespace $(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
+      kubectl apply -f $(Build.Repository.LocalPath)/k8s --namespace=$(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
+        
 
-steps:   
-  - task: KubectlInstaller@0
-    displayName: 'Install Kubectl latest'
-
-  - task: Kubernetes@1
-    displayName: 'Create Namespace'
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: '$(k8s_service_connection)'
-      command: 'apply'
-      useConfigurationFile: true
-      configurationType: 'inline'
-      inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespace)" }}'
-
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: '$(k8s_service_connection)'
-      namespace: '$(k8sNamespace)'
-      command: 'login'
-
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        export image=$(imagename)
-        kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace)
-        yq eval '.spec.template.spec.containers[0].image = "'$image'"' $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml | kubectl apply -f - --namespace=$(k8sNamespace)
+- task: Bash@3
+  condition: eq(variables.deployCluster, 'EKS')
+  displayName: Apply EKS
+  inputs:
+    targetType: 'inline'
+    script: |
+      aws configure set aws_access_key_id $(ACCESS_KEY)
+      aws configure set aws_secret_access_key $(SECRET_KEY)
+      aws eks update-kubeconfig --name $(CLUSTER_NAME) --region $(REGION)
+      export image=$(imagename) DNSName=$(DNSName)
+      yq eval '.spec.template.spec.containers[0].image = "'$image'"' -i $(Build.Repository.LocalPath)/k8s/*-deployment.yaml 
+      yq eval '.spec.rules[0].host = "'$DNSName'"' -i $(Build.Repository.LocalPath)/k8s/ingress.yaml
+      kubectl create namespace $(k8sNamespace) 
+      kubectl apply -f $(Build.Repository.LocalPath)/k8s --namespace=$(k8sNamespace) 
 
 
-   
-              
-    
-    
-    
-    
