@@ -10,7 +10,7 @@ resources:
     trigger: true
 
 variables:
-  artifactPath: $(Pipeline.Workspace)
+  projectPath: $(Pipeline.Workspace)
 
 pool:
   vmImage: ubuntu-latest
@@ -63,4 +63,4 @@ steps:
   displayName: "SonarQube Analysis"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
-    arguments: $(artifactPath)
+    arguments: $(projectPath)
