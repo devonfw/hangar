@@ -13,6 +13,4 @@ az network public-ip update --resource-group $iprg --name $ipname --dns-name $dn
 
 dns=$(az network public-ip show --resource-group $iprg --name $ipname --query "[dnsSettings.fqdn]" --output tsv)
 
-echo $dns >> $dns
-
 echo "##vso[task.setvariable variable=dns;]$dns"

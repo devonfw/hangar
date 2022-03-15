@@ -68,6 +68,10 @@ steps:
   displayName: 'Publish kubeconfig'
   artifact: kubeconfig
 
-- publish: $(Build.Repository.LocalPath)/$(dns)
+- task: Bash@3
   displayName: 'Publish DNS name'
-  artifact: DNS name
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(pat)
+  inputs:
+    targetType: 'inline'
+    script: 'az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name aks-variables --variables dns_name=$(dns) --authorize true'
