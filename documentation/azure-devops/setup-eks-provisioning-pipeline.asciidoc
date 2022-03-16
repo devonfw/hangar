@@ -74,8 +74,9 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 
 == Appendix: Interacting with the cluster
 
-If you are the cluster creator, follow the below commands to connect using `kubectl` from your terminal
+Follow the below commands to connect using `kubectl` from your terminal
 
 ```
 aws eks update-kubeconfig --name <eks-cluster-name> --region <aws region>
 ```
+NOTE: AWS CLI should be set up in your local terminal, to verify use `aws sts get-caller-identity`
