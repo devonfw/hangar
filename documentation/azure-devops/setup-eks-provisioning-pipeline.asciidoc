@@ -72,6 +72,8 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 ```
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
+After successfull execution of the script, EKS cluster is provisioned. And also a variable group with the name `eks-variables` is created. This contains the DNS name of the nginx ingress controller deployed on the EKS cluster. The DNS name can be used in the application ingress manifest files.
+
 == Appendix: Interacting with the cluster
 
 Run the below command to connect to the AWS EKS cluster from your terminal
