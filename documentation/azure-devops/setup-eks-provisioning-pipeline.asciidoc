@@ -74,9 +74,11 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 
 == Appendix: Interacting with the cluster
 
-Follow the below commands to connect using `kubectl` from your terminal
+Run the below command to connect to the AWS EKS cluster from your terminal
 
 ```
 aws eks update-kubeconfig --name <eks-cluster-name> --region <aws region>
 ```
 NOTE: AWS CLI should be set up in your local terminal; To verify use `aws sts get-caller-identity`.
+
+Now you can use `kubectl` tool to communicate with the cluster.
