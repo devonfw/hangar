@@ -4,10 +4,17 @@ toc::[]
 :idseparator: -
 
 == Setup Container Repository
-In this section, we will see how to create/access Container Registry to pull/tag/push container images.
+* In this block, we will see how to setup/create container registry to pull/tag/push container images. 
+* This block is a pre-requisite to hangar package pipeline.
+* We will get the container registry name/url as output of this block.
+* Here is the container image name format
 
-* A container image is a lightweight, standalone, executable package of software that includes everything needed to run an application - code, runtime, system tools, system libraries and settings.^[1]^
-* A container registry is a repository, or collection of repositories, used to store container images for Kubernetes, DevOps, and container-based application development.^[2]^
+`[registry-name]/[project-id]/[image]:[tag]`
+
+* `<hostname>` : <aws-account-id>.dkr.ecr.<region>.amazonaws.com
+** `<aws-account-id>` : AWS Account ID which is unique for each account.
+** `<region>` : AWS Region which is a separate geographic area and the examples are us-east-1, eu-west-1, ap-south-1. 
+* `<project-id>/<image>` : Repository name given on creation.
 
 == Prerequisites
 * Docker Hub account is required to access Docker Hub Registry.
@@ -76,10 +83,6 @@ Docker Hub is a container registry/repository which is used to save container im
    }
 ----
 
-* `<hostname>` : <aws-account-id>.dkr.ecr.<region>.amazonaws.com
-** `<aws-account-id>` : AWS Account ID which is unique for each account.
-** `<region>` : AWS Region which is a separate geographic area and the examples are us-east-1, eu-west-1, ap-south-1. 
-* `<project-id>/<image>` : Repository name given on creation.
 
 * Docker commands can be used for pulling, tagging and pushing container images as shown below.
 
