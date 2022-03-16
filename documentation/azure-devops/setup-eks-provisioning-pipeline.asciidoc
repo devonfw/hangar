@@ -77,5 +77,5 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 If you are the cluster creator, follow the below commands to connect using `kubectl` from your terminal
 
 ```
-kubectl <kubectl command> --kubeconfig <path to downloaded kubeconfig>
+aws eks update-kubeconfig --name <eks-cluster-name> --region <aws region>
 ```
