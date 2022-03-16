@@ -1,9 +1,6 @@
 # AWS Region to provision the resources
 region="eu-west-1"
 
-# Provide the name for the cluster to be created
-cluster_name="hangar-eks-cluster"
-
 # Name for the VPC to be created by the script.
 vpc_name="k8s-vpc"
 

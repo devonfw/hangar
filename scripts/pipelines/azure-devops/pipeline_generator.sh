@@ -19,6 +19,7 @@ while true; do
         --resource-group)       resourceGroupName=$2; shift 2;;
         --storage-account)      storageAccountName=$2; shift 2;;
         --storage-container)    storageContainerName=$2; shift 2;;
+        --cluster-name)         clusterName=$2; shift 2;;
         --s3-bucket)            s3Bucket=$2; shift 2;;
         --s3-key-path)          s3KeyPath=$2; shift 2;;
         --) shift; break;;
@@ -72,6 +73,7 @@ function help {
     echo "      --storage-container     [Required] Name of the storage container where the tfstate file of the cluster will be stored."
     echo ""
     echo "EKS pipeline flags:"
+    echo "      --cluster-name          [Required] Name of the EKS cluster."
     echo "      --s3-bucket             [Required] Name of the S3 bucket where the tfstate file of the cluster will be stored."
     echo "      --s3-key-path           [Required] Path in the S3 bucket where the tfstate file of the cluster will be stored."
     exit
