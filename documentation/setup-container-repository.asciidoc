@@ -4,17 +4,26 @@ toc::[]
 :idseparator: -
 
 == Setup Container Repository
-* In this block, we will see how to setup/create container registry to pull/tag/push container images. 
+* In this block, we will see how to setup/create container registry with Docker Hub, AWS and Azure. 
 * This block is a pre-requisite to hangar package pipeline.
 * We will get the container registry name/url as output of this block.
-* Here is the container image name format
 
-`[registry-name]/[project-id]/[image]:[tag]`
+* **Container Image Format:**
 
-* `<hostname>` : <aws-account-id>.dkr.ecr.<region>.amazonaws.com
-** `<aws-account-id>` : AWS Account ID which is unique for each account.
-** `<region>` : AWS Region which is a separate geographic area and the examples are us-east-1, eu-west-1, ap-south-1. 
-* `<project-id>/<image>` : Repository name given on creation.
+** `<registry-url>/<namespace>/<project>/<image>:<tag>`
+
+*** `<registry-url>` : Container registry URL based on registry provider
+*** `<namespace>` : Namespace within which the project is created
+*** `<project>/<image>` : Repository name given on creation which can be from one level to three level deep
+*** `<tag>` : Some alphanumeric tag which is given as identifier
+
+** **Sample:**
+
+*** `docker.io/devonfw/devon4quarkus-reference:latest` : Docker Hub Registry format
+*** `devonfw/my-thai-star-angular:latest` : Since Docker Hub is default, no need to specify `docker.io` as prefix
+*** `ghcr.io/devonfw/my-thai-star-java:latest` : GitHub Container Registry format
+*** `ghcr.io/devonfw/my-thai-star/angular:1.5` : Repository name with two levels
+*** `ghcr.io/devonfw/quarkus/sample/devon4quarkus-reference:2.0` : Repository name with three levels
 
 == Prerequisites
 * Docker Hub account is required to access Docker Hub Registry.
@@ -52,7 +61,7 @@ Docker Hub is a container registry/repository which is used to save container im
 * Docker hub has no registry reference (<hostname>) since it is default whereas AWS, Azure, GCP, etc will have references like ecr.io, azr.io, gcr.io, etc.
 
 == AWS Elastic Container Registry
-* First, login to AWS ECR registry^[3]^ with the following command:
+* First, login to AWS ECR registry^[2]^ with the following command:
 
 [source,shell]
 ----
@@ -95,7 +104,7 @@ Docker Hub is a container registry/repository which is used to save container im
 
 
 == Azure Container Registry
-* https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud^[4]^.
+* https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud^[3]^.
 * Azure CLI commands start with "az" which is shown below for login.
 * Registry can be created using the following command.
 
@@ -140,6 +149,5 @@ Docker Hub is a container registry/repository which is used to save container im
 
 == References
 * 1 - ^Docker (https://docs.docker.com/docker-hub/)
-* 2 - ^RedHat (https://www.redhat.com/en/topics/cloud-native-apps/what-is-a-container-registry)
-* 3 - ^AWS (https://docs.aws.amazon.com/ecr/)
-* 4 - ^Azure (https://docs.microsoft.com/en-us/azure/container-registry/)
+* 2 - ^AWS (https://docs.aws.amazon.com/ecr/)
+* 3 - ^Azure (https://docs.microsoft.com/en-us/azure/container-registry/)
