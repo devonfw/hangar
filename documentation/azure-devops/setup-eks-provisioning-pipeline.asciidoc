@@ -45,6 +45,7 @@ pipeline_generator.sh \
   -n <pipeline name> \
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
+  --cluster-name <clusterName> \  
   -d <project local path> \
   [-b <branch>] \
   [-w]
@@ -58,6 +59,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
     --s3-bucket          [Required] Name of the AWS S3 bucket where tfstate file of the cluster will be stored.
     --s3-key-path        [Required] Path in the AWS S3 bucket where tfstate file of the cluster will be stored.
+    --cluster-name       [Required] Name of the EKS cluster."    
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
@@ -66,7 +68,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/eks/eks-config.cfg -n eks-provisioning --s3-bucket terraformStateBucket --s3-key-path eks/state -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/eks/eks-config.cfg -n eks-provisioning --s3-bucket terraformStateBucket --s3-key-path eks/state -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop --cluster-name hangar-eks-cluster -w
 ```
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
