@@ -18,7 +18,6 @@ Pipeline_to_find="$1"
 sourceVersion="$2"
 i=0
 number_lst=100
-encontrado="false"
 
 # Getting the id of the pipeline using the name
 pipelineInfo=$(az pipelines show --name "$Pipeline_to_find")
@@ -35,7 +34,6 @@ do
   if test "$listSourceVersion" = "$sourceVersion"
   then
     # If the commit is the one we are looking for, we get the Id of this execution and the result of it (then stop the while loop)
-    encontrado="true"
     result=$(echo "$pipelineList" | python -c "import sys, json; print(json.load(sys.stdin)[$i]['result'])")
     runId=$(echo "$pipelineList" | python -c "import sys, json; print(json.load(sys.stdin)[$i]['id'])")
 		break

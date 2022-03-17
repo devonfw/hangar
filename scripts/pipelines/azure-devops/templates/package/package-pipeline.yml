@@ -36,7 +36,7 @@ stages:
         AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
       inputs:
         targetType: inline
-        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh $(qualityPipeline) $(Build.SourceVersion)'
+        script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(qualityPipeline) $(Build.SourceVersion)'
 
     - bash: 'echo "The quality pipeline executed for this commit has failed, we cannot package your application.";exit 1'
       displayName: 'Quality pipeline failed'
@@ -60,7 +60,7 @@ stages:
         AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
       inputs:
         targetType: inline
-        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh $(BuildPipeline) $(Build.SourceVersion)'
+        script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(BuildPipeline) $(Build.SourceVersion)'
 
     - task: DownloadPipelineArtifact@2
       displayName: 'Download last artifact from build pipeline'
@@ -74,7 +74,15 @@ stages:
         runId: $(runId)
 
     - task: Bash@3
-      displayName: 'Build and Push the image to the registry'
+      displayName: 'Build and Push the image to the registry (Default)'
       inputs:
         targetType: 'inline'
-        script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh ; $(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+        script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+      condition: eq(variables['isECR'], '')
+
+    - task: Bash@3
+      displayName: 'Build and Push the image to the registry (AWS)'
+      inputs:
+        targetType: 'inline'
+        script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -a $(aws_access_key) -s $(aws_secret_access_key) -l $(region) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+      condition: eq(variables['isECR'], 'true')

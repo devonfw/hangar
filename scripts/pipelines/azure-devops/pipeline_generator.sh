@@ -1,6 +1,6 @@
 #!/bin/bash
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -26,6 +26,9 @@ while true; do
         --quality-pipeline-name)  qualityPipelineName=$2; shift 2;;
         --test-pipeline-name)     testPipelineName=$2; shift 2;;
         --dockerfile)             dockerFile=$2; shift 2;;
+        --aws-access-key)         awsAccessKey="$2"; shift 2;;
+        --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
+        --aws-region)             awsRegion="$2"; shift 2;;
         --) shift; break;;
     esac
 done
@@ -68,10 +71,13 @@ function help {
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --dockerfile            [Required, if language not set] Path to the Dockerfile, replace the one set with the language if both flags are given."
     echo "  -i, --image-name            [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
-    echo "  -u, --user                  [Required] User to connect to your container registry."
-    echo "  -p, --password              [Required] Password of the user to connect to your container registry."
     echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --quality-pipeline-name [Required] Quality pipeline name."
+    echo "  -u, --user                  [Required if not using aws access key] User to connect to your container registry."
+    echo "  -p, --password              [Required if not using aws access key] Password of the user to connect to your container registry."
+    echo "      --aws-access-key                  Access key to connect to your aws account (if this value is set, -u and -p will be ignored)."
+    echo "      --aws-secret-access-key [Required if --aws-access-key is used] Secret access key to connect to your AWS account."
+    echo "      --aws-region            [Required if --aws-access-key is used] region for your AWS account."
     echo ""
     echo "Deploy pipeline flags:"
     echo ""

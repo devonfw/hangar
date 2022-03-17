@@ -23,7 +23,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
-    script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh $(testPipelineName) $(Build.SourceVersion)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(testPipelineName) $(Build.SourceVersion)'
 
 - bash: 'echo "The test pipeline executed for this commit has failed.";exit 1'
   displayName: 'Test pipeline failed'
@@ -47,7 +47,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
-    script: 'chmod 755 $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh; $(Build.Repository.LocalPath)/.pipelines/scripts/CheckPipelineExec.sh $(buildPipelineName) $(Build.SourceVersion)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion)'
 
 - task: DownloadPipelineArtifact@2
   displayName: "Download Artifact"

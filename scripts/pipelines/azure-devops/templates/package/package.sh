@@ -12,7 +12,7 @@
 # -t : Path to the pom.xml
 #########################################################################################
 
-while getopts f:c:u:p:r:i:b:t: flag
+while getopts f:c:u:p:r:i:b:t:a:s:l: flag
 do
     case "${flag}" in
         f) dockerFile=${OPTARG};;
@@ -23,9 +23,12 @@ do
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
 	t) pomPath=${OPTARG};;
+    a) aws_access_key=${OPTARG};;
+    s) aws_secret_access_key=${OPTARG};;
+    l) region=${OPTARG};;
     esac
 done
-
+red='\e[0;31m'
 # We define the tag using the version set in the pom.xml
 tag=$(grep version ${pomPath} | grep -v -e '<?xml'| head -n 1 | sed 's/[[:space:]]//g' | sed -E 's/<.{0,1}version>//g' | awk '{print $1}')
 # We get the name of the branch removing the "/ref/head/<folder>"
@@ -40,17 +43,30 @@ echo "docker build -f $dockerFile -t $imageName:$tag_completed $context"
 docker build -f $dockerFile -t $imageName:$tag_completed $context
 
 # We connect to the registry
-echo "docker login -u=$username -p=$password"
-docker login -u="$username" -p="$password" $registry
-echo "docker push $imageName:$tag_completed"
+if test -z "$aws_access_key"
+then
+    echo "docker login -u=$username -p=$password $registry"
+    docker login -u="$username" -p="$password" $registry
+else
+    aws configure set aws_access_key_id "$aws_access_key"
+    aws configure set aws_secret_access_key "$aws_secret_access_key"
+    echo "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $registry"
+    aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin "$registry"
+fi
 
 # We push the image previously built
+echo "docker push $imageName:$tag_completed"
 docker push $imageName:$tag_completed
+[ $? != '0' ] && echo -e "${red}Fail during the push of $imageName:$tag_completed" && exit 1
 
 # If this is a release we push it a second time with "latest" tag
 if echo $branch | grep release
 then
 	echo "Also pushing the image as 'latest' if this is a release"
 	docker tag $imageName:$tag_completed $imageName:latest
+    echo "docker push $imageName:latest"
 	docker push $imageName:latest
+    CR=$?
+    [ $CR != '0' ] &&  test -z "$aws_access_key" && echo -e "${red}Fail during the push of $imageName:$tag_completed" && exit 1
+    echo "Push succesful"
 fi
