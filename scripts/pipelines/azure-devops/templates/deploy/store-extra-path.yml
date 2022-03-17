@@ -4,11 +4,5 @@
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/acr-secrets.sh'    
 
-- task: Bash@3
-  condition: eq(variables.deployCluster, 'EKS')
-  displayName: 'create secrets for EKS'
-  inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/ecr-secrets.sh'
-        
-    
+
 
