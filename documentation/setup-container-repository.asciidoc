@@ -4,8 +4,7 @@ toc::[]
 :idseparator: -
 
 == Setup Container Repository
-* The scope of this section is to setup/create container registry with Docker Hub, AWS and Azure.
-* By the end of this guide, we get the container registry name/url as output which can be used by hangar package pipeline.
+The scope of this section is to setup/create a container registry with Docker Hub or AWS or Azure for allowing package pipeline to push container images. By the end of this guide, we will get the container registry name/url as an output.
 
 * **Container Image Format:**
 
