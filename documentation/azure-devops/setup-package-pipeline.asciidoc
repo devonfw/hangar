@@ -26,11 +26,14 @@ pipeline_generator.sh \
   -l <language or framework> \
   --dockerfile <dockerfile path> \
   -d <project local path> \
-  -i <image name>
-  -u <user>
-  -p <password>
-  --build-pipeline-name <build pipeline name>
-  --quality-pipeline-name <quality pipeline name>
+  -i <image name> \
+  -u <user> \
+  -p <password> \
+  --build-pipeline-name <build pipeline name> \
+  --quality-pipeline-name <quality pipeline name> \
+  [--aws-access-key <aws access key>] \
+  [--aws-secret-access-key <aws secret access key>] \
+  [--aws-region <aws region>] \
   [-b, --target-branch <branch>] \
   [-w]
 
@@ -47,10 +50,13 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
     --dockerfile               [Required, if language not set] Path to the Dockerfile, replace the one set with the language if both flags are given.
 -d, --local-directory          [Required] Local directory of your project (the path should always be using '/' and not '\').
 -i, --image-name               [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry).
--u, --user                     [Required] User that will be used to connect to the registry.
--p, --password                 [Required] Password that will be used to connect to the registry.
+-u, --user                     [Required if not using aws access key] User that will be used to connect to the registry.
+-p, --password                 [Required if not using aws access key] Password that will be used to connect to the registry.
     --build-pipeline-name      [Required] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
+    --aws-access-key                      Access key to connect to your aws account (if this value is set, -u and -p will be ignored)."
+    --aws-secret-access-key    [Required if --aws-access-key is used] Secret access key to connect to your AWS account."
+    --aws-region               [Required if --aws-access-key is used] region for your AWS account."
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```

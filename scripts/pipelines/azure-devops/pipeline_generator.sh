@@ -199,6 +199,9 @@ function commitFiles {
     fi
 
     # Git commit and push it into the repository.
+    # changing all files to be executable
+    find .pipelines -type f -exec git update-index --chmod=+x {} \;
+    
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
 }
