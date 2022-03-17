@@ -14,16 +14,16 @@ toc::[]
 
 *** `<registry-url>` : Container registry URL based on registry provider
 *** `<namespace>` : Namespace within which the project is created
-*** `<project>/<image>` : Repository name given on creation which can be from one level to three level deep
+*** `<project>/<image>` : Repository name given on creation which can be from one level to three level deep (refer ghcr.io examples below)
 *** `<tag>` : Some alphanumeric tag which is given as identifier
 
-** **Sample:**
+** **Examples:**
 
 *** `docker.io/devonfw/devon4quarkus-reference:latest` : Docker Hub Registry format
 *** `devonfw/my-thai-star-angular:latest` : Since Docker Hub is default, no need to specify `docker.io` as prefix
-*** `ghcr.io/devonfw/my-thai-star-java:latest` : GitHub Container Registry format
-*** `ghcr.io/devonfw/my-thai-star/angular:1.5` : Repository name with two levels
-*** `ghcr.io/devonfw/quarkus/sample/devon4quarkus-reference:2.0` : Repository name with three levels
+*** `ghcr.io/devonfw/my-thai-star-java:latest` : GitHub Container Registry format with one level of <project>/<image>
+*** `ghcr.io/devonfw/my-thai-star/angular:1.5` : Repository name with two levels of <project>/<image>
+*** `ghcr.io/devonfw/quarkus/sample/devon4quarkus-reference:2.0` : Repository name with three levels of <project>/<image>
 
 == Prerequisites
 * Docker Hub account is required to access Docker Hub Registry.
