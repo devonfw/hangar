@@ -1,6 +1,6 @@
 #!/bin/bash
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,aks-provision-pipeline:,deploy-cluster:,package-pipeline-name:," -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,aks-provision-pipeline:,deploy-cluster:,k8s-namespace:,secrets-value:,package-pipeline-name:," -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -23,8 +23,10 @@ while true; do
         --s3-bucket)                 s3Bucket=$2; shift 2;;
         --s3-key-path)               s3KeyPath=$2; shift 2;;
         --deploy-files)              deployFiles=$2; shift 2;;
-        --aks-provision-pipeline)    aksProvisionPipeline=$2; shift 2;; 
-        --deploy-cluster)             deployCluster=$2; shift 2;; 
+        --aks-provision-pipeline)    aksProvisionPipelineName=$2; shift 2;; 
+        --deploy-cluster)            deployCluster=$2; shift 2;; 
+        --k8s-namespace)             k8sNamespace=$2; shift 2;; 
+        --secrets-value)             secretsValue=$2; shift 2;;  
         --package-pipeline-name)     packagePipelineName=$2; shift 2;;
         --) shift; break;;
     esac
@@ -68,9 +70,11 @@ function help {
     echo ""
     echo "Deploy pipeline flags:"
     echo "      --deploy-files              [Required] Path inside the remote repository where the deployment YAML files are located."
-    echo "      --aks-provision-pipeline    [Required] Name of the aks provision pipeline name."
-    echo "      --deploy-cluster            [Required] Name of the kubernetes cluster, AKS or EKS cluster name.."
-    echo "      --package-pipeline-name     [Required] Package pipeline name."
+    echo "      --aks-provision-pipeline    [Required] Name of the AKS provision pipeline name."
+    echo "      --deploy-cluster            [Required] Name of the kubernetes cluster, AKS or EKS cluster name."
+    echo "      --k8s-namespace			    [Required] Name of the kubernetes namespace."
+    echo "      --secrets-value                        Name of the secrets, pull images from private registry."
+    echo "      --package-pipeline-name     [Required] Name of the Package pipeline name."
     echo ""
     echo "Library deploy pipeline flags:"
     echo "  -l, --language                  [Required] Language or framework of the project."
