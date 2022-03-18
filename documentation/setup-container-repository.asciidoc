@@ -4,7 +4,7 @@ toc::[]
 :idseparator: -
 
 == Setup Container Repository
-The scope of this section is to setup/create a container registry with Docker Hub or AWS or Azure for allowing package pipeline to push container images. By the end of this guide, we will get the container registry name/url as an output.
+The scope of this section is to setup/create a container registry with Docker Hub, AWS or Azure for allowing package pipeline to push container images. By the end of this guide, we will get the container registry name/url as an output.
 
 A container image name generically has the following format:
 
@@ -12,12 +12,12 @@ A container image name generically has the following format:
 
 ** `<registry-url>`: Container registry URL based on registry provider.
 ** `<namespace>`: Namespace within which the image is located.
-** `<image-name>`: Repository/project/image name given on creation which can be from one level to n-level deep.
+** `<image-name>`: Repository/project/image name which can be from one level to n-level deep.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
 == Docker Hub
 === Prerequisites
-* Docker Hub account is required to access Docker Hub Registry. If you do not have one, please create one https://hub.docker.com/[here]. 
+* Docker Hub account is required to access Docker Hub Registry. You can create one https://hub.docker.com/[here]. 
 
 === Steps
 * In the Docker Hub https://hub.docker.com/repositories[homepage] (once you logged in), create a repository by clicking "Create Repository".
@@ -29,7 +29,7 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 * `<namespace>/<image-name>:<tag>`
 
 ** `<namespace>`: Username or Organization on Docker Hub.
-** `<image-name>`: Freely chosed project/image-name given by the user.
+** `<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
 ==== Examples
@@ -40,7 +40,8 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 == AWS Elastic Container Registry
 
 === Prerequisites
-* AWS account and AWS CLI installation are required.
+* An AWS account.
+* AWS CLI installed.
 
 === Steps
 * Get the AWS Account ID by executing `aws sts get-caller-identity`.
@@ -79,7 +80,7 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 * `<registry-url>/<namespace>/<image-name>:<tag>`
 ** `<registry-url>`: <aws-account-id>.dkr.ecr.<region>.amazonaws.com
 ** `<namespace>`: Previously chosen repository name.
-** `<image-name>`: Freely chosed project/image-name given by the user.
+** `<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
 ==== Examples
@@ -90,22 +91,21 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 == Azure Container Registry
 
 === Prerequisites
-* Azure account and Azure CLI installation are required.
+* An Azure account with active subscription.
+* An Azure resource group.
+* Azure CLI installed.
 
 === Steps
-* https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud^[3]^.
-* Azure CLI commands start with "az" which is shown below for login.
-* Registry can be created using the following command.
+* Login to Azure using `az login`.
+* Set the Azure Subscription using `az account set --subscription <mySubscription>`.
+* Create a registry with the following command:
 
 [source,shell]
 ----
    az acr create --resource-group <resourcegroup-name> --name <registry-name> --sku Basic
 ----
 
-
-=== Image Format
-
-*Sample Output:*
+*Sample Output*
 [source,json]
 ----
 {
@@ -127,14 +127,17 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
   "type": "Microsoft.ContainerRegistry/registries"
 }
 ----
-==== Examples
-* mycontainerregistry.azurecr.io/hello-world:v1.1.2
-* mcr.microsoft.com/hello-world
 
-[source,shell]
-----
-   az acr login --name <registry-name>
-----
+=== Image Format
+* `<registry-url>/<namespace>/<image-name>:<tag>`
+** `<registry-url>`: <registry-name>.azurecr.io
+** `<namespace>/<image-name>`: Freely chosen project/image-name given by the user.
+** `<tag>`: Some alphanumeric tag which is given as identifier.
+
+==== Examples
+*** `devonacr.azurecr.io/devonfw/my-thai-star-angular:latest`
+*** `devonacr.azurecr.io/devonfw/my-thai-star/angular:1.5`
+*** `devonacr.azurecr.io/devonfw/quarkus/sample/devon4quarkus-reference:2.0`
 
 == Provider Documentation
 * link:https://docs.docker.com/docker-hub/[Docker Hub]
