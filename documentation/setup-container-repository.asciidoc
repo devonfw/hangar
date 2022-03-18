@@ -8,20 +8,12 @@ The scope of this section is to setup/create a container registry with Docker Hu
 
 * **Container Image Format:**
 
-** `<registry-url>/<namespace>/<project>/<image>:<tag>`
+** `<registry-url>/<namespace>/<image-name>:<tag>`
 
 *** `<registry-url>` : Container registry URL based on registry provider
 *** `<namespace>` : Namespace within which the project is created
-*** `<project>/<image>` : Repository name given on creation which can be from one level to three level deep (refer ghcr.io examples below)
+*** `<image-name>` : Repository/project/image name given on creation which can be from one level to three level deep (refer ghcr.io examples below)
 *** `<tag>` : Some alphanumeric tag which is given as identifier
-
-** **Examples:**
-
-*** `docker.io/devonfw/devon4quarkus-reference:latest` : Docker Hub Registry format
-*** `devonfw/my-thai-star-angular:latest` : Since Docker Hub is default, no need to specify `docker.io` as prefix
-*** `ghcr.io/devonfw/my-thai-star-java:latest` : GitHub Container Registry format with one level of <project>/<image>
-*** `ghcr.io/devonfw/my-thai-star/angular:1.5` : Repository name with two levels of <project>/<image>
-*** `ghcr.io/devonfw/quarkus/sample/devon4quarkus-reference:2.0` : Repository name with three levels of <project>/<image>
 
 == Prerequisites
 * Docker Hub account is required to access Docker Hub Registry.
@@ -33,6 +25,17 @@ Docker Hub is a container registry/repository which is used to save container im
 
 * You will need a Docker Hub account. If you do not have one, please create one https://hub.docker.com/[here]. 
 * Once you have a Docker Hub account, you can create a repository in just a few clicks in the https://hub.docker.com/repositories[link here]. First, click "Create Repository".
+
+** **Docker Registry Examples:**
+
+*** `docker.io/devonfw/devon4quarkus-reference:latest` : Docker Hub Registry format
+*** `devonfw/my-thai-star-angular:latest` : Since Docker Hub is default, no need to specify `docker.io` as prefix
+*** `devonfw/my-thai-star-java:latest` : GitHub Container Registry format with one level of <image-name>
+*** `devonfw/my-thai-star/angular:1.5` : Repository name with two levels of <image-name>
+*** `devonfw/quarkus/sample/devon4quarkus-reference:2.0` : Repository name with three levels of <image-name>
+
+* Docker hub has no registry reference (<hostname>) since it is default whereas AWS, Azure, GCP, etc will have references like ecr.io, azr.io, gcr.io, etc.
+
 * Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
 [source,shell]
 ----
@@ -56,7 +59,7 @@ Docker Hub is a container registry/repository which is used to save container im
    docker push <hostname>/<project-id>/<imagename>
 ----
 * Going back to our Docker Hub account, we can see the new tag stored in our private repository.
-* Docker hub has no registry reference (<hostname>) since it is default whereas AWS, Azure, GCP, etc will have references like ecr.io, azr.io, gcr.io, etc.
+
 
 == AWS Elastic Container Registry
 * First, login to AWS ECR registry^[2]^ with the following command:
