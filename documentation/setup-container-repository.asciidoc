@@ -18,6 +18,7 @@ A container image name generically has the following format:
 == Docker Hub
 === Prerequisites
 * Docker Hub account is required to access Docker Hub Registry. If you do not have one, please create one https://hub.docker.com/[here]. 
+
 === Steps
 * In the Docker Hub https://hub.docker.com/repositories[homepage] (once you logged in), create a repository by clicking "Create Repository".
 * Provide Name and Visibility for the repository and click "Create" button.
@@ -39,8 +40,9 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 == AWS Elastic Container Registry
 
 === Prerequisites
-* AWS account and AWS CLI installation are required to access AWS Container Registry.
+* AWS account and AWS CLI installation are required.
 
+=== Steps
 * First, login to AWS ECR registry^[2]^ with the following command:
 
 [source,shell]
@@ -86,8 +88,9 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 == Azure Container Registry
 
 === Prerequisites
-* Azure account and Azure CLI installation are required to access Azure Container Registry.
+* Azure account and Azure CLI installation are required.
 
+=== Steps
 * https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud^[3]^.
 * Azure CLI commands start with "az" which is shown below for login.
 * Registry can be created using the following command.
@@ -131,7 +134,7 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
    docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
 ----
 
-== References
-* 1 - ^Docker (https://docs.docker.com/docker-hub/)
-* 2 - ^AWS (https://docs.aws.amazon.com/ecr/)
-* 3 - ^Azure (https://docs.microsoft.com/en-us/azure/container-registry/)
+== Provider Documentation
+* link:https://docs.docker.com/docker-hub/[Docker Hub]
+* link:https://docs.aws.amazon.com/ecr/[AWS ECR]
+* link:https://docs.microsoft.com/en-us/azure/container-registry/[Azure ACR]
