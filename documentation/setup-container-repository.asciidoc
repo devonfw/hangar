@@ -6,14 +6,14 @@ toc::[]
 == Setup Container Repository
 The scope of this section is to setup/create a container registry with Docker Hub or AWS or Azure for allowing package pipeline to push container images. By the end of this guide, we will get the container registry name/url as an output.
 
-* **Container Image Format:**
+A container image name generically has the following format:
 
-** `<registry-url>/<namespace>/<image-name>:<tag>`
+* `<registry-url>/<namespace>/<image-name>:<tag>`
 
-*** `<registry-url>` : Container registry URL based on registry provider
-*** `<namespace>` : Namespace within which the project is created
-*** `<image-name>` : Repository/project/image name given on creation which can be from one level to three level deep (refer ghcr.io examples below)
-*** `<tag>` : Some alphanumeric tag which is given as identifier
+** `<registry-url>`: Container registry URL based on registry provider.
+** `<namespace>`: Namespace within which the image is located.
+** `<image-name>`: Repository/project/image name given on creation which can be from one level to n-level deep.
+** `<tag>`: Some alphanumeric tag which is given as identifier.
 
 == Prerequisites
 * Docker Hub account is required to access Docker Hub Registry.
