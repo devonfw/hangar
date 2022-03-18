@@ -84,3 +84,8 @@ aws eks update-kubeconfig --name <eks-cluster-name> --region <aws region>
 Now you can use `kubectl` tool to communicate with the cluster.
 
 To enable an IAM user to connect to the EKS cluster, please refer https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html[here].
+
+To get the DNS name of the nginx ingress controller from the EKS cluster, run the below command from your terminal
+```
+kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
+```
