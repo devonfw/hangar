@@ -43,7 +43,8 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 * AWS account and AWS CLI installation are required.
 
 === Steps
-* First, login to AWS ECR registry^[2]^ with the following command:
+* Get the AWS Account ID by executing `aws sts get-caller-identity`.
+* Login to AWS ECR with the following command (an example `<region>` would be `eu-west-1`):
 
 [source,shell]
 ----
@@ -53,37 +54,38 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
        --password-stdin <aws-account-id>.dkr.ecr.<region>.amazonaws.com
 ----
 
-* Create a repository inside the specified namespace in the default registry for an account like in the example below:
+* Create a repository namespace with the following command:
 
 [source,shell]
 ----
    aws ecr create-repository \ 
-       --repository-name <project-id>/<image> \ 
+       --repository-name <namespace> \ 
        --region <region>
 ----
 
-*Sample Output:*
+*Sample Output*
 [source,json]
 ----
    {
        "repository": { 
            "registryId": "123456789012",
            "repositoryName": "sample-repo",
-           "repositoryArn": "arn:aws:ecr:us-east-1:123456789012:repository/project-a/nginx-web-app"
+           "repositoryArn": "arn:aws:ecr:eu-west-1:123456789012:repository/project-a/nginx-web-app"
        }
    }
 ----
 
+=== Image Format
+* `<registry-url>/<namespace>/<image-name>:<tag>`
+** `<registry-url>`: <aws-account-id>.dkr.ecr.<region>.amazonaws.com
+** `<namespace>`: Previously chosen repository name.
+** `<image-name>`: Freely chosed project/image-name given by the user.
+** `<tag>`: Some alphanumeric tag which is given as identifier.
 
-* Docker commands can be used for pulling, tagging and pushing container images as shown below.
-
-[source,shell]
-----
-    docker pull <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
-    docker tag hello-world:latest <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
-    docker push <aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-world:latest
-----
-
+==== Examples
+*** `1000000001.dkr.ecr.eu-west-1.amazonaws.com/devonfw/my-thai-star-angular:latest`
+*** `1000100001.dkr.ecr.us-east-1.amazonaws.com/devonfw/my-thai-star/angular:1.5`
+*** `1000200001.dkr.ecr.ap-south-1.amazonaws.com/devonfw/quarkus/sample/devon4quarkus-reference:2.0`
 
 == Azure Container Registry
 
@@ -99,6 +101,9 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 ----
    az acr create --resource-group <resourcegroup-name> --name <registry-name> --sku Basic
 ----
+
+
+=== Image Format
 
 *Sample Output:*
 [source,json]
@@ -122,16 +127,13 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
   "type": "Microsoft.ContainerRegistry/registries"
 }
 ----
-
-* Docker commands can be used for pulling, tagging and pushing container images as shown below.
+==== Examples
+* mycontainerregistry.azurecr.io/hello-world:v1.1.2
+* mcr.microsoft.com/hello-world
 
 [source,shell]
 ----
    az acr login --name <registry-name>
-   
-   docker pull mcr.microsoft.com/hello-world
-   docker tag mcr.microsoft.com/hello-world mycontainerregistry.azurecr.io/hello-world:v1.1.2
-   docker push mycontainerregistry.azurecr.io/hello-world:v1.1.2
 ----
 
 == Provider Documentation
