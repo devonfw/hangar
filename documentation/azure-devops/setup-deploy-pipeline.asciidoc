@@ -72,7 +72,7 @@ NOTE: kubectl get ingress -n <namespace> --kubeconfig <kubeconfig path>
 
 == Interacting with the EKS cluster
 
-Before connecting to the EKS cluster, need to get right access to the IAM user, please refer https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html[here].
+Before connecting to the EKS cluster, enable right access to the IAM user, please refer https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html[here].
 
 Run the below command to connect to the AWS EKS cluster from your terminal
 
