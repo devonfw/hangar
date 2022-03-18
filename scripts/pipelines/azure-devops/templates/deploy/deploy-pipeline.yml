@@ -15,9 +15,9 @@ resources:
         - feature/*
         exclude:
         - master
-        
+
 variables:
-- group: registry_info  
+- group: secrets_test_info  
 - group: AWS_Credentials 
   
 pool:
@@ -52,14 +52,20 @@ jobs:
         kubectl create namespace $(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
         # Apply manifest files.
         kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
-          
+
+  - task: Bash@3
+    condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
+    displayName: 'create secrets for AKS'
+    inputs:
+      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/acr-secrets.sh'
+
 - job: Deploy_to_EKS
   variables:
   - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
     condition: eq(variables.deployCluster, 'EKS')
-    displayName: "Deploy app to EKS"
+    displayName: Deploy app to EKS
     inputs:
       targetType: 'inline'
       script: |
@@ -75,6 +81,10 @@ jobs:
         kubectl create namespace $(k8sNamespace) 
         # Apply manifest files.
         kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) 
-
+  - task: Bash@3
+    condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
+    displayName: 'create secrets for EKS'
+    inputs:
+      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/ecr-secrets.sh'      
 
 
