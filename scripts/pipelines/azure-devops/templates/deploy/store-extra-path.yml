@@ -1,8 +1,0 @@
-- task: Bash@3
-  condition: eq(variables.deployCluster, 'AKS')
-  displayName: 'create secrets for AKS'
-  inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/acr-secrets.sh'    
-
-
-
