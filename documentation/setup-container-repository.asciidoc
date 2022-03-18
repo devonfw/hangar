@@ -15,53 +15,32 @@ A container image name generically has the following format:
 ** `<image-name>`: Repository/project/image name given on creation which can be from one level to n-level deep.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
-== Prerequisites
-* Docker Hub account is required to access Docker Hub Registry.
-* AWS account and AWS CLI installation are required to access AWS Container Registry.
-* Azure account and Azure CLI installation are required to access Azure Container Registry.
-
 == Docker Hub
-Docker Hub is a container registry/repository which is used to save container images.^[1]^ We will also demonstrate how to pull a container image from Docker Hub to your local machine, and then push a version with a tag back to your own repository.
+=== Prerequisites
+* Docker Hub account is required to access Docker Hub Registry. If you do not have one, please create one https://hub.docker.com/[here]. 
+=== Steps
+* In the Docker Hub https://hub.docker.com/repositories[homepage] (once you logged in), create a repository by clicking "Create Repository".
+* Provide Name and Visibility for the repository and click "Create" button.
 
-* You will need a Docker Hub account. If you do not have one, please create one https://hub.docker.com/[here]. 
-* Once you have a Docker Hub account, you can create a repository in just a few clicks in the https://hub.docker.com/repositories[link here]. First, click "Create Repository".
+=== Image Format
+For referencing an image in Docker Hub, you don't have to specify the `<registry-url>` since it is the default on Docker.
 
-** **Docker Registry Examples:**
+* `<namespace>/<image-name>:<tag>`
 
-*** `docker.io/devonfw/devon4quarkus-reference:latest` : Docker Hub Registry format
-*** `devonfw/my-thai-star-angular:latest` : Since Docker Hub is default, no need to specify `docker.io` as prefix
-*** `devonfw/my-thai-star-java:latest` : GitHub Container Registry format with one level of <image-name>
-*** `devonfw/my-thai-star/angular:1.5` : Repository name with two levels of <image-name>
-*** `devonfw/quarkus/sample/devon4quarkus-reference:2.0` : Repository name with three levels of <image-name>
+** `<namespace>`: Username or Organization on Docker Hub.
+** `<image-name>`: Freely chosed project/image-name given by the user.
+** `<tag>`: Some alphanumeric tag which is given as identifier.
 
-* Docker hub has no registry reference (<hostname>) since it is default whereas AWS, Azure, GCP, etc will have references like ecr.io, azr.io, gcr.io, etc.
-
-* Use the following command and login to Docker Hub account. You will see a message saying "Login Succeeded" after authenticating with Password.
-[source,shell]
-----
-   docker login -u <username>
-----
-* Use the following command to pull the container image from Docker Hub to local machine.
-* Pull the desired container images to our local repository with `docker pull` command.
-[source,shell]
-----
-   docker pull <hostname>/<project-id>/<imagename>
-----
-* After making the necessary changes, tag the container image using the `docker tag` command.
-* After tagging our container image, use `docker push` command to push the changes into the Docker Hub.
-[source,shell]
-----   
-   docker tag <source-image> <hostname>/<project-id>/<image>
-----
-* Use the following command to push a container image to private repository.
-[source,shell]
-----
-   docker push <hostname>/<project-id>/<imagename>
-----
-* Going back to our Docker Hub account, we can see the new tag stored in our private repository.
-
+==== Examples
+*** `devonfw/my-thai-star-angular:latest`
+*** `devonfw/my-thai-star/angular:1.5`
+*** `devonfw/quarkus/sample/devon4quarkus-reference:2.0`
 
 == AWS Elastic Container Registry
+
+=== Prerequisites
+* AWS account and AWS CLI installation are required to access AWS Container Registry.
+
 * First, login to AWS ECR registry^[2]^ with the following command:
 
 [source,shell]
@@ -105,6 +84,10 @@ Docker Hub is a container registry/repository which is used to save container im
 
 
 == Azure Container Registry
+
+=== Prerequisites
+* Azure account and Azure CLI installation are required to access Azure Container Registry.
+
 * https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal[ACR] is a private registry service from Azure Cloud^[3]^.
 * Azure CLI commands start with "az" which is shown below for login.
 * Registry can be created using the following command.
