@@ -36,8 +36,8 @@ IMPORTANT: Docker Hub does not support multi-level image names.
 
 ==== Examples
 *** `devonfw/my-thai-star-angular:latest`
-*** `devonfw/my-thai-star/angular:1.5`
-*** `devonfw/quarkus/sample/devon4quarkus-reference:2.0`
+*** `devonfw/my-thai-star-java:1.5`
+*** `devonfw/devon4quarkus-reference:2.0`
 
 == AWS Elastic Container Registry
 
