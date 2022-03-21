@@ -43,7 +43,7 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 * An AWS account.
 * AWS CLI installed.
 
-=== Steps
+=== Creating an image repository namespace
 * Get the AWS Account ID by executing `aws sts get-caller-identity`.
 * Login to AWS ECR with the following command (an example `<region>` would be `eu-west-1`):
 
