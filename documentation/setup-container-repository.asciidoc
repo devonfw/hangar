@@ -30,7 +30,7 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 * `<namespace>/<image-name>:<tag>`
 
 ** `<namespace>`: Username or Organization on Docker Hub.
-** `<image-name>`: Freely chosen project/image-name given by the user.
+** `<image-name>`: Previously chosen repository name.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
 ==== Examples
