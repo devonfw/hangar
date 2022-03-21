@@ -13,7 +13,7 @@
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Setting up a Quality Pipeline]
 ** Package
 *** App
-**** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry] [WIP]
+**** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
 **** https://github.com/devonfw/hangar/pull/37/files?short_path=cb8a27b#diff-cb8a27bd6b3910f0777c3268bf5a5598b71226b8704202f131db37cdd5609a44[Setting up a Package Pipeline] [WIP]
 *** https://github.com/devonfw/hangar/pull/38/files?short_path=7f2c666#diff-7f2c666a33ed5ae8c860badba1f129d0d707d86d6b73ffa680b179247b16b43b[Setting up a Java library Package Pipeline] [WIP]
 ** Setup Kubernetes deploying environment pipeline
