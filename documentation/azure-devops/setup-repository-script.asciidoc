@@ -103,9 +103,9 @@ If your folder is an online Git repository, the branch *develop* and *master* wi
 
 NOTE: `-r` and `-s` are independent, you can use one without the other it will not affect their use, but they are both dependent to `-b`.
 
-== Branches and policies
+== Branching strategies
 
-To ensure the quality of development, you will need to have a clean Git workflow. For a new repository or when pushing a regular folder as your Azure DevOps repository, we created a Git workflow.
+To ensure the quality of development, it is crucial to keep a clean Git workflow. The following branching strategies are supported (using `-s` flag):
 
 === Branches
 
