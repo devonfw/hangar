@@ -25,7 +25,8 @@ A container image name generically has the following format:
 * Provide Name and Visibility for the repository and click "Create" button.
 
 === Image Format
-For referencing an image in Docker Hub, you don't have to specify the `<registry-url>` since it is the default on Docker.
+NOTE: For referencing an image in Docker Hub, you don't have to specify the `<registry-url>` since it is the default on Docker.
+IMPORTANT: Docker Hub does not support multi-level image names.
 
 * `<namespace>/<image-name>:<tag>`
 
