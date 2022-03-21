@@ -83,6 +83,10 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 ** `<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
+That is:
+
+* `<aws-account-id>.dkr.ecr.<region>.amazonaws.com/<repository-name>/<image-name>:<tag>`
+
 ==== Examples
 *** `1000000001.dkr.ecr.eu-west-1.amazonaws.com/devonfw/my-thai-star-angular:latest`
 *** `1000100001.dkr.ecr.us-east-1.amazonaws.com/devonfw/my-thai-star/angular:1.5`
