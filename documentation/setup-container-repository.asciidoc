@@ -20,7 +20,8 @@ A container image name generically has the following format:
 * Docker Hub account is required to access Docker Hub Registry. You can create one https://hub.docker.com/[here]. 
 
 === Steps
-* In the Docker Hub https://hub.docker.com/repositories[homepage] (once you logged in), create a repository by clicking "Create Repository".
+* Login on https://hub.docker.com/login[Docker Hub website].
+* Go to https://hub.docker.com/repositories[Repositories] tab and click on "Create Repository".
 * Provide Name and Visibility for the repository and click "Create" button.
 
 === Image Format
