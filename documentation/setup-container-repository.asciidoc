@@ -101,7 +101,7 @@ That is:
 * An Azure resource group.
 * Azure CLI installed.
 
-=== Creating an image repository registry
+=== Creating an image registry
 * Login to Azure using `az login`.
 * Set the Azure Subscription using `az account set --subscription <mySubscription>`.
 * Create a registry with the following command:
