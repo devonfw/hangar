@@ -12,7 +12,7 @@ A container image name generically has the following format:
 
 ** `<registry-url>`: Container registry URL based on registry provider.
 ** `<namespace>`: Namespace within which the image is located.
-** `<image-name>`: Repository/project/image name which can be from one level to n-level deep.
+** `<image-name>`: Repository/image name which can be from one level to n-level deep (depending on provider).
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
 == Docker Hub
