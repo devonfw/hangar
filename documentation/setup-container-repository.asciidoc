@@ -134,6 +134,10 @@ For referencing an image in Docker Hub, you don't have to specify the `<registry
 ** `<namespace>/<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
+That is:
+
+* `<registry-name>.azurecr.io/<namespace>/<image-name>:<tag>`
+
 ==== Examples
 *** `devonacr.azurecr.io/devonfw/my-thai-star-angular:latest`
 *** `devonacr.azurecr.io/devonfw/my-thai-star/angular:1.5`
