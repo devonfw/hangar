@@ -1,30 +1,23 @@
 :imagesdir: ./images/setup-repository-script
 = Setting up a repository on Azure DevOps using script
 
-In this section we will create a repository on Azure DevOps in an automated way using a script. If you prefer using the Azure DevOps web interface, follow link:setup-repository-step-by-step.asciidoc[the step-by-step tutorial] instead.
+By the end of this guide, a repository on Azure DevOps will be created in an automated way using a script. If you prefer using the Azure DevOps web interface, follow link:setup-repository-step-by-step.asciidoc[the step-by-step guide] instead.
 
-NOTE: Here you will see two types of repository, Git repositories and Azure DevOps repositories, it is important to know that Azure DevOps repositories are still Git repositories, but in this documentation we will use Azure DevOps repository to talk about the one we want to create, and Git repository is about any other Git repository (it can be host on Github, on your local computer, on another Azure DevOps project ...)
 
 == Prerequisites
-. Install the https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest[Azure CLI].
+. Have an Azure DevOps project already setup and Azure CLI installed and configured. If it is not the case, please go back to corresponding guide.
 
 . Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
 
 
-== Using the script to create the repository
-
-The script is located at `scripts/repositories/azure-devops/create_repo.bash`.
-
-It can be used in different ways:
-
-. Create an empty repository with just a README file and clone it to your computer into the directory you set (use this case if you want to create a brand new repository).
-
-Import an already existing directory or Git repository into your project giving a path or an URL (use this case if you already have a project and want to import it into Azure DevOps).
+== Creating repository using provided script
 
 
-NOTE: For the first case, and the second case if your directory was not a Git repository, the repository is created with already some branches and branch policies. You can of course personalize them if needed.
+The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows you to either:
 
+. Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch.
 
+. Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to Azure DevOps the development of an existing project.
 === Syntax +
 
 ```
@@ -41,37 +34,24 @@ NOTE: For the first case, and the second case if your directory was not a Git re
       [-f]
 ```
 
-=== Arguments +
+=== Flags
 
 ```
-  -a (for action) :       (Mandatory) The value of this will tell in which case the script must be executed, can be 'create' (1st case) or 'import'(2nd case).
-  -n (for name) :         (Mandatory if the value of 'action' is 'create') Name the Azure DevOps repository will have.
-                          If not set for action 'import', it will used the name of the Git repository you are trying to import or the name of the directory you will convert.
-  -d (for directory) :    (Mandatory) Name of the directory where your repository will be cloned (for the action 'create' and 'import' if you used the -g flag), or name of the folder on your local machine you want to import (for the action 'import' if you did not use the -g flag).
+  -a, --action       [Required] Use case to fulfil: create, import.
+  -n, --name         Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
+  -d, --directory    [Required] Path to the directory where your repository will be cloned or initialized.
   -o (for organization) : URL of your Azure DevOps organization (mandatory)
-  -p (for project) :      (Mandatory) name of you Azure DevOps project
-  -g (for giturl) :       URL of the Git repository you want to clone
+  -p, --project      (Mandatory) Name of the Azure DevOps project.
+  -g, --source-git-url       Source URL of the Git repository to import.
   -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
   -r (for remove) :       If you gave a branch as reference when importing an existing git repository, it will delete all other branches (except master and develop).
   -s (for strategy) :     Set this flag if you want the script to create branch policies with the template this script uses.
-  -f (for force) :        If you set this flag it will automatically say yes to every step where user confirmation is required.
+  -f, --force        Skips any user confirmation.
 ```
 
-==== Additional information
+=== Typical use cases
 
-* For the `-d`: The path can be relative or absolute. You can use paths defined with backslashes because they will be converted into forward slashes, but be careful to write the path inside simple quote (or bash will try to interpret the backslashes).
-
-* For the `-o`: Be careful, this parameter is not the name of your organization, but the URL of it.
-
-* When you use the second case, If the `-g` flag is set it will import the Git repository with the URL and clone your repository inside the path set with the `-d` flag, if the `-g` flag is not set it will import the directory set with the `-d` flag.
-
-* The `-r` flag will be ignored if you choose the action create, or when trying to import a local directory (because there is no existing branches before the execution of the script). The flag will also be ignored if you did not mention a reference branch with the `-b` flag.
-
-* The `-s` flag is ignored if you are trying to import an existing git repository and you did not set a branch with the `-b` flag.
-
-
-=== Usage
-
+TIP: This is non-exhaustive list. Make your own combination of flags if all of the following use cases does not fit your needs.
 
 ==== 1st case: Creating a new repo +
 
