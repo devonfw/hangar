@@ -21,12 +21,7 @@
 # ex : 				Timothé Paty							20/09/2021	adding something because of a reason
 
 ####################################################################################################
-# We check if the '-h' flag is set
-echo $* | grep "\ \-h" >> /dev/null
-# RET_GREP=$?
-# if [ $RET_GREP -eq 0 ] || [ "$*" = "" ]
 function help {
-# then
   echo "This script is used to create a repository on your azure project."
   echo ""
   echo "You can create it in 2 different ways:"
@@ -46,46 +41,53 @@ function help {
   echo "  -f (for force) :        If you set this flag it will automatically say yes to every step where user confirmation is required."
   exit
 }
-# fi
+[ "$*" = "" ] && help
+ARGS=$*
+FLAGS=$(getopt -a --options a:n:d:o:p:g:b:rs:fh --long "action:,name:,directory:,org:,project:,giturl:,branch:,remove-other-branches,setup-branch-strategy:,force,help" -- "$@")
+eval set -- "$FLAGS"
+#We read every arguments given
+force="false"
+remove="false"
+help= "false"
+while true; do
+    case "$1" in
+        -a | --action)                          action=$2; shift 2;;
+        -n | --name)                            name=$2; shift 2;;
+        -d | --directory)                       directory_tmp=$2; shift 2;;
+        -o | --org)                             organization="https://dev.azure.com/$2"; shift 2;;
+        -p | --project)                         project=$2; shift 2;;
+        -g | --giturl)                          giturl_argument=$2; shift 2;;
+        -b | --branch)                          branch=$2; shift 2;;
+        -r | --remove-other-branches)           remove="true"; shift 1;;
+        -s | --setup-branch-strategy)           strategy=$2; shift 2;;
+        -h | --help)                            help="true"; shift 1;;
+        -f | --force)                           force="true"; shift 1;;
+        --) shift; break;;
+    esac
+done
+
+[ "$help" = "true" ] && help
+
+
+
 yellow='\e[1;33m'
 white='\e[1;37m'
 red='\e[0;31m'
 green='\e[1;32m'
 blue='\e[1;34m'
 
-#If no argument given, show the help
-[ "$*" = "" ] && help
-#We read every arguments given
-force="false"
-remove="false"
-strategy="false"
-while getopts "a:n:d:o:p:g:b:hfrs" flag
-do
-  case "${flag}" in
-    a) action=${OPTARG};;
-    n) name=${OPTARG};;
-    d) directory_tmp=${OPTARG};;
-    o) organization=${OPTARG};;
-    p) project=${OPTARG};;
-    g) giturl_argument=${OPTARG};;
-    b) branch=${OPTARG};;
-    h) help;;
-    f) force="true";;
-    r) remove="true";;
-    s) strategy="true";;
-esac
-done
-
 project_convertido=$(echo $project | sed 's/\ /%20/g')
+absoluteScriptPath=$(realpath $0)
+absoluteFolderScriptPath=$(echo "${absoluteScriptPath%/*}/")
 function MSG_ERROR {
- if [ $2 != 0 ]
- then
+if [ $2 != 0 ]
+then
    echo ""
-	echo -e "${red}A problem occured in the step: $1."
-	echo -e "Stopping the script..."
-  echo -e ${white}
-  cd $old_path
-	exit 1
+   echo -e "${red}A problem occured in the step: $1."
+   echo -e "Stopping the script..."
+   echo -e ${white}
+   cd $old_path
+   exit 1
 fi
 }
 
@@ -98,8 +100,6 @@ then
   MSG_ERROR "Cding into the directory given." $?
 fi
 directory_name=$(basename $(pwd))
-folder_of_script=$(dirname $0)
-
 
 
 function create_repo {
@@ -126,26 +126,39 @@ function set_default_branch_and_policies {
   # $2 = project
   # $3 = repository_id
   # $4 = name (of repository)
-  # $5 = branch
+  # $5 = strategy
   echo "--"
-  echo -e "${blue}Setting 'develop' as default branch${white}"
-  echo ""
-  az repos update --organization ${1} --project "$2" --repository "$4" --default-branch $5 > /dev/null
-  MSG_ERROR "Setting 'develop' branch as default branch" $?
+  echo -e "Charging the properties for the strategy you choose."
+  load_conf ${absoluteFolderScriptPath}/config/strategy.cfg $5
+  echo "Creating the branches needed."
+  for i in ${STR_BRANCHES}
+  do
+    git checkout master
+    git checkout -b $i
+    git push --set-upstream origin $i
+  done
+  az repos update --organization ${1} --project "$2" --repository "$4" --default-branch master > /dev/null
+  MSG_ERROR "Setting 'master' branch as default branch" $?
   echo ""
   echo -e "${blue}Setting policies for the repository. ${white}"
-  echo ""
-  policyMaster=$(az repos policy merge-strategy create --blocking true --branch master --enabled true --repository-id $3 --allow-no-fast-forward false --allow-rebase false --allow-rebase-merge false --allow-squash true --branch-match-type exact --project "${2}" --organization ${1})
-  policydevelop=$(az repos policy merge-strategy create --blocking true --branch develop --enabled true --repository-id $3 --allow-no-fast-forward true --allow-rebase false --allow-rebase-merge true  --allow-squash true --branch-match-type exact --project "${2}" --organization ${1})
-  echo -e "${blue}As you put the 's' flag we set the branch policies."
-  echo -e "${white}We created a master branch: which is supposed to contain only finished and validated developpement ready to be in production."
-  echo -e "We created a develop branch: which is supposed to contain finished development ready to be validate, every feature branch should be created from this branch."
-  echo -e "We created a feature branch, this branch is only for the template we use for the name of feature branches."
-  echo -e "We also created branch policy for master and develop."
-  echo -e "master: We desactivated 'Basic merge (no fast-forward)', 'Rebase and fast-forward', 'Rebase with merge commit' and activated 'Squash merge'"
-  echo -e "develop: We desactivated 'Rebase and fast-forward' and activated 'Basic merge (no fast-forward)', 'Rebase with merge commit', 'Squash merge'"
-  echo -e "Of course you can still change these policies, this is a template we advise you to use."
-  echo -e "For more information about branches policies: https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops&tabs=browser"
+  STR_BRANCHES_WITH_MASTER="master $STR_BRANCHES"
+  for i in $STR_BRANCHES_WITH_MASTER
+  do
+      echo "For $i:"
+      echo -e "${blue}Creating rule to need approval of $STR_REVIEWER_NBR people. (enable=$ENABLE_APPROVE_COUNT)"
+      echo -e "${white}"
+      az repos policy approver-count create --blocking true --branch $i --enabled $ENABLE_APPROVE_COUNT --repository-id $repo_id --minimum-approver-count $STR_REVIEWER_NBR --creator-vote-counts false --allow-downvotes false --reset-on-source-push false --project "$2" --organization "$1"
+      echo ""
+      echo -e "${blue}Adding comment resolution policy.(enable=$ENABLE_APPROVE_COUNT)"
+      echo -e "${white}"
+      az repos policy comment-required create --blocking true --branch $i --enabled $ENABLE_COMMENT_RESOLUTION --repository-id $repo_id --project "$2" --organization "$1"
+      echo ""
+      echo -e "${blue}Adding merge limits.(enable=$ENABLE_APPROVE_COUNT)"
+      echo -e "${white}"
+      az repos policy merge-strategy create --blocking true --branch $i --enabled $ENABLE_MERGE_LIMITS --repository-id $repo_id --allow-no-fast-forward $ALLOW_NO_FAST_FORWARD --allow-rebase $ALLOW_REBASE --allow-rebase-merge $ALLOW_REBASE_MERGE --allow-squash $ALLOW_SQASH --branch-match-type exact --project "$2" --organization "$1"
+  done
+  echo -e "${blue}As you put the 's' flag we set the branch policies corresponding to $5."
+  echo -e "${white}"
   echo "--"
 }
 
@@ -197,8 +210,7 @@ function delete_branches_not_in {
       echo "Branch $i given in argument, skipping delete."
     else
       echo "Deleting Branch $i"
-      # git branch -d $i
-      MSG_ERROR "Deleting branch $i" $?
+      git branch -d $i
     fi
   done
 }
@@ -222,18 +234,22 @@ function push_existing_directory {
     echo ""
     if [ "$6" != "" ]
     then
-      echo "You gave a branch with -b flag, that means we are going to take this branch as reference and create develop and master from this one, if they already exist they will be deleted to be created again."
+      echo "You gave a branch with -b flag, that means we are going to take this branch as reference and create master from this one, if it already exists it will be deleted to be created again."
       if [ $force = "false" ]
       then
         echo "Type 'Y' to validate and 'N' to exit the script. (You can use -f flag to skip user confirmation on next executions)"
         read user_input_branch
+      else
+        user_input_branch='Y'
       fi
+      while [ "$user_input_branch" != 'Y' ] && [ "$user_input_branch" != 'N' ]
+      do
+        echo 'Your input is not valid, Press Y to confirm and N to cancel:'
+        read user_input_branch
+      done
 
-      if [ "$force" = "true" ] || [ "$user_input_branch" = 'Y' ]
+      if [ "$user_input_branch" = 'Y' ]
       then
-        echo "remove: $remove"
-        [ "$remove" = "true" ] && delete_branches_not_in develop master $6
-        replace_branch_with_reference develop $6
         replace_branch_with_reference master $6
       else
         exit
@@ -242,7 +258,7 @@ function push_existing_directory {
   else
     echo "$(pwd) is not a git repository, executing git init and commiting all files ..."
     check_emptyness=$(ls)
-    [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file" && cp $folder_of_script/README.md .
+    [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file" && cp $absoluteFolderScriptPath/README.md .
     git init .
 # When using git init, the branch created will be the one you definie with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
     git checkout -b master
@@ -288,21 +304,52 @@ function push_existing_directory {
     git checkout -b feature/TEAM/featureName
     echo ""
   fi
+  [ "$remove" = "true" ] && delete_branches_not_in master
   echo "Pushing Every modification on the remote URL we just set."
   echo ""
   git push -u origin --all
   echo ""
-  if [ "$strategy" = "true" ]
+  if [ "$strategy" != "" ]
   then
     if [ $isGitRepo -eq 0 ] && [ "$6" = "" ]
     then
       echo -e "${yellow}You gave the '-s' flag but without a branch ('-b' flag) and your directory was already a git repository, we skipped the setting of branch policies.${white}"
     else
-      echo "set_default_branch_and_policies ${1} \"$2\" $4 $3 \"develop\""
-      set_default_branch_and_policies ${1} "$2" $4 $3 "develop"
+      echo "set_default_branch_and_policies ${1} \"$2\" $4 $3 $strategy"
+      set_default_branch_and_policies ${1} "$2" $4 $3 $strategy
     fi
   fi
   echo "--"
+}
+
+function load_conf {
+# load only the configuration of a specific block from a conf file (only conf under [<section>])
+# $1 = configuration file
+# $2 = section
+    read_line=1
+    block_found=0
+    SECTION="$2"
+    CMDS=""
+
+    while read -r line ; do
+        # loop on all the lines of the file
+
+        if [[ "$line" =~ \[*\] ]] ; then
+            if (( block_found )) ; then
+                break
+            fi
+            read_line=0
+            if echo $line  | grep $SECTION > /dev/null ; then
+                block_found=1
+                read_line=1
+            fi
+        elif (( read_line )) ; then
+            CMDS="$CMDS
+            $line"
+        fi
+    done < "$1"
+
+    eval "$CMDS"
 }
 
 
@@ -383,15 +430,13 @@ then
   git clone ${organization}/${project_convertido}/_git/$name
   cd $name
   git checkout -b master
-  cp $folder_of_script/README.md .
+  cp $absoluteFolderScriptPath/README.md .
   git add -A
   git commit -m "Adding README"
-  git checkout -b develop
-  git checkout -b feature/TEAM/featureName
   git push -u origin --all
-  if [ "$strategy" = "true" ]
+  if [ "$strategy" != "" ]
   then
-    set_default_branch_and_policies ${organization} "$project" $repo_id $name "develop"
+    set_default_branch_and_policies ${organization} "$project" $repo_id $name "$strategy"
   fi
 fi
 
