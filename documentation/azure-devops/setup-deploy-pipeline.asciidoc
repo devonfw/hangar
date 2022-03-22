@@ -14,7 +14,7 @@ NOTE: The deploy pipeline will fail if the package pipeline executed on the same
 
 * If it is private container registry, create secret for docker registry to pull image from private repository. 
 
-NOTE: Use extra secrets script to pull image from private container registry `--secrets-value` flag.
+NOTE: Use secrets script to pull image from private container registry `--secrets-value` flag.
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
