@@ -53,32 +53,21 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
 
 TIP: This is non-exhaustive list. Make your own combination of flags if all of the following use cases does not fit your needs.
 
-==== 1st case: Creating a new repo +
+==== Creating an empty repository
 
-===== Subcase a +
-  ./create_repo.bash -a 'create' -d <path to directory> -o https://dev.azure.com/<organization> -p <azure project> -n <repository name>
+  ./create-repo.sh -a create -o <organization> -p <project> -n <repository name> -d <local destination directory>
 
+In case repository name is not specified, destination directory name will be used.
 
-This command creates a repository on Azure DevOps and clones it into our local directory, it creates *develop* and *master* branches.
+==== Creating an empty repository with Gitflow branching strategy
 
+  ./create-repo.sh -a create -o <organization> -p <project> -n <repository name> -d <local destination directory> -s gitflow
 
-===== Subcase b +
-  ./create_repo.bash -a 'create' -d <path to directory> -o https://dev.azure.com/<organization> -p <azure project> -n <repository name> -s
+==== Importing a remote Git repository
 
+  ./create-repo.sh -a import -g <source git url> -o <organization> -p <project name> -n <repository name> -d <local destination directory>
 
-This command creates the repository and clones it the same way the Subcase *a* does it, then it creates the branch policies (see <<Branches and policies>> for more informations).
-
-==== 2nd case: Importing a directory or a repository +
-For the 2nd case, we will not give an exhaustive list of every combination of argument it is possible to use, but the list we give you will allow you to understand what you can do with them.
-
-===== Subcase a +
-  ./create_repo.bash -a 'import' -d <path to directory> -o  https://dev.azure.com/<organization> -p <project name> -n <repository name> -g <git url>
-
-This will import all the content of the repository stored at that URL `<git url>` under the name *<repository name>*, if no name is set, the repository will be imported under the name *repository* (it uses the URL to know the name). +
-Then the repository is cloned inside the folder *<path to directory>*. +
-
-NOTE: Importing a Git repository into Azure DevOps just imports the content (branchs, files ...), but once the repository is imported there is no link between them, any modification made on the original repo will not apply on your Azure DevOps project (and the other way around is also true). +
-
+In case repository name is not specified, source repository name (in URL) will be used.
 
 ===== Subcase b +
   ./create_repo.bash -a 'import' -d <path to directory>-o  https://dev.azure.com/<organization> -p <project name> -n <repository name> -g <git url> -b <reference branch> -s -r
