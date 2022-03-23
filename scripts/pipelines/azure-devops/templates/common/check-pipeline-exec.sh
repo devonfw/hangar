@@ -23,7 +23,7 @@ number_lst=100
 pipelineInfo=$(az pipelines show --name "$Pipeline_to_find")
 id=$(echo "$pipelineInfo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
 # Getting the list of the last execution (the lenght of the list is defined by the value of $number_lst)
-pipelineList=$(az pipelines runs list --pipeline-ids $id --top $number_lst)
+pipelineList=$(az pipelines runs list --pipeline-ids "$id" --top "$number_lst")
 
 # While loop to look at every pipeline execution json one by one
 while [[ (("$i" -lt "$number_lst")) ]]
