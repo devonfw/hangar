@@ -199,18 +199,17 @@ function delete_branches_not_in {
   # no limit of arguments, you just need to give a reference branch as first argument,
   # because we cannot delete the branch we are currently in, so wee need to checkout to a branch we want to keep
   echo "--"
-  echo -e "${blue}Deleting all branches except: $@ ${white}"
+  echo -e "${blue}Deleting every local branches except: $@ ${white}"
   git checkout $1
-  branch_list=$(git branch -a |  sed 's/\*//g')
+  branch_list=$(git branch |  sed 's/\*//g')
   for i in $branch_list
   do
-    echo $i
     if [[ "$@" == *"$i"* ]]
     then
       echo "Branch $i given in argument, skipping delete."
     else
       echo "Deleting Branch $i"
-      git branch -d $i
+      git branch -D $i > /dev/null
     fi
   done
 }
@@ -403,8 +402,7 @@ then
       import_repo $giturl_argument $organization "$project" $name
       git clone ${organization}/${project_convertido}/_git/$name
     else
-      echo -e "${yellow}You have given a branch name so only the content of this branch will be imported and we will use our branches policy.${white}"
-      echo "Cloning the repository using only the branch $branch"
+      echo -e "${yellow}You have given a branch name so a master branch will be created from this one.${white}"
       if [ "$remove" = "true" ]
       then
         echo "The flag '-r' is detected, cloning only the reference branch: $5."
