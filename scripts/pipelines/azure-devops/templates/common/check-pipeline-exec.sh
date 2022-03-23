@@ -17,7 +17,7 @@
 Pipeline_to_find="$1"
 sourceVersion="$2"
 i=0
-number_lst=100
+number_lst=5000
 
 # Getting the id of the pipeline using the name
 pipelineInfo=$(az pipelines show --name "$Pipeline_to_find")

@@ -11,7 +11,7 @@ while true; do
         -a | --artifact-path)     artifactPath=$2; shift 2;;
         -b | --target-branch)     targetBranch=$2; shift 2;;
         -l | --language)          language=$2; shift 2;;
-        --build-pipeline-name)    buildPipelineName=$2; shift 2;;
+        --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
         -i | --image-name)        imageName=$2; shift 2;;
@@ -23,8 +23,8 @@ while true; do
         --cluster-name)           clusterName=$2; shift 2;;
         --s3-bucket)              s3Bucket=$2; shift 2;;
         --s3-key-path)            s3KeyPath=$2; shift 2;;
-        --quality-pipeline-name)  qualityPipelineName=$2; shift 2;;
-        --test-pipeline-name)     testPipelineName=$2; shift 2;;
+        --quality-pipeline-name)  export qualityPipelineName=$2; shift 2;;
+        --test-pipeline-name)     export testPipelineName=$2; shift 2;;
         --dockerfile)             dockerFile=$2; shift 2;;
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
@@ -165,12 +165,11 @@ function copyYAMLFile {
 
 
     # Copy the YAML Template into the repository.
-    cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    cp "${hangarPath}/${templatesPath}/${yamlFile}.template" "${localDirectory}/${pipelinePath}/${yamlFile}.template"
 
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    sed -i "s/<@build-pipeline-name@>/${buildPipelineName}/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
-    sed -i "s/<@test-pipeline-name@>/${testPipelineName}/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
-    sed -i "s/<@quality-pipeline-name@>/${qualityPipelineName}/g" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${localDirectory}/${pipelinePath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
+    rm "${localDirectory}/${pipelinePath}/${yamlFile}.template"
 
 }
 
@@ -201,7 +200,7 @@ function commitFiles {
     # Git commit and push it into the repository.
     # changing all files to be executable
     find .pipelines -type f -exec git update-index --chmod=+x {} \;
-    
+
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
 }

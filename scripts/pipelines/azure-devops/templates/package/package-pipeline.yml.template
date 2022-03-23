@@ -6,11 +6,11 @@ trigger:
 resources:
   pipelines:
   - pipeline: 'Quality-Pipeline'
-    source: '<@quality-pipeline-name@>'
+    source: '$qualityPipelineName'
     trigger:
       branches:
         include:
-        - releases/*
+        - release/*
         - develop
         exclude:
         - feature/*
