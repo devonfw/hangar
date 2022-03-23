@@ -1,0 +1,23 @@
+# devonfw Hangar
+
+### Use case: Quarkus-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
+
+* https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
+* https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
+* https://github.com/devonfw/hangar/blob/9b7bc5bba0c8ae14f77043b32b0b674273dd3110/documentation/azure-devops/setup-repository-script.asciidoc[Setting up a repository] [WIP]
+* Setup Azure DevOps Pipelines:
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Setting up a Build Pipeline]
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Setting up a Test Pipeline]
+** Quality
+*** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Setting up a Quality Pipeline]
+** Package
+*** App
+**** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
+**** https://github.com/devonfw/hangar/blob/39d8ad5b63ccd9c9ccf6ef1522220b2dc66c970a/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package Pipeline] [WIP]
+*** https://github.com/devonfw/hangar/blob/c7cbbf8e7ebc83910dffbf28bc972e1431afaf28/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a Java library Package Pipeline] [WIP]
+** Setup Kubernetes deploying environment pipeline
+*** https://github.com/devonfw/hangar/blob/af80ba5f796086882a0efc446986e2f197f06249/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setup EKS provisioning pipeline] [WIP]
+*** https://github.com/devonfw/hangar/blob/eb939e98f6316ca3dc3fd175154a92ec637951f4/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setup AKS provisioning pipeline] [WIP]
+** https://github.com/devonfw/hangar/blob/d9c53c959803073beb5a8bf5f54df5e0cc7c35df/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up Deploy Pipeline] [WIP]
+** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
