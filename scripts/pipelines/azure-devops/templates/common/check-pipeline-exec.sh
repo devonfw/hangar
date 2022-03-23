@@ -30,7 +30,6 @@ while [[ (("$i" -lt "$number_lst")) ]]
 do
   # Getting the commit on which the pipeline has been executed to compare it with the one given as argument
   listSourceVersion=$(echo "$pipelineList" | python -c "import sys, json; print(json.load(sys.stdin)[$i]['sourceVersion'])")
-	echo "$listSourceVersion = $sourceVersion"
   if test "$listSourceVersion" = "$sourceVersion"
   then
     # If the commit is the one we are looking for, we get the Id of this execution and the result of it (then stop the while loop)

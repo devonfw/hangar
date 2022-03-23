@@ -1,6 +1,6 @@
 = Setting up a Test Pipeline on Azure DevOps
 
-In this section we will create a Test pipeline on Azure DevOps for running project test cases. This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully, regardless of which branch it is made on.
+In this section we will create a test pipeline on Azure DevOps for running project test cases. This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit.
 
 The creation of this pipeline will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
@@ -20,10 +20,10 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n  <pipeline name> \
+  -n <pipeline name> \
   -l <language or framework> \
   -d <project local path> \
-  --build-pipeline-name <build_pipeline_name> \
+  --build-pipeline-name <build pipeline name> \
   [-a <artifact source path>] \
   [-b <branch>] \
   [-w]
@@ -39,7 +39,7 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 -n, --pipeline-name         [Required] Name that will be set to the pipeline.
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --build-pipeline-name   [Required] Name of the build pipeline that will be checked before executing tests.
+    --build-pipeline-name   [Required] Build pipeline name.
 -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.

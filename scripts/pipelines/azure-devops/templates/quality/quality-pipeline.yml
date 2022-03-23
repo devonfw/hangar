@@ -18,7 +18,7 @@ pool:
 steps:
 
 - task: Bash@3
-  displayName: 'Getting the last execution of the Test pipeline to check the result of it'
+  displayName: 'Checking last Test pipeline execution status'
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
@@ -33,16 +33,16 @@ steps:
   displayName: 'Test pipeline canceled'
   condition: eq(variables['result'], 'canceled')
 
-- bash: 'echo "We could not find any execution of the test pipeline with this commit.";exit 1'
+- bash: 'echo "There is no test pipeline execution for this commit.";exit 1'
   displayName: 'Test pipeline not found'
   condition: eq(variables['result'], '')
 
-- bash: 'echo "We could not find any execution of the test pipeline with this commit.";exit 1'
+- bash: 'echo "The test pipeline for this commit is not over yet.";exit 1'
   displayName: 'Test pipeline not over'
   condition: eq(variables['result'], 'None')
 
 - task: Bash@3
-  displayName: 'Getting the last execution of the Build pipeline to download the right artifact'
+  displayName: 'Getting last Build pipeline execution to download artifact'
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
@@ -50,7 +50,7 @@ steps:
     script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion)'
 
 - task: DownloadPipelineArtifact@2
-  displayName: "Download Artifact"
+  displayName: "Download Build pipeline artifact"
   inputs:
     source: 'specific'
     project: '$(System.TeamProject)'
