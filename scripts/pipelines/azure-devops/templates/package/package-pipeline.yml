@@ -69,7 +69,6 @@ stages:
         project: '$(System.TeamProject)'
         pipeline: $(BuildPipeline)
         runVersion: 'specific'
-        runBranch: $(Build.SourceBranch)
         downloadPath: $(Pipeline.Workspace)
         runId: $(runId)
 
