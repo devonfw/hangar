@@ -22,7 +22,8 @@ number_lst=100
 # Getting the id of the pipeline using the name
 pipelineInfo=$(az pipelines show --name "$Pipeline_to_find")
 id=$(echo "$pipelineInfo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
-# Getting the list of the last execution (the lenght of the list is defined by the value of $number_lst)
+# Getting the list of the last execution (the length of the list is defined by the value of $number_lst)
+
 pipelineList=$(az pipelines runs list --pipeline-ids $id --top $number_lst)
 
 # While loop to look at every pipeline execution json one by one
@@ -30,7 +31,6 @@ while [[ (("$i" -lt "$number_lst")) ]]
 do
   # Getting the commit on which the pipeline has been executed to compare it with the one given as argument
   listSourceVersion=$(echo "$pipelineList" | python -c "import sys, json; print(json.load(sys.stdin)[$i]['sourceVersion'])")
-	echo "$listSourceVersion = $sourceVersion"
   if test "$listSourceVersion" = "$sourceVersion"
   then
     # If the commit is the one we are looking for, we get the Id of this execution and the result of it (then stop the while loop)

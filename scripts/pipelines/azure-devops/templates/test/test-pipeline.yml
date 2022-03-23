@@ -15,7 +15,7 @@ pool:
 steps:
 
 - task: Bash@3
-  displayName: 'Getting the last execution of the Build pipeline to check the status of it'
+  displayName: 'Checking last Build pipeline execution status'
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
@@ -30,7 +30,7 @@ steps:
   displayName: 'Build pipeline canceled'
   condition: eq(variables['result'], 'canceled')
 
-- bash: 'echo "We could not find any execution of the build pipeline with this commit.";exit 1'
+- bash: 'echo "There is no build pipeline execution for this commit.";exit 1'
   displayName: 'Build pipeline not found'
   condition: eq(variables['result'], '')
 
