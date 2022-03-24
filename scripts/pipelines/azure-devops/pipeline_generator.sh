@@ -15,8 +15,8 @@ while true; do
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
         -i | --image-name)        imageName=$2; shift 2;;
-        -u | --registry-user)              dockerUser=$2; shift 2;;
-        -p | --registry-password)          dockerPassword=$2; shift 2;;
+        -u | --registry-user)     dockerUser=$2; shift 2;;
+        -p | --registry-password) dockerPassword=$2; shift 2;;
         --resource-group)         resourceGroupName=$2; shift 2;;
         --storage-account)        storageAccountName=$2; shift 2;;
         --storage-container)      storageContainerName=$2; shift 2;;
@@ -202,7 +202,7 @@ function commitCommonFiles {
 
     # Git commit and push it into the repository.
     # changing all files to be executable
-    find .pipelines -type f -name *.sh -exec git update-index --chmod=+x {} \;
+    find .pipelines -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
 
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
