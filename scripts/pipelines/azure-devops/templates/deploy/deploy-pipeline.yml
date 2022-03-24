@@ -6,16 +6,20 @@ trigger:
 resources:
   pipelines:
   - pipeline: 'package-Pipeline'
-    source: '<@package-pipeline-name@>'
+    source: '$packagePipelineName'
     trigger:
       branches:
         include:
-        - releases/*
+        - release/*
         - develop
-        - feature/*
         exclude:
+        - feature/*
         - master
 
+variables:
+  - group: registry_info
+  - group: AWS_Credentials
+  
 pool:
   vmImage: ubuntu-latest
 
@@ -23,7 +27,6 @@ jobs:
 - job: Deploy_to_AKS
   condition: eq(variables.deployCluster, 'AKS')
   variables:
-  - group: registry_info - acr # private repository
   - group: aks-variables # DNS available for this job
   steps:
   - task: DownloadPipelineArtifact@2
@@ -55,8 +58,6 @@ jobs:
 - job: Deploy_to_EKS
   condition: eq(variables.deployCluster, 'EKS')
   variables:
-  - group: AWS_Credentials 
-  - group: registry_info - ECR # private repository
   - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
