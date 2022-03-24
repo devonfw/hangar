@@ -25,56 +25,56 @@ pool:
 steps:
 
 - task: Bash@3
-  displayName: 'Getting the last execution of the quality pipeline for the wanted commit'
+  displayName: 'Checking last Quality pipeline execution status'
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
     script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(qualityPipeline) $(Build.SourceVersion) $(Build.SourceBranch)'
 
-- bash: 'echo "The quality pipeline executed for this commit has failed, we cannot package your application.";exit 1'
+- bash: 'echo "The quality pipeline executed for this commit has failed.";exit 1'
   displayName: 'Quality pipeline failed'
   condition: eq(variables['result'], 'failed')
 
-- bash: 'echo "The quality pipeline executed for this commit has been canceled, we cannot package your application.";exit 1'
+- bash: 'echo "The quality pipeline executed for this commit has been canceled.";exit 1'
   displayName: 'Quality pipeline canceled'
   condition: eq(variables['result'], 'canceled')
 
-- bash: 'echo "We could not find any execution of the quality pipeline with this commit, we cannot package your application.";exit 1'
+- bash: 'echo "There is no quality pipeline execution for this commit.";exit 1'
   displayName: 'Quality pipeline not found'
   condition: eq(variables['result'], '')
 
-- bash: 'echo "The result of the quality pipeline is not over yet";exit 1'
+- bash: 'echo "The quality pipeline for this commit is not over yet.";exit 1'
   displayName: 'Quality pipeline not over'
   condition: eq(variables['result'], 'None')
 
 - task: Bash@3
-  displayName: 'Getting the last execution of the Build pipeline to download the right artifact'
+  displayName: 'Getting last Build pipeline execution to download artifact'
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(BuildPipeline) $(Build.SourceVersion)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipeline) $(Build.SourceVersion)'
 
 - task: DownloadPipelineArtifact@2
-  displayName: 'Download last artifact from build pipeline'
+  displayName: 'Download Build pipeline artifact'
   inputs:
     source: 'specific'
     project: '$(System.TeamProject)'
-    pipeline: $(BuildPipeline)
+    pipeline: $(buildPipeline)
     runVersion: 'specific'
     downloadPath: $(Pipeline.Workspace)
     runId: $(runId)
 
 - task: Bash@3
-  displayName: 'Build and Push the image to the registry (Default)'
+  displayName: 'Build and push image to registry'
   inputs:
     targetType: 'inline'
     script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
   condition: eq(variables['isECR'], '')
 
 - task: Bash@3
-  displayName: 'Build and Push the image to the registry (AWS)'
+  displayName: 'Build and push image to registry (AWS)'
   inputs:
     targetType: 'inline'
     script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -a $(aws_access_key) -s $(aws_secret_access_key) -l $(region) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
