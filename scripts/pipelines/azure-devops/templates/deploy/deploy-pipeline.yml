@@ -23,11 +23,10 @@ jobs:
 - job: Deploy_to_AKS
   condition: eq(variables.deployCluster, 'AKS')
   variables:
-  - group: registry_info - acr
+  - group: registry_info - acr # private repository
   - group: aks-variables # DNS available for this job
   steps:
   - task: DownloadPipelineArtifact@2
-    condition: eq(variables.deployCluster, 'AKS')
     displayName: "Download AKS Kubeconfig"
     inputs:
       source: 'specific'
@@ -37,7 +36,6 @@ jobs:
       downloadPath: '$(Pipeline.Workspace)' 
     
   - task: Bash@3
-    condition: eq(variables.deployCluster, 'AKS')
     displayName: "Deploy app to AKS" 
     inputs:
       targetType: 'inline'
@@ -57,12 +55,11 @@ jobs:
 - job: Deploy_to_EKS
   condition: eq(variables.deployCluster, 'EKS')
   variables:
-  - group: AWS_Credentials
-  - group: registry_info - ECR
+  - group: AWS_Credentials 
+  - group: registry_info - ECR # private repository
   - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
-    condition: eq(variables.deployCluster, 'EKS')
     displayName: Deploy app to EKS
     inputs:
       targetType: 'inline'
