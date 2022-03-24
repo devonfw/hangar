@@ -16,7 +16,7 @@
 # There is a var called "pipelineRunsListLimit", it limits the size of the list of execution,
 # feel free to change this value depending on your project
 #########################################################################################
-
+set -e
 # Init var
 pipelineToFind="$1"
 sourceVersion="$2"

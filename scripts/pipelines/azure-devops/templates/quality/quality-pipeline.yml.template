@@ -47,7 +47,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
 
 - task: DownloadPipelineArtifact@2
   displayName: "Download Build pipeline artifact"

@@ -291,16 +291,16 @@ copyYAMLFile
 
 copyCommonScript
 
-type copyScript 2>&1 > /dev/null && copyScript
+type copyScript &> /dev/null && copyScript
 
 commitCommonFiles
 
-type commitFiles 2>&1 > /dev/null && commitFiles
+type commitFiles &> /dev/null && commitFiles
 
 createPipeline
 
 addCommonPipelineVariables
 
-type addPipelineVariables 2>&1 > /dev/null && addPipelineVariables
+type addPipelineVariables &> /dev/null && addPipelineVariables
 
 createPR
