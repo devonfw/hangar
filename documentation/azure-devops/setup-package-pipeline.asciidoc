@@ -1,10 +1,6 @@
 = Setting up a Package Pipeline on Azure DevOps
 
-In this section we will create a package pipeline to build and push an image into our container registry. This pipeline will be configured to be triggered manually or triggered by a quality pipeline depending on the branch.
-
-
-NOTE: The package pipeline will fail if the quality pipeline executed on the same commit has failed.
-
+In this section we will create a package pipeline to build and push a container image of the project application into the specified container registry. This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed. It consumes the artifact produced by the build pipeline.
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/package-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
@@ -26,15 +22,15 @@ pipeline_generator.sh \
   -l <language or framework> \
   --dockerfile <dockerfile path> \
   -d <project local path> \
-  -i <image name> \
-  -u <user> \
-  -p <password> \
   --build-pipeline-name <build pipeline name> \
   --quality-pipeline-name <quality pipeline name> \
+  -i <image name> \
+  [-u <registry user>] \
+  [-p <registry password>] \
   [--aws-access-key <aws access key>] \
   [--aws-secret-access-key <aws secret access key>] \
   [--aws-region <aws region>] \
-  [-b, --target-branch <branch>] \
+  [-b <branch>] \
   [-w]
 
 ```
@@ -47,16 +43,16 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 -c, --config-file              [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name            [Required] Name that will be set to the pipeline.
 -l, --language                 [Required, if dockerfile not set] Language or framework of the project.
-    --dockerfile               [Required, if language not set] Path to the Dockerfile, replace the one set with the language if both flags are given.
+    --dockerfile               [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one.
 -d, --local-directory          [Required] Local directory of your project (the path should always be using '/' and not '\').
--i, --image-name               [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry).
--u, --user                     [Required if not using aws access key] User that will be used to connect to the registry.
--p, --password                 [Required if not using aws access key] Password that will be used to connect to the registry.
     --build-pipeline-name      [Required] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
-    --aws-access-key                      Access key to connect to your aws account (if this value is set, -u and -p will be ignored)."
-    --aws-secret-access-key    [Required if --aws-access-key is used] Secret access key to connect to your AWS account."
-    --aws-region               [Required if --aws-access-key is used] region for your AWS account."
+-i, --image-name               [Required] Name (excluding tag) for the generated container image.
+-u, --registry-user            [Required, unless AWS] Container registry login user.
+-p, --registry-password        [Required, unless AWS] Container registry login password.
+    --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
+    --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
+    --aws-region               [Required, if AWS] AWS region for ECR."
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -66,8 +62,7 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i docker.io/username/quarkus-project -u username -p password --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality  -b develop -w
-
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality -i docker.io/username/quarkus-project -u username -p password -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
