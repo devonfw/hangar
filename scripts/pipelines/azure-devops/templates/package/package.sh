@@ -46,7 +46,7 @@ docker build -f $dockerFile -t $imageName:$tag_completed $context
 # We connect to the registry
 if test -z "$aws_access_key"
 then
-    echo "docker login -u=$username -p=$password $registry"
+    echo "docker login -u=**** -p=**** $registry"
     docker login -u="$username" -p="$password" $registry
 else
     aws configure set aws_access_key_id "$aws_access_key"
