@@ -30,7 +30,7 @@ while true; do
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
-        -w)                       merge="true"; shift 1;;
+        -w)                       webBrowser="true"; shift 1;;
         --) shift; break;;
     esac
 done
@@ -259,7 +259,7 @@ function createPR {
             prURL="$url/pullrequest/$id"
 
             # Check if the -w flag is activated.
-            if [[ "$merge" == "true" ]]
+            if [[ "$webBrowser" == "true" ]]
             then
                 # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
                 echo -e "${green}Pull Request successfully created."
