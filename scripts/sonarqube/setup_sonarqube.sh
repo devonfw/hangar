@@ -31,7 +31,15 @@ sudo docker volume create sonarqube-data
 sudo docker volume create sonarqube-logs
 sudo docker volume create sonarqube-extensions
 
+# Get the maximum memory for the container.
+mem=$(grep MemTotal /proc/meminfo)
+length=${#mem}
+mem=${mem:10:length-10-3}
+mem=$(echo "scale=2;$mem/1000" |bc)
+mem=$(echo "scale=2;$mem*0.8" |bc)
+mem="$mem"m
+
 echo -e "${green}Launching SonarQube container..."
 echo -e ${white}
-sudo docker run -d --restart always --name sonarqube -p 9000:9000 -p 9092:9092 --ulimit nofile=131072 --ulimit nproc=8192 -v sonarqube-conf:/opt/sonarqube/conf -v sonarqube-data:/opt/sonarqube/data -v sonarqube-logs:/opt/sonarqube/logs -v sonarqube-extensions:/opt/sonarqube/extensions sonarqube:lts
+sudo docker run -d --restart always --memory "$mem" --name sonarqube -p 9000:9000 -p 9092:9092 --ulimit nofile=131072 --ulimit nproc=8192 -v sonarqube-conf:/opt/sonarqube/conf -v sonarqube-data:/opt/sonarqube/data -v sonarqube-logs:/opt/sonarqube/logs -v sonarqube-extensions:/opt/sonarqube/extensions sonarqube:lts
                 
