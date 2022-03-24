@@ -89,7 +89,7 @@ function help {
     echo "AKS pipeline flags:"
     echo "      --resource-group        [Required] Name of the resource group for the cluster."
     echo "      --storage-account       [Required] Name of the storage account for the cluster."
-    echo "      --storage-container     [Required] Name of the storage container where the tfstate file of the cluster will be stored."
+    echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
     echo ""
     echo "AWS EKS provisioning pipeline flags:"
     echo "      --cluster-name          [Required] Name for the cluster."
