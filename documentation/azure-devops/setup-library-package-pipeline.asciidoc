@@ -5,18 +5,19 @@ toc::[]
 
 = Setting up a Java library package pipeline using Azure DevOps
 
-In this section we will create a java library package pipeline to package a java library and upload to a maven feed in Azure DevOps. This pipeline will be configured in order to be triggered every time a commit to the Azure DevOps repository is done, regardless of which branch it is made on. *REVISAR NO SE CUANDO SE TRIGGEA* Also a PAT token and a maven feed will be created in Azure DevOps.
+In this section we will create a package pipeline to generate a distributable of a Java library and push it to a Maven feed in Azure DevOps. This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed. It consumes the artifact produced by the build pipeline.
 
-The creation of this pipeline will follow the project workflow, so a new branch named feature/library-package-pipeline will be created. The YAML file and the bash script for the pipeline will be pushed to it. Additionally, the settings.xml file will be pushed to allow java library connect to the maven feed to be uploaded.
+The creation of this pipeline will follow the project workflow, so a new branch named feature/library-package-pipeline will be created. The YAML file and the bash script for the pipeline will be pushed to it, as well as a generated `settings.xml` containing required credentials for connecting to Maven feed.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in -b flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using -w flag.
 
-The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create a java library package pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
+The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create a Java library package pipeline based on a YAML template appropriate for Maven, create the Maven feed, create a PAT token with permission to push to that feed, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
-* This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
-== Creating java library package pipeline usign provided script
+This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
+
+== Creating the pipeline using provided script
 
 === Usage
 ```
@@ -31,14 +32,14 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
   [-w]
 ```
 
-NOTE: The config file for the quality pipeline is located at `/scripts/pipelines/azure-devops/templates/library-package/library-package-pipeline.cfg`.
+NOTE: The config file for the library package pipeline is located at `/scripts/pipelines/azure-devops/templates/library-package/library-package-pipeline.cfg`.
 
 === Flags
 
 ```
 -c, --config-file              [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name            [Required] Name that will be set to the pipeline.
--l, --language                 [Required, if dockerfile not set] Language or framework of the project.
+-l, --language                 [Required] Language or framework of the project.
 -d, --local-directory          [Required] Local directory of your project (the path should always be using '/' and not '\').
     --build-pipeline-name      [Required] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
@@ -50,24 +51,22 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 
 ==== Java project
 ```
-./pipeline_generator.sh -c ./templates/library-package/library-package-pipeline.cfg -n library-package-pipeline -l java -d C:/projects/libraryrepo --build-pipeline-name library-build-pipeline --quality-pipeline-name library-quality-pipeline
+./pipeline_generator.sh -c ./templates/library-package/library-package-pipeline.cfg -n library-package-pipeline -l java -d C:/Users/$USERNAME/Desktop/java-library-project --build-pipeline-name java-library-build --quality-pipeline-name java-library-quality
 ```
 
-== Connect library to maven feed
+== Adding Maven feed to library repository list
 
-Go to Artifacts section in Azure DevOps and select the newly created maven feed by the script (default name is `maven-feed`). Then follow the link:https://docs.microsoft.com/en-us/azure/devops/artifacts/maven/pom-and-settings?view=azure-devops[Set up the Maven client] guide from Azure Devops official documentation to connect to the maven feed to be able to upload the library.
+Go to Artifacts section in Azure DevOps and select the newly created Maven feed by the script (default name is `maven-feed`). Then follow the link:https://docs.microsoft.com/en-us/azure/devops/artifacts/maven/pom-and-settings?view=azure-devops[Set up the Maven client] guide from Azure Devops official documentation to perform required steps on the library project code side for being able to push the library from the pipeline.
 
 IMPORTANT: Ignore the settings.xml part as it is created by the script. Only pom.xml modification is needed.
-
-At this point you can execute the library package pipeline to upload the library to the maven feed.
 
 == Appendix
 
 === Consume library from the main project
 
-Go to Azure Artifacts and click on the artifact that you want to install. Then copy the contents of the <dependency> element and paste it inside the <dependencies> element of your pom.xml file.
+Go to Azure Artifacts and click on the artifact of the library. Then copy the contents of the <dependency> element and paste it inside the `<dependencies>` element of your `pom.xml` file.
 
-Then, follow again the link:https://docs.microsoft.com/en-us/azure/devops/artifacts/maven/pom-and-settings?view=azure-devops[Set up the Maven client] guide to connect the main project to the maven feed to be able to consume the library.
+Then, follow again the link:https://docs.microsoft.com/en-us/azure/devops/artifacts/maven/pom-and-settings?view=azure-devops[Set up the Maven client] guide to connect the main project to the Maven feed to be able to consume the library.
 
 IMPORTANT: Ignore the settings.xml part as is not necessary to consume an artifact. Only pom.xml modification is needed.
 
