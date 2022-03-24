@@ -91,10 +91,11 @@ function help {
     echo "      --storage-account       [Required] Name of the storage account for the cluster."
     echo "      --storage-container     [Required] Name of the storage container where the tfstate file of the cluster will be stored."
     echo ""
-    echo "EKS pipeline flags:"
-    echo "      --cluster-name          [Required] AWS EKS cluster name."
-    echo "      --s3-bucket             [Required] Name of the S3 bucket where the tfstate file of the cluster will be stored."
-    echo "      --s3-key-path           [Required] Path of the S3 bucket where the tfstate file of the cluster will be stored."
+    echo "AWS EKS provisioning pipeline flags:"
+    echo "      --cluster-name          [Required] Name for the cluster."
+    echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
+    echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
+
     exit
 }
 
