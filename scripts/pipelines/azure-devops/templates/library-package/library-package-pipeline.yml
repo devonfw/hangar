@@ -10,10 +10,10 @@ resources:
     trigger:
       branches:
         include:
-        - releases/*
+        - release/*
         - develop
-        - feature/*
         exclude:
+        - feature/*
         - master
 
 pool:
