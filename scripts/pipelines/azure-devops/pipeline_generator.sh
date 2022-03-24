@@ -14,8 +14,8 @@ while true; do
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
         -i | --image-name)        imageName=$2; shift 2;;
-        -u | --user)              dockerUser=$2; shift 2;;
-        -p | --password)          dockerPassword=$2; shift 2;;
+        -u | --registry-user)              dockerUser=$2; shift 2;;
+        -p | --registry-password)          dockerPassword=$2; shift 2;;
         --resource-group)         resourceGroupName=$2; shift 2;;
         --storage-account)        storageAccountName=$2; shift 2;;
         --storage-container)      storageContainerName=$2; shift 2;;
@@ -63,29 +63,29 @@ function help {
     echo ""
     echo "Quality pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
+    echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --test-pipeline-name    [Required] Test pipeline name."
     echo ""
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
-    echo "      --dockerfile            [Required, if language not set] Path to the Dockerfile, replace the one set with the language if both flags are given."
-    echo "  -i, --image-name            [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
+    echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
+    echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
     echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --quality-pipeline-name [Required] Quality pipeline name."
-    echo "  -u, --user                  [Required if not using aws access key] User to connect to your container registry."
-    echo "  -p, --password              [Required if not using aws access key] Password of the user to connect to your container registry."
-    echo "      --aws-access-key                  Access key to connect to your aws account (if this value is set, -u and -p will be ignored)."
-    echo "      --aws-secret-access-key [Required if --aws-access-key is used] Secret access key to connect to your AWS account."
-    echo "      --aws-region            [Required if --aws-access-key is used] region for your AWS account."
+    echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
+    echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
+    echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
+    echo "      --aws-secret-access-key [Required, if AWS] AWS account secret access key."
+    echo "      --aws-region            [Required, if AWS] AWS region for ECR."
     echo ""
+    echo "Library package pipeline flags:"
+    echo "  -l, --language              [Required] Language or framework of the project."
     echo "Deploy pipeline flags:"
     echo ""
-    echo "Library deploy pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
     echo ""
-    echo "AKS pipeline flags:"
+    echo "Azure AKS provisioning pipeline flags:"
     echo "      --resource-group        [Required] Name of the resource group for the cluster."
     echo "      --storage-account       [Required] Name of the storage account for the cluster."
     echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
