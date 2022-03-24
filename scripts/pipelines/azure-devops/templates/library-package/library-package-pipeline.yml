@@ -40,7 +40,7 @@ steps:
   displayName: 'Quality pipeline not found'
   condition: eq(variables['result'], '')
 
-- bash: 'echo "The quality pipeline for this commit is not over yet.;exit 1'
+- bash: 'echo "The quality pipeline for this commit is not over yet.";exit 1'
   displayName: 'Quality pipeline not over'
   condition: eq(variables['result'], 'None')
 
