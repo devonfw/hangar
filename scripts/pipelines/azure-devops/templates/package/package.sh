@@ -19,10 +19,10 @@ do
         c) context=${OPTARG};;
         u) username=${OPTARG};;
         p) password=${OPTARG};;
-	    r) registry=${OPTARG};;
+        r) registry=${OPTARG};;
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
-	    t) pomPath=${OPTARG};;
+        t) pomPath=${OPTARG};;
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;

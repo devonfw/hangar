@@ -22,7 +22,7 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-stages:
+steps:
 
 - task: Bash@3
   displayName: 'Getting the last execution of the quality pipeline for the wanted commit'

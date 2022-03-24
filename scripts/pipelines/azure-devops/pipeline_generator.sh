@@ -1,5 +1,6 @@
 #!/bin/bash
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
+set -e
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -173,6 +174,12 @@ function copyYAMLFile {
     envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${localDirectory}/${pipelinePath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
     rm "${localDirectory}/${pipelinePath}/${yamlFile}.template"
 
+    # Check if an extra artifact to store is supplied.
+    if test ! -z "$artifactPath"
+    then
+        # Add the extra step to the YAML.
+        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${scriptFilePath}/${yamlFile}"
+    fi
 }
 
 function copyCommonScript {
@@ -180,9 +187,10 @@ function copyCommonScript {
     echo -ne ${white}
 
     cp "${hangarPath}/${commonTemplatesPath}"/* "${localDirectory}/${scriptFilePath}"
+
 }
 
-function commitFiles {
+function commitCommonFiles {
     echo -e "${green}Commiting and pushing into Git remote..."
     echo -ne ${white}
 
@@ -191,13 +199,6 @@ function commitFiles {
 
     # Add the YAML files.
     git add .pipelines -f
-
-    # Check if it is a provisioning pipeline.
-    if test ! -z $resourceGroupName || test ! -z $clusterName
-    then
-        # Add the terraform files.
-        git add .terraform -f
-    fi
 
     # Git commit and push it into the repository.
     # changing all files to be executable
@@ -213,6 +214,17 @@ function createPipeline {
 
     # Create Azure Pipeline
     az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+}
+
+# Function that adds the variables to be used in the pipeline.
+function addCommonPipelineVariables {
+    if test -z ${artifactPath}
+    then
+        echo "Skipping creation of the variable artifactPath as the flag has not been used."
+    else
+        # Add the extra artifact to store variable.
+        az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+    fi
 }
 
 function createPR {
@@ -279,12 +291,16 @@ copyYAMLFile
 
 copyCommonScript
 
-copyScript
+type copyScript 2>&1 > /dev/null && copyScript
 
-commitFiles
+commitCommonFiles
+
+type commitFiles 2>&1 > /dev/null && commitFiles
 
 createPipeline
 
-addPipelineVariables
+addCommonPipelineVariables
+
+type addPipelineVariables 2>&1 > /dev/null && addPipelineVariables
 
 createPR
