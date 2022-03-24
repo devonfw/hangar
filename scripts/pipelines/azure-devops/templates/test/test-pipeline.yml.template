@@ -20,7 +20,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
 
 - bash: 'echo "The build pipeline executed for this commit has failed.";exit 1'
   displayName: 'Build pipeline failed'

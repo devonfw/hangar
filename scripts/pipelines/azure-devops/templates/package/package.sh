@@ -19,13 +19,13 @@ do
         c) context=${OPTARG};;
         u) username=${OPTARG};;
         p) password=${OPTARG};;
-	r) registry=${OPTARG};;
+	    r) registry=${OPTARG};;
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
-	t) pomPath=${OPTARG};;
-    a) aws_access_key=${OPTARG};;
-    s) aws_secret_access_key=${OPTARG};;
-    l) region=${OPTARG};;
+	    t) pomPath=${OPTARG};;
+        a) aws_access_key=${OPTARG};;
+        s) aws_secret_access_key=${OPTARG};;
+        l) region=${OPTARG};;
     esac
 done
 red='\e[0;31m'
@@ -50,8 +50,8 @@ then
 else
     aws configure set aws_access_key_id "$aws_access_key"
     aws configure set aws_secret_access_key "$aws_secret_access_key"
-    echo "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $registry"
-    aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin "$registry"
+    echo "aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry"
+    aws ecr get-login-password --region "$region" | docker login --username AWS --password-stdin "$registry"
 fi
 
 # We push the image previously built

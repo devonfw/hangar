@@ -5,28 +5,33 @@
 ################################# Arguments #############################################
 # $1 = Name of the pipeline
 # $2 = Commit on which the execution you are looking for has been played
+# $3 = Branch on which the execution you are looking for has been played
+# Using branch while we already use commit can seem like an overkill, but in some particular cases,
+# two branches are at the same commit and if pipelines are executed at the same time on those branches,
+# it can cause a problem because for one of the branch, when getting the list of execution it will get the first one with the same commit but it can be another branch
 ################################# Output ################################################
 # runId : The Id of the run, you can use it in your pipeline into any task (for example to dowload an artifact from a build pipeline using this Id)
 # result : The result of the execution you found, it can be 'canceled', 'failed' or 'succeeded'
 ################################# Additional infos ######################################
-# There is a var called "number_lst", it limits the size of the list of execution,
+# There is a var called "pipelineRunsListLimit", it limits the size of the list of execution,
 # feel free to change this value depending on your project
 #########################################################################################
 
 # Init var
-Pipeline_to_find="$1"
+pipelineToFind="$1"
 sourceVersion="$2"
+sourceBranch="$3"
 i=0
-number_lst=5000
+pipelineRunsListLimit=100
 
 # Getting the id of the pipeline using the name
-pipelineInfo=$(az pipelines show --name "$Pipeline_to_find")
+pipelineInfo=$(az pipelines show --name "$pipelineToFind")
 id=$(echo "$pipelineInfo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
-# Getting the list of the last execution (the lenght of the list is defined by the value of $number_lst)
-pipelineList=$(az pipelines runs list --pipeline-ids "$id" --top "$number_lst")
+# Getting the list of the last execution (the length of the list is defined by the value of $pipelineRunsListLimit)
+pipelineList=$(az pipelines runs list --pipeline-ids "$id" --top "$pipelineRunsListLimit" --branch "$sourceBranch")
 
 # While loop to look at every pipeline execution json one by one
-while [[ (("$i" -lt "$number_lst")) ]]
+while [[ (("$i" -lt "$pipelineRunsListLimit")) ]]
 do
   # Getting the commit on which the pipeline has been executed to compare it with the one given as argument
   listSourceVersion=$(echo "$pipelineList" | python -c "import sys, json; print(json.load(sys.stdin)[$i]['sourceVersion'])")

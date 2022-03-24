@@ -1,6 +1,6 @@
 #!/bin/bash
 ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -29,6 +29,8 @@ while true; do
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
+        -h | --help)              help="true"; shift 1;;
+        -w)                       merge="true"; shift 1;;
         --) shift; break;;
     esac
 done
@@ -245,7 +247,7 @@ function createPR {
             prURL="$url/pullrequest/$id"
 
             # Check if the -w flag is activated.
-            if [[ "$ARGS" == *" -w"* ]]
+            if [[ "$merge" == "true" ]]
             then
                 # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
                 echo -e "${green}Pull Request successfully created."
@@ -263,7 +265,7 @@ function createPR {
     fi
 }
 
-if [[ "$ARGS" == "-h"  || "$ARGS" == "--help" ]]; then help; fi
+if [[ "$help" == "true" ]]; then help; fi
 
 importConfigFile
 
