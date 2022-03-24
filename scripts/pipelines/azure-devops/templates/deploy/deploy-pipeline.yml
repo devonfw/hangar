@@ -16,10 +16,6 @@ resources:
         exclude:
         - master
 
-variables:
-- group: registry_info  
-- group: AWS_Credentials 
-  
 pool:
   vmImage: ubuntu-latest
 
@@ -27,6 +23,7 @@ jobs:
 - job: Deploy_to_AKS
   condition: eq(variables.deployCluster, 'AKS')
   variables:
+  - group: registry_info - acr
   - group: aks-variables # DNS available for this job
   steps:
   - task: DownloadPipelineArtifact@2
@@ -54,31 +51,14 @@ jobs:
         # Apply manifest files.
         kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
 
-  - task: Bash@3
-    condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
-    displayName: 'create secrets for AKS'
-    inputs:
-      targetType: 'inline'
-      script: | 
-        #Command to create secrets to pull image from private registry.
-        kubectl delete secret $(secretsName) --namespace=$(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
-        # create secrets for private registry.
-        kubectl create secret docker-registry $(secretsName) \
-            --docker-server=$(registry) \
-            --docker-username=$(docker_username) \
-            --docker-password=$(docker_password) \
-            --namespace=$(k8sNamespace) \
-            --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig 
-        # export secrets name and add secrets into deployment file.
-        export secrets=$(secretsName) 
-        yq e '.spec.template.spec."imagePullSecrets"=[{"name":"secrets"}]' -i $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
-        yq e '.spec.template.spec.imagePullSecrets[0].name = "'$secrets'"' -i $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
-        # Apply the changes.
-        kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml --namespace=$(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
-
+  # Create secrets to pull private repository images.
+  - template: acr-secrets.yaml
+  
 - job: Deploy_to_EKS
   condition: eq(variables.deployCluster, 'EKS')
   variables:
+  - group: AWS_Credentials
+  - group: registry_info - ECR
   - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
@@ -99,27 +79,7 @@ jobs:
         kubectl create namespace $(k8sNamespace) 
         # Apply manifest files.
         kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) 
-        
-  - task: Bash@3
-    condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
-    displayName: 'create secrets for EKS'
-    inputs:
-      targetType: 'inline'
-      script: | 
-        #Command to create secrets to pull image from private registry.
-        kubectl delete secret $(secretsName) --namespace=$(k8sNamespace) 
-        # create secrets for private registry.
-        kubectl create secret docker-registry $(secretsName) \
-          --docker-server=$(registry) \
-          --docker-username=$(aws_access_key) \
-          --docker-password=$(aws_secret_access_key) \
-          --namespace=$(k8sNamespace) 
-        # export secrets name and add secrets into deployment file.
-        export secrets=$(secretsName) 
-        yq e '.spec.template.spec."imagePullSecrets"=[{"name":"secrets"}]' -i $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
-        yq e '.spec.template.spec.imagePullSecrets[0].name = "'$secrets'"' -i $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
-        # Apply the changes.
-        kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml --namespace=$(k8sNamespace)
-           
 
-
+  # Create secrets to pull private repository images.
+  - template: ecr-secrets.yaml
+  
