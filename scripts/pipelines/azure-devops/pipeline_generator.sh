@@ -178,7 +178,7 @@ function copyYAMLFile {
     if test ! -z "$artifactPath"
     then
         # Add the extra step to the YAML.
-        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${scriptFilePath}/${yamlFile}"
+        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
 }
 
@@ -187,7 +187,7 @@ function copyCommonScript {
     echo -ne ${white}
 
     cp "${hangarPath}/${commonTemplatesPath}"/* "${localDirectory}/${scriptFilePath}"
-
+    rm "${localDirectory}/${scriptFilePath}/store-extra-path.yml"
 }
 
 function commitCommonFiles {
