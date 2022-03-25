@@ -1,31 +1,40 @@
 #!/bin/bash
-ARGS=$*
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,user:,password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,deploy-files:,deploy-cluster:,secrets-name:,package-pipeline-name:," -- "$@")
+set -e
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,deploy-files:,deploy-cluster:,secrets-name:,package-pipeline-name:,help" -- "$@")
+
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
-        -c | --config-file)          configFile=$2; shift 2;;
-        -n | --pipeline-name)        pipelineName=$2; shift 2;;
-        -d | --local-directory)      localDirectory=$2; shift 2;;
-        -a | --artifact-path)        artifactPath=$2; shift 2;;
-        -b | --target-branch)        targetBranch=$2; shift 2;;
-        -l | --language)             language=$2; shift 2;;
-        --build-pipeline-name)       buildPipelineName=$2; shift 2;;
-        --sonar-url)                 sonarUrl=$2; shift 2;;
-        --sonar-token)               sonarToken=$2; shift 2;;
-        -i | --image-name)           imageName=$2; shift 2;;
-        -u | --user)                 user=$2; shift 2;;
-        -p | --password)             password=$2; shift 2;;
-        --resource-group)            resourceGroupName=$2; shift 2;;
-        --storage-account)           storageAccountName=$2; shift 2;;
-        --storage-container)         storageContainerName=$2; shift 2;;
-        --cluster-name)              clusterName=$2; shift 2;;
-        --s3-bucket)                 s3Bucket=$2; shift 2;;
-        --s3-key-path)               s3KeyPath=$2; shift 2;;
-        --deploy-files)              deployFiles=$2; shift 2;;
-        --deploy-cluster)            deployCluster=$2; shift 2;; 
-        --secrets-name)             secretsName=$2; shift 2;;  
-        --package-pipeline-name)     packagePipelineName=$2; shift 2;;
+        -c | --config-file)       configFile=$2; shift 2;;
+        -n | --pipeline-name)     pipelineName=$2; shift 2;;
+        -d | --local-directory)   localDirectory=$2; shift 2;;
+        -a | --artifact-path)     artifactPath=$2; shift 2;;
+        -b | --target-branch)     targetBranch=$2; shift 2;;
+        -l | --language)          language=$2; shift 2;;
+        --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
+        --sonar-url)              sonarUrl=$2; shift 2;;
+        --sonar-token)            sonarToken=$2; shift 2;;
+        -i | --image-name)        imageName=$2; shift 2;;
+        -u | --registry-user)     dockerUser=$2; shift 2;;
+        -p | --registry-password) dockerPassword=$2; shift 2;;
+        --resource-group)         resourceGroupName=$2; shift 2;;
+        --storage-account)        storageAccountName=$2; shift 2;;
+        --storage-container)      storageContainerName=$2; shift 2;;
+        --cluster-name)           clusterName=$2; shift 2;;
+        --s3-bucket)              s3Bucket=$2; shift 2;;
+        --s3-key-path)            s3KeyPath=$2; shift 2;;
+        --quality-pipeline-name)  export qualityPipelineName=$2; shift 2;;
+        --test-pipeline-name)     export testPipelineName=$2; shift 2;;
+        --dockerfile)             dockerFile=$2; shift 2;;
+        --aws-access-key)         awsAccessKey="$2"; shift 2;;
+        --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
+        --aws-region)             awsRegion="$2"; shift 2;;
+		--deploy-files)           deployFiles=$2; shift 2;; 
+        --deploy-cluster)         deployCluster=$2; shift 2;; 
+        --secrets-name)           secretsName=$2; shift 2;; 
+		--package-pipeline-name)  export packagePipelineName=$2; shift 2;;
+        -h | --help)              help="true"; shift 1;;
+        -w)                       webBrowser="true"; shift 1;;
         --) shift; break;;
     esac
 done
@@ -35,56 +44,66 @@ white='\e[1;37m'
 green='\e[1;32m'
 red='\e[0;31m'
 
+# Common var
+commonTemplatesPath="scripts/pipelines/azure-devops/templates/common"
+
 function help {
     echo ""
     echo "Generates a pipeline on Azure DevOps based on the given definition."
     echo ""
     echo "Common flags:"
-    echo "  -c, --config-file               [Required] Configuration file containing pipeline definition."
-    echo "  -n, --pipeline-name             [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory           [Required] Local directory of your project (the path should always be using '/' and not '\')."
-    echo "  -a, --artifact-path                        Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
-    echo "  -b, --target-branch                        Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -w                                         Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
+    echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
+    echo "  -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
+    echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
+    echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
     echo "Build pipeline flags:"
-    echo "  -l, --language                  [Required] Language or framework of the project."
+    echo "  -l, --language              [Required] Language or framework of the project."
     echo ""
     echo "Test pipeline flags:"
-    echo "  -l, --language                  [Required] Language or framework of the project."
+    echo "  -l, --language              [Required] Language or framework of the project."
+    echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo ""
     echo "Quality pipeline flags:"
-    echo "  -l, --language                  [Required] Language or framework of the project."
-    echo "      --build-pipeline-name       [Required] Build pipeline name."
-    echo "      --sonar-url                 [Required] Sonarqube URL."
-    echo "      --sonar-token               [Required] Sonarqube token."
+    echo "  -l, --language              [Required] Language or framework of the project."
+    echo "      --sonar-url             [Required] Sonarqube URL."
+    echo "      --sonar-token           [Required] Sonarqube token."
+    echo "      --build-pipeline-name   [Required] Build pipeline name."
+    echo "      --test-pipeline-name    [Required] Test pipeline name."
     echo ""
     echo "Package pipeline flags:"
-    echo "  -l, --language                  [Required] Language or framework of the project."
-    echo "  -i, --image-name                [Required] Name that will be given to the Docker image (It must contain the name of the registry and the name or path of the repository inside the registry)."
-    echo "  -u, --user                      [Required] User to connect to your container registry."
-    echo "  -p, --password                  [Required] Password of the user to connect to your container registry."
-    echo "      --build-pipeline-name       [Required] Build pipeline name."
+    echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
+    echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
+    echo "      --build-pipeline-name   [Required] Build pipeline name."
+    echo "      --quality-pipeline-name [Required] Quality pipeline name."
+    echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
+    echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
+    echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
+    echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
+    echo "      --aws-secret-access-key [Required, if AWS] AWS account secret access key."
+    echo "      --aws-region            [Required, if AWS] AWS region for ECR."
+    echo ""
+    echo "Library package pipeline flags:"
+    echo "  -l, --language              [Required] Language or framework of the project."
     echo ""
     echo "Deploy pipeline flags:"
     echo "      --deploy-files              [Required] Path inside the remote repository where the manifest YAML files are located."
     echo "      --deploy-cluster            [Required] Name of the kubernetes cluster, AKS or EKS."
-    echo "      --secrets-value                        Name of the secrets."
+    echo "      --secrets-name                         Name of the secrets."
     echo "      --package-pipeline-name     [Required] Name of the Package pipeline."
     echo ""
-    echo "Library deploy pipeline flags:"
-    echo "  -l, --language                  [Required] Language or framework of the project."
+    echo "Azure AKS provisioning pipeline flags:"
+    echo "      --resource-group        [Required] Name of the resource group for the cluster."
+    echo "      --storage-account       [Required] Name of the storage account for the cluster."
+    echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
     echo ""
-    echo "AKS pipeline flags:"
-    echo "      --resource-group            [Required] Name of the resource group for the cluster."
-    echo "      --storage-account           [Required] Name of the storage account for the cluster."
-    echo "      --storage-container         [Required] Name of the storage container where the tfstate file of the cluster will be stored."
-    echo ""
-    echo "EKS pipeline flags:"
-    echo "      --cluster-name              [Required] AWS EKS cluster name."
-    echo "      --s3-bucket                 [Required] Name of the S3 bucket where the tfstate file of the cluster will be stored."
-    echo "      --s3-key-path               [Required] Path of the S3 bucket where the tfstate file of the cluster will be stored."
-    echo ""
+    echo "AWS EKS provisioning pipeline flags:"
+    echo "      --cluster-name          [Required] Name for the cluster."
+    echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
+    echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
+
     exit
 }
 
@@ -142,7 +161,9 @@ function createNewBranch {
     echo -ne ${white}
 
     # Create the new branch.
-    cd ${localDirectory}
+    cd "${localDirectory}"
+    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
+
     git checkout -b ${sourceBranch}
 }
 
@@ -150,24 +171,34 @@ function copyYAMLFile {
     echo -e "${green}Copying the corresponding files into your directory..."
     echo -ne ${white}
 
-    # Check if the folders .pipelines and scripts exist.
-    if [ ! -d "${localDirectory}/${pipelinePath}" ]
-    then
-        # The folder does not exist.
-        # Create .pipelines folder.
-        cd ${localDirectory}
-        mkdir .pipelines
+    # Create .pipelines and scripts if they do not exist.
+    mkdir -p "${localDirectory}/.pipelines/scripts"
 
-        # Create scripts folder.
-        cd ${localDirectory}/${pipelinePath}
-        mkdir scripts
-    fi
 
     # Copy the YAML Template into the repository.
-    cp "${hangarPath}/${templatesPath}/${yamlFile}" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    cp "${hangarPath}/${templatesPath}/${yamlFile}.template" "${localDirectory}/${pipelinePath}/${yamlFile}.template"
+
+    # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
+    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${packagePipelineName}' < "${localDirectory}/${pipelinePath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
+    rm "${localDirectory}/${pipelinePath}/${yamlFile}.template"
+
+    # Check if an extra artifact to store is supplied.
+    if test ! -z "$artifactPath"
+    then
+        # Add the extra step to the YAML.
+        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${scriptFilePath}/${yamlFile}"
+    fi
 }
 
-function commitFiles {
+function copyCommonScript {
+    echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
+    echo -ne ${white}
+
+    cp "${hangarPath}/${commonTemplatesPath}"/* "${localDirectory}/${scriptFilePath}"
+
+}
+
+function commitCommonFiles {
     echo -e "${green}Commiting and pushing into Git remote..."
     echo -ne ${white}
 
@@ -177,14 +208,10 @@ function commitFiles {
     # Add the YAML files.
     git add .pipelines -f
 
-    # Check if it is a provisioning pipeline.
-    if test ! -z $resourceGroupName || test ! -z $clusterName
-    then
-        # Add the terraform files.
-        git add .terraform -f
-    fi
-
     # Git commit and push it into the repository.
+    # changing all files to be executable
+    find .pipelines -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
+
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
 }
@@ -195,6 +222,17 @@ function createPipeline {
 
     # Create Azure Pipeline
     az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+}
+
+# Function that adds the variables to be used in the pipeline.
+function addCommonPipelineVariables {
+    if test -z ${artifactPath}
+    then
+        echo "Skipping creation of the variable artifactPath as the flag has not been used."
+    else
+        # Add the extra artifact to store variable.
+        az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+    fi
 }
 
 function createPR {
@@ -229,7 +267,7 @@ function createPR {
             prURL="$url/pullrequest/$id"
 
             # Check if the -w flag is activated.
-            if [[ "$ARGS" == *" -w"* ]]
+            if [[ "$webBrowser" == "true" ]]
             then
                 # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
                 echo -e "${green}Pull Request successfully created."
@@ -247,7 +285,7 @@ function createPR {
     fi
 }
 
-if [[ "$ARGS" == "-h"  || "$ARGS" == "--help" ]]; then help; fi
+if [[ "$help" == "true" ]]; then help; fi
 
 importConfigFile
 
@@ -259,12 +297,18 @@ createNewBranch
 
 copyYAMLFile
 
-copyScript
+copyCommonScript
 
-commitFiles
+type copyScript &> /dev/null && copyScript
+
+commitCommonFiles
+
+type commitFiles &> /dev/null && commitFiles
 
 createPipeline
 
-addPipelineVariables
+addCommonPipelineVariables
+
+type addPipelineVariables &> /dev/null && addPipelineVariables
 
 createPR
