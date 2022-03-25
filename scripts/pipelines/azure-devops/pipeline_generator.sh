@@ -179,6 +179,7 @@ function copyYAMLFile {
     then
         # Add the extra step to the YAML.
         cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${scriptFilePath}/${yamlFile}"
+        rm "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml"
     fi
 }
 
