@@ -1,3 +1,3 @@
 #!/bin/bash
 settings_path="$(pwd)/.pipelines/scripts/settings.xml"
-mvn deploy --settings $settings_path
+mvn deploy -Dmaven.install.skip=true -Dmaven.test.skip=true --settings $settings_path

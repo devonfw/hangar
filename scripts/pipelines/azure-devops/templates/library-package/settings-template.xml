@@ -5,9 +5,9 @@
   <servers>
 
     <server>
-      <id>${feed}</id>
-      <username>${organization}</username>
-      <password>${pat}</password>
+      <id>$feed</id>
+      <username>$organization</username>
+      <password>$pat</password>
     </server>
 
   </servers>
