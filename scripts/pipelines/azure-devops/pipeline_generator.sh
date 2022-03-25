@@ -186,8 +186,7 @@ function copyCommonScript {
     echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
     echo -ne ${white}
 
-    cp "${hangarPath}/${commonTemplatesPath}"/* "${localDirectory}/${scriptFilePath}"
-    rm "${localDirectory}/${scriptFilePath}/store-extra-path.yml"
+    cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
 }
 
 function commitCommonFiles {
