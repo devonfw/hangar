@@ -2,12 +2,19 @@ trigger:
   branches:
     include:
     - '*'
-
+    
 resources:
   pipelines:
   - pipeline: 'Package-Pipeline'
     source: '$packagePipelineName'
-    trigger: true
+    trigger:
+      branches:
+        include:
+        - 'release/*'
+        - develop
+        exclude:
+        - 'feature/*'
+        - master
     
 variables:
   - group: registry_info
