@@ -202,7 +202,7 @@ function commitCommonFiles {
     git add .pipelines -f
 
     # Git commit and push it into the repository.
-    # changing all files to be executable
+    # Changing all files to be executable.
     find .pipelines -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
 
     git commit -m "Adding the source YAML"
