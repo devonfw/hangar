@@ -5,17 +5,10 @@ trigger:
 
 resources:
   pipelines:
-  - pipeline: 'package-Pipeline'
+  - pipeline: 'Test-Pipeline'
     source: '$packagePipelineName'
-    trigger:
-      branches:
-        include:
-        - release/*
-        - develop
-        exclude:
-        - feature/*
-        - master
-
+    trigger: true
+    
 variables:
   - group: registry_info
   - group: AWS_Credentials
