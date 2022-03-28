@@ -40,12 +40,12 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
   -a, --action       [Required] Use case to fulfil: create, import.
   -n, --name         Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
   -d, --directory    [Required] Path to the directory where your repository will be cloned or initialized.
-  -o (for organization) : URL of your Azure DevOps organization (mandatory)
+  -o, --org  Name of the Azure DevOps organization (mandatory).
   -p, --project      (Mandatory) Name of the Azure DevOps project.
   -g, --source-git-url       Source URL of the Git repository to import.
-  -b (for branch) :       If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
-  -r (for remove) :       If you gave a branch as reference when importing an existing git repository, it will delete all other branches (except master and develop).
-  -s (for strategy) :     Set this flag if you want the script to create branch policies with the template this script uses.
+  -b, --source-branch       Source branch to be used as a basis to initialize the repository on import, as master branch.
+  -r, --remove-other-branches       When combined with -b (and possibly -s), removes any other remaining branch.
+  -s, --setup-branch-strategy     Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
   -f, --force        Skips any user confirmation.
 ```
 
@@ -69,52 +69,43 @@ In case repository name is not specified, destination directory name will be use
 
 In case repository name is not specified, source repository name (in URL) will be used.
 
-===== Subcase b +
-  ./create_repo.bash -a 'import' -d <path to directory>-o  https://dev.azure.com/<organization> -p <project name> -n <repository name> -g <git url> -b <reference branch> -s -r
+==== Importing a specific remote Git repository branch as source for a new repository with Gitflow branching strategy
 
-This will first import the repository stored in the given URL the same way as it would in subcase *a*, then as a reference branch is given, it will create (or replace if they already exist) *master* and *develop* from this *<reference branch>*, then as the `-s` flag is set it will create the branch policies detailed here <<Branches and policies>>. As the `-r` flag is set, all branches except *<reference branch>*, *master* and *develop* will be deleted.
+  ./create-repo.sh -a import -g <source git url> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name> -d <local destination directory> 
 
+This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
 
-===== Subcase c: +
-  ./create_repo.bash -a 'import' -d <path to directory> -o https://dev.azure.com/<organization> -p <project name> -n <repository name>
+==== Importing local directory or Git repository
 
-If your folder *<path to directory>* is just a folder, it will convert it into a Git repository, push it to your Azure DevOps project and create *master* and *develop* branches. +
-If your folder is a local Git repository, it will just push it to your Azure DevOps project. +
-If your folder is an online Git repository, it will change the remote URL so that future commits will be pushed into your Azure DevOps repository but not on the one already configured, and it will push all your branches at the new URL. +
+  ./create-repo.sh -a import -d <local source directory> -o <organization> -p <project name> -n <repository name>
 
+In case repository name is not specified, source directory name will be used.
 
-===== Subcase d: +
-  ./create_repo.bash -a 'import' -d <path to directory> -o https://dev.azure.com/<organization> -p <project name> -n <repository name> -b <reference branch> -r -s
+==== Importing a specific local Git repository branch as source for a new repository with Gitflow branching strategy
 
-If your folder *<path to directory>* is just a folder, it will act the exact same way as *2nd case c*. +
-If your folder is a local Git repository, it will use *<reference branch>* to create *develop* and *master* (it will replace them if they already exists), delete all other branches that the 3 given before (`-r` is set), then it will just push it to your Azure DevOps project and create the policies defined below (`-s` is set). +
-If your folder is an online Git repository, the branch *develop* and *master* will be created the same way as if it was a local git repository. Any other branch than *master*, *develop* and *<reference branch>* will be deleted (`-r`), then it will change the URL so that future commits will be pushed into your Azure DevOps repository but not on the one already configured, after that it will push all your branches at the new URL. Finally it will create the policies defined below (`-s`). +
+  ./create-repo.sh -a 'import' -d <local source directory> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name>
 
-NOTE: `-r` and `-s` are independent, you can use one without the other it will not affect their use, but they are both dependent to `-b`.
+This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
+
+WARNING: This operation is destructive regarding branches on the local repository.
+
+NOTE: Same command could also be used with a local directory, but then using `-b` and `-r` would be redundant.
+
 
 == Branching strategies
 
 To ensure the quality of development, it is crucial to keep a clean Git workflow. The following branching strategies are supported (using `-s` flag):
 
-=== Branches
+=== Gitflow
 
-We created 3 branches:
+This is not an explanation of Gitflow (there are plenty of them on the web), but the actions performed by the script to help you start using this worflow.
 
-==== "develop"
+==== Branches
 
-This is the branch containing all finished development waiting for validation, every time you work on a new feature (or bug fix), you need to create a new branch, this branch must be created from *develop*, once your development is over, you can merge it into *develop* where validation tests will play on it. If these tests are successful, *develop* will be merged into *master*.
+* `master` is the initial (seed) branch. 
+* `develop` branch is created from `master` branch.
 
-
-==== "master"
-
-This branch contains every validated development ready to be released. It is from this branch we create release branches.
-
-
-==== "feature/TEAM/featureName"
-
-This branch is just for giving you an example of the template you can use for naming your feature branches.
-
-NOTE: You should never commit directly on *develop* or *master*, modifications on *develop* should only come from merge of feature branches and modifications on *master* should only come from merge of *develop*.
+Any other branch part the strategy (feature, release, and hotfix branches) will be created by developers during the lifecycle of the project.
 
 === Policies
 
