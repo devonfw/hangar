@@ -47,4 +47,4 @@ steps:
   displayName: "Publish Test Results"
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: '**/TEST-*.xml'
+

@@ -63,4 +63,3 @@ steps:
   displayName: "SonarQube Analysis"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
-    arguments: $(projectPath)
