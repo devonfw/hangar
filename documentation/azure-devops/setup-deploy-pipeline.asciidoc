@@ -66,7 +66,7 @@ In order to interact with your cluster download the artifact `kubeconfig` genera
 ```
 kubectl <kubectl command> --kubeconfig <kubeconfig path>
 ```
-Once your successfully deploy application, get the hot name to access application in publicly by following command.
+Once your successfully deploy application, get the host name to access application in publicly by following command.
 
 NOTE: kubectl get ingress -n <namespace> --kubeconfig <kubeconfig path>
 
@@ -79,7 +79,7 @@ Run the below command to connect to the AWS EKS cluster from your terminal
 ```
 aws eks update-kubeconfig --name <eks-cluster-name> --region <aws region>
 ```
-Now you can use `kubectl` command to get the hot name, access application in publicly.
+Now you can use `kubectl` command to get the host name, access application in publicly.
 
 NOTE: kubectl get ingress -n <namespace>
 
