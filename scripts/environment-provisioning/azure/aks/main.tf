@@ -17,6 +17,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     location = var.location
     resource_group_name = var.resource_group_name
     dns_prefix = var.dns_prefix
+    role_based_access_control_enabled = true
 
     default_node_pool {
         name = "default"
@@ -25,12 +26,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     }
 
     network_profile {
-        load_balancer_sku = "Standard"
+        load_balancer_sku = "standard"
         network_plugin = "kubenet"
-    }
-
-    role_based_access_control {
-        enabled = true
     }
 
     identity {
