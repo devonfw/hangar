@@ -80,7 +80,7 @@ IMPORTANT: Docker Hub does not support multi-level image names.
 
 === Image Format
 * `<registry-url>/<namespace>/<image-name>:<tag>`
-** `<registry-url>`: <aws-account-id>.dkr.ecr.<region>.amazonaws.com
+** `<registry-url>`: `<aws-account-id>.dkr.ecr.<region>.amazonaws.com`
 ** `<namespace>`: Previously chosen repository name.
 ** `<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
@@ -152,7 +152,7 @@ NOTE: Any https://docs.microsoft.com/en-us/azure/container-registry/container-re
 
 === Image Format
 * `<registry-url>/<namespace>/<image-name>:<tag>`
-** `<registry-url>`: <registry-name>.azurecr.io
+** `<registry-url>`: `<registry-name>.azurecr.io`
 ** `<namespace>/<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
