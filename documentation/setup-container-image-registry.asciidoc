@@ -143,7 +143,7 @@ NOTE: Any https://docs.microsoft.com/en-us/azure/container-registry/container-re
    az acr update -n <registry-name> --admin-enabled true
 ----
 
-* Retrieve credentials for accesing the registry with the following command:
+* Retrieve credentials for accessing the registry with the following command:
 
 [source,shell]
 ----
