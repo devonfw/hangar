@@ -18,20 +18,20 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
 . Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch.
 
 . Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to Azure DevOps the development of an existing project.
-=== Syntax +
+=== Usage +
 
 ```
-  create_repo.bash
-      [-a <String>]
-      [-n <String>]
-      [-d <String>]
-      [-o <String>]
-      [-p <String>]
-      [-g <String>]
-      [-b <string>]
-      [-r]
-      [-s]
-      [-f]
+  create_repo.bash \
+      -a <String> \
+      -d <String> \
+      -o <String> \
+      -p <String> \
+      [-n <String>] \
+      [-g <String>] \
+      [-b <string>] \
+      [-r] \
+      [-s] <string> \
+      [-f] \
 ```
 
 === Flags
@@ -71,7 +71,7 @@ In case repository name is not specified, source repository name (in URL) will b
 
 ==== Importing a specific remote Git repository branch as source for a new repository with Gitflow branching strategy
 
-  ./create-repo.sh -a import -g <source git url> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name> -d <local destination directory> 
+  ./create-repo.sh -a import -g <source git url> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name> -d <local destination directory>
 
 This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
 
@@ -102,7 +102,7 @@ This is not an explanation of Gitflow (there are plenty of them on the web), but
 
 ==== Branches
 
-* `master` is the initial (seed) branch. 
+* `master` is the initial (seed) branch.
 * `develop` branch is created from `master` branch.
 
 Any other branch part the strategy (feature, release, and hotfix branches) will be created by developers during the lifecycle of the project.
