@@ -77,7 +77,7 @@ function help {
     echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
     echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
     echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
-    echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."  
+    echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     echo "      --aws-secret-access-key [Required, if AWS] AWS account secret access key."
     echo "      --aws-region            [Required, if AWS] AWS region for ECR."
     echo ""
@@ -178,8 +178,7 @@ function copyYAMLFile {
     if test ! -z "$artifactPath"
     then
         # Add the extra step to the YAML.
-        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${scriptFilePath}/${yamlFile}"
-        rm "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml"
+        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
 }
 
@@ -187,8 +186,7 @@ function copyCommonScript {
     echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
     echo -ne ${white}
 
-    cp "${hangarPath}/${commonTemplatesPath}"/* "${localDirectory}/${scriptFilePath}"
-
+    cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
 }
 
 function commitCommonFiles {
@@ -202,7 +200,7 @@ function commitCommonFiles {
     git add .pipelines -f
 
     # Git commit and push it into the repository.
-    # Changing all files to be executable.
+    # changing all files to be executable
     find .pipelines -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
 
     git commit -m "Adding the source YAML"

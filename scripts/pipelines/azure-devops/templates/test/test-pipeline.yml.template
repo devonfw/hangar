@@ -1,12 +1,43 @@
 trigger:
   branches:
-    include:
+    exclude:
     - '*'
+
+resources:
+  pipelines:
+  - pipeline: 'Build-Pipeline'
+    source: '$buildPipelineName'
+    trigger: true
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
+
+- task: Bash@3
+  displayName: 'Checking last Build pipeline execution status'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  inputs:
+    targetType: inline
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+- bash: 'echo "The build pipeline executed for this commit has failed.";exit 1'
+  displayName: 'Build pipeline failed'
+  condition: eq(variables['result'], 'failed')
+
+- bash: 'echo "The build pipeline executed for this commit has been canceled.";exit 1'
+  displayName: 'Build pipeline canceled'
+  condition: eq(variables['result'], 'canceled')
+
+- bash: 'echo "There is no build pipeline execution for this commit.";exit 1'
+  displayName: 'Build pipeline not found'
+  condition: eq(variables['result'], '')
+
+- bash: 'echo "The build pipeline for this commit is not over yet.";exit 1'
+  displayName: 'Build pipeline not over'
+  condition: eq(variables['result'], 'None')
+
 - task: Bash@3
   displayName: "Test"
   inputs:

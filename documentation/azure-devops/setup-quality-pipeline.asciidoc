@@ -1,6 +1,6 @@
 = Setting up a Quality Pipeline on Azure DevOps
 
-In this section we will create a quality pipeline for analyzing project code with SonarQube. This pipeline will be configured in order to be triggered every time a commit to the Azure DevOps repository is done, regardless of which branch it is made on.
+In this section we will create a quality pipeline for analyzing project code with SonarQube. This pipeline will be configured in order to be triggered every time the test pipeline is executed successfully on a commit, and consumes the artifact produced by the build pipeline.
 
 The creation of this pipeline will follow the project workflow, so a new branch named `feature/quality-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
@@ -21,10 +21,11 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -l <language or framework> \
-  --build-pipeline-name <build pipeline name> \
   --sonar-url <sonarqube url> \
   --sonar-token <sonarqube token> \
   -d <project local path> \
+  --build-pipeline-name <build pipeline name> \
+  --test-pipeline-name <test pipeline name> \
   [-b <branch>] \
   [-w]
 ```
@@ -36,10 +37,11 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 -c, --config-file            [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name          [Required] Name that will be set to the pipeline.
 -l, --language               [Required] Language or framework of the project.
-    --build-pipeline-name    [Required] Build pipeline name.
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
 -d, --local-directory        [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --build-pipeline-name    [Required] Build pipeline name.
+    --test-pipeline-name     [Required] Test pipeline name.
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -49,7 +51,7 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --build-pipeline-name quarkus-project-build --sonar-url http://52.17.210.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --test-pipeline-name quarkus-project-test  -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
