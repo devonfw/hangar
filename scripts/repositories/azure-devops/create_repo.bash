@@ -137,7 +137,7 @@ function set_default_branch_and_policies {
     git checkout -b $i
     git push --set-upstream origin $i
   done
-  az repos update --organization ${1} --project "$2" --repository "$4" --default-branch master > /dev/null
+  az repos update --organization ${1} --project "$2" --repository "$4" --default-branch master &> /dev/null
   MSG_ERROR "Setting 'master' branch as default branch" $?
   echo ""
   echo -e "${blue}Setting policies for the repository. ${white}"
@@ -169,7 +169,7 @@ function import_repo {
   # $4 = name (of repository)
   echo "--"
   echo -e "${blue}Importing the repo located at $1. ${white}"
-  az repos import create --git-url $1 --organization ${2} --project "$3" --repository $4 > /dev/null
+  az repos import create --git-url $1 --organization ${2} --project "$3" --repository $4 &> /dev/null
   MSG_ERROR  "Importing sample repository"  $?
   echo "--"
 }
@@ -185,8 +185,8 @@ function replace_branch_with_reference {
   then
     git checkout $2
     MSG_ERROR  "Checking out to reference branch"  $?
-    git branch | grep "${1}$" > /dev/null && echo "The branch $1 already exists, deleting it." && git branch -D $1
-    git branch | grep "${1}$" > /dev/null && MSG_ERROR  "Deleting branch $1"  $?
+    git branch | grep "${1}$" &> /dev/null && echo "The branch $1 already exists, deleting it." && git branch -D $1
+    git branch | grep "${1}$" &> /dev/null && MSG_ERROR  "Deleting branch $1"  $?
     git checkout -b $1
     git add -A
     git commit -m "Creating $1 from $2"
@@ -206,10 +206,10 @@ function delete_branches_not_in {
   do
     if [[ "$@" == *"$i"* ]]
     then
-      echo "Branch $i given in argument, skipping delete."
+      echo "Branch $i given in argument of the function, skipping delete."
     else
       echo "Deleting Branch $i"
-      git branch -D $i > /dev/null
+      git branch -D $i &> /dev/null
     fi
   done
 }
@@ -225,7 +225,7 @@ function push_existing_directory {
   echo "--"
   echo -e "${blue}Start of the function to import a directory/repository.${white}"
   echo ""
-  git rev-parse --git-dir > /dev/null
+  git rev-parse --git-dir &> /dev/null
   isGitRepo=$?
   if [ $isGitRepo -eq 0 ]
   then
@@ -265,7 +265,7 @@ function push_existing_directory {
     git commit -m "creation of the repository"
   fi
 # We check if the repo already have an url set
-  git config --get remote.origin.url > /dev/null
+  git config --get remote.origin.url &> /dev/null
   if [ $? -eq "0" ]
   then
     giturl_azure_repo=$(git config --get remote.origin.url)
@@ -295,15 +295,7 @@ function push_existing_directory {
     git remote add origin ${1}/${5}/_git/$3
     echo ""
   fi
-  if [ $isGitRepo -ne 0 ]
-  then
-    echo "Creating branches because the directory was not a Git repository."
-    echo ""
-    git checkout -b develop > /dev/null
-    git checkout -b feature/TEAM/featureName
-    echo ""
-  fi
-  [ "$remove" = "true" ] && delete_branches_not_in master
+  [ "$remove" = "true" ] && [ $isGitRepo -eq 0 ] && [ "$6" != "" ] && delete_branches_not_in master
   echo "Pushing Every modification on the remote URL we just set."
   echo ""
   git push -u origin --all
@@ -338,7 +330,7 @@ function load_conf {
                 break
             fi
             read_line=0
-            if echo $line  | grep $SECTION > /dev/null ; then
+            if echo $line  | grep $SECTION &> /dev/null ; then
                 block_found=1
                 read_line=1
             fi
