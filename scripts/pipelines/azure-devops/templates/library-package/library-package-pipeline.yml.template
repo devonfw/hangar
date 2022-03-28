@@ -26,7 +26,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(qualityPipeline) $(Build.SourceVersion)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(qualityPipeline) $(Build.SourceVersion) $(Build.SourceBranch)'
 
 - bash: 'echo "The quality pipeline executed for this commit has failed.";exit 1'
   displayName: 'Quality pipeline failed'
@@ -50,7 +50,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
     targetType: inline
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipeline) $(Build.SourceVersion)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipeline) $(Build.SourceVersion) $(Build.SourceBranch)'
 
 - task: DownloadPipelineArtifact@2
   displayName: 'Download Build pipeline artifact'

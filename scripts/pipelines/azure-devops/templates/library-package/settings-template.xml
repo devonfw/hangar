@@ -7,7 +7,7 @@
     <server>
       <id>$feed</id>
       <username>$organization</username>
-      <password>$pat</password>
+      <password>$patToken</password>
     </server>
 
   </servers>
