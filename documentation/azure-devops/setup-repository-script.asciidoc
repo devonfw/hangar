@@ -25,7 +25,7 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
       -d <local directory> \
       -o <organization> \
       -p <project> \
-      [-n <name of the repo>] \
+      [-n <repository name>] \
       [-g <giturl>] \
       [-b <branch>] \
       [-r] \
