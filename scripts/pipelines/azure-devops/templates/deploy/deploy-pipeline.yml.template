@@ -2,7 +2,7 @@ trigger:
   branches:
     include:
     - '*'
-    
+
 resources:
   pipelines:
   - pipeline: 'Package-Pipeline'
@@ -15,11 +15,15 @@ resources:
         exclude:
         - 'feature/*'
         - master
-    
+
 variables:
-  - group: registry_info
+  - group: registry_info 
   - group: AWS_Credentials
-  
+  - name: deploymentYamlPath
+    value: $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
+  - name: kubeconfigPath
+    value: $(Pipeline.Workspace)/kubeconfig/kubeconfig   
+
 pool:
   vmImage: ubuntu-latest
 
@@ -51,10 +55,14 @@ jobs:
         kubectl create namespace $(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
         # Apply manifest files.
         kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
-
-  # Create secrets to pull private repository images.
-  - template: acr-secrets.yaml
   
+  - task: Bash@3
+    condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
+    displayName: 'create secrets for AKS'
+    inputs:
+      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/acr-secrets.sh'
+      arguments: '$(k8sNamespace) $(secretsName) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath) $(kubeconfigPath)'
+ 
 - job: Deploy_to_EKS
   condition: eq(variables.deployCluster, 'EKS')
   variables:
@@ -78,6 +86,11 @@ jobs:
         # Apply manifest files.
         kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) 
 
-  # Create secrets to pull private repository images.
-  - template: ecr-secrets.yaml
+  - task: Bash@3
+    condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
+    displayName: 'create secrets for EKS'
+    inputs:
+      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/ecr-secrets.sh'
+      arguments: '$(k8sNamespace) $(secretsName) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
+
   
