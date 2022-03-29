@@ -69,7 +69,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning --s3-bucket terraformStateBucket --s3-key-path eks/state -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop --cluster-name hangar-eks-cluster -w
+./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w
 ```
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
