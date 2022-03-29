@@ -2,19 +2,17 @@
 # Creation: 18/10/2021 Timothé Paty
 # Description: 	Script to create a repo on azure, you can choose between three differents way of creation
 #
-# Arguments:  -a:        Type of action you want to do: import, create
-#             -n:        name of the repository you want to create (mandatory in the case you choose create,
-#                           in other case if not set it will be the name of the directory given without the path or the name of the repository in the URL
-#             -d:        path to the directory where you want to clone your repository or directory you want to push/import in your azure project
-#             -o:        url of your azure organization
-#             -p:        name of you azure project
-#             -g:        URL of the git repository you want to clone (only if you choose the action import)
-#             -b:        If you mention this parameter it will be used in the case you used the action 'import, it will import your repository as is but will create a master and develop branch from the branch you gave (if they already exists they will be replace, be careful), if you gave an URL it will import only the branch you gave and then create master and develop.
-#             -r:       You need to set the -b flag to use this one (it will be ignored if not), when you give a branch as reference when importing a repo, it will delete all other branches.
-#                           (of course nothing happens when creating a new repository or importing a simple directory)
-#             -s:       Set this flag if you want the script to create branch policies with the template this script uses.
-#                           (when importing an already existing git repository you have to set the -b flag, if not, the -s flag is simply ignored).
-#             -f :       If you set this flag it will automatically say yes to every step where user confirmation is required.
+# Arguments:
+# -a, --action                  [Required]  Use case to fulfil: create, import."
+# -d, --directory               [Required]  Path to the directory where your repository will be cloned or initialized."
+# -o, --org                                 Name of the Azure DevOps organization (mandatory)."
+# -p, --project                 [Required]  Name of the Azure DevOps project."
+# -n, --name                                Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
+# -g, --source-git-url                      Source URL of the Git repository to import."
+# -b, --source-branch                       Source branch to be used as a basis to initialize the repository on import, as master branch."
+# -r, --remove-other-branches               When combined with -b (and possibly -s), removes any other remaining branch."
+# -s, --setup-branch-strategy               Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
+# -f, --force                               Skips any user confirmation."
 #
 ######################################################################################################
 # Modification:		Name									date		Description
@@ -31,16 +29,16 @@ function help {
   echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to Azure DevOps the development of an existing project"
   echo ""
   echo "Flags:"
-  echo "  -a, --action                  [Required] Use case to fulfil: create, import."
-  echo "  -n, --name                    Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
-  echo "  -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
-  echo "  -o, --org                     Name of the Azure DevOps organization (mandatory)."
-  echo "  -p, --project                 [Required] Name of the Azure DevOps project."
-  echo "  -g, --source-git-url          Source URL of the Git repository to import."
-  echo "  -b, --source-branch           Source branch to be used as a basis to initialize the repository on import, as master branch."
-  echo "  -r, --remove-other-branches   When combined with -b (and possibly -s), removes any other remaining branch."
-  echo "  -s, --setup-branch-strategy   Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
-  echo "  -f, --force                   Skips any user confirmation."
+  echo "  -a, --action                  [Required]  Use case to fulfil: create, import."
+  echo "  -d, --directory               [Required]  Path to the directory where your repository will be cloned or initialized."
+  echo "  -o, --org                     [Required]  Name of the Azure DevOps organization (mandatory)."
+  echo "  -p, --project                 [Required]  Name of the Azure DevOps project."
+  echo "  -n, --name                                Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
+  echo "  -g, --source-git-url                      Source URL of the Git repository to import."
+  echo "  -b, --source-branch                       Source branch to be used as a basis to initialize the repository on import, as master branch."
+  echo "  -r, --remove-other-branches               When combined with -b (and possibly -s), removes any other remaining branch."
+  echo "  -s, --setup-branch-strategy               Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
+  echo "  -f, --force                               Skips any user confirmation."
   exit
 }
 [ "$*" = "" ] && help
