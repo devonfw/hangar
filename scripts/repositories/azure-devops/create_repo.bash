@@ -173,7 +173,7 @@ function import_repo {
   echo "--"
   echo -e "${blue}Importing the repo located at $1. ${white}"
   az repos import create --git-url $1 --organization ${2} --project "$3" --repository $4 > /dev/null
-  MSG_ERROR  "Importing sample repository"  $?
+  MSG_ERROR  "Importing repository: $1"  $?
   echo "--"
 }
 
