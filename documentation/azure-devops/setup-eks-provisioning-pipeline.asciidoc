@@ -17,22 +17,21 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
 * Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] and name it `AWS-Terraform-Connection`. If you already have a service connection available or you need a specific connection name, please update `eks-pipeline.cfg` accordingly.
 
-* S3 Bucket - You can use existing one or create a new one with the following command:
+* A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
 ```
-aws s3 mb <bucketname> 
-Example: aws s3 mb s3://terraformStateBucket
+aws s3 mb <bucket name>
+# Example: aws s3 mb s3://terraformStateBucket
 ```
 
-Refer https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[here] for more S3 details. You can create a folder inside bucket. Bucket name and the path needs to be passed as parameter to the script while executing. 
-
-* Verify if the AWS IAM user has https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[required permissions] to provision the EKS cluster.
+* An AWS IAM user with https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[required permissions] to provision the EKS cluster.
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
 == Creating the pipeline using provided script
 
-* The script will by default create a new AWS VPC with name `k8s-vpc`. However, if you wish to provision AWS EKS in your existing `VPC` please edit `existing_vpc_id` and `existing_vpc_private_subnets` with respective values.
-* Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `setTerraformVariables.sh` script, which allows you to create or update values for the required variables, passing them as flags. As an example
+Before executing the pipeline generator, you will need to customize some input variables about the environment. Also, you may want to use existing VPC and subnets instead of creating new ones. To do so, you can either edit `terraform.tfvars` file or take advantage of the `setTerraformVariables.sh` script, which allows you to create or update values for the required variables, passing them as flags.
+
+Examples:
 
 ```
 ./setTerraformVariables.sh --region <region name> --instance_type <instance type> --vpc_name <vpc name> --vpc_cidr_block <vpc_cidr_block>
@@ -44,10 +43,10 @@ Refer https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.
 pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
+  -d <project local path> \
+  --cluster-name <cluster name> \  
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
-  --cluster-name <clusterName> \  
-  -d <project local path> \
   [-b <branch>] \
   [-w]
 ```
