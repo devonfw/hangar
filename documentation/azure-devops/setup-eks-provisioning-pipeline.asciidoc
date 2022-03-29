@@ -15,7 +15,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 === Prerequisites
 
 * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
-* Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] (Name this `AWS-Terraform-Connection`). If you already have a service connection available or you need a specific connection name, please update in `eks-pipeline.cfg`.
+* Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] and name it `AWS-Terraform-Connection`. If you already have a service connection available or you need a specific connection name, please update `eks-pipeline.cfg` accordingly.
 
 * S3 Bucket - You can use existing one or create a new one with the following command:
 ```
