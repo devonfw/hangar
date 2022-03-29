@@ -21,15 +21,15 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
 
 ```
   create_repo.bash \
-      -a <String> \
-      -d <String> \
-      -o <String> \
-      -p <String> \
-      [-n <String>] \
-      [-g <String>] \
-      [-b <string>] \
+      -a <action> \
+      -d <local directory> \
+      -o <organization> \
+      -p <project> \
+      [-n <name of the repo>] \
+      [-g <giturl>] \
+      [-b <branch>] \
       [-r] \
-      [-s] <string> \
+      [-s] <branch strategy> \
       [-f] \
 ```
 
