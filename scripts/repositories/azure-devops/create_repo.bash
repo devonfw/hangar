@@ -22,12 +22,15 @@
 
 ####################################################################################################
 function help {
-  echo "This script is used to create a repository on your azure project."
+  echo "Creates or imports a repository on Azure DevOps."
   echo ""
-  echo "You can create it in 2 different ways:"
-  echo "  - 1st case: create an empty repository (or use the example one) and clone it to your computer"
-  echo "  - 2nd case: import a already existing directory or git repository into your project with a path or an URL, then clone this repo on your computer if you gave an URL, if the path you mentionned is a regular directory it will be converted into a git repository."
-  echo "arguments:"
+  echo "It allows you to, based action flag, either:"
+  echo ""
+  echo "  - Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch."
+  echo ""
+  echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to Azure DevOps the development of an existing project"
+  echo ""
+  echo "Flags:"
   echo "  -a, --action                  [Required] Use case to fulfil: create, import."
   echo "  -n, --name                    Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
   echo "  -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
@@ -114,7 +117,6 @@ function create_repo {
   MSG_ERROR "Creating repo $1" $?
   repo_id=$(cat  ./tmp_json_repo | grep '"id"' -m1 | cut -d: -f2 | cut -d, -f1 | tr -d \")
   echo ""
-  echo -e "${blue}Here are all the information about the repository you just created, you can save it in a json file if you feel the need."
   cat ./tmp_json_repo
   rm -f ./tmp_json_repo
   echo -e "--${white}"
@@ -127,7 +129,8 @@ function set_default_branch_and_policies {
   # $4 = name (of repository)
   # $5 = strategy
   echo "--"
-  echo -e "Charging the properties for the strategy you choose."
+  echo -e "Loading the properties for the strategy you chose."
+
   load_conf ${absoluteFolderScriptPath}/config/strategy.cfg $5
   echo "Creating the branches needed."
   for i in ${STR_BRANCHES}
@@ -156,7 +159,8 @@ function set_default_branch_and_policies {
       echo -e "${white}"
       az repos policy merge-strategy create --blocking true --branch $i --enabled $ENABLE_MERGE_LIMITS --repository-id $repo_id --allow-no-fast-forward $ALLOW_NO_FAST_FORWARD --allow-rebase $ALLOW_REBASE --allow-rebase-merge $ALLOW_REBASE_MERGE --allow-squash $ALLOW_SQASH --branch-match-type exact --project "$2" --organization "$1"
   done
-  echo -e "${blue}As you put the 's' flag we set the branch policies corresponding to $5."
+  echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
+
   echo -e "${white}"
   echo "--"
 }
@@ -235,14 +239,14 @@ function push_existing_directory {
       echo "You gave a branch with -b flag, that means we are going to take this branch as reference and create master from this one, if it already exists it will be deleted to be created again."
       if [ $force = "false" ]
       then
-        echo "Type 'Y' to validate and 'N' to exit the script. (You can use -f flag to skip user confirmation on next executions)"
+        echo "Type 'Y' to validate or 'N' to exit the script. (You can use -f flag to skip user confirmation on next executions)"
         read user_input_branch
       else
         user_input_branch='Y'
       fi
       while [ "$user_input_branch" != 'Y' ] && [ "$user_input_branch" != 'N' ]
       do
-        echo 'Your input is not valid, Press Y to confirm and N to cancel:'
+        echo 'Your input is not valid, Press Y to confirm or N to cancel:'
         read user_input_branch
       done
 
@@ -258,7 +262,8 @@ function push_existing_directory {
     check_emptyness=$(ls)
     [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file" && cp $absoluteFolderScriptPath/README.md .
     git init .
-# When using git init, the branch created will be the one you definie with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
+# When using git init, the branch created will be the one you defined with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
+
     git checkout -b master
     git add -A
     git commit -m "creation of the repository"
@@ -268,7 +273,8 @@ function push_existing_directory {
   if [ $? -eq "0" ]
   then
     giturl_azure_repo=$(git config --get remote.origin.url)
-    echo "There is already a URL set for the remote repository ($giturl_azure_repo), this script will change this URL so that all the next commits you will push will be done on the azure repository but not on the current one, Press Y to confirm and N to cancel:"
+    echo "There is already a remote origin configured for this repository: ($giturl_azure_repo). This will be change by the new Azure DevOps repository. Press Y to confirm or N to cancel:"
+
     if [ "$force" = "false" ]
     then
       read user_input_remote_url
@@ -349,8 +355,10 @@ if [ "$action" = "create" ]
 then
   if [ "$name" = "" ] || [ "$directory" = "" ] || [ "${organization}" = "" ] || [ "$project" = "" ]
   then
-    echo -e "${red}You chose the action 'create' but one of these parameters is null but they are mandatory: -n, -d, -o, -p"
-    echo "you can type -h to get more information about the script"
+    echo -e "${red}You chose the action 'create' but one of these mandatory flags is missing: -n, -d, -o, -p."
+
+    echo "Use -h or --help flag to display help."
+
     cd $old_path
     exit 1
   fi
@@ -358,8 +366,9 @@ elif [ "$action" = "import" ]
 then
   if [ "$directory" = "" ] ||  [ "${organization}" = "" ] || [ "$project" = "" ]
   then
-    echo -e "${red}You chose the action 'import' but one of these parameters is null but they are mandatory: -d, -o, -p, -g"
-    echo -e "${white}you can type -h to get more information about the script"
+    echo -e "${red}You chose the action 'import' but one of these mandatory flags is missing: -d, -o, -p, -g"
+
+    echo -e "${white}Use -h or --help flag to display help."
     cd $old_path
     exit 1
   else
@@ -372,8 +381,10 @@ then
     fi
   fi
 else
-  echo -e "${red}The parameter -a is not set or not set correctly, its value can be 'import' or 'create'"
-  echo -e "${white}you can type -h to get more information about the script"
+  echo -e "${red}The flag -a is not set or invalid. Accepted values are 'import' and 'create'."
+
+  echo -e "${white}Use -h or --help flag to display help."
+
   cd $old_path
   exit 1
 fi
