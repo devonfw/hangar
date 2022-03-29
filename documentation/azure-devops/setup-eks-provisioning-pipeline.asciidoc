@@ -58,9 +58,9 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 ```
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
-    --s3-bucket          [Required] Name of the AWS S3 bucket where tfstate file of the cluster will be stored.
-    --s3-key-path        [Required] Path in the AWS S3 bucket where tfstate file of the cluster will be stored.
-    --cluster-name       [Required] Name of the EKS cluster."    
+    --cluster-name       [Required] Name for the cluster."
+    --s3-bucket          [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
+    --s3-key-path        [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
