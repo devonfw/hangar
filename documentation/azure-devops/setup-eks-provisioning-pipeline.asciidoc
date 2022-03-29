@@ -37,6 +37,7 @@ Refer https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.
 ```
 ./setTerraformVariables.sh --region <region name> --instance_type <instance type> --vpc_name <vpc name> --vpc_cidr_block <vpc_cidr_block>
 ```
+* The script installs Rancher on the cluster after provisioning. However before executing the script, please edit the config file `eks-pipeline.cfg` to disable rancher installation. 
 
 === Usage
 ```
@@ -74,6 +75,11 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 
 After successfull execution of the script, EKS cluster is provisioned. And also a variable group with the name `eks-variables` is created. This contains the DNS name of the nginx ingress controller deployed on the EKS cluster. The DNS name may be used in the application ingress manifest files.
 
+Rancher can be accessed at the DNS name of the nginx ingress controller. Refer the appendix to retrieve the DNS name from the nginx ingress controller. 
+```
+Example DNS Name - https://aa9e8f0434d934c939be841f1de52a09-1657056367.eu-west-1.elb.amazonaws.com/dashboard
+```
+
 == Appendix: Interacting with the cluster
 
 Run the below command to connect to the AWS EKS cluster from your terminal
@@ -89,3 +95,9 @@ To get the DNS name of the nginx ingress controller from the EKS cluster, run th
 ```
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
 ```
+== Appendix: Rancher resources
+
+•	Refer https://rancher.com/docs/rancher/v2.5/en/cluster-admin/cluster-access/kubectl/ to download Kubeconfig.
+•	To use RBAC in Rancher refer https://rancher.com/docs/rancher/v2.5/en/admin-settings/rbac/default-custom-roles/
+•	Monitoring - https://rancher.com/docs/rancher/v2.5/en/monitoring-alerting/
+•	Logging - https://rancher.com/docs/rancher/v2.0-v2.4/en/cluster-admin/tools/cluster-logging/
