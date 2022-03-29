@@ -37,7 +37,7 @@ steps:
     environmentServiceNameAWS: "$(awsServiceConnection)"
 
 - task: Bash@3
-  displayName: 'Install ingress controller and Publish DNS'
+  displayName: 'Install Ingress controller and publish its DNS name'
   env:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
