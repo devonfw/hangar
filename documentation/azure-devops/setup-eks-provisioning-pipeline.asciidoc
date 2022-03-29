@@ -72,10 +72,6 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 ```
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
-```
-Example DNS Name - https://aa9e8f0434d934c939be841f1de52a09-1657056367.eu-west-1.elb.amazonaws.com/dashboard
-```
-
 == Appendix: Interacting with the cluster
 
 Run the below command to connect to the AWS EKS cluster from your terminal
@@ -90,6 +86,9 @@ To enable an IAM user to connect to the EKS cluster, please refer https://docs.a
 To get the DNS name of the nginx ingress controller from the EKS cluster, run the below command from your terminal
 ```
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
+```
+```
+Example DNS Name - https://aa9e8f0434d934c939be841f1de52a09-1657056367.eu-west-1.elb.amazonaws.com/dashboard
 ```
 == Appendix: Rancher resources
 
