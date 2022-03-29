@@ -73,9 +73,6 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 ```
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
-After successfull execution of the script, EKS cluster is provisioned. And also a variable group with the name `eks-variables` is created. This contains the DNS name of the nginx ingress controller deployed on the EKS cluster. The DNS name may be used in the application ingress manifest files.
-
-Rancher can be accessed at the DNS name of the nginx ingress controller. Refer the appendix to retrieve the DNS name from the nginx ingress controller. 
 ```
 Example DNS Name - https://aa9e8f0434d934c939be841f1de52a09-1657056367.eu-west-1.elb.amazonaws.com/dashboard
 ```
