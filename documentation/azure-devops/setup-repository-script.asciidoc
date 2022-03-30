@@ -129,9 +129,9 @@ Check for comment resolution:           REQUIRED
 
 Limit merge types:                      OFF
 
-NOTE: We set the number of reviewers to 1 and allowed requestors to approve their own changes because without it, it will block the creation of pipelines in next steps.
-
 ```
+
+NOTE: We set the number of reviewers to 1 and allowed requestors to approve their own changes because without it, it will block the creation of pipelines in next steps.
 
 ==== Additional link
 
