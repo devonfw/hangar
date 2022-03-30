@@ -131,6 +131,8 @@ Limit merge types:                      OFF
 
 NOTE: We set the number of reviewers to 1 and allowed requestors to approve their own changes because without it, it will block the creation of pipelines in next steps.
 
+```
+
 ==== Additional link
 
 There are many other parameters you can use to define your branches policy, if you need to modify it, here is a link with more information about it. +
