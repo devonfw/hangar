@@ -51,7 +51,7 @@ steps:
   inputs:
     source: 'specific'
     project: '$(System.TeamProject)'
-    pipeline: $(buildPipeline)
+    pipeline: $(buildPipelineName)
     runVersion: 'specific'
     downloadPath: $(Pipeline.Workspace)
     runId: $(runId)
