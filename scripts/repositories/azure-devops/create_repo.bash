@@ -7,7 +7,7 @@
 # -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
 # -o, --org                                Name of the Azure DevOps organization (mandatory)."
 # -p, --project                 [Required] Name of the Azure DevOps project."
-# -n, --name                    [Required for action=create] Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
+# -n, --name                               Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
 # -g, --source-git-url                     Source URL of the Git repository to import."
 # -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
 # -r, --remove-other-branches              When combined with -b (and possibly -s), removes any other remaining branch."
@@ -33,7 +33,7 @@ function help {
   echo "  -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
   echo "  -o, --org                     [Required] Name of the Azure DevOps organization (mandatory)."
   echo "  -p, --project                 [Required] Name of the Azure DevOps project."
-  echo "  -n, --name                    [Required for action=create] Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
+  echo "  -n, --name                               Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
   echo "  -g, --source-git-url                     Source URL of the Git repository to import."
   echo "  -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
   echo "  -r, --remove-other-branches              When combined with -b (and possibly -s), removes any other remaining branch."
@@ -96,6 +96,7 @@ old_path=$(pwd)
 [ "$directory_tmp" != "" ] && directory=$(echo $directory_tmp | sed 's/\\/\//g')
 if [ "$directory" != "" ]
 then
+  [ "$action" == "create" ] && mkdir -p $directory
   cd $directory
   MSG_ERROR "Cding into the directory given." $?
 fi
@@ -351,7 +352,7 @@ function load_conf {
 # arguments check
 if [ "$action" = "create" ]
 then
-  if [ "$name" = "" ] || [ "$directory" = "" ] || [ "${organization}" = "" ] || [ "$project" = "" ]
+  if [ "$directory" = "" ] || [ "${organization}" = "" ] || [ "$project" = "" ]
   then
     echo -e "${red}You chose the action 'create' but one of these mandatory flags is missing: -n, -d, -o, -p."
 
@@ -359,6 +360,8 @@ then
 
     cd $old_path
     exit 1
+  else
+    [ "$name" = "" ] && name=$directory_name && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
   fi
 elif [ "$action" = "import" ]
 then
@@ -425,8 +428,11 @@ then
   fi
 elif [ "$action" = "create" ]
 then
-  git clone ${organization}/${project_convertido}/_git/$name
-  cd $name
+  cd $directory/..
+  MSG_ERROR "Cding into the directory given." $?
+  git clone ${organization}/${project_convertido}/_git/$name $directory_name
+  MSG_ERROR "Cloning empty repo." $?
+  cd $directory_name
   git checkout -b master
   cp $absoluteFolderScriptPath/README.md .
   git add -A
