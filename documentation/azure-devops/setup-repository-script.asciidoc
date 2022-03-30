@@ -40,7 +40,7 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
 -d, --directory             [Required] Path to the directory where your repository will be cloned or initialized.
 -o, --org                   [Required] Name of the Azure DevOps organization.
 -p, --project               [Required] Name of the Azure DevOps project.
--n, --name                             Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
+-n, --name                  [Required for action=create] Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
 -g, --source-git-url                   Source URL of the Git repository to import.
 -b, --source-branch                    Source branch to be used as a basis to initialize the repository on import, as master branch.
 -r, --remove-other-branches            When combined with -b (and possibly -s), removes any other remaining branch.
@@ -112,15 +112,24 @@ You can define policies on your branches so you can secure them from commits not
 
 Here are the policies we use as templates.
 
-For the *develop* and *master* branch we have limited the type of merge that can be done.
+For the *develop* and *master* branch we have set those policies:
 
-==== master
+```
 
-image::master_policy.PNG[]
+Require a minimum number of reviewers: ON
+    Minimum number of reviewers:                                      1
+    Allow requestors to approve their own changes:                    ON
+    Prohibit the most recent pusher from approving their own changes: OFF
+    Allow completion even if some reviewers vote to wait or reject:   OFF
+    When new changes are pushed:                                      Reset all approval votes (does not reset votes to reject or wait)
 
-==== develop
+Check for linked work items:            OFF
 
-image::develop_policy.PNG[]
+Check for comment resolution:           REQUIRED
+
+Limit merge types:                      OFF
+
+NOTE: We set the number of reviewers to 1 and allowed requestors to approve their own changes because without it, it will block the creation of pipelines in next steps.
 
 ==== Additional link
 
