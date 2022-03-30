@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,deploy-files:,deploy-cluster:,secrets-name:,package-pipeline-name:,help" -- "$@")
-
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -29,10 +28,10 @@ while true; do
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
-		--deploy-files)           deployFiles=$2; shift 2;; 
+    		--deploy-files)           deployFiles=$2; shift 2;; 
         --deploy-cluster)         deployCluster=$2; shift 2;; 
         --secrets-name)           secretsName=$2; shift 2;; 
-		--package-pipeline-name)  export packagePipelineName=$2; shift 2;;
+		    --package-pipeline-name)  export packagePipelineName=$2; shift 2;;
         -h | --help)              help="true"; shift 1;;
         -w)                       webBrowser="true"; shift 1;;
         --) shift; break;;
@@ -174,28 +173,22 @@ function copyYAMLFile {
     # Create .pipelines and scripts if they do not exist.
     mkdir -p "${localDirectory}/.pipelines/scripts"
 
-
-    # Copy the YAML Template into the repository.
-    cp "${hangarPath}/${templatesPath}/${yamlFile}.template" "${localDirectory}/${pipelinePath}/${yamlFile}.template"
-
+    # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${packagePipelineName}' < "${localDirectory}/${pipelinePath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
-    rm "${localDirectory}/${pipelinePath}/${yamlFile}.template"
+    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${packagePipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
 
     # Check if an extra artifact to store is supplied.
     if test ! -z "$artifactPath"
     then
         # Add the extra step to the YAML.
-        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${scriptFilePath}/${yamlFile}"
+        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
 }
 
 function copyCommonScript {
     echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
     echo -ne ${white}
-
-    cp "${hangarPath}/${commonTemplatesPath}"/* "${localDirectory}/${scriptFilePath}"
-
+    cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
 }
 
 function commitCommonFiles {
