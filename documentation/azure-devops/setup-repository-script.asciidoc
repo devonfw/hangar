@@ -130,6 +130,7 @@ Check for comment resolution:           REQUIRED
 Limit merge types:                      OFF
 
 ```
+A config file exists to configure your own branch policies, see the file ./scripts/repositories/azure-devops/config/strategy.cfg +
 
 NOTE: We set the number of reviewers to 1 and allowed requestors to approve their own changes because without it, it will block the creation of pipelines in next steps.
 
