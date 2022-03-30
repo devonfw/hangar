@@ -39,6 +39,24 @@ steps:
   condition: eq(variables['result'], 'None')
 
 - task: Bash@3
+  displayName: 'Getting last Build pipeline execution to download artifact'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  inputs:
+    targetType: inline
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download Build pipeline artifact'
+  inputs:
+    source: 'specific'
+    project: '$(System.TeamProject)'
+    pipeline: $(buildPipeline)
+    runVersion: 'specific'
+    downloadPath: $(Pipeline.Workspace)
+    runId: $(runId)
+
+- task: Bash@3
   displayName: "Test"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/test.sh'
