@@ -21,9 +21,13 @@ variables:
   - group: AWS_Credentials
   - name: deploymentYamlPath
     value: $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
+  - name: ingressYamlPath
+    value: $(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml  
+  - name: deployFilesPath
+    value: $(Build.Repository.LocalPath)/$(deployFiles)
   - name: kubeconfigPath
-    value: $(Pipeline.Workspace)/kubeconfig/kubeconfig   
-
+    value: $(Pipeline.Workspace)/kubeconfig/kubeconfig 
+    
 pool:
   vmImage: ubuntu-latest
 
@@ -45,16 +49,8 @@ jobs:
   - task: Bash@3
     displayName: "Deploy app to AKS" 
     inputs:
-      targetType: 'inline'
-      script: |
-        # Add image name and ingress DNS name.
-        export image=$(imagename) dns=$(dns_name)
-        yq eval '.spec.template.spec.containers[0].image = "'$image'"' -i $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
-        yq eval '.spec.rules[0].host = "'$dns'"' -i $(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml
-        # Create namespace in AKS cluster.
-        kubectl create namespace $(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
-        # Apply manifest files.
-        kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) --kubeconfig $(Pipeline.Workspace)/kubeconfig/kubeconfig
+      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/aks-deploy.sh'
+      arguments: '$(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(k8sNamespace) $(kubeconfigPath)'
   
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
@@ -69,7 +65,7 @@ jobs:
   - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
-    displayName: Deploy app to EKS
+    displayName: Connect to EKS
     inputs:
       targetType: 'inline'
       script: |
@@ -77,14 +73,12 @@ jobs:
         aws configure set aws_access_key_id $(ACCESS_KEY)
         aws configure set aws_secret_access_key $(SECRET_KEY)
         aws eks update-kubeconfig --name $(CLUSTER_NAME) --region $(REGION)
-        # Add image name and ingress DNS name.
-        export image=$(imagename) dns=$(dns_name)
-        yq eval '.spec.template.spec.containers[0].image = "'$image'"' -i $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
-        yq eval '.spec.rules[0].host = "'$dns'"' -i $(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml
-        # Create namespace in EKS cluster.
-        kubectl create namespace $(k8sNamespace) 
-        # Apply manifest files.
-        kubectl apply -f $(Build.Repository.LocalPath)/$(deployFiles) --namespace=$(k8sNamespace) 
+        
+  - task: Bash@3
+    displayName: Deploy app to EKS
+    inputs:
+      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/eks-deploy.sh'
+      arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
 
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
@@ -92,5 +86,7 @@ jobs:
     inputs:
       filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/ecr-secrets.sh'
       arguments: '$(k8sNamespace) $(secretsName) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
+
+  
 
   
