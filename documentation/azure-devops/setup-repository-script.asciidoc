@@ -117,11 +117,11 @@ For the *develop* and *master* branch we have set those policies:
 ```
 
 Require a minimum number of reviewers: ON
-    Minimum number of reviewers:                                      1
-    Allow requestors to approve their own changes:                    ON
+    Minimum number of reviewers: 1
+    Allow requestors to approve their own changes: ON
     Prohibit the most recent pusher from approving their own changes: OFF
-    Allow completion even if some reviewers vote to wait or reject:   OFF
-    When new changes are pushed:                                      Reset all approval votes (does not reset votes to reject or wait)
+    Allow completion even if some reviewers vote to wait or reject: OFF
+    When new changes are pushed: Reset all approval votes (does not reset votes to reject or wait)
 
 Check for linked work items:            OFF
 
