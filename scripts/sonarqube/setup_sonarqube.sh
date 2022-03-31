@@ -36,7 +36,7 @@ mem=$(grep MemTotal /proc/meminfo)
 length=${#mem}
 mem=${mem:10:length-10-3}
 mem=$(echo "scale=2;$mem/1000" |bc)
-mem=$(echo "scale=2;$mem*0.8" |bc)
+mem=$(echo "scale=2;$mem*0.85" |bc)
 mem="$mem"m
 
 echo -e "${green}Launching SonarQube container..."
