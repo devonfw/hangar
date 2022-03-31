@@ -298,8 +298,8 @@ type commitFiles &> /dev/null && commitFiles
 
 createPipeline
 
-addCommonPipelineVariables
-
 type addPipelineVariables &> /dev/null && addPipelineVariables
+
+addCommonPipelineVariables
 
 createPR
