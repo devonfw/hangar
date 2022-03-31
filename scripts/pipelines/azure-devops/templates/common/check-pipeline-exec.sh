@@ -29,9 +29,9 @@ pipelineInfo=$(az pipelines show --name "$pipelineToFind")
 id=$(echo "$pipelineInfo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
 # Getting the list of the last execution (the length of the list is defined by the value of $pipelineRunsListLimit)
 pipelineList=$(az pipelines runs list --pipeline-ids "$id" --top "$pipelineRunsListLimit" --branch "$sourceBranch")
-
+pipelineListLen=$(echo "$pipelineList" | python -c "import sys,json; print(len(json.load(sys.stdin)))")
 # While loop to look at every pipeline execution json one by one
-while [[ (("$i" -lt "$pipelineRunsListLimit")) ]]
+while [[ (("$i" -lt "$pipelineListLen")) ]]
 do
   # Getting the commit on which the pipeline has been executed to compare it with the one given as argument
   listSourceVersion=$(echo "$pipelineList" | python -c "import sys, json; print(json.load(sys.stdin)[$i]['sourceVersion'])")
@@ -42,7 +42,7 @@ do
     runId=$(echo "$pipelineList" | python -c "import sys, json; print(json.load(sys.stdin)[$i]['id'])")
 		break
   fi
-  ((i++))
+  ((i+=1))
 done
 
 echo "runId=$runId  ;  result=$result"
