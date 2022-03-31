@@ -51,15 +51,15 @@ remove="false"
 help= "false"
 while true; do
     case "$1" in
-        -a | --action)                          action=$2; shift 2;;
-        -n | --name)                            name=$2; shift 2;;
-        -d | --directory)                       directory_tmp=$2; shift 2;;
-        -o | --org)                             organization="https://dev.azure.com/$2"; shift 2;;
-        -p | --project)                         project=$2; shift 2;;
-        -g | --giturl)                          giturl_argument=$2; shift 2;;
-        -b | --branch)                          branch=$2; shift 2;;
+        -a | --action)                          action="$2"; shift 2;;
+        -n | --name)                            name="$2"; shift 2;;
+        -d | --directory)                       directory_tmp="$2"; shift 2;;
+        -o | --org)                             organization="https://dev.azure.com/"$2""; shift 2;;
+        -p | --project)                         project="$2"; shift 2;;
+        -g | --giturl)                          giturl_argument="$2"; shift 2;;
+        -b | --branch)                          branch="$2"; shift 2;;
         -r | --remove-other-branches)           remove="true"; shift 1;;
-        -s | --setup-branch-strategy)           strategy=$2; shift 2;;
+        -s | --setup-branch-strategy)           strategy="$2"; shift 2;;
         -h | --help)                            help="true"; shift 1;;
         -f | --force)                           force="true"; shift 1;;
         --) shift; break;;
@@ -76,28 +76,28 @@ red='\e[0;31m'
 green='\e[1;32m'
 blue='\e[1;34m'
 
-project_convertido=$(echo $project | sed 's/\ /%20/g')
-absoluteScriptPath=$(realpath $0)
+project_convertido=$(echo "$project" | sed 's/\ /%20/g')
+absoluteScriptPath=$(realpath "$0")
 absoluteFolderScriptPath=$(echo "${absoluteScriptPath%/*}/")
 function MSG_ERROR {
-if [ $2 != 0 ]
+if [ "$2" != 0 ]
 then
    echo ""
    echo -e "${red}A problem occured in the step: $1."
    echo -e "Stopping the script..."
-   echo -e ${white}
-   cd $old_path
+   echo -e "${white}"
+   cd "$old_path"
    exit 1
 fi
 }
 
 #We save the path from where the script is executing to cd there back at the end of the script
 old_path=$(pwd)
-[ "$directory_tmp" != "" ] && directory=$(echo $directory_tmp | sed 's/\\/\//g')
+[ "$directory_tmp" != "" ] && directory=$(echo "$directory_tmp" | sed 's/\\/\//g')
 if [ "$directory" != "" ]
 then
-  [ "$action" == "create" ] && mkdir -p $directory
-  cd $directory
+  [ "$action" == "create" ] && mkdir -p "$directory"
+  cd "$directory"
   MSG_ERROR "Cding into the directory given." $?
 fi
 directory_name=$(basename $(pwd))
@@ -111,8 +111,8 @@ function create_repo {
   echo -e "${blue}Creating repo $1. ${white}"
   echo ""
   #We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
-  echo "az repos create --name $1 --organization $2 --project "$3""
-  json_repo=$(az repos create --name $1 --organization ${2} --project "$3")
+  echo "az repos create --name \"$1\" --organization \"$2\" --project \"$3\""
+  json_repo=$(az repos create --name "$1" --organization "${2}" --project "$3")
   MSG_ERROR "Creating repo $1" $?
   echo "$json_repo"
   repo_id=$(echo "$json_repo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
@@ -129,7 +129,7 @@ function set_default_branch_and_policies {
   echo "--"
   echo -e "Loading the properties for the strategy you chose."
 
-  load_conf ${absoluteFolderScriptPath}/config/strategy.cfg $5
+  load_conf "${absoluteFolderScriptPath}/config/strategy.cfg" $5
   echo "Creating the branches needed."
   for i in ${STR_BRANCHES}
   do
@@ -258,7 +258,7 @@ function push_existing_directory {
   else
     echo "$(pwd) is not a git repository, executing git init and commiting all files ..."
     check_emptyness=$(ls)
-    [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file" && cp $absoluteFolderScriptPath/README.md .
+    [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file" && cp "$absoluteFolderScriptPath/README.md" .
     git init .
 # When using git init, the branch created will be the one you defined with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
 
@@ -286,16 +286,18 @@ function push_existing_directory {
     done
     if [ "$user_input_remote_url" = 'Y' ]
     then
-      echo "      git remote set-url --add --push origin ${1}/${5}/_git/$3"
-      git remote set-url --add --push origin ${1}/${5}/_git/$3
+      URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
+      echo "      git remote set-url --add --push origin \"$URL_space_converted\""
+      git remote set-url --add --push origin "$URL_space_converted"
     else
-      cd $old_path
+      cd "$old_path"
       exit
     fi
   else
     echo ""
     echo "Adding remote URL as no URL was previously set."
-    git remote add origin ${1}/${5}/_git/$3
+    URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
+    git remote add origin "$URL_space_converted"
     echo ""
   fi
   [ "$remove" = "true" ] && [ $isGitRepo -eq 0 ] && [ "$6" != "" ] && delete_branches_not_in master
@@ -309,8 +311,8 @@ function push_existing_directory {
     then
       echo -e "${yellow}You gave the '-s' flag but without a branch ('-b' flag) and your directory was already a git repository, we skipped the setting of branch policies.${white}"
     else
-      echo "set_default_branch_and_policies ${1} \"$2\" $4 $3 $strategy"
-      set_default_branch_and_policies ${1} "$2" $4 $3 $strategy
+      echo "set_default_branch_and_policies \"${1}\" \"$2\" \"$4\" \"$3\" \"$strategy\""
+      set_default_branch_and_policies "${1}" "$2" "$4" "$3" "$strategy"
     fi
   fi
   echo "--"
@@ -333,7 +335,7 @@ function load_conf {
                 break
             fi
             read_line=0
-            if echo $line  | grep $SECTION > /dev/null ; then
+            if echo $line  | grep "$SECTION" > /dev/null ; then
                 block_found=1
                 read_line=1
             fi
@@ -357,10 +359,10 @@ then
 
     echo "Use -h or --help flag to display help."
 
-    cd $old_path
+    cd "$old_path"
     exit 1
   else
-    [ "$name" = "" ] && name=$directory_name && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
+    [ "$name" = "" ] && name="$directory_name" && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
   fi
 elif [ "$action" = "import" ]
 then
@@ -375,9 +377,9 @@ then
     if [ "$giturl_argument" = "" ]
     then
       echo -e "${yellow}No Giturl has been given, the directory $directory will be imported then ${white}"
-      [ "$name" = "" ] && name=$directory_name && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
+      [ "$name" = "" ] && name="$directory_name" && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
     else
-      [ "$name" = "" ]  && name_tmp=${giturl_argument##*/} && name=$(basename $name_tmp ".git") && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
+      [ "$name" = "" ]  && name_tmp="${giturl_argument##*/}" && name=$(basename "$name_tmp" ".git") && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
     fi
   fi
 else
@@ -385,59 +387,56 @@ else
 
   echo -e "${white}Use -h or --help flag to display help."
 
-  cd $old_path
+  cd "$old_path"
   exit 1
 fi
 
-create_repo $name $organization "$project"
+create_repo "$name" "$organization" "$project"
 
 if [ "$action" = "import" ]
 then
-  ls -l
   if [ "$giturl_argument" = "" ]
   then
-    push_existing_directory $organization "$project" $name $repo_id $project_convertido $branch
+    push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
   else
     if [ "$branch" = "" ]
     then
       echo "You have not given a branch name so the repository will be imported as it is"
-      import_repo $giturl_argument $organization "$project" $name
+      import_repo "$giturl_argument" "$organization" "$project" "$name"
       git clone ${organization}/${project_convertido}/_git/$name
     else
       echo -e "${yellow}You have given a branch name so a master branch will be created from this one.${white}"
       if [ "$remove" = "true" ]
       then
         echo "The flag '-r' is detected, cloning only the reference branch: $5."
-        ls -l
-        git clone --branch $branch $giturl_argument $name
+        git clone --branch "$branch" "$giturl_argument" "$name"
         MSG_ERROR "Cloning the repository using only the branch $branch" $?
       else
         echo "The flag '-r' has not been set, cloning the whole repository."
-        ls -l
-        git clone $giturl_argument $name
+        git clone "$giturl_argument" "$name"
         MSG_ERROR "Cloning the repository" $?
       fi
-      cd $name
+      cd "$name"
       MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$pwd'" $?
-      push_existing_directory $organization "$project" $name $repo_id $project_convertido $branch
+      push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
     fi
   fi
 elif [ "$action" = "create" ]
 then
-  cd $directory/..
+  cd "$directory/.."
   MSG_ERROR "Cding into the directory given." $?
   git clone ${organization}/${project_convertido}/_git/$name $directory_name
   MSG_ERROR "Cloning empty repo." $?
-  cd $directory_name
+  cd "$directory_name"
   git checkout -b master
-  cp $absoluteFolderScriptPath/README.md .
+  cp "$absoluteFolderScriptPath/README.md" .
   git add -A
   git commit -m "Adding README"
   git push -u origin --all
   if [ "$strategy" != "" ]
   then
-    set_default_branch_and_policies ${organization} "$project" $repo_id $name "$strategy"
+    set_default_branch_and_policies "${organization}" "$project" "$repo_id" "$name" "$strategy"
   fi
 fi
 
-cd $old_path
+cd "$old_path"
