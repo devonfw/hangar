@@ -18,17 +18,17 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
 === Usage
 
 ```
-  create_repo.bash \
-      -a <action> \
-      -d <local directory> \
-      -o <organization> \
-      -p <project> \
-      [-n <repository name>] \
-      [-g <giturl>] \
-      [-b <branch>] \
-      [-r] \
-      [-s] <branch strategy> \
-      [-f] \
+create-repo.sh \
+    -a <action> \
+    -d <local directory> \
+    -o <organization> \
+    -p <project> \
+    [-n <repository name>] \
+    [-g <giturl>] \
+    [-b <branch>] \
+    [-r] \
+    [-s] <branch strategy> \
+    [-f] \
 ```
 
 === Flags
