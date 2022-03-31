@@ -1,4 +1,4 @@
-= Setting up a repository on Azure DevOps using script
+= Setting up a repository on Azure DevOps
 
 By the end of this guide, a repository on Azure DevOps will be created in an automated way using a script.
 
@@ -8,7 +8,6 @@ By the end of this guide, a repository on Azure DevOps will be created in an aut
 * Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
 
 == Creating repository using provided script
-
 
 The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows you to either:
 
@@ -107,33 +106,22 @@ Any other branch part the strategy (feature, release, and hotfix branches) will 
 
 === Policies
 
-You can define policies on your branches so you can secure them from commits not following certain rules. For example you can block squash merge.
+In Azure DevOps it is possible to protect important branches against bad practices using branch policies.
 
-Here are the policies we use as templates.
+The following branch policies are applied to `master` and `develop` branches:
 
-For the *develop* and *master* branch we have set those policies:
+* Require a minimum number of reviewers: ON
+** Minimum number of reviewers: 1
+** Allow requestors to approve their own changes: ON
+** Prohibit the most recent pusher from approving their own changes: OFF
+** Allow completion even if some reviewers vote to wait or reject: OFF
+** When new changes are pushed: Reset all approval votes (does not reset votes to reject or wait)
+* Check for linked work items: OFF
+* Check for comment resolution: REQUIRED
+* Limit merge types: OFF
 
-```
+The above policies are defined in a configuration file located at `/scripts/repositories/azure-devops/config/strategy.cfg`. Feel free to adapt it to your needs.
 
-Require a minimum number of reviewers: ON
-    Minimum number of reviewers: 1
-    Allow requestors to approve their own changes: ON
-    Prohibit the most recent pusher from approving their own changes: OFF
-    Allow completion even if some reviewers vote to wait or reject: OFF
-    When new changes are pushed: Reset all approval votes (does not reset votes to reject or wait)
+NOTE: This is the bare minimum standard for any project. We do not prohibit the most recent pusher from approving their own changes, although being more than recommendable, because if we do, it will block the auto-approval of Pull Requests generated during pipelines creation on the following guides.
 
-Check for linked work items:            OFF
-
-Check for comment resolution:           REQUIRED
-
-Limit merge types:                      OFF
-
-```
-A config file exists to configure your own branch policies, see the file ./scripts/repositories/azure-devops/config/strategy.cfg +
-
-NOTE: We set the number of reviewers to 1 and allowed requestors to approve their own changes because without it, it will block the creation of pipelines in next steps.
-
-==== Additional link
-
-There are many other parameters you can use to define your branches policy, if you need to modify it, here is a link with more information about it. +
-https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops&tabs=browser
+You can find more information about branch policies in the https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops[official documentation].
