@@ -19,7 +19,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 az group create -n <resource group name> -l <location>
 ```
 
-* Have a storage container in Azure. You can use an existing one or create a new one with the following command:
+* Have a storage account in Azure. You can use an existing one or create a new one with the following command:
 
 ```
 az storage account create -n <storage account name> -g <resource group name> -l <location>
