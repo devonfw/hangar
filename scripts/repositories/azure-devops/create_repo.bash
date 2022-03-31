@@ -112,12 +112,11 @@ function create_repo {
   echo ""
   #We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
   echo "az repos create --name $1 --organization $2 --project "$3""
-  az repos create --name $1 --organization ${2} --project "$3" > ./tmp_json_repo
+  json_repo=$(az repos create --name $1 --organization ${2} --project "$3")
   MSG_ERROR "Creating repo $1" $?
-  repo_id=$(cat  ./tmp_json_repo | grep '"id"' -m1 | cut -d: -f2 | cut -d, -f1 | tr -d \")
+  echo "$json_repo"
+  repo_id=$(echo "$json_repo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
   echo ""
-  cat ./tmp_json_repo
-  rm -f ./tmp_json_repo
   echo -e "--${white}"
 }
 
@@ -420,9 +419,6 @@ then
       fi
       cd $name
       MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$pwd'" $?
-      # echo "Deleting the .git folder so that we can initialize this repository with our branches"
-      # rm -rf .git
-      # MSG_ERROR "Deleting the .git folder so that we can initialize this repository with our branches" $?
       push_existing_directory $organization "$project" $name $repo_id $project_convertido $branch
     fi
   fi
