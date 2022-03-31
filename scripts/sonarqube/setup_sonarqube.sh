@@ -31,9 +31,9 @@ sudo docker volume create sonarqube-data
 sudo docker volume create sonarqube-logs
 sudo docker volume create sonarqube-extensions
 
-# Get the maximum memory for the container.
+#Get the maximum memory for the container.
 mem=$(grep MemTotal /proc/meminfo)
-length=${#mem}
+length={#mem}
 mem=${mem:10:length-10-3}
 mem=$(echo "scale=2;$mem/1000" |bc)
 mem=$(echo "scale=2;$mem*0.85" |bc)
