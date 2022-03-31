@@ -42,19 +42,18 @@ function help {
   exit
 }
 [ "$*" = "" ] && help
-ARGS=$*
 FLAGS=$(getopt -a --options a:n:d:o:p:g:b:rs:fh --long "action:,name:,directory:,org:,project:,giturl:,branch:,remove-other-branches,setup-branch-strategy:,force,help" -- "$@")
 eval set -- "$FLAGS"
 #We read every arguments given
 force="false"
 remove="false"
-help= "false"
+help="false"
 while true; do
     case "$1" in
         -a | --action)                          action="$2"; shift 2;;
         -n | --name)                            name="$2"; shift 2;;
         -d | --directory)                       directory_tmp="$2"; shift 2;;
-        -o | --org)                             organization="https://dev.azure.com/"$2""; shift 2;;
+        -o | --org)                             organization_tmp="https://dev.azure.com/$2"; shift 2;;
         -p | --project)                         project="$2"; shift 2;;
         -g | --giturl)                          giturl_argument="$2"; shift 2;;
         -b | --branch)                          branch="$2"; shift 2;;
@@ -76,9 +75,12 @@ red='\e[0;31m'
 green='\e[1;32m'
 blue='\e[1;34m'
 
+organization=$(echo "$organization_tmp" | sed 's/\ /%20/g')
 project_convertido=$(echo "$project" | sed 's/\ /%20/g')
 absoluteScriptPath=$(realpath "$0")
-absoluteFolderScriptPath=$(echo "${absoluteScriptPath%/*}/")
+absoluteFolderScriptPath="${absoluteScriptPath%/*}"
+echo $absoluteFolderScriptPath
+exit
 function MSG_ERROR {
 if [ "$2" != 0 ]
 then
@@ -417,7 +419,7 @@ then
         MSG_ERROR "Cloning the repository" $?
       fi
       cd "$name"
-      MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$pwd'" $?
+      MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'" $?
       push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
     fi
   fi
