@@ -79,8 +79,6 @@ organization=$(echo "$organization_tmp" | sed 's/\ /%20/g')
 project_convertido=$(echo "$project" | sed 's/\ /%20/g')
 absoluteScriptPath=$(realpath "$0")
 absoluteFolderScriptPath="${absoluteScriptPath%/*}"
-echo $absoluteFolderScriptPath
-exit
 function MSG_ERROR {
 if [ "$2" != 0 ]
 then
