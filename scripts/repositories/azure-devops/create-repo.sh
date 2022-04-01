@@ -329,7 +329,7 @@ function load_conf {
                 break
             fi
             read_line=0
-            if echo $line  | grep "$SECTION" > /dev/null ; then
+            if echo "$line"  | grep "$SECTION" > /dev/null ; then
                 block_found=1
                 read_line=1
             fi
