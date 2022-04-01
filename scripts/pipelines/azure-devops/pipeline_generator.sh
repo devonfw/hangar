@@ -166,13 +166,9 @@ function copyYAMLFile {
     # Create .pipelines and scripts if they do not exist.
     mkdir -p "${localDirectory}/.pipelines/scripts"
 
-
-    # Copy the YAML Template into the repository.
-    cp "${hangarPath}/${templatesPath}/${yamlFile}.template" "${localDirectory}/${pipelinePath}/${yamlFile}.template"
-
+    # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${localDirectory}/${pipelinePath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
-    rm "${localDirectory}/${pipelinePath}/${yamlFile}.template"
+    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
 
     # Check if an extra artifact to store is supplied.
     if test ! -z "$artifactPath"
