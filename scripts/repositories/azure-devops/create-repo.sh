@@ -89,7 +89,6 @@ then
 fi
 }
 
-#We save the path from where the script is executing to cd there back at the end of the script
 [ "$directory_tmp" != "" ] && directory=$(echo "$directory_tmp" | sed 's/\\/\//g')
 if [ "$directory" != "" ]
 then
