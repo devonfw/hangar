@@ -147,15 +147,15 @@ function set_default_branch_and_policies {
       echo "For $i:"
       echo -e "${blue}Creating rule to need approval of ${REVIEWER_NBR} people. (enable=${ENABLE_APPROVE_COUNT})"
       echo -e "${white}"
-      az repos policy approver-count create --blocking true --branch $i --enabled ${ENABLE_APPROVE_COUNT} --repository-id ${repo_id} --minimum-approver-count ${REVIEWER_NBR} --creator-vote-counts ${CREATOR_VOTE_COUNTS} --allow-downvotes ${ALLOW_DOWNVOTES} --reset-on-source-push ${RESET_ON_PUSH} --project "${2}" --organization "${1}"
+      az repos policy approver-count create --blocking true --branch "$i" --enabled "${ENABLE_APPROVE_COUNT}" --repository-id "${repo_id}" --minimum-approver-count "${REVIEWER_NBR}" --creator-vote-counts "${CREATOR_VOTE_COUNTS}" --allow-downvotes "${ALLOW_DOWNVOTES}" --reset-on-source-push "${RESET_ON_PUSH}" --project "${2}" --organization "${1}"
       echo ""
       echo -e "${blue}Adding comment resolution policy.(enable=${ENABLE_APPROVE_COUNT})"
       echo -e "${white}"
-      az repos policy comment-required create --blocking true --branch ${i} --enabled ${ENABLE_COMMENT_RESOLUTION} --repository-id ${repo_id} --project "${2}" --organization "${1}"
+      az repos policy comment-required create --blocking true --branch "${i}" --enabled "${ENABLE_COMMENT_RESOLUTION}" --repository-id "${repo_id}" --project "${2}" --organization "${1}"
       echo ""
       echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
       echo -e "${white}"
-      az repos policy merge-strategy create --blocking true --branch $i --enabled ${ENABLE_MERGE_LIMITS} --repository-id ${repo_id} --allow-no-fast-forward ${ALLOW_NO_FAST_FORWARD} --allow-rebase ${ALLOW_REBASE} --allow-rebase-merge ${ALLOW_REBASE_MERGE} --allow-squash ${ALLOW_SQASH} --branch-match-type exact --project "${2}" --organization "${1}"
+      az repos policy merge-strategy create --blocking true --branch "$i" --enabled "${ENABLE_MERGE_LIMITS}" --repository-id "${repo_id}" --allow-no-fast-forward "${ALLOW_NO_FAST_FORWARD}" --allow-rebase "${ALLOW_REBASE}" --allow-rebase-merge "${ALLOW_REBASE_MERGE}" --allow-squash "${ALLOW_SQASH}" --branch-match-type exact --project "${2}" --organization "${1}"
   done
   echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
 
