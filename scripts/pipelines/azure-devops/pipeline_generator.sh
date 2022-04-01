@@ -224,7 +224,7 @@ function addCommonPipelineVariables {
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
     else
         # Add the extra artifact to store variable.
-        az pipelines variable create --name "artifactPath" --pipeline-name $pipelineName --value ${artifactPath}
+        az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}"
     fi
 }
 
@@ -300,8 +300,8 @@ type commitFiles &> /dev/null && commitFiles
 
 createPipeline
 
-addCommonPipelineVariables
-
 type addPipelineVariables &> /dev/null && addPipelineVariables
+
+addCommonPipelineVariables
 
 createPR
