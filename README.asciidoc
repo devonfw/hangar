@@ -4,7 +4,7 @@
 
 * https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
-* https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-repository-script.asciidoc[Setting up a repository]
+* https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-repository-script.asciidoc[Setting up a repository on Azure DevOps]
 * Setup Azure DevOps Pipelines:
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Setting up a Build Pipeline]
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Setting up a Test Pipeline]
