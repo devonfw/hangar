@@ -109,7 +109,7 @@ function create_repo {
   #We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
   echo "az repos create --name \"$1\" --organization \"$2\" --project \"$3\""
   json_repo=$(az repos create --name "$1" --organization "${2}" --project "$3")
-  MSG_ERROR "Creating repo $1" $?
+  MSG_ERROR "Creating repo $1" "$?"
   echo "$json_repo"
   repo_id=$(echo "$json_repo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
   echo ""
@@ -167,7 +167,7 @@ function import_repo {
   echo "--"
   echo -e "${blue}Importing the repo located at $1. ${white}"
   az repos import create --git-url "$1" --organization "${2}" --project "$3" --repository "$4" > /dev/null
-  MSG_ERROR  "Importing repository: $1"  $?
+  MSG_ERROR  "Importing repository: $1"  "$?"
   echo "--"
 }
 
@@ -181,9 +181,9 @@ function replace_branch_with_reference {
   if [ "$1" != "$2" ]
   then
     git checkout "$2"
-    MSG_ERROR  "Checking out to reference branch"  $?
-    git branch | grep "${1}$" > /dev/null && echo "The branch $1 already exists, deleting it." && git branch -D $1
-    git branch | grep "${1}$" > /dev/null && MSG_ERROR  "Deleting branch $1"  $?
+    MSG_ERROR  "Checking out to reference branch"  "$?"
+    git branch | grep "${1}$" > /dev/null && echo "The branch $1 already exists, deleting it." && git branch -D "$1"
+    git branch | grep "${1}$" > /dev/null && MSG_ERROR  "Deleting branch $1"  "$?"
     git checkout -b "$1"
     git add -A
     git commit -m "Creating $1 from $2"
@@ -223,7 +223,7 @@ function push_existing_directory {
   echo -e "${blue}Start of the function to import a directory/repository.${white}"
   echo ""
   git rev-parse --git-dir &> /dev/null
-  isGitRepo=$?
+  isGitRepo="$?"
   if [ $isGitRepo -eq 0 ]
   then
     echo "$(pwd) is already a git repository, skipping git init and first commit"
@@ -246,7 +246,7 @@ function push_existing_directory {
 
       if [ "$user_input_branch" = 'Y' ]
       then
-        replace_branch_with_reference master $6
+        replace_branch_with_reference master "$6"
       else
         exit
       fi
@@ -294,14 +294,14 @@ function push_existing_directory {
     git remote add origin "$URL_space_converted"
     echo ""
   fi
-  [ "$remove" = "true" ] && [ $isGitRepo -eq 0 ] && [ "$6" != "" ] && delete_branches_not_in_master
+  [ "$remove" = "true" ] && [ "$isGitRepo" -eq 0 ] && [ "$6" != "" ] && delete_branches_not_in_master
   echo "Pushing every modification on the remote URL we just set."
   echo ""
   git push -u origin --all
   echo ""
   if [ "$strategy" != "" ]
   then
-    if [ $isGitRepo -eq 0 ] && [ "$6" = "" ]
+    if [ "$isGitRepo" -eq 0 ] && [ "$6" = "" ]
     then
       echo -e "${yellow}You gave the '-s' flag but without a branch ('-b' flag) and your directory was already a git repository, we skipped the setting of branch policies.${white}"
     else
@@ -399,21 +399,21 @@ then
       then
         echo "The flag '-r' is detected, cloning only the reference branch: $5."
         git clone --branch "$branch" "$giturl_argument" "$name"
-        MSG_ERROR "Cloning the repository using only the branch $branch" $?
+        MSG_ERROR "Cloning the repository using only the branch $branch" "$?"
       else
         echo "The flag '-r' has not been set, cloning the whole repository."
         git clone "$giturl_argument" "$name"
-        MSG_ERROR "Cloning the repository" $?
+        MSG_ERROR "Cloning the repository" "$?"
       fi
       cd "$name"
-      MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'" $?
+      MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'" "$?"
       push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
     fi
   fi
 elif [ "$action" = "create" ]
 then
   cd "$directory/.."
-  MSG_ERROR "Cding into the directory given." $?
+  MSG_ERROR "Cding into the directory given." "$?"
   git clone "${organization}/${project_convertido}/_git/${name// /%20}" "$directory_name"
   MSG_ERROR "Cloning empty repo." $?
   cd "$directory_name"
