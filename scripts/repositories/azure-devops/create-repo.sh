@@ -85,13 +85,11 @@ then
    echo -e "${red}A problem occured in the step: $1."
    echo -e "Stopping the script..."
    echo -e "${white}"
-   cd "$old_path"
    exit 1
 fi
 }
 
 #We save the path from where the script is executing to cd there back at the end of the script
-old_path=$(pwd)
 [ "$directory_tmp" != "" ] && directory=$(echo "$directory_tmp" | sed 's/\\/\//g')
 if [ "$directory" != "" ]
 then
@@ -288,7 +286,6 @@ function push_existing_directory {
       echo "      git remote set-url --add --push origin \"$URL_space_converted\""
       git remote set-url --add --push origin "$URL_space_converted"
     else
-      cd "$old_path"
       exit
     fi
   else
@@ -356,8 +353,6 @@ then
     echo -e "${red}You chose the action 'create' but one of these mandatory flags is missing: -n, -d, -o, -p."
 
     echo "Use -h or --help flag to display help."
-
-    cd "$old_path"
     exit 1
   else
     [ "$name" = "" ] && name="$directory_name" && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
@@ -369,7 +364,6 @@ then
     echo -e "${red}You chose the action 'import' but one of these mandatory flags is missing: -d, -o, -p, -g"
 
     echo -e "${white}Use -h or --help flag to display help."
-    cd $old_path
     exit 1
   else
     if [ "$giturl_argument" = "" ]
@@ -384,8 +378,6 @@ else
   echo -e "${red}The flag -a is not set or invalid. Accepted values are 'import' and 'create'."
 
   echo -e "${white}Use -h or --help flag to display help."
-
-  cd "$old_path"
   exit 1
 fi
 
@@ -436,5 +428,3 @@ then
     set_default_branch_and_policies "${organization}" "$project" "$repo_id" "$name" "$strategy"
   fi
 fi
-
-cd "$old_path"
