@@ -133,8 +133,8 @@ function set_default_branch_and_policies {
   for i in ${STR_BRANCHES}
   do
     git checkout master
-    git checkout -b $i
-    git push --set-upstream origin $i
+    git checkout -b "$i"
+    git push --set-upstream origin "$i"
   done
   az repos update --organization ${1} --project "$2" --repository "$4" --default-branch master > /dev/null
   MSG_ERROR "Setting 'master' branch as default branch" $?
