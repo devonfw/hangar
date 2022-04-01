@@ -53,7 +53,7 @@ while true; do
         -a | --action)                          action="$2"; shift 2;;
         -n | --name)                            name="$2"; shift 2;;
         -d | --directory)                       directory_tmp="$2"; shift 2;;
-        -o | --org)                             organization_tmp="https://dev.azure.com/$2"; shift 2;;
+        -o | --org)                             organization="https://dev.azure.com/$2"; shift 2;;
         -p | --project)                         project="$2"; shift 2;;
         -g | --giturl)                          giturl_argument="$2"; shift 2;;
         -b | --branch)                          branch="$2"; shift 2;;
@@ -75,8 +75,7 @@ red='\e[0;31m'
 green='\e[1;32m'
 blue='\e[1;34m'
 
-organization="${organization_tmp/ /%20}"
-project_convertido="${project/ /%20}"
+project_convertido="${project// /%20}"
 absoluteScriptPath=$(realpath "$0")
 absoluteFolderScriptPath="${absoluteScriptPath%/*}"
 function MSG_ERROR {
@@ -100,7 +99,7 @@ then
   cd "$directory"
   MSG_ERROR "Cding into the directory given." $?
 fi
-directory_name=$(basename $(pwd))
+directory_name=$(basename "$(pwd)")
 
 
 function create_repo {
@@ -155,7 +154,7 @@ function set_default_branch_and_policies {
       echo ""
       echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
       echo -e "${white}"
-      az repos policy merge-strategy create --blocking true --branch "$i" --enabled "${ENABLE_MERGE_LIMITS}" --repository-id "${repo_id}" --allow-no-fast-forward "${ALLOW_NO_FAST_FORWARD}" --allow-rebase "${ALLOW_REBASE}" --allow-rebase-merge "${ALLOW_REBASE_MERGE}" --allow-squash "${ALLOW_SQASH}" --branch-match-type exact --project "${2}" --organization "${1}"
+      az repos policy merge-strategy create --blocking true --branch "$i" --enabled "${ENABLE_MERGE_LIMITS}" --repository-id "${repo_id}" --allow-no-fast-forward "${ALLOW_NO_FAST_FORWARD}" --allow-rebase "${ALLOW_REBASE}" --allow-rebase-merge "${ALLOW_REBASE_MERGE}" --allow-squash "${ALLOW_SQUASH}" --branch-match-type exact --project "${2}" --organization "${1}"
   done
   echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
 
@@ -207,7 +206,7 @@ function delete_branches_not_in_master {
   do
     if [[ "$i" == "master" ]]
     then
-      echo "Branch $i given in argument of the function, skipping delete."
+      echo "Skipping master."
     else
       echo "Deleting Branch $i"
       git branch -D $i > /dev/null
@@ -402,7 +401,7 @@ then
     then
       echo "You have not given a branch name so the repository will be imported as it is"
       import_repo "$giturl_argument" "$organization" "$project" "$name"
-      git clone ${organization}/${project_convertido}/_git/$name
+      git clone "${organization}/${project_convertido}/_git/${name// /%20}"
     else
       echo -e "${yellow}You have given a branch name so a master branch will be created from this one.${white}"
       if [ "$remove" = "true" ]
@@ -424,7 +423,7 @@ elif [ "$action" = "create" ]
 then
   cd "$directory/.."
   MSG_ERROR "Cding into the directory given." $?
-  git clone ${organization}/${project_convertido}/_git/$name $directory_name
+  git clone "${organization}/${project_convertido}/_git/${name// /%20}" "$directory_name"
   MSG_ERROR "Cloning empty repo." $?
   cd "$directory_name"
   git checkout -b master
