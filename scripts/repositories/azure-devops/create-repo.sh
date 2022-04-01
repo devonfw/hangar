@@ -180,11 +180,11 @@ function replace_branch_with_reference {
   echo ""
   if [ "$1" != "$2" ]
   then
-    git checkout $2
+    git checkout "$2"
     MSG_ERROR  "Checking out to reference branch"  $?
     git branch | grep "${1}$" > /dev/null && echo "The branch $1 already exists, deleting it." && git branch -D $1
     git branch | grep "${1}$" > /dev/null && MSG_ERROR  "Deleting branch $1"  $?
-    git checkout -b $1
+    git checkout -b "$1"
     git add -A
     git commit -m "Creating $1 from $2"
   fi
@@ -206,7 +206,7 @@ function delete_branches_not_in_master {
       echo "Skipping master."
     else
       echo "Deleting Branch $i"
-      git branch -D $i > /dev/null
+      git branch -D "$i" > /dev/null
     fi
   done
 }
