@@ -136,7 +136,7 @@ function set_default_branch_and_policies {
     git checkout -b "$i"
     git push --set-upstream origin "$i"
   done
-  az repos update --organization ${1} --project "$2" --repository "$4" --default-branch master > /dev/null
+  az repos update --organization "$1" --project "$2" --repository "$4" --default-branch master > /dev/null
   MSG_ERROR "Setting 'master' branch as default branch" $?
   echo ""
   echo -e "${blue}Setting policies for the repository. ${white}"
