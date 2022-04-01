@@ -1,4 +1,4 @@
-######################################################################################################
+#!/bin/bash
 # Creation: 18/10/2021 Timothé Paty
 # Description: 	Script to create a repo on azure, you can choose between three differents way of creation
 #
@@ -75,8 +75,8 @@ red='\e[0;31m'
 green='\e[1;32m'
 blue='\e[1;34m'
 
-organization=$(echo "$organization_tmp" | sed 's/\ /%20/g')
-project_convertido=$(echo "$project" | sed 's/\ /%20/g')
+organization="${organization_tmp/ /%20}"
+project_convertido="${project/ /%20}"
 absoluteScriptPath=$(realpath "$0")
 absoluteFolderScriptPath="${absoluteScriptPath%/*}"
 function MSG_ERROR {
@@ -129,7 +129,7 @@ function set_default_branch_and_policies {
   echo "--"
   echo -e "Loading the properties for the strategy you chose."
 
-  load_conf "${absoluteFolderScriptPath}/config/strategy.cfg" $5
+  load_conf "${absoluteFolderScriptPath}/config/strategy.cfg" "$5"
   echo "Creating the branches needed."
   for i in ${STR_BRANCHES}
   do
@@ -195,17 +195,17 @@ function replace_branch_with_reference {
   echo "--"
 }
 
-function delete_branches_not_in {
+function delete_branches_not_in_master {
   # delete every branches not given in argument
   # no limit of arguments, you just need to give a reference branch as first argument,
   # because we cannot delete the branch we are currently in, so wee need to checkout to a branch we want to keep
   echo "--"
-  echo -e "${blue}Deleting every local branches except: $@ ${white}"
-  git checkout $1
+  echo -e "${blue}Deleting every local branch except master ${white}"
+  git checkout master
   branch_list=$(git branch |  sed 's/\*//g')
   for i in $branch_list
   do
-    if [[ "$@" == *"$i"* ]]
+    if [[ "$i" == "master" ]]
     then
       echo "Branch $i given in argument of the function, skipping delete."
     else
@@ -238,14 +238,14 @@ function push_existing_directory {
       if [ $force = "false" ]
       then
         echo "Type 'Y' to validate or 'N' to exit the script. (You can use -f flag to skip user confirmation on next executions)"
-        read user_input_branch
+        read -r user_input_branch
       else
         user_input_branch='Y'
       fi
       while [ "$user_input_branch" != 'Y' ] && [ "$user_input_branch" != 'N' ]
       do
         echo 'Your input is not valid, Press Y to confirm or N to cancel:'
-        read user_input_branch
+        read -r user_input_branch
       done
 
       if [ "$user_input_branch" = 'Y' ]
@@ -267,22 +267,21 @@ function push_existing_directory {
     git commit -m "creation of the repository"
   fi
 # We check if the repo already have an url set
-  git config --get remote.origin.url > /dev/null
-  if [ $? -eq "0" ]
+  if git config --get remote.origin.url > /dev/null
   then
     giturl_azure_repo=$(git config --get remote.origin.url)
     echo "There is already a remote origin configured for this repository: ($giturl_azure_repo). This will be changed to the new Azure DevOps repository. Press Y to confirm or N to cancel:"
 
     if [ "$force" = "false" ]
     then
-      read user_input_remote_url
+      read -r user_input_remote_url
     else
       user_input_remote_url="Y"
     fi
     while [ "$user_input_remote_url" != 'Y' ] && [ "$user_input_remote_url" != 'N' ]
     do
       echo 'Your input is not valid, Press Y to confirm and N to cancel:'
-      read user_input_remote_url
+      read -r user_input_remote_url
     done
     if [ "$user_input_remote_url" = 'Y' ]
     then
@@ -300,8 +299,8 @@ function push_existing_directory {
     git remote add origin "$URL_space_converted"
     echo ""
   fi
-  [ "$remove" = "true" ] && [ $isGitRepo -eq 0 ] && [ "$6" != "" ] && delete_branches_not_in master
-  echo "Pushing Every modification on the remote URL we just set."
+  [ "$remove" = "true" ] && [ $isGitRepo -eq 0 ] && [ "$6" != "" ] && delete_branches_not_in_master
+  echo "Pushing every modification on the remote URL we just set."
   echo ""
   git push -u origin --all
   echo ""
