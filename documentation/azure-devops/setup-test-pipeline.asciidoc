@@ -1,6 +1,6 @@
 = Setting up a Test Pipeline on Azure DevOps
 
-In this section we will create a test pipeline on Azure DevOps for running project test cases. This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit.
+In this section we will create a test pipeline on Azure DevOps for running project test cases. This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit, and consumes the artifact produced by the build pipeline.
 
 The creation of this pipeline will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
