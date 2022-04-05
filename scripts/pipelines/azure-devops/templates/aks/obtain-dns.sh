@@ -1,5 +1,5 @@
 #!/bin/bash
-ip=$(kubectl get -o json svc nginx-stable-nginx-ingress --namespace nginx-ingress --kubeconfig $1/kubeconfig | python -c "import sys, json; print(json.load(sys.stdin)['status']['loadBalancer']['ingress'][0]['ip'])")
+ip="$(kubectl get -o json svc nginx-stable-nginx-ingress --namespace nginx-ingress --kubeconfig $1/kubeconfig | python -c "import sys, json; print(json.load(sys.stdin)['status']['loadBalancer']['ingress'][0]['ip'])")"
 
 url=$2
 length=${#url}
