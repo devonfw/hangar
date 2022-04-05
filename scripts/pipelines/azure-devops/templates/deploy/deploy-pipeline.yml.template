@@ -1,7 +1,4 @@
-trigger:
-  branches:
-    include:
-    - '*'
+trigger: none
 
 resources:
   pipelines:
