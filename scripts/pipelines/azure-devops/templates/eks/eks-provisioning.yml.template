@@ -37,18 +37,39 @@ steps:
     environmentServiceNameAWS: "$(awsServiceConnection)"
 
 - task: Bash@3
-  displayName: 'Install Ingress controller and publish its DNS name'
-  env:
-    AZURE_DEVOPS_EXT_PAT: $(PAT)
+  displayName: 'Install nginx ingress controller'
   inputs:
     targetType: inline
     script: |
-      # Connect to EKS using credentials
       aws configure set aws_access_key_id $(ACCESS_KEY)
       aws configure set aws_secret_access_key $(SECRET_KEY)
       aws eks update-kubeconfig --name $(clustername) --region $(REGION)
       helm repo add bitnami https://charts.bitnami.com/bitnami
       helm repo update
       helm upgrade --install nginx-ingress nginx-ingress-controller --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo https://charts.bitnami.com/bitnami --namespace nginx-ingress --create-namespace
+
+- task: Bash@3
+  displayName: 'Wait for the ingress controller IP'
+  inputs:
+    targetType: 'inline'
+    script: 'sleep 60'      
+
+- task: Bash@3
+  displayName: 'Publish DNS'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(PAT)
+  inputs:
+    targetType: inline
+    script: |
+      aws configure set aws_access_key_id $(ACCESS_KEY)
+      aws configure set aws_secret_access_key $(SECRET_KEY)
+      aws eks update-kubeconfig --name $(clustername) --region $(REGION)
       dnsName=$(kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-      az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name eks_variables --variable dns_name=$dnsName cluster_name=$(clustername) --authorize true	
+      az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name eks_variables --variable dns_name=$dnsName cluster_name=$(clustername) --authorize true
+      echo "##vso[task.setvariable variable=dns;isOutput=true]$dnsName"
+  name: PublishDNS
+
+- task: Bash@3
+  inputs:
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/install-rancher.sh'
+    arguments: '$(PublishDNS.dns)'

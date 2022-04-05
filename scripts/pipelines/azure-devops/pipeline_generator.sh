@@ -190,7 +190,7 @@ function commitCommonFiles {
     echo -ne ${white}
 
     # Move into the project's directory and pushing the template into the Azure DevOps repository.
-    cd ${localDirectory}
+    cd "${localDirectory}"
 
     # Add the YAML files.
     git add .pipelines -f

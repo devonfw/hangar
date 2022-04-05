@@ -31,27 +31,20 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   version         = "17.24.0"
   cluster_name    = var.cluster_name
-  cluster_version = "1.20"
+  cluster_version = "1.21"
 
   vpc_id =  (var.existing_vpc_id == "none" ? module.vpc[0].vpc_id : var.existing_vpc_id)
   subnets = (var.existing_vpc_id == "none" ? module.vpc[0].private_subnets : var.existing_vpc_private_subnets)
 
-  workers_group_defaults = {
-    root_volume_type = "gp2"
-  }
+  node_groups = {
+    first = {
+      desired_capacity = 2
+      max_capacity     = 4
+      min_capacity     = 1
 
-  worker_groups = [
-    {
-      name                          = "worker-group-1"
-      instance_type                 = var.instance_type
-      asg_desired_capacity          = 2
-    },
-    {
-      name                          = "worker-group-2"
-      instance_type                 = var.instance_type
-      asg_desired_capacity          = 2
-    },
-  ]
+      instance_type = var.instance_type
+    }
+  }
 }
 
 data "aws_eks_cluster" "cluster" {
