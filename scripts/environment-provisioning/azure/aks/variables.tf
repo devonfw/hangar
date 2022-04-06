@@ -24,6 +24,6 @@ variable "worker_node_count" {
 }
 
 variable "dns_prefix" {
-    description = "DNS name prefix to use with the hosted Kubernetes API server FQDN"
+    description = "DNS name prefix to use with the hosted Kubernetes API server FQDN. This forms part of the fully qualified domain name used to access the cluster"
     type = string
 }
