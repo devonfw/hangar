@@ -34,7 +34,7 @@ Before executing the pipeline generator, you will need to customize some input v
 Examples:
 
 ```
-./setTerraformVariables.sh --region <region name> --instance_type <instance type> --vpc_name <vpc name> --vpc_cidr_block <vpc_cidr_block>
+./set-terraform-variables.sh --region <region name> --instance_type <instance type> --vpc_name <vpc name> --vpc_cidr_block <vpc_cidr_block>
 ```
 * The script installs Rancher on the cluster after provisioning. If you wish to change this, please update `eks-pipeline.cfg` accordingly.
 
