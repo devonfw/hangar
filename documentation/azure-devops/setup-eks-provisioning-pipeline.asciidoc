@@ -4,7 +4,7 @@ toc::[]
 :idseparator: -
 
 = Setting up the AWS EKS provisioning pipeline
-In this section we will create a pipeline which will provision AWS EKS. This pipeline will be configured to be manually triggered by the user. As part of EKS cluster provisioning, an NGINX Ingress controller is deployed and a variable group with the name `eks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer the appendix to retrieve the DNS name of the ingress controller independently. 
+In this section we will create a pipeline which will provision an AWS EKS cluster. This pipeline will be configured to be manually triggered by the user. As part of EKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `eks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the ingress controller independently. 
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/eks-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
 
@@ -15,7 +15,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 === Prerequisites
 
 * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
-* Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] and name it `AWS-Terraform-Connection`. If you already have a service connection available or you need a specific connection name, please update `eks-pipeline.cfg` accordingly.
+* Create a service connection for connecting to an AWS account (as explained in the above Terraform extension link) and name it `AWS-Terraform-Connection`. If you already have a service connection available or you need a specific connection name, please update `eks-pipeline.cfg` accordingly.
 
 * A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
 ```
@@ -29,7 +29,7 @@ aws s3 mb <bucket name>
 
 == Creating the pipeline using provided script
 
-Before executing the pipeline generator, you will need to customize some input variables about the environment. Also, you may want to use existing VPC and subnets instead of creating new ones. To do so, you can either edit `terraform.tfvars` file or take advantage of the `setTerraformVariables.sh` script, which allows you to create or update values for the required variables, passing them as flags.
+Before executing the pipeline generator, you will need to customize some input variables about the environment. Also, you may want to use existing VPC and subnets instead of creating new ones. To do so, you can either edit `terraform.tfvars` file or take advantage of the `setTerraformVariables.sh` script located at `/scripts/environment-provisioning/aws/eks`, which allows you to create or update values for the required variables, passing them as flags.
 
 Examples:
 
@@ -57,10 +57,10 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 ```
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
+-d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
     --cluster-name       [Required] Name for the cluster."
     --s3-bucket          [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
     --s3-key-path        [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
--d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -74,7 +74,7 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 
 == Appendix: Interacting with the cluster
 
-Run the below command to connect to the AWS EKS cluster from your terminal
+First, generate a `kubeconfig` file for accessing the AWS EKS cluster:
 
 ```
 aws eks update-kubeconfig --name <eks-cluster-name> --region <aws region>
@@ -83,7 +83,7 @@ Now you can use `kubectl` tool to communicate with the cluster.
 
 To enable an IAM user to connect to the EKS cluster, please refer https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html[here].
 
-To get the DNS name of the nginx ingress controller from the EKS cluster, run the below command from your terminal
+To get the DNS name of the NGINX Ingress controller on the EKS cluster, run the below command:
 ```
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
 ```
