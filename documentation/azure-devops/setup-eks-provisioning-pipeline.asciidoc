@@ -36,6 +36,10 @@ Examples:
 ```
 ./set-terraform-variables.sh --region <region name> --instance_type <instance type> --vpc_name <vpc name> --vpc_cidr_block <vpc_cidr_block>
 ```
+Example to reuse existing VPC and subnets
+```
+./set-terraform-variables.sh --region <region name> --instance_type <instance type> --existing_vpc_id <existing vpc id> --existing_vpc_private_subnets <existing VPC private subnets>
+```
 * The script installs Rancher on the cluster after provisioning. If you wish to change this, please update `eks-pipeline.cfg` accordingly.
 
 === Usage
