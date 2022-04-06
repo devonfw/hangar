@@ -34,7 +34,7 @@ az storage container create -n <storage container name> --account-name <storage 
 
 == Creating the pipeline using provided script
 
-Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-config.sh` script located at `/scripts/environment-provisioning/azure/aks`, which allows you to create or update values for the required variables, passing them as flags. As a full example:
+Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables.sh` script located at `/scripts/environment-provisioning/azure/aks`, which allows you to create or update values for the required variables, passing them as flags. As a full example:
 
 ```
 ./set-terraform-variables.sh --cluster_name <cluster name> --location <location> --resource_group_name <resource group name> --instance_type <worker instance type> --worker_node_count <number of worker nodes> --dns_prefix <dns prefix>
