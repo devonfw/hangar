@@ -29,7 +29,7 @@ aws s3 mb <bucket name>
 
 == Creating the pipeline using provided script
 
-Before executing the pipeline generator, you will need to customize some input variables about the environment. Also, you may want to use existing VPC and subnets instead of creating new ones. To do so, you can either edit `terraform.tfvars` file or take advantage of the `setTerraformVariables.sh` script located at `/scripts/environment-provisioning/aws/eks`, which allows you to create or update values for the required variables, passing them as flags.
+Before executing the pipeline generator, you will need to customize some input variables about the environment. Also, you may want to use existing VPC and subnets instead of creating new ones. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables.sh` script located at `/scripts/environment-provisioning/aws/eks`, which allows you to create or update values for the required variables, passing them as flags.
 
 Examples:
 
