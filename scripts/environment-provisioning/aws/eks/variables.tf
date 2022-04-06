@@ -32,7 +32,19 @@ variable "public_subnets" {
 
 variable "instance_type" {
   type = string
-  description = "[Optional] - Instance type of the worker node group configuration."
+  description = "Instance type of the worker node group configuration."
+}
+variable "nodegroup_desired_capacity" {
+  type = string
+  description = "Cluster Node Group Desired Capacity"
+}
+variable "nodegroup_max_capacity" {
+  type = string
+  description = "Cluster Node Group Maximum Capacity"
+}
+variable "nodegroup_min_capacity" {
+  type = string
+  description = "Cluster Node Group Minimum Capacity"
 }
 
 variable "existing_vpc_id" {
