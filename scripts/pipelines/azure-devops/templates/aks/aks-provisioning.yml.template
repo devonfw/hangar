@@ -49,12 +49,6 @@ steps:
 
       helm install nginx-ingress nginx-ingress-controller --set ingressClassResource.default=true --namespace nginx-ingress --create-namespace --kubeconfig $(terraformWorkingDirectory)/kubeconfig
 
-- task: Bash@3
-  displayName: 'Wait for the ingress controller IP'
-  inputs:
-    targetType: 'inline'
-    script: 'sleep 60'
-
 - task: AzureCLI@2
   displayName: 'Obtain DNS name'
   inputs:

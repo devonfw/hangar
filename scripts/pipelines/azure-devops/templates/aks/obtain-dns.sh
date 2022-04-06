@@ -1,8 +1,15 @@
 #!/bin/bash
-ip="$(kubectl get -o json svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress --kubeconfig $1/kubeconfig | python -c "import sys, json; print(json.load(sys.stdin)['status']['loadBalancer']['ingress'][0]['ip'])")"
+ip=$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}' &> /dev/null)
+
+while test -z "$ip"
+do
+    sleep 5s
+    ip=$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+done
 
 url=$2
 length=${#url}
+# Obtain the organization name by taking away the first 22 characters (https://dev.azure.com/) and the las /.
 dnsname=${url:22:length-22-1}
 
 ipname=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$ip')].[name]" --output tsv)
