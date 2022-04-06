@@ -19,7 +19,7 @@ variable "instance_type" {
 }
 
 variable "worker_node_count" {
-    description = "Number of nodes for the cluster"
+    description = "Number of worker nodes for the cluster"
     type = string
 }
 
