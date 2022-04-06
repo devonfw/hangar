@@ -71,5 +71,5 @@ steps:
 
 - task: Bash@3
   inputs:
-    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/install-rancher.sh'
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
     arguments: '$(PublishDNS.dns)'
