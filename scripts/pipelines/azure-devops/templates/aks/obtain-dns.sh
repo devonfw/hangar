@@ -1,5 +1,5 @@
 #!/bin/bash
-ip=$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}' &> /dev/null)
+ip=$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress --kubeconfig $1/kubeconfig -o jsonpath='{.status.loadBalancer.ingress[0].ip}' &> /dev/null)
 
 while test -z "$ip"
 do
