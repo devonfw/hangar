@@ -4,7 +4,7 @@ ip=$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-in
 while test -z "$ip"
 do
     sleep 5s
-    ip=$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    ip=$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress --kubeconfig $1/kubeconfig -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 done
 
 url=$2
