@@ -45,4 +45,9 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
 
+==== Node project
+```
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n node-project-build -l node -d C:/Users/$USERNAME/Desktop/node-project -b develop -w
+```
+
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
