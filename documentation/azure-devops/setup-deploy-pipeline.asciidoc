@@ -6,7 +6,7 @@ The creation of the pipeline will follow the project workflow, so a new branch n
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create new branch,create a deploy pipeline based on a YAML template appropriate for the project manifests files, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
+The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create the new branch, create a deploy pipeline based on a YAML template appropriate for the project manifests files, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
 
 NOTE: The deploy pipeline will fail if the package pipeline executed on the same commit has failed.
 
@@ -14,7 +14,7 @@ NOTE: The deploy pipeline will fail if the package pipeline executed on the same
 
 * If it is private container registry, create secret for container registry to pull image from private repository. 
 
-NOTE: Use `--secrets-value` flag to add extra secrets script to pull image from private container registry .
+NOTE: Use `--secrets-name` flag to add extra secrets script to pull image from private container registry .
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
@@ -26,10 +26,12 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
-  --deploy-files <deploy files> \
-  --deploy-cluster <deploy cluster name> \
-  --secrets-value <secretsValue> \
   --package-pipeline-name <package pipeline name> \
+  --aks-provision-pipeline-name \
+  --deploy-cluster <deploy environment name> \
+  --k8s-namespace \
+  --deploy-files <deploy files> \ 
+  --secrets-name <secretsValue> \
   [-b <branch>] \
   [-w]
 ```
@@ -37,15 +39,17 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 
 === Flags
 ```
--c  --config-file             [Required] Configuration file containing pipeline definition.
--n  --pipeline-name           [Required] Name that will be set to the pipeline.
--d  --local-directory         [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --deploy-files            [Required] Path inside the remote repository where the manifest YAML files are located.
-    --deploy-cluster          [Required] Name of the kubernetes cluster, AKS or EKS.
-    --secrets-name                       Name of the secrets.
-    --package-pipeline-name   [Required] Name of the Package pipeline.
--b  --target-branch                      Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                       Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+-c  --config-file                   [Required] Configuration file containing pipeline definition.
+-n  --pipeline-name                 [Required] Name that will be set to the pipeline.
+-d  --local-directory               [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --package-pipeline-name         [Required] Name of the Package pipeline.
+    --aks-provision-pipeline-name   [Required, if deployment in Azure] Azure AKS provision pipeline name.
+    --deploy-cluster                [Required] Deployment environment, AKS or EKS.
+    --k8s-namespace                 [Required] kubernetes namespace.
+    --deploy-files                  [Required] Path inside the remote repository where the manifest YAML files are located.  
+    --secrets-name                  [Required, if private registry] Name of the secrets.
+-b  --target-branch                            Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-w                                             Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
 === Examples
@@ -53,7 +57,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --deploy-files manifest-path --deploy-cluster deploy-cluster-name --package-pipeline-name package-pipeline-name -b develop -w
+./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --package-pipeline-name quarkus-project-package --deploy-cluster EKS --k8s-namespace hangar --deploy-files k8s-files  -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
