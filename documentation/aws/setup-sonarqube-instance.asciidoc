@@ -23,7 +23,7 @@ IMPORTANT: This will create a public key, directly stored in AWS (current region
 * `variables.tf` contains variable definition for `main.tf`.
 * `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
 * `terraform.tfstate` contains current state of the created infrastructure. Should be stored securely.
-* `set-config.sh` assists user in setting the values of `terraform.tfvars`.
+* `set-terraform-variables.sh` assists user in setting the values of `terraform.tfvars`.
 
 == Usage
 
@@ -33,10 +33,10 @@ First, you need to initialize the working directory containing Terraform configu
 terraform init 
 ```
 
-Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-config.sh` script, which allows you to create or update values for the required variables, passing them as flags. As a full example:
+Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script located at `/scripts/sonarqube`, which allows you to create or update values for the required variables, passing them as flags. As a full example:
 
 ```
-./set-config.sh --aws_region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
+./set-terraform-variables.sh --aws_region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
 ```
 
 WARNING: Unless changed, the keypair name expected by default is `sonarqube`.
