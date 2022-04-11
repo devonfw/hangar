@@ -70,6 +70,8 @@ steps:
   name: PublishDNS
 
 - task: Bash@3
+  displayName: 'Install Rancher'
+  condition: eq(variables.installRancher, 'true')
   inputs:
     filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
     arguments: '$(PublishDNS.dns)'
