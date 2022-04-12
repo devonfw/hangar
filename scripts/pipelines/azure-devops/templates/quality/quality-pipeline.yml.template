@@ -1,0 +1,63 @@
+trigger: none
+
+resources:
+  pipelines:
+  - pipeline: 'Test-Pipeline'
+    source: '$testPipelineName'
+    trigger: true
+
+variables:
+  projectPath: $(Pipeline.Workspace)
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: Bash@3
+  displayName: 'Checking last Test pipeline execution status'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  inputs:
+    targetType: inline
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(testPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+- bash: 'echo "The test pipeline executed for this commit has failed.";exit 1'
+  displayName: 'Test pipeline failed'
+  condition: eq(variables['result'], 'failed')
+
+- bash: 'echo "The test pipeline executed for this commit has been canceled.";exit 1'
+  displayName: 'Test pipeline canceled'
+  condition: eq(variables['result'], 'canceled')
+
+- bash: 'echo "There is no test pipeline execution for this commit.";exit 1'
+  displayName: 'Test pipeline not found'
+  condition: eq(variables['result'], '')
+
+- bash: 'echo "The test pipeline for this commit is not over yet.";exit 1'
+  displayName: 'Test pipeline not over'
+  condition: eq(variables['result'], 'None')
+
+- task: Bash@3
+  displayName: 'Getting last Build pipeline execution to download artifact'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  inputs:
+    targetType: inline
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+- task: DownloadPipelineArtifact@2
+  displayName: "Download Build pipeline artifact"
+  inputs:
+    source: 'specific'
+    project: '$(System.TeamProject)'
+    pipeline: '$(buildPipelineName)'
+    runVersion: 'specific'
+    downloadPath: '$(Pipeline.Workspace)'
+    runId: $(runId)
+
+- task: Bash@3
+  displayName: "SonarQube Analysis"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
+    arguments: $(projectPath)
