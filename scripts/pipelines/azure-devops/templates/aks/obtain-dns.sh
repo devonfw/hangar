@@ -9,7 +9,7 @@ done
 
 url=$2
 length=${#url}
-# Obtain the organization name by taking away the first 22 characters (https://dev.azure.com/) and the las /.
+# Obtain the organization name by taking away the first 22 characters (https://dev.azure.com/) and the last /.
 dnsname=${url:22:length-22-1}
 
 ipname=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$ip')].[name]" --output tsv)
