@@ -37,7 +37,7 @@ steps:
     environmentServiceNameAWS: "$(awsServiceConnection)"
 
 - task: Bash@3
-  displayName: 'Install nginx ingress controller'
+  displayName: 'Install NGINX Ingress controller'
   inputs:
     targetType: inline
     script: |
@@ -49,13 +49,13 @@ steps:
       helm upgrade --install nginx-ingress nginx-ingress-controller --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo https://charts.bitnami.com/bitnami --namespace nginx-ingress --create-namespace
 
 - task: Bash@3
-  displayName: 'Wait for the ingress controller IP'
+  displayName: 'Wait for the Ingress controller IP'
   inputs:
     targetType: 'inline'
     script: 'sleep 60'      
 
 - task: Bash@3
-  displayName: 'Publish DNS'
+  displayName: 'Publish Ingress Controller domain name'
   env:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:

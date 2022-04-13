@@ -32,7 +32,8 @@ variable "public_subnets" {
 
 variable "instance_type" {
   type = string
-  description = "Instance type of the worker node group configuration."
+  description = "Instance type for cluster workers."
+
 }
 variable "nodegroup_desired_capacity" {
   type = string
