@@ -71,7 +71,20 @@ Then, follow again the link:https://docs.microsoft.com/en-us/azure/devops/artifa
 IMPORTANT: Ignore the settings.xml part as is not necessary to consume an artifact. Only pom.xml modification is needed.
 
 
+==== Node.js project
+```
+./pipeline_generator.sh -c ./templates/library-package/library-package-pipeline.cfg -n library-package-pipeline -l node -d C:/Users/$USERNAME/Desktop/node-library-project --build-pipeline-name node-library-build --quality-pipeline-name node-library-quality
+```
 
+== Adding npm feed to library repository list
 
+Add a .npmrc to your project, in the same directory as your package.json
 
+```
+registry=https://pkgs.dev.azure.com/<yourOrganization>/_packaging/<yourFeed>/npm/registry/
 
+always-auth=true
+```
+== Appendix
+
+=== Consume library from the main project
