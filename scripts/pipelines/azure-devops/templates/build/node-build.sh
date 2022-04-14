@@ -1,2 +1,2 @@
 #!/bin/bash
-node install
+npm install
