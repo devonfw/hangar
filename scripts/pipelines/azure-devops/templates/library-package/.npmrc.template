@@ -1,0 +1,8 @@
+; begin auth token
+//pkgs.dev.azure.com/timo-pascalwolf/_packaging/timo-pascalwolf/npm/registry/:username=$organization
+//pkgs.dev.azure.com/timo-pascalwolf/_packaging/timo-pascalwolf/npm/registry/:_password=$encodedPatToken
+//pkgs.dev.azure.com/timo-pascalwolf/_packaging/timo-pascalwolf/npm/registry/:email=$email
+//pkgs.dev.azure.com/timo-pascalwolf/_packaging/timo-pascalwolf/npm/:username=$organization
+//pkgs.dev.azure.com/timo-pascalwolf/_packaging/timo-pascalwolf/npm/:_password=$encodedPatToken
+//pkgs.dev.azure.com/timo-pascalwolf/_packaging/timo-pascalwolf/npm/:email=$email
+; end auth token
