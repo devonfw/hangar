@@ -4,8 +4,7 @@ trigger:
     - '*'
 
 variables:
-  language = '$language'
-  targetPath = target
+  targetPath = '$targetDirectory'
 
 pool:
   vmImage: ubuntu-latest
@@ -16,7 +15,7 @@ steps:
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/build.sh'
 
-- publish: $(Build.Repository.LocalPath)/$(targetPath)/$(language)
+- publish: $(Build.Repository.LocalPath)/$(targetPath)
   displayName: "Publish Artifact"
   artifact: target
   
