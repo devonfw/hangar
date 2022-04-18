@@ -54,7 +54,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
     filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/obtain-dns.sh'
-  name: PublishDNS
+    arguments: '$(clustername)'
 
 - task: Bash@3
   displayName: 'Install Rancher'
