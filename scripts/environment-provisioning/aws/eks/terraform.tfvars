@@ -15,9 +15,9 @@ public_subnets = ["172.16.4.0/24", "172.16.5.0/24", "172.16.6.0/24"]
 instance_type="t3a.small"
 
 # Node group capacity configuration
-nodegroup_desired_capacity=2
-nodegroup_max_capacity=4
-nodegroup_min_capacity=1
+desired_workers=2
+max_workers=4
+min_workers=1
 
 # Set this VPC ID only if you already have a VPC available,  
 # script will provision the AWS EKS in the given VPC.

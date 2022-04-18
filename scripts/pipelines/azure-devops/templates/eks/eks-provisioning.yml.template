@@ -49,24 +49,11 @@ steps:
       helm upgrade --install nginx-ingress nginx-ingress-controller --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo https://charts.bitnami.com/bitnami --namespace nginx-ingress --create-namespace
 
 - task: Bash@3
-  displayName: 'Wait for the Ingress controller IP'
-  inputs:
-    targetType: 'inline'
-    script: 'sleep 60'      
-
-- task: Bash@3
   displayName: 'Publish Ingress Controller domain name'
   env:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
-    targetType: inline
-    script: |
-      aws configure set aws_access_key_id $(ACCESS_KEY)
-      aws configure set aws_secret_access_key $(SECRET_KEY)
-      aws eks update-kubeconfig --name $(clustername) --region $(REGION)
-      dnsName=$(kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-      az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name eks_variables --variable dns_name=$dnsName cluster_name=$(clustername) --authorize true
-      echo "##vso[task.setvariable variable=dns;isOutput=true]$dnsName"
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/obtain-dns.sh'
   name: PublishDNS
 
 - task: Bash@3
