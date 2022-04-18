@@ -33,7 +33,7 @@ First, you need to initialize the working directory containing Terraform configu
 terraform init 
 ```
 
-Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script located at `/scripts/sonarqube`, which allows you to create or update values for the required variables, passing them as flags. As a full example:
+Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script, which allows you to create or update values for the required variables, passing them as flags. As a full example:
 
 ```
 ./set-terraform-variables.sh --aws_region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
