@@ -62,7 +62,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
     targetType: 'inline'
-    script: 'az pipelines variable-group create --organization "$(System.TeamFoundationCollectionUri)" --project "$(System.TeamProject)" --name eks-variables --variables dns_name=$(dns) cluster_name=$(clustername) --authorize true'
+    script: 'az pipelines variable-group create --organization "$(System.TeamFoundationCollectionUri)" --project "$(System.TeamProject)" --name eks-variables --variables dns_name=$(PublishDNS.dns) cluster_name=$(clustername) --authorize true'
 
 - task: Bash@3
   condition: eq(variables.installRancher, 'true')
