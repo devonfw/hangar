@@ -4,7 +4,7 @@ toc::[]
 :idseparator: -
 
 == Setup Container Image Registry
-The scope of this section is to setup/create a container image registry or repository (depending on provider) on Docker Hub, AWS or Azure for allowing the pipeline that will package the application to push the resulting container image. By the end of this guide, we will get the container repository URI as an output.
+The scope of this section is to setup/create a container image registry or repository (depending on provider) on Docker Hub, AWS or Azure for allowing the pipeline that will package the application to push the resulting container image. By the end of this guide, we will get as an output the container repository URI, and, for some providers, the credentials for accessing the registry.
 
 A container image name generically has the following format:
 
@@ -80,7 +80,7 @@ IMPORTANT: Docker Hub does not support multi-level image names.
 
 === Image Format
 * `<registry-url>/<namespace>/<image-name>:<tag>`
-** `<registry-url>`: <aws-account-id>.dkr.ecr.<region>.amazonaws.com
+** `<registry-url>`: `<aws-account-id>.dkr.ecr.<region>.amazonaws.com`
 ** `<namespace>`: Previously chosen repository name.
 ** `<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
@@ -134,9 +134,25 @@ That is:
 }
 ----
 
+* Enable user and password authentication on the registry with the following command:
+
+NOTE: Any https://docs.microsoft.com/en-us/azure/container-registry/container-registry-authentication?tabs=azure-cli[authentication option] that produces as a result a long-term user and password is valid. The least troublesome one follows.
+
+[source,shell]
+----
+   az acr update -n <registry-name> --admin-enabled true
+----
+
+* Retrieve credentials for accessing the registry with the following command:
+
+[source,shell]
+----
+   az acr credential show --name <registry-name>
+----
+
 === Image Format
 * `<registry-url>/<namespace>/<image-name>:<tag>`
-** `<registry-url>`: <registry-name>.azurecr.io
+** `<registry-url>`: `<registry-name>.azurecr.io`
 ** `<namespace>/<image-name>`: Freely chosen project/image-name given by the user.
 ** `<tag>`: Some alphanumeric tag which is given as identifier.
 
