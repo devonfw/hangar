@@ -66,3 +66,9 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
+
+==== NodeJs project
+
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project -u username -p password -b develop -w
+```
