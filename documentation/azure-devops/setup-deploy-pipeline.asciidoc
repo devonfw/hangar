@@ -74,7 +74,7 @@ Once your successfully deploy application, get the host name to access applicati
 
 NOTE: kubectl get ingress -n <namespace> --kubeconfig <kubeconfig path>
 
-== Interacting with the EKS cluster
+=== Interacting with the EKS cluster
 
 Before connecting to the EKS cluster, enable right access to the IAM user, please refer https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html[here].
 
