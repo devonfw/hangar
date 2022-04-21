@@ -172,12 +172,14 @@ function copyYAMLFile {
     # we default to the language specific defaults e.g. target for java, ./ for node
     if test -z $targetDirectory
     then 
-        if [ $language = "node"]
-        then
-            $targetDirectory = "./"
-        else
-            $targetDirectory = "./target/"
-        fi
+        case $language in 
+            "node")
+                $targetDirectory = "./"
+            ;;
+            "java")
+                $targetDirectory = "./target/"
+            ;;
+            *)
     fi
 
     # Generate pipeline YAML from template and put it in the repository.
