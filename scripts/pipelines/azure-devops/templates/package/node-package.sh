@@ -9,7 +9,7 @@
 # -r : Registry used to store the image
 # -i : Name of the image (containing the name of the registry and the path to the image)
 # -b : Name of the branch from where the version is coming
-# -t : Path to the pom.xml
+# -t : Path to the package.json
 #########################################################################################
 set -e
 
@@ -23,14 +23,15 @@ do
         r) registry=${OPTARG};;
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
-        t) pomPath=${OPTARG};;
+        t) packageDotJsonPath=${OPTARG};;
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
     esac
 done
-# We define the tag using the version set in the pom.xml
-tag=$(grep version ${pomPath} | grep -v -e '<?xml'| head -n 1 | sed 's/[[:space:]]//g' | sed -E 's/<.{0,1}version>//g' | awk '{print $1}')
+# We define the tag using the version set in the package.json
+tag=$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' ${packageDotJsonPath})
+
 # we get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
 branch_short=$(echo $branch | awk -F '/' '{ print $NF }')
 
