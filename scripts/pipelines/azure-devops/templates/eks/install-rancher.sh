@@ -12,4 +12,4 @@ helm repo update
 # Install the cert-manager Helm chart
 helm install cert-manager "jetstack/cert-manager"  --namespace cert-manager --create-namespace --version v1.5.1
 
-helm install rancher "rancher-latest/rancher" --namespace cattle-system --set hostname='$1' --set replicas=3
+helm install rancher "rancher-latest/rancher" --namespace cattle-system --set hostname="$1" --set replicas=3
