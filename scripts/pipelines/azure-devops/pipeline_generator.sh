@@ -173,13 +173,10 @@ function copyYAMLFile {
     if test -z $targetDirectory
     then 
         case $language in 
-            "node")
-                $targetDirectory = "./"
-            ;;
-            "java")
-                $targetDirectory = "./target/"
-            ;;
-            *)
+            "node") targetDirectory="./" ;;
+            "java") targetDirectory="./target/" ;;
+            *) targetDirectory="./"
+        esac    
     fi
 
     # Generate pipeline YAML from template and put it in the repository.
