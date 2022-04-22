@@ -54,7 +54,7 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
     filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/obtain-dns.sh'
-  name: 'PublishDNS'
+  name: 'ObtainDNS'
 
 - task: Bash@3
   displayName: 'Publish Ingress Controller domain name'
@@ -62,11 +62,11 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
     targetType: 'inline'
-    script: 'az pipelines variable-group create --organization "$(System.TeamFoundationCollectionUri)" --project "$(System.TeamProject)" --name eks-variables --variables dns_name=$(PublishDNS.dns) cluster_name=$(clustername) --authorize true'
+    script: 'az pipelines variable-group create --organization "$(System.TeamFoundationCollectionUri)" --project "$(System.TeamProject)" --name eks-variables --variables dns_name=$(ObtainDNS.dns) cluster_name=$(clustername) --authorize true'
 
 - task: Bash@3
   condition: eq(variables.installRancher, 'true')
   displayName: 'Install Rancher'
   inputs:
     filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
-    arguments: '$(PublishDNS.dns)'
+    arguments: '$(ObtainDNS.dns)'

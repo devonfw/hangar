@@ -37,15 +37,15 @@ variable "instance_type" {
 }
 variable "desired_workers" {
   type = string
-  description = "Desired Workers"
+  description = "Cluster Node Group Desired Capacity"
 }
 variable "max_workers" {
   type = string
-  description = "Maximum Workers"
+  description = "Cluster Node Group Maximum Capacity"
 }
 variable "min_workers" {
   type = string
-  description = "Minimum workers"
+  description = "Cluster Node Group Minimum Capacity"
 }
 
 variable "existing_vpc_id" {
