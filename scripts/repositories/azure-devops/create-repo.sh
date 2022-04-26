@@ -395,7 +395,7 @@ then
     then
       echo "You have not given a branch name so the repository will be imported as it is"
       import_repo "$giturl_argument" "$organization" "$project" "$name"
-      git clone "${organization}/${project_convertido}/_git/${name// /%20}"
+      git clone "${organization}/${project_convertido}/_git/${name// /%20}" "$name"
     else
       echo -e "${yellow}You have given a branch name so a master branch will be created from this one.${white}"
       if [ "$remove" = "true" ] && [ "$subpath" = "" ]
@@ -405,7 +405,8 @@ then
         MSG_ERROR "Cloning the repository using only the branch $branch" "$?"
       elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
       then
-        echo "The combination of the flags '-b', '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch $branch"
+        echo "test $(pwd)"
+        (echo "The combination of the flags '-b', '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch $branch"
         mkdir "$name"
         MSG_ERROR "Creating folder '$name'" "$?"
         cd "$name"
@@ -419,7 +420,7 @@ then
         MSG_ERROR "Configuring sparseCheckout" "$?"
         echo "$subpath" >> .git/info/sparse-checkout
         MSG_ERROR "Adding subpath to sparse-checkout" "$?"
-        git pull origin $branch
+        git pull origin "$branch"
         MSG_ERROR "Pulling branch: $branch" "$?"
         git config core.sparseCheckout false
         list_folder=$(ls)
@@ -427,7 +428,7 @@ then
         MSG_ERROR "creating tmp folder" "$?"
         mkdir tmp_to_keep
         MSG_ERROR "creating tmp folder" "$?"
-        for i in $list_folder;do mv $i tmp_to_delete;done
+        for i in $list_folder;do mv "$i" tmp_to_delete;done
         # mv "$subpath" tmp_to_delete
         MSG_ERROR "moving base folder to tmp_to_delete" "$?"
         folder_name_subpath=$(basename "$subpath")
@@ -435,8 +436,8 @@ then
         MSG_ERROR "moving folder to the tmp_to_keep directory" "$?"
         mv "tmp_to_keep/$folder_name_subpath" "./$folder_name_subpath"
         MSG_ERROR "moving folder to the root directory" "$?"
-        rm -rf tmp_to_delete tmp_to_keep .git
-        cd ..
+        rm -rf tmp_to_delete tmp_to_keep .git)
+        echo "test $(pwd)"
       else
         echo "The flag '-r' has not been set, cloning the whole repository."
         git clone "$giturl_argument" "$name"
