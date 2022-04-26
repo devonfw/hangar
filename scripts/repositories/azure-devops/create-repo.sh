@@ -13,6 +13,7 @@
 # -r, --remove-other-branches              When combined with -b (and possibly -s), removes any other remaining branch."
 # -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
 # -f, --force                              Skips any user confirmation."
+#     --subpath                            When importing from an URL, will initialize the repo with the subpath set. (ignored if -g, -b or -r not set)
 #
 ######################################################################################################
 # Modification:		Name									date		Description
@@ -39,10 +40,11 @@ function help {
   echo "  -r, --remove-other-branches              When combined with -b (and possibly -s), removes any other remaining branch."
   echo "  -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
   echo "  -f, --force                              Skips any user confirmation."
+  echo "      --subpath                            When importing from an URL, will initialize the repo with the subpath given. (ignored if -g, -b or -r not set)"
   exit
 }
 [ "$*" = "" ] && help
-FLAGS=$(getopt -a --options a:n:d:o:p:g:b:rs:fh --long "action:,name:,directory:,org:,project:,giturl:,branch:,remove-other-branches,setup-branch-strategy:,force,help" -- "$@")
+FLAGS=$(getopt -a --options a:n:d:o:p:g:b:rs:fh --long "action:,name:,directory:,org:,project:,giturl:,branch:,remove-other-branches,setup-branch-strategy:,force,help,subpath:" -- "$@")
 eval set -- "$FLAGS"
 #We read every arguments given
 force="false"
@@ -61,6 +63,7 @@ while true; do
         -s | --setup-branch-strategy)           strategy="$2"; shift 2;;
         -h | --help)                            help="true"; shift 1;;
         -f | --force)                           force="true"; shift 1;;
+        --subpath)                              subpath="$2"; shift 2;;
         --) shift; break;;
     esac
 done
@@ -395,11 +398,45 @@ then
       git clone "${organization}/${project_convertido}/_git/${name// /%20}"
     else
       echo -e "${yellow}You have given a branch name so a master branch will be created from this one.${white}"
-      if [ "$remove" = "true" ]
+      if [ "$remove" = "true" ] && [ "$subpath" = "" ]
       then
-        echo "The flag '-r' is detected, cloning only the reference branch: $5."
+        echo "The flag '-r' is detected, cloning only the reference branch: $branch."
         git clone --branch "$branch" "$giturl_argument" "$name"
         MSG_ERROR "Cloning the repository using only the branch $branch" "$?"
+      elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
+      then
+        echo "The combination of the flags '-b', '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch $branch"
+        mkdir "$name"
+        MSG_ERROR "Creating folder '$name'" "$?"
+        cd "$name"
+        MSG_ERROR "cding into '$name'" "$?"
+        echo "We do a git init an empty directory so we can configure the git sparse-checkout to clone only the wanted subpath."
+        git init
+        MSG_ERROR "git init" "$?"
+        git remote add -f origin "$giturl_argument"
+        MSG_ERROR "setting the fetch url with: $giturl_argument" "$?"
+        git config core.sparseCheckout true
+        MSG_ERROR "Configuring sparseCheckout" "$?"
+        echo "$subpath" >> .git/info/sparse-checkout
+        MSG_ERROR "Adding subpath to sparse-checkout" "$?"
+        git pull origin $branch
+        MSG_ERROR "Pulling branch: $branch" "$?"
+        git config core.sparseCheckout false
+        list_folder=$(ls)
+        mkdir tmp_to_delete
+        MSG_ERROR "creating tmp folder" "$?"
+        mkdir tmp_to_keep
+        MSG_ERROR "creating tmp folder" "$?"
+        for i in $list_folder;do mv $i tmp_to_delete;done
+        # mv "$subpath" tmp_to_delete
+        MSG_ERROR "moving base folder to tmp_to_delete" "$?"
+        folder_name_subpath=$(basename "$subpath")
+        mv "tmp_to_delete/$subpath" "tmp_to_keep/$folder_name_subpath"
+        MSG_ERROR "moving folder to the tmp_to_keep directory" "$?"
+        mv "tmp_to_keep/$folder_name_subpath" "./$folder_name_subpath"
+        MSG_ERROR "moving folder to the root directory" "$?"
+        rm -rf tmp_to_delete tmp_to_keep .git
+        cd ..
       else
         echo "The flag '-r' has not been set, cloning the whole repository."
         git clone "$giturl_argument" "$name"

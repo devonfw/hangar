@@ -29,6 +29,7 @@ create-repo.sh \
     [-r] \
     [-s] <branch strategy> \
     [-f] \
+    [--subpath] <path_to_clone> \
 ```
 
 === Flags
@@ -44,6 +45,7 @@ create-repo.sh \
 -r, --remove-other-branches            When combined with -b (and possibly -s), removes any other remaining branch.
 -s, --setup-branch-strategy            Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
 -f, --force                            Skips any user confirmation.
+    --subpath                          When importing from an URL, will initialize the repo with the subpath set. (ignored if -g, -b or -r not set)
 ```
 
 === Typical use cases
