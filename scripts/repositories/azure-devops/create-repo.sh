@@ -179,7 +179,7 @@ function replace_branch_with_reference {
   # $1 = branch we want to replace
   # $2 = reference branch
   echo "--"
-  echo -e "${blue}Replacing the branch $1 with the branch $2. ${white}"
+  echo -e " ${blue}Replacing the branch $1 with the branch $2. ${white}"
   echo ""
   if [ "$1" != "$2" ]
   then
@@ -194,19 +194,19 @@ function replace_branch_with_reference {
   echo "--"
 }
 
-function delete_branches_not_in_master {
+function delete_branches_not_in {
   # delete every branches not given in argument
-  # no limit of arguments, you just need to give a reference branch as first argument,
-  # because we cannot delete the branch we are currently in, so wee need to checkout to a branch we want to keep
+  # Arguments:
+  #             $1 = reference branch
   echo "--"
-  echo -e "${blue}Deleting every local branch except master ${white}"
-  git checkout master
+  echo -e " ${blue}Deleting every local branch except: $1 ${white}"
+  git checkout $1
   branch_list=$(git branch |  sed 's/\*//g')
   for i in $branch_list
   do
-    if [[ "$i" == "master" ]]
+    if [[ "$i" == "$1" ]]
     then
-      echo "Skipping master."
+      echo "Skipping $1."
     else
       echo "Deleting Branch $i"
       git branch -D "$i" > /dev/null
@@ -231,40 +231,19 @@ function push_existing_directory {
   then
     echo "$(pwd) is already a git repository, skipping git init and first commit"
     echo ""
-    if [ "$6" != "" ]
-    then
-      echo "You gave a branch with -b flag, that means we are going to take this branch as reference and create master from this one, if it already exists it will be deleted to be created again."
-      if [ $force = "false" ]
-      then
-        echo "Type 'Y' to validate or 'N' to exit the script. (You can use -f flag to skip user confirmation on next executions)"
-        read -r user_input_branch
-      else
-        user_input_branch='Y'
-      fi
-      while [ "$user_input_branch" != 'Y' ] && [ "$user_input_branch" != 'N' ]
-      do
-        echo 'Your input is not valid, Press Y to confirm or N to cancel:'
-        read -r user_input_branch
-      done
-
-      if [ "$user_input_branch" = 'Y' ]
-      then
-        replace_branch_with_reference master "$6"
-      else
-        exit
-      fi
-    fi
   else
     echo "$(pwd) is not a git repository, executing git init and commiting all files ..."
     check_emptyness=$(ls)
     [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file" && cp "$absoluteFolderScriptPath/README.md" .
     git init .
 # When using git init, the branch created will be the one you defined with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
-
-    git checkout -b master
+    [ "$init_with_default_branch" != "true" ] && echo "Creating master branch" && git checkout -b master
+    # We create those two cases because in case we used -r and --subpath we want the default branch to be created and not master
+    [ "$init_with_default_branch" = "true" ] && echo "Creating $default_branch branch again" && git checkout -b $default_branch
     git add -A
     git commit -m "creation of the repository"
   fi
+
 # We check if the repo already have an url set
   if git config --get remote.origin.url > /dev/null
   then
@@ -282,6 +261,7 @@ function push_existing_directory {
       echo 'Your input is not valid, Press Y to confirm and N to cancel:'
       read -r user_input_remote_url
     done
+
     if [ "$user_input_remote_url" = 'Y' ]
     then
       URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
@@ -297,11 +277,47 @@ function push_existing_directory {
     git remote add origin "$URL_space_converted"
     echo ""
   fi
-  [ "$remove" = "true" ] && [ "$isGitRepo" -eq 0 ] && [ "$6" != "" ] && delete_branches_not_in_master
+
+  # Creating master from the reference
+  if [ $isGitRepo -eq 0 ]
+  then
+    if [ "$6" != "" ]
+    then
+      echo "You gave a branch with -b flag, that means we are going to take this branch as reference and create master from this one, if it already exists it will be deleted to be created again."
+      if [ $force = "false" ]
+      then
+        echo "Type 'Y' to validate or 'N' to exit the script. (You can use -f flag to skip user confirmation on next executions)"
+        read -r user_input_branch
+      else
+        user_input_branch='Y'
+      fi
+      while [ "$user_input_branch" != 'Y' ] && [ "$user_input_branch" != 'N' ]
+      do
+        echo 'Your input is not valid, Press Y to confirm or N to cancel:'
+        read -r user_input_branch
+      done
+      if [ "$user_input_branch" = 'Y' ]
+      then
+        replace_branch_with_reference master "$6"
+      else
+        exit
+      fi
+    fi
+
+ # Remove branches (other that master if -b flag and other than reference if no)
+    if [ "$remove" = "true" ]
+    then
+      [ "$branch" = "" ] && default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p') && delete_branches_not_in "$default_branch"
+      [ "$branch" != "" ] && delete_branches_not_in "master"
+    fi
+  fi
+
+  # Pushing after setting push URL (and eventually preparing repo with -b -r flags)
   echo "Pushing every modification on the remote URL we just set."
   echo ""
   git push -u origin --all
-  echo ""
+
+  # Setting up strategy
   if [ "$strategy" != "" ]
   then
     if [ "$isGitRepo" -eq 0 ] && [ "$6" = "" ]
@@ -391,64 +407,54 @@ then
   then
     push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
   else
-    if [ "$branch" = "" ]
+    if [ "$branch" = "" ] && [ "$remove" = "false" ]
     then
-      echo "You have not given a branch name so the repository will be imported as it is"
+      echo "You have not given a branch name or used the '-r' flag so the repository will be imported as it is"
       import_repo "$giturl_argument" "$organization" "$project" "$name"
       git clone "${organization}/${project_convertido}/_git/${name// /%20}" "$name"
+    elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
+    then
+      (echo "The combination of the flags '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch given or the default one."
+      mkdir "$name.tmp"
+      MSG_ERROR "Creating folder '$name.tmp'" "$?"
+      mkdir "$name"
+      MSG_ERROR "Creating folder '$name'" "$?"
+      cd "$name.tmp"
+      MSG_ERROR "cding into '$name.tmp'" "$?"
+      echo "We do a git init an empty directory so we can configure the git sparse-checkout to clone only the wanted subpath."
+      git init
+      MSG_ERROR "git init" "$?"
+      git remote add -f origin "$giturl_argument"
+      MSG_ERROR "setting the fetch url with: $giturl_argument" "$?"
+      git config core.sparseCheckout true
+      MSG_ERROR "Configuring sparseCheckout" "$?"
+      echo "$subpath" >> .git/info/sparse-checkout
+      MSG_ERROR "Adding subpath to sparse-checkout" "$?"
+      [ "$branch" != "" ] || { init_with_default_branch="true" && default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p' && git pull origin "$default_branch") ; MSG_ERROR "Pulling default branch" "$?"; }
+      [ "$branch" = "" ] || { git pull origin "$branch"; MSG_ERROR "Pulling branch: $branch" "$?" ;}
+      mv "$subpath" "../$name"
+      MSG_ERROR "moving folder to $name" "$?"
+      cd "../$name"
+      push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch")
+      [ "$?" != "0" ] && exit 1
+      rm -rf "$name.tmp"
     else
-      echo -e "${yellow}You have given a branch name so a master branch will be created from this one.${white}"
-      if [ "$remove" = "true" ] && [ "$subpath" = "" ]
+      if [ "$branch" = "" ] && [ "$remove" = "true" ] && [ "$subpath" = "" ]
       then
-        echo "The flag '-r' is detected, cloning only the reference branch: $branch."
-        git clone --branch "$branch" "$giturl_argument" "$name"
-        MSG_ERROR "Cloning the repository using only the branch $branch" "$?"
-      elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
-      then
-        echo "test $(pwd)"
-        (echo "The combination of the flags '-b', '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch $branch"
-        mkdir "$name"
-        MSG_ERROR "Creating folder '$name'" "$?"
-        cd "$name"
-        MSG_ERROR "cding into '$name'" "$?"
-        echo "We do a git init an empty directory so we can configure the git sparse-checkout to clone only the wanted subpath."
-        git init
-        MSG_ERROR "git init" "$?"
-        git remote add -f origin "$giturl_argument"
-        MSG_ERROR "setting the fetch url with: $giturl_argument" "$?"
-        git config core.sparseCheckout true
-        MSG_ERROR "Configuring sparseCheckout" "$?"
-        echo "$subpath" >> .git/info/sparse-checkout
-        MSG_ERROR "Adding subpath to sparse-checkout" "$?"
-        git pull origin "$branch"
-        MSG_ERROR "Pulling branch: $branch" "$?"
-        git config core.sparseCheckout false
-        list_folder=$(ls)
-        mkdir tmp_to_delete
-        MSG_ERROR "creating tmp folder" "$?"
-        mkdir tmp_to_keep
-        MSG_ERROR "creating tmp folder" "$?"
-        for i in $list_folder;do mv "$i" tmp_to_delete;done
-        # mv "$subpath" tmp_to_delete
-        MSG_ERROR "moving base folder to tmp_to_delete" "$?"
-        folder_name_subpath=$(basename "$subpath")
-        mv "tmp_to_delete/$subpath" "tmp_to_keep/$folder_name_subpath"
-        MSG_ERROR "moving folder to the tmp_to_keep directory" "$?"
-        mv "tmp_to_keep/$folder_name_subpath" "./$folder_name_subpath"
-        MSG_ERROR "moving folder to the root directory" "$?"
-        rm -rf tmp_to_delete tmp_to_keep .git)
-        echo "test $(pwd)"
-      else
-        echo "The flag '-r' has not been set, cloning the whole repository."
+        echo "'-r' flag detected without '-b' and '--subpath' flags, cloning repo with default branch."
         git clone "$giturl_argument" "$name"
-        MSG_ERROR "Cloning the repository" "$?"
+        MSG_ERROR "Cloning the repository with default branch." "$?"
+      else # -b || -b -r || -b --subpath
+        echo "'-b' flag detected without the combination of '-r' and '--subpath', cloning repo with reference branch: $branch."
+        git clone --branch "$branch" "$giturl_argument" "$name"; MSG_ERROR "Cloning the repository using only the branch $branch" "$?"
+        MSG_ERROR "Cloning the repository with reference branch: $branch." "$?"
       fi
       cd "$name"
       MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'" "$?"
       push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
     fi
   fi
-elif [ "$action" = "create" ]
+  elif [ "$action" = "create" ]
 then
   cd "$directory/.."
   MSG_ERROR "Cding into the directory given." "$?"
