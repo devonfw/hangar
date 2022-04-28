@@ -200,7 +200,7 @@ function delete_branches_not_in {
   #             $1 = reference branch
   echo "--"
   echo -e " ${blue}Deleting every local branch except: $1 ${white}"
-  git checkout $1
+  git checkout "$1"
   branch_list=$(git branch |  sed 's/\*//g')
   for i in $branch_list
   do
@@ -239,7 +239,7 @@ function push_existing_directory {
 # When using git init, the branch created will be the one you defined with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
     [ "$init_with_default_branch" != "true" ] && echo "Creating master branch" && git checkout -b master
     # We create those two cases because in case we used -r and --subpath we want the default branch to be created and not master
-    [ "$init_with_default_branch" = "true" ] && echo "Creating $default_branch branch again" && git checkout -b $default_branch
+    [ "$init_with_default_branch" = "true" ] && echo "Creating $default_branch branch again" && git checkout -b "$default_branch"
     git add -A
     git commit -m "creation of the repository"
   fi
