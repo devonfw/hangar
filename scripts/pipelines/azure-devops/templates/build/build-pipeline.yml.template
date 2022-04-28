@@ -4,7 +4,7 @@ trigger:
     - '*'
 
 variables:
-  targetPath: /.pipelines/target
+  targetPath: target
 
 pool:
   vmImage: ubuntu-latest

@@ -56,7 +56,7 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 ==== Node project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/zchriste/IdeaProjects/hangar-tezt --build-pipeline-name node-project-build -b master -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
