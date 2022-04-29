@@ -23,7 +23,7 @@
 function help {
   echo "Creates or imports a repository on Azure DevOps."
   echo ""
-  echo "It allows you to, based action flag, either:"
+  echo "It allows you to, based on action flag, either:"
   echo ""
   echo "  - Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch."
   echo ""
