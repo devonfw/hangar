@@ -47,6 +47,8 @@ steps:
 
 - task: AzureCLI@2
   displayName: 'Obtain DNS name'
+  env:
+    KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
   inputs:
     azureSubscription: '$(serviceConnection)'
     scriptType: 'bash'
