@@ -148,6 +148,12 @@ function obtainHangarPath {
     hangarPath=$(pwd)
 }
 
+function ensureAbsolutePath {
+    # Converts a relative path to an absolute one.
+    # If the path is already absolute, it will remain unchanged.
+    localDirectory=$(python -c "from pathlib import Path; print(Path('${localDirectory}').resolve().as_posix());")
+}
+
 function createNewBranch {
     echo -e "${green}Creating the new branch: ${sourceBranch}..."
     echo -ne ${white}
@@ -279,6 +285,8 @@ importConfigFile
 checkInstallations
 
 obtainHangarPath
+
+ensureAbsolutePath
 
 createNewBranch
 
