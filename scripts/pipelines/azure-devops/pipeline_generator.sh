@@ -173,15 +173,15 @@ function copyYAMLFile {
     if test -z $targetDirectory
     then 
         case $language in 
-            "node") targetDirectory="./" ;;
-            "java") targetDirectory="./target/" ;;
+            node) targetDirectory="./" ;;
+            java) targetDirectory="./target/" ;;
             *) targetDirectory="./"
         esac    
     fi
 
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${targetDirectory}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
+    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
 
     # Check if an extra artifact to store is supplied.
     if test ! -z "$artifactPath"
