@@ -1,2 +1,2 @@
 #!/bin/bash
-/bin/sh ../../../set-config.sh "$*"
+../../../set-config.sh "$*"

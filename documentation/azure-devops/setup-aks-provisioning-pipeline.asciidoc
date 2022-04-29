@@ -1,6 +1,6 @@
 = Setting up the Azure AKS provisioning pipeline
 
-In this section we will create a pipeline which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the ingress controller independently.
+In this section we will create a pipeline which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently.
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
 
