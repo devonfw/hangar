@@ -40,11 +40,10 @@ steps:
 
 - task: Bash@3
   displayName: 'Install nginx-ingress controller'
+  env:
+    KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
   inputs:
-    targetType: 'inline'
-    script: |
-      export KUBECONFIG="$(terraformWorkingDirectory)/kubeconfig"
-      sh '$(Build.Repository.LocalPath)/.pipelines/scripts/install-nginx-ingress.sh'
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/install-nginx-ingress.sh'
 
 - task: AzureCLI@2
   displayName: 'Obtain DNS name'
