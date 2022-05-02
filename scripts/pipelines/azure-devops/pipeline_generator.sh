@@ -143,9 +143,11 @@ function checkInstallations {
     fi
 }
 
-function obtainHangarPath {
-    cd ../../..
-    hangarPath=$(pwd)
+function obtainHangarPath { 
+    # This line go to the localDirectory of the repo and gets the repo name 
+    repoName=$( cd ${localDirectory}  && basename -s .git `git config --get remote.origin.url`)
+    # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
+    hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 }
 
 function createNewBranch {
@@ -208,7 +210,7 @@ function createPipeline {
     echo -ne ${white}
 
     # Create Azure Pipeline
-    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true --repository $repoName --repository-type tfsgit
 }
 
 # Function that adds the variables to be used in the pipeline.
