@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help:,rancher" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -20,6 +20,7 @@ while true; do
         --resource-group)         resourceGroupName=$2; shift 2;;
         --storage-account)        storageAccountName=$2; shift 2;;
         --storage-container)      storageContainerName=$2; shift 2;;
+        --rancher)                installRancher="true"; shift 1;;
         --cluster-name)           clusterName=$2; shift 2;;
         --s3-bucket)              s3Bucket=$2; shift 2;;
         --s3-key-path)            s3KeyPath=$2; shift 2;;
@@ -90,6 +91,7 @@ function help {
     echo "      --resource-group        [Required] Name of the resource group for the cluster."
     echo "      --storage-account       [Required] Name of the storage account for the cluster."
     echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
+    echo "      --rancher                          Install Rancher to manage the cluster."
     echo ""
     echo "AWS EKS provisioning pipeline flags:"
     echo "      --cluster-name          [Required] Name for the cluster."

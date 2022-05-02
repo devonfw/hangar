@@ -67,3 +67,12 @@ steps:
   inputs:
     targetType: 'inline'
     script: 'az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name aks-variables --variables dns_name=$(dns) --authorize true'
+
+- task: Bash@3
+  condition: eq(variables.installRancher, 'true')
+  displayName: 'Install Rancher'
+  env:
+    KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
+  inputs:
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
+    arguments: $(dns)

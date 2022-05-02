@@ -49,6 +49,7 @@ pipeline_generator.sh \
   --resource-group <resource group name> \
   --storage-account <storage account name> \
   --storage-container <storage container name> \
+  [--rancher] \
   [-b <branch>] \
   [-w]
 ```
@@ -63,6 +64,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
     --resource-group     [Required] Name of the resource group for the cluster.
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
+    --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -88,4 +90,20 @@ kubectl <command>
 
 # via command-line flag
 kubectl <command> --kubeconfig=<path to downloaded kubeconfig>
+```
+
+=== Appendix: Installing Rancher
+
+In order to install Rancher to manage your Kubernetes cluster execute the `pipeline_generator.sh` script with the `--rancher` flag:
+
+```
+./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
+```
+
+You will be able to access the Rancher dashborad through the URL: https://<domain name>.
+
+When accessing the URL you will be asked to introduce the inital password which you can obtain bey executing the following command on your console:
+
+```
+kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
 ```
