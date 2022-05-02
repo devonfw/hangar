@@ -27,10 +27,12 @@ do
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
+        *) echo "usage: $0 [-v] [-r]" >&2
+            exit 1 ;;
     esac
 done
 # We define the tag using the version set in the package.json
-tag=$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' ${packageDotJsonPath})
+tag=$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' "${packageDotJsonPath}")
 
 # we get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
 branch_short=$(echo "$branch" | awk -F '/' '{ print $NF }')
