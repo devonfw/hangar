@@ -146,7 +146,7 @@ function checkInstallations {
 function obtainHangarPath { 
 
     # This line go to the localDirectory of the repo and gets the repo name 
-    repoName=$( cd ${localDirectory}  && basename -s .git `git config --get remote.origin.url`)
+    repoName="$( cd ${localDirectory}  && basename -s .git $(git config --get remote.origin.url))"
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 
