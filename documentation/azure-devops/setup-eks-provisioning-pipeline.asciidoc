@@ -4,7 +4,7 @@ toc::[]
 :idseparator: -
 
 = Setting up the AWS EKS provisioning pipeline
-In this section we will create a pipeline which will provision an AWS EKS cluster. This pipeline will be configured to be manually triggered by the user. As part of EKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `eks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the ingress controller independently. 
+In this section we will create a pipeline which will provision an AWS EKS cluster. This pipeline will be configured to be manually triggered by the user. As part of EKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `eks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently. 
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/eks-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
 
@@ -40,7 +40,7 @@ Example: reusing existing VPC and subnets:
 ```
 ./set-terraform-variables.sh --region <region name> --instance_type <workers instance type> --existing_vpc_id <vpc id> --existing_vpc_private_subnets <array of subnet ids>
 ```
-* The script installs Rancher on the cluster after provisioning. If you wish to change this, please update `eks-pipeline.cfg` accordingly.
+* Rancher is installed by default on the cluster after provisioning. If you wish to change this, please update `eks-pipeline.cfg` accordingly.
 
 === Usage
 ```
@@ -81,7 +81,7 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 First, generate a `kubeconfig` file for accessing the AWS EKS cluster:
 
 ```
-aws eks update-kubeconfig --name <eks-cluster-name> --region <aws region>
+aws eks update-kubeconfig --name <cluster name> --region <aws region>
 ```
 Now you can use `kubectl` tool to communicate with the cluster.
 
@@ -91,12 +91,11 @@ To get the DNS name of the NGINX Ingress controller on the EKS cluster, run the 
 ```
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
 ```
-```
-Example DNS Name - https://aa9e8f0434d934c939be841f1de52a09-1657056367.eu-west-1.elb.amazonaws.com/dashboard
-```
+
+Rancher will be available on `https://<ingress controller domain>/dashboard`.
 == Appendix: Rancher resources
 
-•	Refer https://rancher.com/docs/rancher/v2.5/en/cluster-admin/cluster-access/kubectl/ to download Kubeconfig.
-•	To use RBAC in Rancher refer https://rancher.com/docs/rancher/v2.5/en/admin-settings/rbac/default-custom-roles/
-•	Monitoring - https://rancher.com/docs/rancher/v2.5/en/monitoring-alerting/
-•	Logging - https://rancher.com/docs/rancher/v2.0-v2.4/en/cluster-admin/tools/cluster-logging/
+* https://rancher.com/docs/rancher/v2.6/en/cluster-admin/cluster-access/kubectl/[Downloading `kubeconfig`].
+* https://rancher.com/docs/rancher/v2.6/en/admin-settings/rbac/[RBAC]
+* https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/[Monitoring]
+* https://rancher.com/docs/rancher/v2.6/en/logging/[Logging]
