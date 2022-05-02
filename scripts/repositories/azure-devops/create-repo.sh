@@ -304,7 +304,7 @@ function push_existing_directory {
       fi
     fi
 
- # Remove branches (other that master if -b flag and other than reference if no)
+ # Remove branches (other that master if -b flag, and other than the default one of the repo if no)
     if [ "$remove" = "true" ]
     then
       [ "$branch" = "" ] && default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p') && delete_branches_not_in "$default_branch"
@@ -414,7 +414,7 @@ then
       git clone "${organization}/${project_convertido}/_git/${name// /%20}" "$name"
     elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
     then
-      if !(echo "The combination of the flags '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch given or the default one."
+      if ! (echo "The combination of the flags '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch given or the default one."
       mkdir "$name.tmp"
       MSG_ERROR "Creating folder '$name.tmp'" "$?"
       mkdir "$name"
