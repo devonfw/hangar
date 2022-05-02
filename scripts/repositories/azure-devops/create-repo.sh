@@ -10,10 +10,10 @@
 # -n, --name                               Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
 # -g, --source-git-url                     Source URL of the Git repository to import."
 # -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
-# -r, --remove-other-branches              When combined with -b (and possibly -s), removes any other remaining branch."
-# -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
-# -f, --force                              Skips any user confirmation."
-#     --subpath                            When importing from an URL, will initialize the repo with the subpath set. (ignored if -g, -b or -r not set)
+# -r, --remove-other-branches              Removes branches other than the (possibly new) default one.
+# -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
+# -f, --force                              Skips any user confirmation.
+#     --subpath                            When combined with -g and -r, imports only the specified subpath of the source Git repository.
 #
 ######################################################################################################
 # Modification:		Name									date		Description
@@ -37,10 +37,10 @@ function help {
   echo "  -n, --name                               Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
   echo "  -g, --source-git-url                     Source URL of the Git repository to import."
   echo "  -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
-  echo "  -r, --remove-other-branches              When combined with -b (and possibly -s), removes any other remaining branch."
+  echo "  -r, --remove-other-branches              Removes branches other than the (possibly new) default one."
   echo "  -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
   echo "  -f, --force                              Skips any user confirmation."
-  echo "      --subpath                            When importing from an URL, will initialize the repo with the subpath given. (ignored if -g, -b or -r not set)"
+  echo "      --subpath                            When combined with -g and -r, imports only the specified subpath of the source Git repository."
   exit
 }
 [ "$*" = "" ] && help

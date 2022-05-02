@@ -27,9 +27,10 @@ create-repo.sh \
     [-g <giturl>] \
     [-b <branch>] \
     [-r] \
-    [-s] <branch strategy> \
+    [-s <branch strategy>] \
+
     [-f] \
-    [--subpath] <path_to_clone> \
+    [--subpath <subpath to import>] \
 ```
 
 === Flags
@@ -43,11 +44,9 @@ create-repo.sh \
 -g, --source-git-url                   Source URL of the Git repository to import.
 -b, --source-branch                    Source branch to be used as a basis to initialize the repository on import, as master branch.
 -r, --remove-other-branches            Removes branches other than the (possibly new) default one.
-
 -s, --setup-branch-strategy            Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
 -f, --force                            Skips any user confirmation.
     --subpath                          When combined with -g and -r, imports only the specified subpath of the source Git repository.
-
 ```
 
 === Typical use cases
