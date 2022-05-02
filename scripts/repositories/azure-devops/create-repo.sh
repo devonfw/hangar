@@ -414,7 +414,7 @@ then
       git clone "${organization}/${project_convertido}/_git/${name// /%20}" "$name"
     elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
     then
-      (echo "The combination of the flags '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch given or the default one."
+      if !(echo "The combination of the flags '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch given or the default one."
       mkdir "$name.tmp"
       MSG_ERROR "Creating folder '$name.tmp'" "$?"
       mkdir "$name"
@@ -436,7 +436,9 @@ then
       MSG_ERROR "moving folder to $name" "$?"
       cd "../$name"
       push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch")
-      [ "$?" != "0" ] && exit 1
+      then
+        exit 1
+      fi
       rm -rf "$name.tmp"
     else
       if [ "$branch" = "" ] && [ "$remove" = "true" ] && [ "$subpath" = "" ]
