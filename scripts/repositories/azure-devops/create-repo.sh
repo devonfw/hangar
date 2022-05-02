@@ -304,7 +304,7 @@ function push_existing_directory {
       fi
     fi
 
- # Remove branches (other that master if -b flag, and other than the default one of the repo if no)
+ # Remove branches (other that master if -b flag, and other than the default one of the repo if no -b flag)
     if [ "$remove" = "true" ]
     then
       [ "$branch" = "" ] && default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p') && delete_branches_not_in "$default_branch"
@@ -443,7 +443,7 @@ then
     else
       if [ "$branch" = "" ] && [ "$remove" = "true" ] && [ "$subpath" = "" ]
       then
-        echo "'-r' flag detected without '-b' and '--subpath' flags, cloning repo with default branch."
+        echo "'-r' flag detected without '-b' nor '--subpath' flags, cloning repo with default branch."
         git clone "$giturl_argument" "$name"
         MSG_ERROR "Cloning the repository with default branch." "$?"
       else # -b || -b -r || -b --subpath
