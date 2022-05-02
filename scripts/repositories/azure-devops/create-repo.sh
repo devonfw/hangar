@@ -214,7 +214,8 @@ function delete_branches_not_in {
   done
 }
 
-function push_existing_directory {
+function prepare_push_existing_repo {
+  # Depending on the flags, will initialize your repo (if not already one), change push URL, remove branches and then push
   # $1 = organization
   # $2 = project
   # $3 = name (of the repo)
@@ -405,7 +406,7 @@ if [ "$action" = "import" ]
 then
   if [ "$giturl_argument" = "" ]
   then
-    push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
+    prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
   else
     if [ "$branch" = "" ] && [ "$remove" = "false" ]
     then
@@ -435,7 +436,7 @@ then
       mv "$subpath" "../$name"
       MSG_ERROR "moving folder to $name" "$?"
       cd "../$name"
-      push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch")
+      prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch")
       then
         exit 1
       fi
@@ -453,7 +454,7 @@ then
       fi
       cd "$name"
       MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'" "$?"
-      push_existing_directory "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
+      prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$branch"
     fi
   fi
   elif [ "$action" = "create" ]
