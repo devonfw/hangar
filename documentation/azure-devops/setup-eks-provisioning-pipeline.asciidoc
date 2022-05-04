@@ -94,6 +94,9 @@ kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller
 
 Rancher will be available on `https://<ingress controller domain>/dashboard`.
 
+== Appendix: Destroying the cluster
+To destroy the resources provisioned, you may use the destroy pipeline located at 
+
 == Appendix: Rancher resources
 
 * https://rancher.com/docs/rancher/v2.6/en/cluster-admin/cluster-access/kubectl/[Downloading `kubeconfig`].
