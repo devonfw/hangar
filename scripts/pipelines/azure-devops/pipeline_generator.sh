@@ -168,17 +168,6 @@ function copyYAMLFile {
     # Create .pipelines and scripts if they do not exist.
     mkdir -p "${localDirectory}/.pipelines/scripts"
     
-    # if the user did not specify a custom target-directory 
-    # we default to the language specific defaults e.g. target for java, ./ for node
-    if test -z $targetDirectory
-    then 
-        case $language in 
-            node) targetDirectory="./" ;;
-            java) targetDirectory="./target/" ;;
-            *) targetDirectory="./"
-        esac    
-    fi
-
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
