@@ -144,8 +144,10 @@ function checkInstallations {
 }
 
 function obtainHangarPath {
-    cd ../../..
-    hangarPath=$(pwd)
+    pipelineGeneratorFullPath="$(pwd)/$0" 
+    pipelineGeneratorRepoPath='/scripts/pipelines/azure-devops/pipeline_generator.sh'
+    # replace the repo path in the full path with an empty string
+    hangarPath=${pipelineGeneratorFullPath/$pipelineGeneratorRepoPath}
 }
 
 function createNewBranch {
