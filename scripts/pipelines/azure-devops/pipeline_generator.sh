@@ -145,6 +145,12 @@ function checkInstallations {
 
 function obtainHangarPath {
     pipelineGeneratorFullPath="$(pwd)/$0" 
+
+    if  [[ $0 == "./pipeline_generator.sh" ]] ;
+    then
+        pipelineGeneratorFullPath="$(pwd)/pipeline_generator.sh" 
+    fi
+     
     pipelineGeneratorRepoPath='/scripts/pipelines/azure-devops/pipeline_generator.sh'
     # replace the repo path in the full path with an empty string
     hangarPath=${pipelineGeneratorFullPath/$pipelineGeneratorRepoPath}
