@@ -68,7 +68,7 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 
 ===== AWS
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality -i username/quarkus-project --aws-access-key access-key --aws-secret-access-key secret-access-key --aws-region region -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality -i username/quarkus-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region us-east-1 -b develop -w
 ```
 
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
@@ -82,6 +82,6 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 
 ===== AWS
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project --aws-access-key access-key --aws-secret-access-key secret-access-key --aws-region region -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region us-east-1 -b develop -w
 ```
 CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
