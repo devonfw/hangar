@@ -31,9 +31,9 @@ while true; do
         --aks-provision-pipeline-name)  aksProvisionPipelineName="$2"; shift 2;;
         --k8s-namespace)                k8sNamespace="$2"; shift 2;;
     	--deploy-files)                 deployFiles=$2; shift 2;; 
-	--deploy-cluster)               deployCluster=$2; shift 2;; 
+	    --deploy-cluster)               deployCluster=$2; shift 2;; 
         --secrets-name)                 secretsName=$2; shift 2;; 
-	--package-pipeline-name)        export packagePipelineName=$2; shift 2;;
+	    --package-pipeline-name)        export packagePipelineName=$2; shift 2;;
         -h | --help)                    help="true"; shift 1;;
         -w)                             webBrowser="true"; shift 1;;
         --) shift; break;;
