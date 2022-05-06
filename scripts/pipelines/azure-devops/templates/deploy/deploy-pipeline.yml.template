@@ -17,13 +17,13 @@ variables:
   - group: registry_info 
   - group: AWS_Credentials
   - name: deploymentYamlPath
-    value: $(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml 
+    value: "$(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml" 
   - name: ingressYamlPath
-    value: $(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml  
+    value: "$(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml"  
   - name: deployFilesPath
-    value: $(Build.Repository.LocalPath)/$(deployFiles)
+    value: "$(Build.Repository.LocalPath)/$(deployFiles)"
   - name: kubeconfigPath
-    value: $(Pipeline.Workspace)/kubeconfig/kubeconfig 
+    value: "$(Pipeline.Workspace)/kubeconfig/kubeconfig" 
     
 pool:
   vmImage: ubuntu-latest
