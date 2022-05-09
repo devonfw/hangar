@@ -27,6 +27,7 @@ do
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
+        *) echo "flag ${flag} not specified"
     esac
 done
 
@@ -34,18 +35,18 @@ done
 branch_short=$(echo "$branch" | awk -F '/' '{ print $NF }')
 
 # We change the name of the tag depending if it is a release or another branch
-echo $branch | grep release && tag_completed="${tag}"
-echo $branch | grep release || tag_completed="${tag}_${branch_short}"
+echo "$branch" | grep release && tag_completed="${tag}"
+echo "$branch" | grep release || tag_completed="${tag}_${branch_short}"
 
 # We build the image
 echo "docker build -f $dockerFile -t $imageName:$tag_completed $context"
-docker build -f $dockerFile -t $imageName:$tag_completed $context
+docker build -f "$dockerFile" -t "$imageName":"$tag_completed" "$context"
 
 # We connect to the registry
 if test -z "$aws_access_key"
 then
     echo "docker login -u=**** -p=**** $registry"
-    docker login -u="$username" -p="$password" $registry
+    docker login -u="$username" -p="$password" "$registry"
 else
     aws configure set aws_access_key_id "$aws_access_key"
     aws configure set aws_secret_access_key "$aws_secret_access_key"
@@ -55,13 +56,13 @@ fi
 
 # We push the image previously built
 echo "docker push $imageName:$tag_completed"
-docker push $imageName:$tag_completed
+docker push "$imageName":"$tag_completed"
 
 # If this is a release we push it a second time with "latest" tag
-if echo $branch | grep release
+if echo "$branch" | grep release
 then
     echo "Also pushing the image as 'latest' if this is a release"
     docker tag "$imageName:$tag_completed" "$imageName:latest"
     echo "docker push $imageName:latest"
-    docker push $imageName:latest
+    docker push "$imageName":latest
 fi
