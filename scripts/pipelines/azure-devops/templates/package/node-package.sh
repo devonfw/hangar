@@ -18,5 +18,5 @@ done
 tag=$(grep version "${packagePath}" | sed 's/.*"version": "\(.*\)".*/\1/')
 
 SCRIPT_PATH="./package-common.sh"
-# shellcheck source="scripts/pipelines/azure-devops/templates/package/package-common.sh"
+# shellcheck source="package-common.sh"
 source "$SCRIPT_PATH" "$@" -q "$tag"
