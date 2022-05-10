@@ -266,8 +266,8 @@ function prepare_push_existing_repo {
     if [ "$user_input_remote_url" = 'Y' ]
     then
       URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
-      echo "      git remote set-url --add --push origin \"$URL_space_converted\""
-      git remote set-url --add --push origin "$URL_space_converted"
+      echo "      git remote set-url origin \"$URL_space_converted\""
+      git remote set-url origin "$URL_space_converted"
     else
       exit
     fi
