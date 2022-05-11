@@ -167,7 +167,6 @@ function copyYAMLFile {
 
     # Create .pipelines and scripts if they do not exist.
     mkdir -p "${localDirectory}/.pipelines/scripts"
-    
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
