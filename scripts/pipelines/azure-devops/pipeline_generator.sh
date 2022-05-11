@@ -58,7 +58,7 @@ function help {
     echo ""
     echo "Build pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
-    echo "  -t, --target-directory                 Target directory of the application" 
+    echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
     echo ""
     echo "Test pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
