@@ -15,4 +15,3 @@ steps:
 - publish: $(Build.Repository.LocalPath)/$(targetPath)
   displayName: "Publish Artifact"
   artifact: $(targetPath)
-    
