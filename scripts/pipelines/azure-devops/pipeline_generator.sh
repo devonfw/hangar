@@ -143,10 +143,10 @@ function checkInstallations {
     fi
 }
 
-function ensureAbsolutePath {
-    # Converts a relative path to an absolute one.
-    # If the path is already absolute, it will remain unchanged.
-    localDirectory=$(python -c "from pathlib import Path; print(Path('${localDirectory}').resolve().as_posix());")
+function ensurePathFormat {
+    # When necessary, converts a relative path into an absolute path, and a Windows-style path using backslashes (e.g. "C:\Users") into a 
+    # Unix-style path using forward slashes (e.g. "C:/Users").
+    localDirectory=$(python -c "from pathlib import Path; print(Path('${localDirectory//'\'/"/"}').resolve().as_posix());")
 }
 
 function obtainHangarPath {
@@ -284,7 +284,7 @@ importConfigFile
 
 checkInstallations
 
-ensureAbsolutePath
+ensurePathFormat
 
 obtainHangarPath
 
