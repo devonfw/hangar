@@ -1,4 +1,12 @@
 #!/bin/bash
 url=<sonarqube-url>
 login=<sonarqube-token>
-npx sonar-scanner -Dsonar.host.url=$url -Dsonar.login=$login # Project key / basedir / sources yet to be added
+projectKey=$(python <<EOF
+from json import load
+with open('../../package.json', 'r') as file:
+    package = load(file)
+print(package["name"])
+EOF
+)
+
+npx sonar-scanner -Dsonar.host.url=$url -Dsonar.login=$login -Dsonar.projectKey=$projectKey -Dsonar.projectBaseDir="../../" -Dsonar.sources="."
