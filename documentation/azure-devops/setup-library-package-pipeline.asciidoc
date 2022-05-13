@@ -59,21 +59,11 @@ NOTE: The config file for the library package pipeline is located at `/scripts/p
 ./pipeline_generator.sh -c ./templates/library-package/library-package-pipeline.cfg -n library-package-pipeline -l node -d C:/Users/$USERNAME/Desktop/node-library-project --build-pipeline-name node-library-build --quality-pipeline-name node-library-quality
 ```
 
-== Adding feed to library repository list
+== Adding Maven feed to library repository list
 
-=== Maven feed
 Go to Artifacts section in Azure DevOps and select the newly created Maven feed by the script (default name is `maven-feed`). Then follow the link:https://docs.microsoft.com/en-us/azure/devops/artifacts/maven/pom-and-settings?view=azure-devops[Set up the Maven client] guide from Azure Devops official documentation to perform required steps on the library project code side for being able to push the library from the pipeline.
 
 IMPORTANT: Ignore the settings.xml part as it is created by the script. Only pom.xml modification is needed.
-
-=== npm feed
-Add a .npmrc to your project, in the same directory as your package.json:
-
-```
-registry=https://pkgs.dev.azure.com/<yourOrganization>/_packaging/<yourFeed>/npm/registry/
-
-always-auth=true
-```
 
 == Appendix
 
