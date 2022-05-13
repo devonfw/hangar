@@ -149,18 +149,12 @@ function ensurePathFormat {
     # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a 
     # Unix-style path using forward slashes (e.g. "/c/Users").
     localDirectory=${localDirectory//'\'/"/"}
-    cd $localDirectory
+    cd "${localDirectory}"
+    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
     localDirectory=$(pwd)
 
     # Return to initial directory
     cd $currentDirectory
-
-    # Throws an error if the local directory didn't exist and the 'cd $localdirectory' therefore failed.
-    if [ $currentDirectory = $localDirectory ]
-    then
-        echo -e "${red}Error: Specified local directory doesn't exist." >&2
-        exit 127
-    fi
 }
 
 function obtainHangarPath {
@@ -174,8 +168,6 @@ function createNewBranch {
 
     # Create the new branch.
     cd "${localDirectory}"
-    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
-
     git checkout -b ${sourceBranch}
 }
 
