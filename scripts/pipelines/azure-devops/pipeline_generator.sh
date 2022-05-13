@@ -149,8 +149,7 @@ function ensurePathFormat {
     # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a 
     # Unix-style path using forward slashes (e.g. "/c/Users").
     localDirectory=${localDirectory//'\'/"/"}
-    cd "${localDirectory}"
-    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
+    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
     localDirectory=$(pwd)
 
     # Return to initial directory
