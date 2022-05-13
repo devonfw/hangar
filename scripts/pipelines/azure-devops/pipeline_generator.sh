@@ -144,9 +144,23 @@ function checkInstallations {
 }
 
 function ensurePathFormat {
-    # When necessary, converts a relative path into an absolute path, and a Windows-style path using backslashes (e.g. "C:\Users") into a 
-    # Unix-style path using forward slashes (e.g. "C:/Users").
-    localDirectory=$(python -c "from pathlib import Path; print(Path('${localDirectory//'\'/"/"}').resolve().as_posix());")
+    currentDirectory=$(pwd)
+
+    # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a 
+    # Unix-style path using forward slashes (e.g. "/c/Users").
+    localDirectory=${localDirectory//'\'/"/"}
+    cd $localDirectory
+    localDirectory=$(pwd)
+
+    # Return to initial directory
+    cd $currentDirectory
+
+    # Throws an error if the local directory didn't exist and the 'cd $localdirectory' therefore failed.
+    if [ $currentDirectory = $localDirectory ]
+    then
+        echo -e "${red}Error: Specified local directory doesn't exist." >&2
+        exit 127
+    fi
 }
 
 function obtainHangarPath {
