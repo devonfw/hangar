@@ -27,7 +27,7 @@ do
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
-        *) echo "usage: $0 [f] [c] [u] [p] [r] [i] [b] [t] [a] [s] [l]" >&2
+        *) echo "Error: Unexpected flag." >&2
             exit 1 ;;
     esac
 done
