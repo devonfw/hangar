@@ -1,0 +1,6 @@
+
+    - name: Publish Additional Output Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: additional-pipeline-output
+        path: "${{ env.artifactPath }}"

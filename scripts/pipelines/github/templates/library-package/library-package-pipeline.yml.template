@@ -1,0 +1,65 @@
+trigger: none
+
+resources:
+  pipelines:
+  - pipeline: 'Quality-Pipeline'
+    source: '$qualityPipelineName'
+    trigger:
+      branches:
+        include:
+        - release/*
+        - develop
+        exclude:
+        - feature/*
+        - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Bash@3
+  displayName: 'Checking last Quality pipeline execution status'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  inputs:
+    targetType: inline
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(qualityPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+- bash: 'echo "The quality pipeline executed for this commit has failed.";exit 1'
+  displayName: 'Quality pipeline failed'
+  condition: eq(variables['result'], 'failed')
+
+- bash: 'echo "The quality pipeline executed for this commit has been canceled.";exit 1'
+  displayName: 'Quality pipeline canceled'
+  condition: eq(variables['result'], 'canceled')
+
+- bash: 'echo "There is no quality pipeline execution for this commit.";exit 1'
+  displayName: 'Quality pipeline not found'
+  condition: eq(variables['result'], '')
+
+- bash: 'echo "The quality pipeline for this commit is not over yet.";exit 1'
+  displayName: 'Quality pipeline not over'
+  condition: eq(variables['result'], 'None')
+
+- task: Bash@3
+  displayName: 'Getting last Build pipeline execution to download artifact'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  inputs:
+    targetType: inline
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(buildPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download Build pipeline artifact'
+  inputs:
+    source: 'specific'
+    project: '$(System.TeamProject)'
+    pipeline: $(buildPipelineName)
+    runVersion: 'specific'
+    downloadPath: $(Pipeline.Workspace)
+    runId: $(runId)
+
+- task: Bash@3
+  displayName: "Package and push library to repository"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/library-package.sh'
