@@ -27,6 +27,8 @@ do
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
+        *) echo "Error: Unexpected flag." >&2
+            exit 1;;
     esac
 done
 # We define the tag using the version set in the pom.xml
