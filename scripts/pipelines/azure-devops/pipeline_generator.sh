@@ -221,8 +221,19 @@ function createPipeline {
     echo -ne ${white}
 
     # Create Azure Pipeline
-    pipelineResult=$(az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true)
+    
+    pipelineResult=$(az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true) || {
+        # if the script fails, clean pollution
+        echo "There was an error creating the pipeline! Please check if you specified the name and got all settings right!"
 
+        clearPollution
+
+        exit 127
+    }
+
+    pipelineId=$(echo "$pipelineResult" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
+
+    # pipeline got created successfully     
     undoLevel=3
 }
 
@@ -233,7 +244,15 @@ function addCommonPipelineVariables {
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
     else
         # Add the extra artifact to store variable.
-        variableResult=$(az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}")
+        variableResult=$(az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}") || {
+            # if the variable-creation fails, clean up
+
+            echo "There was an error creating the pipeline-artifact-path variable!. Exiting"
+
+            clearPollution
+
+            exit 127
+        }
     fi
 }
 
@@ -324,9 +343,9 @@ function clearPollution {
     #    clearVariables
     #}
 
-    #if (${undoLevel} > 2) {
-    #    clearPipeline
-    #}
+    if [ ${undoLevel} > 2 ]; then
+        clearPipeline
+    fi
 
     if [ ${undoLevel} > 1 ]; then
         clearRemoteBranches
@@ -355,14 +374,12 @@ type copyScript &> /dev/null && copyScript
 
 commitCommonFiles
 
-# type commitFiles &> /dev/null && commitFiles
+type commitFiles &> /dev/null && commitFiles
 
-# createPipeline
+createPipeline
 
-# type addPipelineVariables &> /dev/null && addPipelineVariables
+type addPipelineVariables &> /dev/null && addPipelineVariables
 
-# addCommonPipelineVariables
+addCommonPipelineVariables
 
-# createPR
-
-clearPollution
+createPR
