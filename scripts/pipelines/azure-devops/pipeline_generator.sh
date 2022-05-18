@@ -43,6 +43,9 @@ red='\e[0;31m'
 # Common var
 commonTemplatesPath="scripts/pipelines/azure-devops/templates/common"
 
+# Undo-Level for the script. Used to clean up the resources in case of a failure
+undoLevel=0
+
 function help {
     echo ""
     echo "Generates a pipeline on Azure DevOps based on the given definition."
@@ -157,6 +160,9 @@ function createNewBranch {
     [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
 
     git checkout -b ${sourceBranch}
+
+    # clear local-branches
+    ${undoLevel}=1
 }
 
 function copyYAMLFile {
@@ -201,6 +207,9 @@ function commitCommonFiles {
 
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
+
+    # clean up remote-branches
+    ${undoLevel}=2
 }
 
 function createPipeline {
@@ -208,7 +217,9 @@ function createPipeline {
     echo -ne ${white}
 
     # Create Azure Pipeline
-    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+    result=$(az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true)
+
+    ${undoLevel}=3
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -271,6 +282,41 @@ function createPR {
         fi
     fi
 }
+
+function clearLocalBranches {
+    cd "${localDirectory}"
+
+    git checkout master
+
+    git branch -D ${sourceBranch}
+}
+
+function clearRemoteBranches {
+    git push origin ${sourceBranch}
+}
+
+function clearRemotePipeline {
+    # 
+}
+
+function clearPipeline {
+    
+}
+
+function clearPollution {
+    # automatically frees all resources
+    if (${undoLevel} > 0) {
+        clearLocalBranches()
+    }
+
+    if (${undoLevel} > 1) {
+        clearRemoteBranches()
+    }
+
+    if (${undoLevel} > 2) {
+        clearRemotePipeline()
+    }
+}  
 
 if [[ "$help" == "true" ]]; then help; fi
 
