@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -11,6 +11,7 @@ while true; do
         -a | --artifact-path)     artifactPath=$2; shift 2;;
         -b | --target-branch)     targetBranch=$2; shift 2;;
         -l | --language)          language=$2; shift 2;;
+        -t | --target-directory)  targetDirectory=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
@@ -57,6 +58,7 @@ function help {
     echo ""
     echo "Build pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
     echo ""
     echo "Test pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
