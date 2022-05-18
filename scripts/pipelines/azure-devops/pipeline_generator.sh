@@ -157,12 +157,16 @@ function createNewBranch {
 
     # Create the new branch.
     cd "${localDirectory}"
+
+    # store current branch 
+    originalBranch=$(git branch --show-current)
+
     [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
 
     git checkout -b ${sourceBranch}
 
     # clear local-branches
-    ${undoLevel}=1
+    undoLevel=1
 }
 
 function copyYAMLFile {
@@ -209,7 +213,7 @@ function commitCommonFiles {
     git push -u origin ${sourceBranch}
 
     # clean up remote-branches
-    ${undoLevel}=2
+    undoLevel=2
 }
 
 function createPipeline {
@@ -217,9 +221,9 @@ function createPipeline {
     echo -ne ${white}
 
     # Create Azure Pipeline
-    result=$(az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true)
+    pipelineResult=$(az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true)
 
-    ${undoLevel}=3
+    undoLevel=3
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -229,7 +233,7 @@ function addCommonPipelineVariables {
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
     else
         # Add the extra artifact to store variable.
-        az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}"
+        variableResult=$(az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}")
     fi
 }
 
@@ -286,36 +290,51 @@ function createPR {
 function clearLocalBranches {
     cd "${localDirectory}"
 
-    git checkout master
+    git checkout $originalBranch
 
     git branch -D ${sourceBranch}
 }
 
 function clearRemoteBranches {
-    git push origin ${sourceBranch}
+    # update list of remotes
+    git fetch
+
+    # delete mapped remote-branch
+    git push origin --delete ${sourceBranch}
 }
 
-function clearRemotePipeline {
-    # 
+function clearPipelineFiles {
+    # clear the files
+    cd "${localDirectory}"
+
+    if [ -d "./pipelines" ]; then
+        rm -rf ./pipelines
+    fi
 }
 
-function clearPipeline {
-    
-}
+# function clearPipeline {
+
+# }
+
 
 function clearPollution {
     # automatically frees all resources
-    if (${undoLevel} > 0) {
-        clearLocalBranches()
-    }
 
-    if (${undoLevel} > 1) {
-        clearRemoteBranches()
-    }
+    #if (${undoLevel} > 3) {
+    #    clearVariables
+    #}
 
-    if (${undoLevel} > 2) {
-        clearRemotePipeline()
-    }
+    #if (${undoLevel} > 2) {
+    #    clearPipeline
+    #}
+
+    if [ ${undoLevel} > 1 ]; then
+        clearRemoteBranches
+    fi
+
+    if [ ${undoLevel} > 0 ]; then 
+        clearLocalBranches
+    fi
 }  
 
 if [[ "$help" == "true" ]]; then help; fi
@@ -336,12 +355,14 @@ type copyScript &> /dev/null && copyScript
 
 commitCommonFiles
 
-type commitFiles &> /dev/null && commitFiles
+# type commitFiles &> /dev/null && commitFiles
 
-createPipeline
+# createPipeline
 
-type addPipelineVariables &> /dev/null && addPipelineVariables
+# type addPipelineVariables &> /dev/null && addPipelineVariables
 
-addCommonPipelineVariables
+# addCommonPipelineVariables
 
-createPR
+# createPR
+
+clearPollution
