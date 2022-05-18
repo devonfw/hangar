@@ -139,7 +139,7 @@ function addCommonPipelineVariables {
         grep "    inputs:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null || textArtifactPathInput="    inputs:\n      artifactPath:\n       required: false\n       default: \"${artifactPath//\//\\/}\""
         sed -i "s/# mark to insert additional artifact input #/$textArtifactPathInput/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         # add the env var for the additional artifact
-        grep "^env::" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
+        grep "^env:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         grep "^env:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         # Add the extra artifact to store variable.
         echo "sed -i \"s/# mark to insert additional artifact env var #/$textArtifactPathVar/\" \"${localDirectory}/${pipelinePath}/${yamlFile}\""
