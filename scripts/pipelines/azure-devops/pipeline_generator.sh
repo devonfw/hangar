@@ -44,7 +44,7 @@ red='\e[0;31m'
 commonTemplatesPath="scripts/pipelines/azure-devops/templates/common"
 
 # Undo-Level for the script. Used to clean up the resources in case of a failure
-undoLevel=0
+undoStage=0
 
 function help {
     echo ""
@@ -166,7 +166,7 @@ function createNewBranch {
     git checkout -b ${sourceBranch}
 
     # clear local-branches
-    undoLevel=1
+    undoStage=1
 }
 
 function copyYAMLFile {
@@ -213,7 +213,7 @@ function commitCommonFiles {
     git push -u origin ${sourceBranch}
 
     # clean up remote-branches
-    undoLevel=2
+    undoStage=2
 }
 
 function createPipeline {
@@ -231,10 +231,12 @@ function createPipeline {
         exit 127
     }
 
+    echo "Pipelineresult $pipelineResult"
+
     pipelineId=$(echo "$pipelineResult" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
 
     # pipeline got created successfully     
-    undoLevel=3
+    undoStage=3
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -244,7 +246,7 @@ function addCommonPipelineVariables {
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
     else
         # Add the extra artifact to store variable.
-        variableResult=$(az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}") || {
+        variableResult=$(az pipelines variable create --pipeline-name "$pipelineName" --value "${artifactPath}") || {
             # if the variable-creation fails, clean up
 
             echo "There was an error creating the pipeline-artifact-path variable!. Exiting"
@@ -306,7 +308,7 @@ function createPR {
     fi
 }
 
-function clearLocalBranches {
+function removeLocalBranches {
     cd "${localDirectory}"
 
     git checkout $originalBranch
@@ -314,7 +316,7 @@ function clearLocalBranches {
     git branch -D ${sourceBranch}
 }
 
-function clearRemoteBranches {
+function removeRemoteBranches {
     # update list of remotes
     git fetch
 
@@ -322,7 +324,7 @@ function clearRemoteBranches {
     git push origin --delete ${sourceBranch}
 }
 
-function clearPipelineFiles {
+function removePipelineFiles {
     # clear the files
     cd "${localDirectory}"
 
@@ -331,28 +333,31 @@ function clearPipelineFiles {
     fi
 }
 
-# function clearPipeline {
-
-# }
-
+function removePipeline {
+    az pipelines delete --id ${pipelineId}
+}
 
 function clearPollution {
-    # automatically frees all resources
+    # free all resources
 
-    #if (${undoLevel} > 3) {
-    #    clearVariables
-    #}
+    if [ ${undoStage} -gt 2 ]; then
+        echo "$undoStage"
 
-    if [ ${undoLevel} > 2 ]; then
-        clearPipeline
+        echo "Clearing all pipelines!"
+
+        removePipeline
     fi
 
-    if [ ${undoLevel} > 1 ]; then
-        clearRemoteBranches
+    if [ ${undoStage} -gt 1 ]; then
+        echo "Removing all remote branches!"
+
+        removeRemoteBranches
     fi
 
-    if [ ${undoLevel} > 0 ]; then 
-        clearLocalBranches
+    if [ ${undoStage} -gt 0 ]; then 
+        echo "Removing all local branches!"
+
+        removeLocalBranches
     fi
 }  
 
