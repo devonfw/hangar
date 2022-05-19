@@ -16,6 +16,6 @@ done
 # We define the tag using the version set in the pom.xml
 tag=$(grep version "${pomPath}" | grep -v -e '<?xml'| head -n 1 | sed 's/[[:space:]]//g' | sed -E 's/<.{0,1}version>//g' | awk '{print $1}')
 
-SCRIPT_PATH="./package-common.sh"
-# shellcheck source="package-common.sh"
+SCRIPT_PATH="./templates/package/package-common.sh"
+# shellcheck source="./templates/package/package-common.sh"
 source "$SCRIPT_PATH" "$@" -q "$tag"
