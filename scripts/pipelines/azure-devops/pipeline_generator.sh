@@ -155,14 +155,14 @@ function createNewBranch {
     echo -e "${green}Creating the new branch: ${sourceBranch}..."
     echo -ne ${white}
 
-    # Create the new branch.
     cd "${localDirectory}"
 
-    # store current branch 
+    # store current branch into a variable (only used for rollback/undo) 
     originalBranch=$(git branch --show-current)
 
     [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
 
+    # Create the new branch.
     git checkout -b ${sourceBranch}
 
     # clear local-branches
@@ -309,6 +309,7 @@ function createPR {
 }
 
 function removeLocalBranches {
+    # visit the directory and switch to the branch which was present before
     cd "${localDirectory}"
 
     git checkout $originalBranch
@@ -325,7 +326,7 @@ function removeRemoteBranches {
 }
 
 function removePipelineFiles {
-    # clear the files
+    # clear the generated pipeline-files
     cd "${localDirectory}"
 
     if [ -d "./pipelines" ]; then
@@ -343,7 +344,7 @@ function clearPollution {
     if [ ${undoStage} -gt 2 ]; then
         echo "$undoStage"
 
-        echo "Clearing all pipelines!"
+        echo "Removing all pipelines!"
 
         removePipeline
     fi
