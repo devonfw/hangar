@@ -99,29 +99,6 @@ function help {
     exit
 }
 
-function importConfigFile {
-    # Import config file.
-    source $configFile
-    IFS=, read -ra flags <<< "$mandatoryFlags"
-
-    # Check if the config file was supplied.
-    if test -z "$configFile"
-    then
-        echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
-        exit 2
-    fi
-
-    # Check if the required flags in the config file have been activated.
-    for flag in "${flags[@]}"
-    do
-        if test -z $flag
-        then
-            echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
-            echo -e "${red}Use -h or --help flag to display help." >&2
-            exit 2
-        fi
-    done
-}
 
 function checkInstallations {
     # Check if Git is installed
@@ -144,69 +121,15 @@ function checkInstallations {
 }
 
 function obtainHangarPath {
-    cd ../../..
-    hangarPath=$(pwd)
-}
-
-function createNewBranch {
-    echo -e "${green}Creating the new branch: ${sourceBranch}..."
-    echo -ne ${white}
-
-    # Create the new branch.
-    cd "${localDirectory}"
-    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
-
-    git checkout -b ${sourceBranch}
-}
-
-function copyYAMLFile {
-    echo -e "${green}Copying the corresponding files into your directory..."
-    echo -ne ${white}
-
-    # Create .pipelines and scripts if they do not exist.
-    mkdir -p "${localDirectory}/.pipelines/scripts"
-
-    # Generate pipeline YAML from template and put it in the repository.
-    # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
-
-    # Check if an extra artifact to store is supplied.
-    if test ! -z "$artifactPath"
-    then
-        # Add the extra step to the YAML.
-        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
-    fi
-}
-
-function copyCommonScript {
-    echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
-    echo -ne ${white}
-
-    cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
-}
-
-function commitCommonFiles {
-    echo -e "${green}Commiting and pushing into Git remote..."
-    echo -ne ${white}
-
-    # Move into the project's directory and pushing the template into the Azure DevOps repository.
-    cd ${localDirectory}
-
-    # Add the YAML files.
-    git add .pipelines -f
-
-    # Git commit and push it into the repository.
-    # changing all files to be executable
-    find .pipelines -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
-
-    git commit -m "Adding the source YAML"
-    git push -u origin ${sourceBranch}
+  pipelineGeneratorFullPath=$(readlink -f "$(pwd)/$0")
+  pipelineGeneratorRepoPath='/scripts/pipelines/azure-devops/pipeline_generator.sh'
+  # replace the repo path in the full path with an empty string
+  hangarPath=${pipelineGeneratorFullPath/$pipelineGeneratorRepoPath}
 }
 
 function createPipeline {
     echo -e "${green}Generating the pipeline from the YAML template..."
     echo -ne ${white}
-
     # Create Azure Pipeline
     az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
 }
@@ -274,11 +197,16 @@ function createPR {
 
 if [[ "$help" == "true" ]]; then help; fi
 
+obtainHangarPath
+
+# Load common functions
+. "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
+
+ensurePathFormat
+
 importConfigFile
 
 checkInstallations
-
-obtainHangarPath
 
 createNewBranch
 

@@ -133,6 +133,9 @@ function addCommonPipelineVariables {
     if test -z ${artifactPath}
     then
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
+        # Delete the commentary to set the artifactPath input/var
+        sed -i '/# mark to insert additional artifact input #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+        sed -i '/# mark to insert additional artifact env var #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
     else
         # add the input for the additional artifact
         grep "    inputs:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null && textArtifactPathInput="      artifactPath:\n       required: false\n       default: ${artifactPath//\//\\/}"
@@ -142,7 +145,6 @@ function addCommonPipelineVariables {
         grep "^env:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         grep "^env:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         # Add the extra artifact to store variable.
-        echo "sed -i \"s/# mark to insert additional artifact env var #/$textArtifactPathVar/\" \"${localDirectory}/${pipelinePath}/${yamlFile}\""
         sed -i "s/# mark to insert additional artifact env var #/$textArtifactPathVar/" "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
 }
@@ -193,11 +195,12 @@ function createPR {
 
 if [[ "$help" == "true" ]]; then help; fi
 
-
 obtainHangarPath
 
 # Load common functions
 . "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
+
+ensurePathFormat
 
 importConfigFile
 
