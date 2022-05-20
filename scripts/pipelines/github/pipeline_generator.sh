@@ -130,7 +130,7 @@ hangarPath=${pipelineGeneratorFullPath/$pipelineGeneratorRepoPath}
 
 # Function that adds the variables to be used in the pipeline.
 function addCommonPipelineVariables {
-    if test -z ${artifactPath}
+    if test -z "${artifactPath}"
     then
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
         # Delete the commentary to set the artifactPath input/var
@@ -138,12 +138,12 @@ function addCommonPipelineVariables {
         sed -i '/# mark to insert additional artifact env var #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
     else
         # add the input for the additional artifact
-        grep "    inputs:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null && textArtifactPathInput="      artifactPath:\n       required: false\n       default: ${artifactPath//\//\\/}"
-        grep "    inputs:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null || textArtifactPathInput="    inputs:\n      artifactPath:\n       required: false\n       default: \"${artifactPath//\//\\/}\""
+        grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathInput="      artifactPath:\n       required: false\n       default: ${artifactPath//\//\\/}"
+        grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathInput="    inputs:\n      artifactPath:\n       required: false\n       default: \"${artifactPath//\//\\/}\""
         sed -i "s/# mark to insert additional artifact input #/$textArtifactPathInput/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         # add the env var for the additional artifact
-        grep "^env:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
-        grep "^env:" ${localDirectory}/${pipelinePath}/${yamlFile} > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
+        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
+        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         # Add the extra artifact to store variable.
         sed -i "s/# mark to insert additional artifact env var #/$textArtifactPathVar/" "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
@@ -158,7 +158,7 @@ function createPR {
         exit
     else
         echo -e "${green}Creating a Pull Request..."
-        echo -ne ${white}
+        echo -ne "${white}"
         repoURL=$(git config --get remote.origin.url)
         repoNameWithGit="${repoURL/https:\/\/github.com\/}"
         repoName="${repoNameWithGit/.git}"
