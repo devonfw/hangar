@@ -40,9 +40,10 @@ white='\e[1;37m'
 green='\e[1;32m'
 red='\e[0;31m'
 
-# Loading common function
 # Common var
-commonTemplatesPath="scripts/pipelines/github/templates/common"
+commonTemplatesPath="scripts/pipelines/github/templates/common" # Path for common files of the pipelines
+pipelinePath=".github/workflows" # Path to the pipelines.
+scriptFilePath=".github/workflows/scripts" # Path to the scripts.
 
 function help {
     echo ""

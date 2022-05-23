@@ -41,7 +41,9 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 # Common var
-commonTemplatesPath="scripts/pipelines/azure-devops/templates/common"
+commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for common files of the pipelines 
+pipelinePath=".pipelines" # Path to the pipelines.
+scriptFilePath=".pipelines/scripts" # Path to the scripts.
 
 function help {
     echo ""
