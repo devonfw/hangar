@@ -210,11 +210,15 @@ function createPipeline {
     echo -ne ${white}
 
     # This line go to the localDirectory of the repo and gets the repo name 
-    repoName="$( cd ${localDirectory}  && basename -s .git $(git config --get remote.origin.url))"
-    cd -
+    repoName="$(basename -s .git $(git config --get remote.origin.url))"
+    # This line gets the organization name
+    orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
+    
+    azRepoShow=$(az repos show -r "$repoName")
+    projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
 
     # Create Azure Pipeline
-    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true --repository $repoName --repository-type tfsgit
+    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true --organization "https://dev.azure.com/$orgName" --project "$projectName" --repository "$repoName" --repository-type tfsgit
 }
 
 # Function that adds the variables to be used in the pipeline.
