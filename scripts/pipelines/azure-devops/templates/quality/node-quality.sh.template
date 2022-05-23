@@ -7,4 +7,4 @@ print(package["name"])
 EOF
 )
 
-npx sonar-scanner -Dsonar.host.url="${sonarUrl}" -Dsonar.login="${sonarToken}" -Dsonar.projectKey=$projectKey -Dsonar.projectBaseDir="../../" -Dsonar.sources="."
+npx sonar-scanner -Dsonar.host.url="${sonarUrl}" -Dsonar.login="${sonarToken}" -Dsonar.projectKey=$projectKey -Dsonar.projectBaseDir="${localDirectory}" -Dsonar.sources="."
