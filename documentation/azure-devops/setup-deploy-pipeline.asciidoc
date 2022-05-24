@@ -33,7 +33,7 @@ pipeline_generator.sh \
   --deploy-cluster <deploy environment name> \
   --k8s-namespace <namespace> \
   --deploy-files <deploy files> \ 
-  --secrets-name <secretsValue> \
+  [--secrets-name <secretsValue>] \
   [-b <branch>] \
   [-w]
 ```
