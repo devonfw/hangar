@@ -51,7 +51,7 @@ jobs:
   
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
-    displayName: 'create secrets for AKS'
+    displayName: 'Create secrets for AKS'
     inputs:
       filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/acr-secrets.sh'
       arguments: '$(k8sNamespace) $(secretsName) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath) $(kubeconfigPath)'
