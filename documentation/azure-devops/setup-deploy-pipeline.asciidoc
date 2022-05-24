@@ -31,7 +31,7 @@ pipeline_generator.sh \
   --package-pipeline-name <package pipeline name> \
   [--aks-provision-pipeline-name <aks provisionig pipeline name>] \
   --deploy-cluster <deploy environment name> \
-  --k8s-namespace \
+  --k8s-namespace <namespace> \
   --deploy-files <deploy files> \ 
   --secrets-name <secretsValue> \
   [-b <branch>] \
