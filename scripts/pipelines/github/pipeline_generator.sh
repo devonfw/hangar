@@ -68,7 +68,6 @@ function help {
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --test-pipeline-name    [Required] Test pipeline name."
     echo ""
     echo "Package pipeline flags:"
