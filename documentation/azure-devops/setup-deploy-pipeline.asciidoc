@@ -10,6 +10,8 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 NOTE: The deploy pipeline will fail if the package pipeline executed on the same commit has failed.
 
+NOTE: The deploy pipeline will fail if the provisioning pipeline failed or does not exist.
+
 == Prerequisites
 
 * If the images are stored in a private container registry, create the corresponding secrets to pull images from it.
