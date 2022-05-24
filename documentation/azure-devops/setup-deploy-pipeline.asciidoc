@@ -12,7 +12,7 @@ NOTE: The deploy pipeline will fail if the package pipeline executed on the same
 
 == Prerequisites
 
-* If it is private container registry, create secret for container registry to pull image from private repository. 
+* If the images are stored in a private container registry, create the corresponding secrets to pull images from it.
 
 NOTE: Use `--secrets-name` flag to add extra secrets script to pull image from private container registry .
 
