@@ -62,7 +62,6 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 ./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --package-pipeline-name quarkus-project-package --deploy-cluster EKS --k8s-namespace hangar --deploy-files k8s-files  -b develop -w
 ```
 
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
 
 === Appendix: 
 === Interacting with the AKS cluster
