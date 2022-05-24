@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 #Command to create secrets to pull image from private registry.
 kubectl delete secret "$2" --namespace="$1" 
 # create secrets for private registry.
