@@ -27,7 +27,7 @@ pipeline_generator.sh \
   -n <pipeline name> \
   -d <project local path> \
   --package-pipeline-name <package pipeline name> \
-  --aks-provision-pipeline-name \
+  [--aks-provision-pipeline-name <aks provisionig pipeline name>] \
   --deploy-cluster <deploy environment name> \
   --k8s-namespace \
   --deploy-files <deploy files> \ 
