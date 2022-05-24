@@ -79,7 +79,7 @@ jobs:
 
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
-    displayName: 'create secrets for EKS'
+    displayName: 'Create secrets for EKS'
     inputs:
       filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/ecr-secrets.sh'
       arguments: '$(k8sNamespace) $(secretsName) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
