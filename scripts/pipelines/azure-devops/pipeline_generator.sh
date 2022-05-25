@@ -230,9 +230,7 @@ function createPipeline {
 
         exit 127
     }
-
-    echo "Pipelineresult $pipelineResult"
-
+    
     pipelineId=$(echo "$pipelineResult" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
 
     # pipeline got created successfully     
@@ -318,6 +316,8 @@ function removeLocalBranches {
 }
 
 function removeRemoteBranches {
+    cd "${localDirectory}"
+
     # update list of remotes
     git fetch
 
@@ -342,15 +342,15 @@ function clearPollution {
     # free all resources
 
     if [ ${undoStage} -gt 2 ]; then
-        echo "$undoStage"
-
-        echo "Removing all pipelines!"
+        echo "Removing pipeline with id: ${pipelineId}"
 
         removePipeline
     fi
 
     if [ ${undoStage} -gt 1 ]; then
-        echo "Removing all remote branches!"
+        echo "Removing all pipeline-files and remote branches!"
+
+        removePipelineFiles
 
         removeRemoteBranches
     fi
