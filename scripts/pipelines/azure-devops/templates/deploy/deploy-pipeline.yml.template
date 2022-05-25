@@ -15,9 +15,8 @@ resources:
 
 variables:
   - group: registry_info 
-  - group: AWS_Credentials
   - name: deploymentYamlPath
-    value: "$(Build.Repository.LocalPath)/$(deployFiles)/*-deployment.yaml" 
+    value: "$(Build.Repository.LocalPath)/$(deployFiles)/application-deployment.yaml" 
   - name: ingressYamlPath
     value: "$(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml"  
   - name: deployFilesPath
@@ -27,8 +26,34 @@ variables:
     
 pool:
   vmImage: ubuntu-latest
-
 jobs:
+- job: Checking_provision_pipeline_status
+  steps:
+  - task: Bash@3
+    displayName: 'Checking last Provision pipeline execution status'
+    env:
+      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+    inputs:
+      targetType: inline
+      script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(ProvisionPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+  - bash: 'echo "The Provision pipeline executed for this commit has failed.";exit 1'
+    displayName: 'Provision pipeline failed'
+    condition: eq(variables['result'], 'failed')
+
+  - bash: 'echo "The Provision pipeline executed for this commit has been canceled.";exit 1'
+    displayName: 'Provision pipeline canceled'
+    condition: eq(variables['result'], 'canceled')
+
+  - bash: 'echo "There is no Provision pipeline execution for this commit.";exit 1'
+    displayName: 'Provision pipeline not found'
+    condition: eq(variables['result'], '')
+
+  - bash: 'echo "The Provision pipeline for this commit is not over yet.";exit 1'
+    displayName: 'Provision pipeline not over'
+    condition: eq(variables['result'], 'None')
+
+
 - job: Deploy_to_AKS
   condition: eq(variables.deployCluster, 'AKS')
   variables:
@@ -39,7 +64,7 @@ jobs:
     inputs:
       source: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(aksProvisionPipelineName)'
+      pipeline: '$(ProvisionPipelineName)'
       runVersion: 'latest'
       downloadPath: '$(Pipeline.Workspace)' 
     
@@ -59,6 +84,7 @@ jobs:
 - job: Deploy_to_EKS
   condition: eq(variables.deployCluster, 'EKS')
   variables:
+  - group: AWS_Credentials
   - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3

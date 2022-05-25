@@ -29,7 +29,7 @@ pipeline_generator.sh \
   -n <pipeline name> \
   -d <project local path> \
   --package-pipeline-name <package pipeline name> \
-  [--aks-provision-pipeline-name <aks provisionig pipeline name>] \
+  [--provision-pipeline-name <provisionig pipeline name>] \
   --deploy-cluster <deploy environment name> \
   --k8s-namespace <namespace> \
   --deploy-files <deploy files> \ 
@@ -45,7 +45,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 -n  --pipeline-name                 [Required] Name that will be set to the pipeline.
 -d  --local-directory               [Required] Local directory of your project (the path should always be using '/' and not '\').
     --package-pipeline-name         [Required] Name of the Package pipeline.
-    --aks-provision-pipeline-name   [Required, if deployment in Azure] Azure AKS provision pipeline name.
+    --provision-pipeline-name       [Required] The provision pipeline name (If the deployment in AWS or Azure).
     --deploy-cluster                [Required] Deployment environment, AKS or EKS.
     --k8s-namespace                 [Required] kubernetes namespace.
     --deploy-files                  [Required] Path inside the remote repository where the manifest YAML files are located.  
@@ -59,7 +59,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --package-pipeline-name quarkus-project-package --deploy-cluster EKS --k8s-namespace hangar --deploy-files k8s-files  -b develop -w
+./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --package-pipeline-name quarkus-project-package --provision-pipeline-name eks-provisioning --deploy-cluster EKS --k8s-namespace hangar --deploy-files k8s-files  -b develop -w
 ```
 
 

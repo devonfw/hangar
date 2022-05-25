@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,package-pipeline-name:,aks-provision-pipeline-name:,deploy-cluster:,k8s-namespace:,deploy-files:,secrets-name:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,package-pipeline-name:,provision-pipeline-name:,deploy-cluster:,k8s-namespace:,deploy-files:,secrets-name:,help" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -28,12 +28,12 @@ while true; do
         --aws-access-key)               awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)        awsSecretAccessKey="$2"; shift 2;;
         --aws-region)                   awsRegion="$2"; shift 2;;
-        --aks-provision-pipeline-name)  aksProvisionPipelineName="$2"; shift 2;;
+        --provision-pipeline-name)      ProvisionPipelineName="$2"; shift 2;;
         --k8s-namespace)                k8sNamespace="$2"; shift 2;;
     	--deploy-files)                 deployFiles=$2; shift 2;; 
-	--deploy-cluster)               deployCluster=$2; shift 2;; 
+	    --deploy-cluster)               deployCluster=$2; shift 2;; 
         --secrets-name)                 secretsName=$2; shift 2;; 
-	--package-pipeline-name)        export packagePipelineName=$2; shift 2;;
+	    --package-pipeline-name)        export packagePipelineName=$2; shift 2;;
         -h | --help)                    help="true"; shift 1;;
         -w)                             webBrowser="true"; shift 1;;
         --) shift; break;;
@@ -91,7 +91,7 @@ function help {
     echo ""
     echo "Deploy pipeline flags:"
     echo "      --package-pipeline-name         [Required] Name of the Package pipeline."
-    echo "      --aks-provision-pipeline-name   [Required, if deployment in Azure] Azure AKS provision pipeline name."
+    echo "      --provision-pipeline-name       [Required] The provision pipeline name (If the deployment in AWS or Azure)."
     echo "      --deploy-cluster                [Required] Deployment environment, AKS or EKS."
     echo "      --k8s-namespace                 [Required] kubernetes namespace."
     echo "      --deploy-files                  [Required] Path inside the remote repository where the manifest YAML files are located."
