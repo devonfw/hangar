@@ -153,7 +153,7 @@ function ensurePathFormat {
     localDirectory=$(pwd)
 
     # Return to initial directory
-    cd $currentDirectory
+    cd "$currentDirectory"
 }
 
 function obtainHangarPath {
