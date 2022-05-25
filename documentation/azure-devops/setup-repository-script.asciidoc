@@ -1,9 +1,14 @@
-= Setting up a repository on Azure DevOps
+= Setting up a repository
 
-By the end of this guide, a repository on Azure DevOps will be created in an automated way using a script.
+By the end of this guide, a repository will be created in an automated way using a script.
 
-== Prerequisites
+== Azure Prerequisites
 * Have an Azure DevOps project already setup and Azure CLI installed and configured. If it is not the case, please go back to corresponding guide.
+
+* Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
+
+== GitHub Prerequisites
+* Have a GitHub user registered and GitHub CLI installed and configured. If it is not the case, please go back to corresponding guide.
 
 * Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
 
@@ -13,7 +18,7 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
 
 . Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch.
 
-. Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to Azure DevOps the development of an existing project.
+. Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking the development of an existing project.
 
 === Usage
 
@@ -21,16 +26,17 @@ The script located at `/scripts/repositories/azure-devops/create-repo.sh` allows
 create-repo.sh \
     -a <action> \
     -d <local directory> \
-    -o <organization> \
-    -p <project> \
+    [-o <organization>] \
+    [-p <project>] \
     [-n <repository name>] \
     [-g <giturl>] \
     [-b <branch>] \
     [-r] \
     [-s <branch strategy>] \
-
     [-f] \
     [--subpath <subpath to import>] \
+    [-t <target repository>] \
+    [-u] \
 ```
 
 === Flags
@@ -38,8 +44,8 @@ create-repo.sh \
 ```
 -a, --action                [Required] Use case to fulfil: create, import.
 -d, --directory             [Required] Path to the directory where your repository will be cloned or initialized.
--o, --org                   [Required] Name of the Azure DevOps organization.
--p, --project               [Required] Name of the Azure DevOps project.
+-o, --org             [Azure Required] Name of the Azure DevOps organization.
+-p, --project         [Azure Required] Name of the Azure DevOps project.
 -n, --name                             Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
 -g, --source-git-url                   Source URL of the Git repository to import.
 -b, --source-branch                    Source branch to be used as a basis to initialize the repository on import, as master branch.
@@ -47,6 +53,8 @@ create-repo.sh \
 -s, --setup-branch-strategy            Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
 -f, --force                            Skips any user confirmation.
     --subpath                          When combined with -g and -r, imports only the specified subpath of the source Git repository.
+-t, --target                [Required] Target repository manager. Accepted values: azure, github.
+-u, --public                           Repository scope. Private by default
 ```
 
 === Typical use cases
@@ -55,35 +63,35 @@ TIP: This is non-exhaustive list. Make your own combination of flags if all of t
 
 ==== Creating an empty repository
 
-  ./create-repo.sh -a create -o <organization> -p <project> -n <repository name> -d <local destination directory>
+  ./create-repo.sh -a create -o <organization> -p <project> -n <repository name> -d <local destination directory> -t <target repository>
 
 In case repository name is not specified, destination directory name will be used.
 
 ==== Creating an empty repository with Gitflow branching strategy
 
-  ./create-repo.sh -a create -o <organization> -p <project> -n <repository name> -d <local destination directory> -s gitflow
+  ./create-repo.sh -a create -o <organization> -p <project> -n <repository name> -d <local destination directory> -s gitflow -t <target repository>
 
 ==== Importing a remote Git repository
 
-  ./create-repo.sh -a import -g <source git url> -o <organization> -p <project name> -n <repository name> -d <local destination directory>
+  ./create-repo.sh -a import -g <source git url> -o <organization> -p <project name> -n <repository name> -d <local destination directory> -t <target repository>
 
 In case repository name is not specified, source repository name (in URL) will be used.
 
 ==== Importing a specific remote Git repository branch as source for a new repository with Gitflow branching strategy
 
-  ./create-repo.sh -a import -g <source git url> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name> -d <local destination directory>
+  ./create-repo.sh -a import -g <source git url> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name> -d <local destination directory> -t <target repository>
 
 This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
 
 ==== Importing local directory or Git repository
 
-  ./create-repo.sh -a import -d <local source directory> -o <organization> -p <project name> -n <repository name>
+  ./create-repo.sh -a import -d <local source directory> -o <organization> -p <project name> -n <repository name> -t <target repository>
 
 In case repository name is not specified, source directory name will be used.
 
 ==== Importing a specific local Git repository branch as source for a new repository with Gitflow branching strategy
 
-  ./create-repo.sh -a 'import' -d <local source directory> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name>
+  ./create-repo.sh -a 'import' -d <local source directory> -b <source branch> -s gitflow -r -o <organization> -p <project name> -n <repository name> -t <target repository>
 
 This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
 
@@ -123,7 +131,7 @@ The following branch policies are applied to `master` and `develop` branches:
 * Check for comment resolution: REQUIRED
 * Limit merge types: OFF
 
-The above policies are defined in a configuration file located at `/scripts/repositories/azure-devops/config/strategy.cfg`. Feel free to adapt it to your needs.
+The above policies are defined in a configuration file located at `/scripts/repositories/common/config/strategy.cfg`. Feel free to adapt it to your needs.
 
 NOTE: This is the bare minimum standard for any project. We do not prohibit the most recent pusher from approving their own changes, although being more than recommendable, because if we do, it will block the auto-approval of Pull Requests generated during pipelines creation on the following guides.
 
