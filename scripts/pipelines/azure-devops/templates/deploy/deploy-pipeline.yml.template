@@ -21,8 +21,10 @@ variables:
     value: "$(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml"  
   - name: deployFilesPath
     value: "$(Build.Repository.LocalPath)/$(deployFiles)"
+   - name: artifact
+    value: "kubeconfig"  
   - name: kubeconfigPath
-    value: "$(Pipeline.Workspace)/kubeconfig/kubeconfig" 
+    value: "$(Pipeline.Workspace)/$(artifact)"  
     
 pool:
   vmImage: ubuntu-latest
@@ -45,10 +47,6 @@ jobs:
     displayName: 'Provision pipeline canceled'
     condition: eq(variables['result'], 'canceled')
 
-  - bash: 'echo "There is no Provision pipeline execution for this commit.";exit 1'
-    displayName: 'Provision pipeline not found'
-    condition: eq(variables['result'], '')
-
   - bash: 'echo "The Provision pipeline for this commit is not over yet.";exit 1'
     displayName: 'Provision pipeline not over'
     condition: eq(variables['result'], 'None')
@@ -57,16 +55,18 @@ jobs:
 - job: Deploy_to_AKS
   condition: eq(variables.deployCluster, 'AKS')
   variables:
-  - group: aks-variables # DNS available for this job
+  - ${{ if eq(variables.deployCluster, 'AKS') }}:
+    - group: aks-variables # DNS available for this job
   steps:
   - task: DownloadPipelineArtifact@2
     displayName: "Download AKS Kubeconfig"
     inputs:
-      source: 'specific'
-      project: '$(System.TeamProject)'
-      pipeline: '$(ProvisionPipelineName)'
-      runVersion: 'latest'
-      downloadPath: '$(Pipeline.Workspace)' 
+      buildType: 'specific'
+      project: '$(System.TeamProjectId)'
+      definition: '$(ProvisionPipelineName)'
+      buildVersionToDownload: 'latest'
+      artifactName: '$(artifact)'
+      targetPath: '$(Pipeline.Workspace)'  
     
   - task: Bash@3
     displayName: "Deploy app to AKS" 
@@ -84,8 +84,10 @@ jobs:
 - job: Deploy_to_EKS
   condition: eq(variables.deployCluster, 'EKS')
   variables:
-  - group: AWS_Credentials
-  - group: eks_variables # DNS available for this job
+  - ${{ if eq(variables.deployCluster, 'EKS') }}:
+    - group: AWS_Credentials
+  - ${{ if eq(variables.deployCluster, 'EKS') }}:
+    - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
     displayName: Connect to EKS
