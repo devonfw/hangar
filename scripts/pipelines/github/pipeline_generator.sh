@@ -144,7 +144,7 @@ function createPR {
         repoName="${repoNameWithGit/.git}"
         # Create the Pull Request to merge into the specified branch.
         #debug
-        echo "gh pr create -B \"$targetBranch\" -b \"merge request $sourceBranch\" -H "$sourceBranch" -R \"${repoName}\" -t \"$sourceBranch\""
+        echo "gh pr create -B \"$targetBranch\" -b \"merge request $sourceBranch\" -H \"$sourceBranch\" -R \"${repoName}\" -t \"$sourceBranch\""
         pr=$(gh pr create -B "$targetBranch" -b "merge request $sourceBranch" -H "$sourceBranch" -R "${repoName}" -t "$sourceBranch")
 
         # trying to merge
