@@ -21,7 +21,7 @@ variables:
     value: "$(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml"  
   - name: deployFilesPath
     value: "$(Build.Repository.LocalPath)/$(deployFiles)"
-   - name: artifact
+  - name: artifact
     value: "kubeconfig"  
   - name: kubeconfigPath
     value: "$(Pipeline.Workspace)/$(artifact)"  
