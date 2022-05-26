@@ -1,0 +1,47 @@
+name: $pipelineName
+
+on:
+  workflow_run:
+    workflows: $buildPipelineName
+    types: completed
+  workflow_dispatch:
+# mark to insert additional artifact input #
+
+permissions:
+  actions: write
+
+env:
+  build_pipeline: ${{ github.event.name == 'workflow_run' && format('$buildPipelineName') || github.event.inputs.build_pipeline }}
+# mark to insert additional artifact env var #
+
+jobs:
+    on-success:
+      name: Test
+      runs-on: ubuntu-latest
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
+      steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+
+      - name: Download Build Pipeline Artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-pipeline.yml
+          commit: ${{github.event.pull_request.head.sha}}
+
+      - name: Test
+        run: .github/workflows/scripts/test.sh
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: '**/TEST-*.xml'
+    
+    on-failure:
+      name: Build Pipeline Failed
+      runs-on: ubuntu-latest
+      if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+      steps:
+        - name: Cancel Pipeline
+          uses: andymckay/cancel-action@0.2
