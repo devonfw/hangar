@@ -9,7 +9,7 @@ on:
 
 permissions:
   actions: write
-  
+
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
 # mark to insert additional artifact env var #
@@ -32,8 +32,9 @@ jobs:
           check_artifacts:  true
 
       - name: SonarQube analysis
-        run: .pipelines/scripts/quality.sh .
+        run: .github/workflows/scripts/quality.sh .
 
+# mark to insert step for additonal artifact #
   test-failed:
     name: Canceling curent execution
     runs-on: ubuntu-latest
@@ -44,4 +45,3 @@ jobs:
 
       - name: cancelling
         uses: andymckay/cancel-action@0.2
-
