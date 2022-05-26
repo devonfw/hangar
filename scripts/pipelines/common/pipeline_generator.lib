@@ -35,6 +35,29 @@ function importConfigFile {
     done
 }
 
+function checkInstallations {
+    # Check if Git is installed
+    if ! [ -x "$(command -v git)" ]; then
+        echo -e "${red}Error: Git is not installed." >&2
+        exit 127
+    fi
+
+    # Check if the CLI tool for the provider is installed
+    if ([ "$provider" == "github" ] && ! [ -x "$(command -v gh)" ]); then
+        echo -e "${red}Error: Github CLI is not installed." >&2
+        exit 127
+    elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
+        echo -e "${red}Error: Azure CLI is not installed." >&2
+        exit 127
+    fi
+
+    # Check if Python is installed
+    if ! [ -x "$(command -v python)" ]; then
+        echo -e "${red}Error: Python is not installed." >&2
+        exit 127
+    fi
+}
+
 function createNewBranch {
     echo -e "${green}Creating the new branch: ${sourceBranch}..."
     echo -ne ${white}
@@ -59,7 +82,19 @@ function copyYAMLFile {
     if test ! -z "$artifactPath"
     then
         # Add the extra step to the YAML.
-        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+        if [ "$provider" == "azure-devops" ]
+        then
+            cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+        elif [ "$provider" == "github" ]
+        then
+            storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
+            sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+        fi
+    else
+        if [ "$provider" == "github" ]
+        then
+            sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+        fi
     fi
 }
 

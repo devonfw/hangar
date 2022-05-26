@@ -44,6 +44,7 @@ red='\e[0;31m'
 commonTemplatesPath="scripts/pipelines/github/templates/common" # Path for common files of the pipelines
 pipelinePath=".github/workflows" # Path to the pipelines.
 scriptFilePath=".github/workflows/scripts" # Path to the scripts.
+export provider="github"
 
 function help {
     echo ""
@@ -68,7 +69,6 @@ function help {
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --test-pipeline-name    [Required] Test pipeline name."
     echo ""
     echo "Package pipeline flags:"
@@ -101,27 +101,6 @@ function help {
     exit
 }
 
-
-function checkInstallations {
-    # Check if Git is installed
-    if ! [ -x "$(command -v git)" ]; then
-        echo -e "${red}Error: Git is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Azure CLI is installed
-    if ! [ -x "$(command -v gh)" ]; then
-        echo -e "${red}Error: Github CLI is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Python is installed
-    if ! [ -x "$(command -v python)" ]; then
-        echo -e "${red}Error: Python is not installed." >&2
-        exit 127
-    fi
-}
-
 function obtainHangarPath {
 pipelineGeneratorFullPath=$(readlink -f "$(pwd)/$0")
 pipelineGeneratorRepoPath='/scripts/pipelines/github/pipeline_generator.sh'
@@ -143,7 +122,7 @@ function addCommonPipelineVariables {
         grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathInput="    inputs:\n      artifactPath:\n       required: false\n       default: \"${artifactPath//\//\\/}\""
         sed -i "s/# mark to insert additional artifact input #/$textArtifactPathInput/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         # add the env var for the additional artifact
-        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
+        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: \${{ (github.event_name == 'push' || github.event_name == 'workflow_run') \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         # Add the extra artifact to store variable.
         sed -i "s/# mark to insert additional artifact env var #/$textArtifactPathVar/" "${localDirectory}/${pipelinePath}/${yamlFile}"
@@ -165,8 +144,8 @@ function createPR {
         repoName="${repoNameWithGit/.git}"
         # Create the Pull Request to merge into the specified branch.
         #debug
-        echo "gh pr create -B \"$targetBranch\" -b \"merge request build pipeline\" -H feature/build-pipeline -R \"${repoName}\" -t \"Build Pipeline\""
-        pr=$(gh pr create -B "$targetBranch" -b "merge request build pipeline" -H feature/build-pipeline -R "${repoName}" -t "Build Pipeline")
+        echo "gh pr create -B \"$targetBranch\" -b \"merge request $sourceBranch\" -H "$sourceBranch" -R \"${repoName}\" -t \"$sourceBranch\""
+        pr=$(gh pr create -B "$targetBranch" -b "merge request $sourceBranch" -H "$sourceBranch" -R "${repoName}" -t "$sourceBranch")
 
         # trying to merge
         if gh pr merge -s "$pr"
