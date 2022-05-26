@@ -41,9 +41,10 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 # Common var
-commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for common files of the pipelines 
+commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for common files of the pipelines
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
+export provider="azure-devops"
 
 function help {
     echo ""
@@ -99,27 +100,6 @@ function help {
     echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
 
     exit
-}
-
-
-function checkInstallations {
-    # Check if Git is installed
-    if ! [ -x "$(command -v git)" ]; then
-        echo -e "${red}Error: Git is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Azure CLI is installed
-    if ! [ -x "$(command -v az)" ]; then
-        echo -e "${red}Error: Azure CLI is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Python is installed
-    if ! [ -x "$(command -v python)" ]; then
-        echo -e "${red}Error: Python is not installed." >&2
-        exit 127
-    fi
 }
 
 function obtainHangarPath {
