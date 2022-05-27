@@ -37,7 +37,8 @@ jobs:
         if: always()
         with:
           files: '**/TEST-*.xml'
-    
+
+    # mark to insert step for additonal artifact #
     on-failure:
       name: Build Pipeline Failed
       runs-on: ubuntu-latest
