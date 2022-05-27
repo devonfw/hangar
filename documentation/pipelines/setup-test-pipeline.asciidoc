@@ -1,6 +1,6 @@
 = Setting up a Test Pipeline
 
-In this section we will create a test pipeline on Azure DevOps for running project test cases. This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit, and consumes the artifact produced by the build pipeline.
+In this section we will create a test pipeline for running project test cases. This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit, and consumes the artifact produced by the build pipeline.
 
 The creation of this pipeline will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
@@ -29,7 +29,7 @@ pipeline_generator.sh \
   [-w]
 ```
 
-NOTE:  The config file for the test pipeline is located at `/scripts/pipelines/azure-devops/templates/test/test-pipeline.cfg`.
+NOTE:  The config file for the test pipeline is located at `/scripts/pipelines/<environment>/templates/test/test-pipeline.cfg`.
 
 NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the "additional pipeline output" artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
 
