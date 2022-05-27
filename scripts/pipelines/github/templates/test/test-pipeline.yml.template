@@ -11,7 +11,7 @@ permissions:
   actions: write
 
 env:
-  build_pipeline: ${{ github.event.name == 'workflow_run' && format('$buildPipelineName') || github.event.inputs.build_pipeline }}
+  build_pipeline: 'build-pipeline.yml'
 # mark to insert additional artifact env var #
 
 jobs:
