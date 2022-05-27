@@ -43,6 +43,7 @@ steps:
 
 - task: Bash@3
   displayName: 'Getting last Build pipeline execution to download artifact'
+  condition: eq($(skipBuildPipeline), false)
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   inputs:
@@ -51,6 +52,7 @@ steps:
 
 - task: DownloadPipelineArtifact@2
   displayName: 'Download Build pipeline artifact'
+  condition: eq($(skipBuildPipeline), false)
   inputs:
     source: 'specific'
     project: '$(System.TeamProject)'
