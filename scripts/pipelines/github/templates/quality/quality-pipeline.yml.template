@@ -32,7 +32,7 @@ jobs:
           check_artifacts:  true
 
       - name: SonarQube analysis
-        run: .github/workflows/scripts/quality.sh .
+        run: .github/workflows/scripts/quality.sh . ${{ secrets.SONARQUBE_TOKEN }}
 
 # mark to insert step for additonal artifact #
   test-failed:
