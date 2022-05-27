@@ -181,49 +181,44 @@ function set_default_branch_and_policies {
         echo -e "${blue}Creating rule to need approval of ${REVIEWER_NBR} people. (enable=${ENABLE_APPROVE_COUNT})"
         echo -e "${white}"
         az repos policy approver-count create --blocking true --branch "$i" --enabled "${ENABLE_APPROVE_COUNT}" --repository-id "${repo_id}" --minimum-approver-count "${REVIEWER_NBR}" --creator-vote-counts "${CREATOR_VOTE_COUNTS}" --allow-downvotes "${ALLOW_DOWNVOTES}" --reset-on-source-push "${RESET_ON_PUSH}" --project "${2}" --organization "${1}"
+        echo -e "${blue}Adding comment resolution policy.(enable=${ENABLE_APPROVE_COUNT})"
+        echo -e "${white}"
+        az repos policy comment-required create --blocking true --branch "${i}" --enabled "${ENABLE_COMMENT_RESOLUTION}" --repository-id "${repo_id}" --project "${2}" --organization "${1}"
+        echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
+        echo -e "${white}"
+        az repos policy merge-strategy create --blocking true --branch "$i" --enabled "${ENABLE_MERGE_LIMITS}" --repository-id "${repo_id}" --allow-no-fast-forward "${ALLOW_NO_FAST_FORWARD}" --allow-rebase "${ALLOW_REBASE}" --allow-rebase-merge "${ALLOW_REBASE_MERGE}" --allow-squash "${ALLOW_SQUASH}" --branch-match-type exact --project "${2}" --organization "${1}"
       elif [ "$7" == "github" ]
       then
-        if [ "${ENABLE_APPROVE_COUNT}" == "true" ]
+        if [ "$8" = "true" ] # $8=true to ensure is a public repo. (Only works on public or Github Pro repos)
         then
-          # Get repoid
-          repo_id="$(gh api graphql -f query='{repository(owner:"'$6'",name:"'$4'"){id}}' -q .data.repository.id)"
           # Enable branch protection and comment resolution policy all in one. Only avaliable to public (or GH Pro) repositories
-          if [ "$8" = "true" ]
+          if [ "${ENABLE_APPROVE_COUNT}" == "true" ]
           then
+            # Get repoid
+            repo_id="$(gh api graphql -f query='{repository(owner:"'$6'",name:"'$4'"){id}}' -q .data.repository.id)"
             echo "For $i:"
             echo -e "${blue}Creating rule to need approval of ${REVIEWER_NBR} people. (enable=${ENABLE_APPROVE_COUNT})"
             echo -e "${white}"
             echo -e "${blue}Adding comment resolution policy.(enable=${ENABLE_APPROVE_COUNT})"
             echo -e "${white}"
-          gh api graphql -f query='
-            mutation($repositoryId:ID!,$branch:String!,$requiredReviews:Int!,$enableCommentResolution:Boolean!) {
-              createBranchProtectionRule(input: {
-                repositoryId: $repositoryId
-                pattern: $branch
-                requiresApprovingReviews: true
-                requiredApprovingReviewCount: $requiredReviews
-                requiresConversationResolution: $enableCommentResolution
-              }) { clientMutationId }
-            }' -f repositoryId="$repo_id" -f branch="[$i]*" -F requiredReviews="${REVIEWER_NBR}" -F enableCommentResolution="${ENABLE_COMMENT_RESOLUTION}"
+            gh api graphql -f query='
+              mutation($repositoryId:ID!,$branch:String!,$requiredReviews:Int!,$enableCommentResolution:Boolean!) {
+                createBranchProtectionRule(input: {
+                  repositoryId: $repositoryId
+                  pattern: $branch
+                  requiresApprovingReviews: true
+                  requiredApprovingReviewCount: $requiredReviews
+                  requiresConversationResolution: $enableCommentResolution
+                }) { clientMutationId }
+              }' -f repositoryId="$repo_id" -f branch="[$i]*" -F requiredReviews="${REVIEWER_NBR}" -F enableCommentResolution="${ENABLE_COMMENT_RESOLUTION}"
+          fi
+          if [ "$ENABLE_MERGE_LIMITS" == "true" ]  
+          then
+            echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
+            echo -e "${white}"
+            gh repo edit $6/$4 --enable-rebase-merge="${ALLOW_REBASE_MERGE}" --enable-squash-merge="${ALLOW_SQUASH}" 
           fi
         fi
-      fi
-      if [ "$target" == "azure" ]
-      then
-        echo -e "${blue}Adding comment resolution policy.(enable=${ENABLE_APPROVE_COUNT})"
-        echo -e "${white}"
-        az repos policy comment-required create --blocking true --branch "${i}" --enabled "${ENABLE_COMMENT_RESOLUTION}" --repository-id "${repo_id}" --project "${2}" --organization "${1}"
-      fi
-      if [ "$7" == "azure" ]
-      then
-        echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
-        echo -e "${white}"
-        az repos policy merge-strategy create --blocking true --branch "$i" --enabled "${ENABLE_MERGE_LIMITS}" --repository-id "${repo_id}" --allow-no-fast-forward "${ALLOW_NO_FAST_FORWARD}" --allow-rebase "${ALLOW_REBASE}" --allow-rebase-merge "${ALLOW_REBASE_MERGE}" --allow-squash "${ALLOW_SQUASH}" --branch-match-type exact --project "${2}" --organization "${1}"
-      elif [ "$7" == "github" ] && [ "ENABLE_MERGE_LIMITS" == "true" ] && [ "$8" == "true" ] # $8=true to ensure is a public repo. (Only works on public or Github Pro repos)
-      then
-        echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
-        echo -e "${white}"
-        gh repo edit $6/$4 --enable-rebase-merge="${ALLOW_REBASE_MERGE}" --enable-squash-merge="${ALLOW_SQUASH}" 
       fi
   done
   echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
