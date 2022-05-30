@@ -130,9 +130,9 @@ function create_repo {
   then
     if [ "$5" == "true" ]
     then
-      gh repo create $1 --public
+      gh repo create "$1" --public
     else
-      gh repo create $1 --private
+      gh repo create "$1" --private
     fi
   fi  
 
@@ -166,7 +166,7 @@ function set_default_branch_and_policies {
     az repos update --organization "$1" --project "$2" --repository "$4" --default-branch master > /dev/null
   elif [ "$7" == "github" ]
   then
-    gh repo edit $6/$4 --default-branch master > /dev/null
+    gh repo edit "$6/$4" --default-branch master > /dev/null
   fi
   
   MSG_ERROR "Setting 'master' branch as default branch" $?
@@ -216,7 +216,7 @@ function set_default_branch_and_policies {
           then
             echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
             echo -e "${white}"
-            gh repo edit $6/$4 --enable-rebase-merge="${ALLOW_REBASE_MERGE}" --enable-squash-merge="${ALLOW_SQUASH}" 
+            gh repo edit "$6/$4" --enable-rebase-merge="${ALLOW_REBASE_MERGE}" --enable-squash-merge="${ALLOW_SQUASH}" 
           fi
         fi
       fi
@@ -244,7 +244,7 @@ function import_repo {
     #create_repo "$4" "$2" "$3" "$6" "$5"
     git clone --bare $1
     source_repo_namegit=${1##*/}
-    cd $source_repo_namegit
+    cd "$source_repo_namegit"
     git push --mirror https://github.com/$7/$4.git
   fi
   MSG_ERROR  "Importing repository: $1"  "$?"
