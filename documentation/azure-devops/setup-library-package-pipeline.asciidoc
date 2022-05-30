@@ -41,7 +41,7 @@ NOTE: The config file for the library package pipeline is located at `/scripts/p
 -n, --pipeline-name            [Required] Name that will be set to the pipeline.
 -l, --language                 [Required] Language or framework of the project.
 -d, --local-directory          [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --build-pipeline-name      [Required] Build pipeline name.
+    --build-pipeline-name      [Required, if Java] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
@@ -56,7 +56,7 @@ NOTE: The config file for the library package pipeline is located at `/scripts/p
 
 ==== Node.js project
 ```
-./pipeline_generator.sh -c ./templates/library-package/library-package-pipeline.cfg -n library-package-pipeline -l node -d C:/Users/$USERNAME/Desktop/node-library-project --build-pipeline-name node-library-build --quality-pipeline-name node-library-quality
+./pipeline_generator.sh -c ./templates/library-package/library-package-pipeline.cfg -n library-package-pipeline -l node -d C:/Users/$USERNAME/Desktop/node-library-project --quality-pipeline-name node-library-quality
 ```
 
 == Adding Maven feed to library repository list
