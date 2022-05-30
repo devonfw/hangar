@@ -1,0 +1,39 @@
+name: $pipelineName
+
+on:
+  workflow_run:
+    workflows: $qualityPipelineName
+    types: completed
+  worflow_dispatch:
+# mark to insert additional artifact input #
+
+permissions:
+  actions: write
+
+env:
+  quality_pipeline: 'quality-pipeline.yml'
+# mark to insert additional artifact env var #
+
+jobs:
+  on-success:
+    name: Package
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v2
+
+    - name: Download Build Pipeline Artifact
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        workflow: 'build-pipeline.yml'
+        commit: ${{ github.event.pull_request.head.sha }}
+    
+  # mark to insert step for additional artifact #
+  on-failure:
+    name: Quality Pipeline Failed
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+    - name: Cancel Pipeline
+      uses: andymckay/cancel-action@0.2
