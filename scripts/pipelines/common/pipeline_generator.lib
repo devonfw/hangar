@@ -1,0 +1,124 @@
+function ensurePathFormat {
+    currentDirectory=$(pwd)
+
+    # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a
+    # Unix-style path using forward slashes (e.g. "/c/Users").
+    localDirectory=${localDirectory//'\'/"/"}
+    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
+    localDirectory=$(pwd)
+
+    # Return to initial directory
+    cd $currentDirectory
+}
+
+function importConfigFile {
+    # Import config file.
+    source $configFile
+    IFS=, read -ra flags <<< "$mandatoryFlags"
+
+    # Check if the config file was supplied.
+    if test -z "$configFile"
+    then
+        echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
+        exit 2
+    fi
+
+    # Check if the required flags in the config file have been activated.
+    for flag in "${flags[@]}"
+    do
+        if test -z $flag
+        then
+            echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
+            echo -e "${red}Use -h or --help flag to display help." >&2
+            exit 2
+        fi
+    done
+}
+
+function checkInstallations {
+    # Check if Git is installed
+    if ! [ -x "$(command -v git)" ]; then
+        echo -e "${red}Error: Git is not installed." >&2
+        exit 127
+    fi
+
+    # Check if the CLI tool for the provider is installed
+    if ([ "$provider" == "github" ] && ! [ -x "$(command -v gh)" ]); then
+        echo -e "${red}Error: Github CLI is not installed." >&2
+        exit 127
+    elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
+        echo -e "${red}Error: Azure CLI is not installed." >&2
+        exit 127
+    fi
+
+    # Check if Python is installed
+    if ! [ -x "$(command -v python)" ]; then
+        echo -e "${red}Error: Python is not installed." >&2
+        exit 127
+    fi
+}
+
+function createNewBranch {
+    echo -e "${green}Creating the new branch: ${sourceBranch}..."
+    echo -ne ${white}
+
+    # Create the new branch.
+    cd "${localDirectory}"
+    git checkout -b ${sourceBranch}
+}
+
+function copyYAMLFile {
+    echo -e "${green}Copying the corresponding files into your directory..."
+    echo -ne ${white}
+
+    # Create .pipelines and scripts if they do not exist.
+    mkdir -p "${localDirectory}/$scriptFilePath"
+
+    # Generate pipeline YAML from template and put it in the repository.
+    # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
+    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineVarFile} ${pipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
+
+    # Check if an extra artifact to store is supplied.
+    if test ! -z "$artifactPath"
+    then
+        # Add the extra step to the YAML.
+        if [ "$provider" == "azure-devops" ]
+        then
+            cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+        elif [ "$provider" == "github" ]
+        then
+            storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
+            sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+        fi
+    else
+        if [ "$provider" == "github" ]
+        then
+            sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+        fi
+    fi
+}
+
+function copyCommonScript {
+    echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
+    echo -ne ${white}
+
+    ! (ls "${hangarPath}/${commonTemplatesPath}"/*.sh) &> /dev/null || cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
+}
+
+function commitCommonFiles {
+    echo -e "${green}Commiting and pushing into Git remote..."
+    echo -ne ${white}
+
+    # Move into the project's directory and pushing the template into the Azure DevOps repository.
+    cd ${localDirectory}
+
+    # Add the YAML files.
+    git add "$pipelinePath" -f
+
+    # Git commit and push it into the repository.
+    # changing all files to be executable
+    find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
+
+    git commit -m "Adding the source YAML"
+    git push -u origin ${sourceBranch}
+}
