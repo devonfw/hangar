@@ -1,6 +1,6 @@
-= Setting up a Build Pipeline
+= Setting up a Build Workflow on Github Actions
 
-In this section we will create a build pipeline for compiling project code. This pipeline will be configured to be triggered every time there is a commit to the repository, regardless of which branch it is made on.
+In this section we will create a build workflow on github actions for compiling project code. This workflow will be configured to be triggered every time there is a commit to the repository, regardless of which branch it is made on.
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
