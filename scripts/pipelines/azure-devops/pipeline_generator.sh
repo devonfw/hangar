@@ -165,7 +165,7 @@ function createNewBranch {
     # Create the new branch.
     git checkout -b ${sourceBranch}
 
-    # clear local-branches
+    # set undo-stage (clear local branches)
     undoStage=1
 }
 
@@ -226,7 +226,7 @@ function createPipeline {
         # if the script fails, clean pollution
         echo "There was an error creating the pipeline! Please check if you specified the name and got all settings right!"
 
-        clearPollution
+        undoPreviousSteps
 
         exit 127
     }
@@ -249,7 +249,7 @@ function addCommonPipelineVariables {
 
             echo "There was an error creating the pipeline-artifact-path variable!. Exiting"
 
-            clearPollution
+            undoPreviousSteps
 
             exit 127
         }
@@ -338,7 +338,11 @@ function removePipeline {
     az pipelines delete --id ${pipelineId}
 }
 
-function clearPollution {
+function abandonPullRequest {
+    az repos pr update --id id --status abandoned
+}
+
+function undoPreviousSteps {
     # free all resources
 
     if [ ${undoStage} -gt 2 ]; then
@@ -351,7 +355,7 @@ function clearPollution {
         echo "Removing all pipeline-files and remote branches!"
 
         removePipelineFiles
-
+        removePullRequest
         removeRemoteBranches
     fi
 
