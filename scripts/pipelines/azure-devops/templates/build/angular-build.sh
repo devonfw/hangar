@@ -1,2 +1,2 @@
 #!/bin/bash
-npm install angular
+npm install
