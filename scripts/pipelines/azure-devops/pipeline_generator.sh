@@ -58,6 +58,7 @@ function help {
     echo ""
     echo "Build pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -t, --target-directory      [Required, if language is dotnet] The output directory to place built artifacts in."
     echo ""
     echo "Test pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-dotnet build -o "$targetDirectory"
+dotnet build -c Release -o "$targetDirectory"
