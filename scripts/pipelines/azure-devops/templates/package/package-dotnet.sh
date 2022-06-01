@@ -32,7 +32,7 @@ do
     esac
 done
 
-# We define the tag using the version set in the cs.proj # So far this assumes that we are building the example application.     # TODO: change to csProjectFile
+# We define the tag using the version set in the cs.proj # So far this assumes that we are building the example application.     # TODO: change to correct path of csProjectFile
 version=$(echo 'cat //Project/ItemGroup/PackageReference[@Include="Devon4Net.Infrastructure.WebAPI"]/@Version' | xmllint --shell ./Devon4Net.Application.WebAPI.csproj | awk -F'[="]' '!/>/{print $(NF-1)}')
 
 # We get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
