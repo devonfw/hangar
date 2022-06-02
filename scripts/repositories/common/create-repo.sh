@@ -14,7 +14,6 @@
 # -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
 # -f, --force                              Skips any user confirmation.
 #     --subpath                            When combined with -g and -r, imports only the specified subpath of the source Git repository.
-# -t, --target                  [Required] Target repository manager. Accepted values: azure, github.
 # -u, --public                             Repository scope. Private by default
 #
 ######################################################################################################
@@ -43,13 +42,12 @@ function help {
   echo "  -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
   echo "  -f, --force                              Skips any user confirmation."
   echo "      --subpath                            When combined with -g and -r, imports only the specified subpath of the source Git repository."
-  echo "  -t, --target                  [Required] Target repository manager. Accepted values: azure, github."
   echo "  -u, --public                             Repository scope. Private by default"
 
   exit
 }
 [ "$*" = "" ] && help
-FLAGS=$(getopt -a --options a:n:d:o:p:g:b:rs:fh:t:u --long "action:,name:,directory:,org:,project:,giturl:,branch:,remove-other-branches,setup-branch-strategy:,force,help,subpath:,target:,public" -- "$@")
+FLAGS=$(getopt -a --options a:n:d:o:p:g:b:rs:fhu --long "action:,name:,directory:,org:,project:,giturl:,branch:,remove-other-branches,setup-branch-strategy:,force,help,subpath:,public" -- "$@")
 eval set -- "$FLAGS"
 #We read every arguments given
 force="false"
@@ -70,15 +68,12 @@ while true; do
         -h | --help)                            help="true"; shift 1;;
         -f | --force)                           force="true"; shift 1;;
         --subpath)                              subpath="$2"; shift 2;;
-        -t | --target)                          target="$2"; shift 2;;
         -u | --public)                          public="true"; shift 1;;
         --) shift; break;;
     esac
 done
 
 [ "$help" = "true" ] && help
-
-
 
 yellow='\e[1;33m'
 white='\e[1;37m'
@@ -89,6 +84,8 @@ blue='\e[1;34m'
 project_convertido="${project// /%20}"
 absoluteScriptPath=$(realpath "$0")
 absoluteFolderScriptPath="${absoluteScriptPath%/*}"
+absoluteFolderScriptPath="${absoluteFolderScriptPath}/../common/" # Fixed folder script path to aim to the common path and not to the specific provider path
+
 function MSG_ERROR {
 if [ "$2" != 0 ]
 then
@@ -110,32 +107,16 @@ fi
 directory_name=$(basename "$(pwd)")
 
 
+
 function create_repo {
   # $1 = name (of the repo)
   # $2 = organization
   # $3 = 'project'
-  # $4 = target
-  # $5 = public
+  # $4 = public
   echo "--"
   echo -e "${blue}Creating repo $1. ${white}"
   echo ""
-  if [ "$4" == "azure" ]
-  then
-    #We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
-    json_repo=$(az repos create --name "$1" --organization "${2}" --project "$3")
-    MSG_ERROR "Creating repo $1" "$?"
-    echo "$json_repo"
-    repo_id=$(echo "$json_repo" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
-  elif [ "$4" == "github" ]
-  then
-    if [ "$5" == "true" ]
-    then
-      gh repo create "$1" --public
-    else
-      gh repo create "$1" --private
-    fi
-  fi  
-
+  create_repo_content "$1" "$2" "$3" "$4"
   echo ""
   echo -e "--${white}"
 }
@@ -147,8 +128,7 @@ function set_default_branch_and_policies {
   # $4 = name (of repository)
   # $5 = strategy
   # $6 = ghuser
-  # $7 = target
-  # $8 = public
+  # $7 = public
 
   echo "--"
   echo -e "Loading the properties for the strategy you chose."
@@ -161,65 +141,14 @@ function set_default_branch_and_policies {
     git checkout -b "$i"
     git push --set-upstream origin "$i"
   done
-  if [ "$7" == "azure" ]
-  then
-    az repos update --organization "$1" --project "$2" --repository "$4" --default-branch master > /dev/null
-  elif [ "$7" == "github" ]
-  then
-    gh repo edit "$6/$4" --default-branch master > /dev/null
-  fi
-  
+  set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
   MSG_ERROR "Setting 'master' branch as default branch" $?
   echo ""
   echo -e "${blue}Setting policies for the repository. ${white}"
   STR_BRANCHES_WITH_MASTER="master $STR_BRANCHES"
   for i in $STR_BRANCHES_WITH_MASTER
   do
-      if [ "$7" == "azure" ]
-      then
-        echo "For $i:"
-        echo -e "${blue}Creating rule to need approval of ${REVIEWER_NBR} people. (enable=${ENABLE_APPROVE_COUNT})"
-        echo -e "${white}"
-        az repos policy approver-count create --blocking true --branch "$i" --enabled "${ENABLE_APPROVE_COUNT}" --repository-id "${repo_id}" --minimum-approver-count "${REVIEWER_NBR}" --creator-vote-counts "${CREATOR_VOTE_COUNTS}" --allow-downvotes "${ALLOW_DOWNVOTES}" --reset-on-source-push "${RESET_ON_PUSH}" --project "${2}" --organization "${1}"
-        echo -e "${blue}Adding comment resolution policy.(enable=${ENABLE_APPROVE_COUNT})"
-        echo -e "${white}"
-        az repos policy comment-required create --blocking true --branch "${i}" --enabled "${ENABLE_COMMENT_RESOLUTION}" --repository-id "${repo_id}" --project "${2}" --organization "${1}"
-        echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
-        echo -e "${white}"
-        az repos policy merge-strategy create --blocking true --branch "$i" --enabled "${ENABLE_MERGE_LIMITS}" --repository-id "${repo_id}" --allow-no-fast-forward "${ALLOW_NO_FAST_FORWARD}" --allow-rebase "${ALLOW_REBASE}" --allow-rebase-merge "${ALLOW_REBASE_MERGE}" --allow-squash "${ALLOW_SQUASH}" --branch-match-type exact --project "${2}" --organization "${1}"
-      elif [ "$7" == "github" ]
-      then
-        if [ "$8" = "true" ] # $8=true to ensure is a public repo. (Only works on public or Github Pro repos)
-        then
-          # Enable branch protection and comment resolution policy all in one. Only avaliable to public (or GH Pro) repositories
-          if [ "${ENABLE_APPROVE_COUNT}" == "true" ]
-          then
-            # Get repoid
-            repo_id="$(gh api graphql -f query='{repository(owner:"'$6'",name:"'$4'"){id}}' -q .data.repository.id)"
-            echo "For $i:"
-            echo -e "${blue}Creating rule to need approval of ${REVIEWER_NBR} people. (enable=${ENABLE_APPROVE_COUNT})"
-            echo -e "${white}"
-            echo -e "${blue}Adding comment resolution policy.(enable=${ENABLE_APPROVE_COUNT})"
-            echo -e "${white}"
-            gh api graphql -f query='
-              mutation($repositoryId:ID!,$branch:String!,$requiredReviews:Int!,$enableCommentResolution:Boolean!) {
-                createBranchProtectionRule(input: {
-                  repositoryId: $repositoryId
-                  pattern: $branch
-                  requiresApprovingReviews: true
-                  requiredApprovingReviewCount: $requiredReviews
-                  requiresConversationResolution: $enableCommentResolution
-                }) { clientMutationId }
-              }' -f repositoryId="$repo_id" -f branch="[$i]*" -F requiredReviews="${REVIEWER_NBR}" -F enableCommentResolution="${ENABLE_COMMENT_RESOLUTION}"
-          fi
-          if [ "$ENABLE_MERGE_LIMITS" == "true" ]  
-          then
-            echo -e "${blue}Adding merge limits.(enable=${ENABLE_APPROVE_COUNT})"
-            echo -e "${white}"
-            gh repo edit "$6/$4" --enable-rebase-merge="${ALLOW_REBASE_MERGE}" --enable-squash-merge="${ALLOW_SQUASH}" 
-          fi
-        fi
-      fi
+    set_default_branch_and_policies_content_2 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
   done
   echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
 
@@ -232,21 +161,10 @@ function import_repo {
   # $3 = project
   # $4 = name (of repository)
   # $5 = public
-  # $6 = target
-  # $7 = ghuser
+  # $6 = ghuser
   echo "--"
   echo -e "${blue}Importing the repo located at $1. ${white}"
-  if [ "$6" == "azure" ]
-  then
-    az repos import create --git-url "$1" --organization "${2}" --project "$3" --repository "$4" > /dev/null
-  elif [ "$6" == "github" ]
-  then  
-    #create_repo "$4" "$2" "$3" "$6" "$5"
-    git clone --bare $1
-    source_repo_namegit=${1##*/}
-    cd "$source_repo_namegit"
-    git push --mirror https://github.com/$7/$4.git
-  fi
+  import_repo_content "$1" "$2" "$3" "$4" "$5" "$6"
   MSG_ERROR  "Importing repository: $1"  "$?"
   echo "--"
 }
@@ -298,9 +216,8 @@ function prepare_push_existing_repo {
   # $4 = repo_id
   # $5 = project with spaces converted
   # $6 = ghuser
-  # $7 = target
-  # $8 = public
-  # (optional) $9 = branch of reference
+  # $7 = public
+  # (optional) $8 = branch of reference
   #We check if the directory is already a git repository or not
   echo "--"
   echo -e "${blue}Start of the function to import a directory/repository.${white}"
@@ -344,13 +261,7 @@ function prepare_push_existing_repo {
 
     if [ "$user_input_remote_url" = 'Y' ]
     then
-      if [ "$7" = "azure" ]
-      then
-        URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
-      elif [ "$7" = "github" ]
-      then
-        URL_space_converted="https://github.com/$6/$3.git"
-      fi
+      prepare_push_existing_repo_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
       git remote set-url origin "$URL_space_converted"
     else
       exit
@@ -359,13 +270,7 @@ function prepare_push_existing_repo {
     echo ""
     echo "Adding remote URL as no URL was previously set."
 
-    if [ "$7" = "azure" ]
-    then
-      URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
-    elif [ "$7" = "github" ]
-    then
-      URL_space_converted="https://github.com/$6/$3.git"
-    fi
+    prepare_push_existing_repo_content_2 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
     git remote add origin "$URL_space_converted"
     echo ""
   fi
@@ -373,7 +278,7 @@ function prepare_push_existing_repo {
   # Creating master from the reference
   if [ $isGitRepo -eq 0 ]
   then
-    if [ "$9" != "" ]
+    if [ "$8" != "" ]
     then
       echo "You gave a branch with -b flag, that means we are going to take this branch as reference and create master from this one, if it already exists it will be deleted to be created again."
       if [ $force = "false" ]
@@ -390,7 +295,7 @@ function prepare_push_existing_repo {
       done
       if [ "$user_input_branch" = 'Y' ]
       then
-        replace_branch_with_reference master "$9"
+        replace_branch_with_reference master "$8"
       else
         exit
       fi
@@ -412,11 +317,11 @@ function prepare_push_existing_repo {
   # Setting up strategy
   if [ "$strategy" != "" ]
   then
-    if [ "$isGitRepo" -eq 0 ] && [ "$9" = "" ]
+    if [ "$isGitRepo" -eq 0 ] && [ "$8" = "" ]
     then
       echo -e "${yellow}You gave the '-s' flag but without a branch ('-b' flag) and your directory was already a git repository, we skipped the setting of branch policies.${white}"
     else
-      set_default_branch_and_policies "${1}" "$2" "$4" "$3" "$strategy" "$6" "$7" "$8"
+      set_default_branch_and_policies "${1}" "$2" "$4" "$3" "$strategy" "$6" "$7"
     fi
   fi
 }
@@ -454,17 +359,12 @@ function load_conf {
 
 
 # Arguments check start
-if ([ "${organization}" = "" ] || [ "$project" = "" ]) && [ "$target" = "azure" ]
-then
-  echo -e "${red}You chose an Azure repository as target but one of these mandatory flags is missing: -o, -p."
-  echo "Use -h or --help flag to display help."
-  exit 1
-fi
+arguments_check_content
 if [ "$action" = "create" ]
 then
-  if [ "$directory" = "" ] || [ "$target" = "" ]
+  if [ "$directory" = "" ]
   then
-    echo -e "${red}You chose the action 'create' but one of these mandatory flags is missing: -n, -d, -t."
+    echo -e "${red}You chose the action 'create' but one of these mandatory flags is missing: -n, -d."
 
     echo "Use -h or --help flag to display help."
     exit 1
@@ -473,9 +373,9 @@ then
   fi
 elif [ "$action" = "import" ]
 then
-  if [ "$directory" = "" ] || [ "$target" = "" ]
+  if [ "$directory" = "" ]
   then
-    echo -e "${red}You chose the action 'import' but one of these mandatory flags is missing: -d, -g, -t."
+    echo -e "${red}You chose the action 'import' but one of these mandatory flags is missing: -d, -g."
 
     echo -e "${white}Use -h or --help flag to display help."
     exit 1
@@ -496,38 +396,22 @@ else
 fi
 
 #Arguments check finish
-if [ "$target" = "github" ]
-then
-  organization=""
-  project=""
-fi
-create_repo "$name" "$organization" "$project" "$target" "$public"
 
-#Get github username
-if [ "$target" = "github" ]
-then
-  ghuser=$(gh auth status 2>&1 | sed -n 2p | awk  '{print $7}')
-else
-  ghuser=""
-fi
+custom_vars_assignment
+
+create_repo "$name" "$organization" "$project" "$public"
 
 if [ "$action" = "import" ]
 then
   if [ "$giturl_argument" = "" ]
   then
-    prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$target" "$public" "$branch"
+    prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$public" "$branch"
   else
     if [ "$branch" = "" ] && [ "$remove" = "false" ]
     then
       echo "You have not given a branch name or used the '-r' flag so the repository will be imported as it is"
-      import_repo "$giturl_argument" "$organization" "$project" "$name" "$public" "$target" "$ghuser"
-      if [ "$target" = "azure" ]
-      then
-        git clone "${organization}/${project_convertido}/_git/${name// /%20}" "$name"
-      elif [ "$target" = "github" ]
-      then
-        git clone "https://github.com/$ghuser/$name.git" "$name"
-      fi
+      import_repo "$giturl_argument" "$organization" "$project" "$name" "$public" "$ghuser"
+      clone_git_project_import
     elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
     then
       if ! (echo "The combination of the flags '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch given or the default one."
@@ -551,7 +435,7 @@ then
       mv "$subpath" "../$name"
       MSG_ERROR "moving folder to $name" "$?"
       cd "../$name"
-      prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$target" "$public" "$branch")
+      prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$public" "$branch")
       then
         exit 1
       fi
@@ -569,23 +453,17 @@ then
       fi
       cd "$name"
       MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'" "$?"
-      prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$target" "$public" "$branch"
+      prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$public" "$branch"
     fi
   fi
 elif [ "$action" = "create" ]
 then
   MSG_ERROR "Cding into the directory given." "$?"
-  if [ "$target" == "azure" ]
-  then
-    git clone "${organization}/${project_convertido}/_git/${name// /%20}" .
-  elif [ "$target" == "github" ]
-  then
-    git clone "https://github.com/$ghuser/$name.git" .
-  fi
+  clone_git_project_create
   MSG_ERROR "Cloning empty repo." $?
   git checkout -b master
   cp "$absoluteFolderScriptPath/README.md" .
-  git add -A
+  git a dd -A
   git commit -m "Adding README"
   git push -u origin --all
   if [ "$strategy" != "" ]
