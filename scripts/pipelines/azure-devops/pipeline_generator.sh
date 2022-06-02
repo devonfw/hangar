@@ -50,7 +50,7 @@ function help {
     echo "Common flags:"
     echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
     echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -d, --local-directory       [Required] Local directory of your project."
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
