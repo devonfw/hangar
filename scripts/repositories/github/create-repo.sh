@@ -46,7 +46,7 @@ function set_default_branch_and_policies_content_2 {
 }
 
 function import_repo_content {
-    git clone --bare $1
+    git clone --bare "$1"
     source_repo_namegit=${1##*/}
     cd "$source_repo_namegit"
     git push --mirror https://github.com/$6/$4.git
