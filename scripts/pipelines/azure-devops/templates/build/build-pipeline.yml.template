@@ -11,7 +11,17 @@ steps:
   displayName: "Build"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/build.sh'
+- task: Bash@3
+  displayName: "Build"
+  inputs:
+    targetType: 'inline'
+    script: echo '$(artifactName)'
+- task: Bash@3
+  displayName: "Build"
+  inputs:
+    targetType: 'inline'
+    script: echo '$(targetPath)'
 
 - publish: $(Build.Repository.LocalPath)/$(targetPath)
   displayName: "Publish Artifact"
-  artifact: $(targetPath)
+  artifact: $(artifactName)
