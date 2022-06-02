@@ -32,7 +32,7 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -l, --language           [Required] Language or framework of the project.
--d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
+-d, --local-directory    [Required] Local directory of your project.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -44,5 +44,3 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
-
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.

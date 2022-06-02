@@ -50,7 +50,7 @@ function help {
     echo "Common flags:"
     echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
     echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -d, --local-directory       [Required] Local directory of your project."
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
@@ -143,6 +143,19 @@ function checkInstallations {
     fi
 }
 
+function ensurePathFormat {
+    currentDirectory=$(pwd)
+
+    # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a 
+    # Unix-style path using forward slashes (e.g. "/c/Users").
+    localDirectory=${localDirectory//'\'/"/"}
+    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
+    localDirectory=$(pwd)
+
+    # Return to initial directory
+    cd "$currentDirectory"
+}
+
 function obtainHangarPath {
     pipelineGeneratorFullPath="$(readlink -f """$(pwd)/$0""")" 
      
@@ -157,8 +170,6 @@ function createNewBranch {
 
     # Create the new branch.
     cd "${localDirectory}"
-    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
-
     git checkout -b ${sourceBranch}
 }
 
@@ -280,6 +291,8 @@ if [[ "$help" == "true" ]]; then help; fi
 importConfigFile
 
 checkInstallations
+
+ensurePathFormat
 
 obtainHangarPath
 
