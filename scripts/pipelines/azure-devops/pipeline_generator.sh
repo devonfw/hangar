@@ -43,9 +43,6 @@ red='\e[0;31m'
 # Common var
 commonTemplatesPath="scripts/pipelines/azure-devops/templates/common"
 
-# Undo-Level for the script. Used to clean up the resources in case of a failure
-undoStage=0
-
 function help {
     echo ""
     echo "Generates a pipeline on Azure DevOps based on the given definition."
@@ -329,7 +326,8 @@ function removePipelineFiles {
     # clear the generated pipeline-files
     cd "${localDirectory}"
 
-    if [ -d "./pipelines" ]; then
+    if [ $pipelinesDirectoryAlreadyExists ]; then
+        cd "./pipelines"
 
         case $configFile in 
             *"build"*)
@@ -343,10 +341,12 @@ function removePipelineFiles {
             *"quality"*)
                 rm -rf "quality"*;;
             *"test"*)
-                rm -rf "test";;            
+                rm -rf "test"*;;            
             *)  
                 echo "Can´t remove files matching the string $configFile";;
         esac              
+    else 
+        rm -rf "./pipelines"
     fi
 }
 
@@ -354,16 +354,11 @@ function removePipeline {
     az pipelines delete --id ${pipelineId}
 }
 
-function abandonPullRequest {
-    az repos pr update --id id --status abandoned
-}
-
 function undoPreviousSteps {
     # free all resources
 
     if [ ${undoStage} -gt 2 ]; then
         echo "Removing pipeline with id: ${pipelineId}"
-
         removePipeline
     fi
 
@@ -371,7 +366,6 @@ function undoPreviousSteps {
         echo "Removing all pipeline-files and remote branches!"
 
         removePipelineFiles
-        removePullRequest
         removeRemoteBranches
     fi
 
@@ -383,6 +377,16 @@ function undoPreviousSteps {
 }  
 
 if [[ "$help" == "true" ]]; then help; fi
+
+# check if the .pipeline-directory already existed
+pipelinesDirectoryAlreadyExists=false
+
+if [ -d "./.pipelines" ]; then
+    pipelinesDirectoryAlreadyExists=true
+fi;
+
+# Undo-Level for the script. Used to clean up the resources in case of a failure
+undoStage=0
 
 importConfigFile
 
