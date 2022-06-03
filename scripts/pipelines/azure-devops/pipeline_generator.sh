@@ -244,7 +244,7 @@ function addCommonPipelineVariables {
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
     else
         # Add the extra artifact to store variable.
-        variableResult=$(az pipelines variable create --pipeline-name "$pipelineName" --value "${artifactPath}") || {
+        $(az pipelines variable create --pipeline-name "$pipelineName" --value "${artifactPath}") || {
             # if the variable-creation fails, clean up
 
             echo "There was an error creating the pipeline-artifact-path variable!. Exiting"
@@ -330,7 +330,23 @@ function removePipelineFiles {
     cd "${localDirectory}"
 
     if [ -d "./pipelines" ]; then
-        rm -rf ./pipelines
+
+        case $configFile in 
+            *"build"*)
+                rm -rf "build"*;;
+            *"common"*)
+                rm -rf "common"*;;
+            *"library-package"*)
+                rm -rf "library-package"*;;
+            *"package"*)
+                rm -rf "package"*;;
+            *"quality"*)
+                rm -rf "quality"*;;
+            *"test"*)
+                rm -rf "test";;            
+            *)  
+                echo "Can´t remove files matching the string $configFile";;
+        esac              
     fi
 }
 
