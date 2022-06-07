@@ -1,24 +1,18 @@
 name: $pipelineName
 
 on:
-  workflow_run:
-    workflows: $testPipelineName
-    types: completed
+  workflow_call:
   workflow_dispatch:
 # mark to insert additional artifact input #
-
-permissions:
-  actions: write
 
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
 # mark to insert additional artifact env var #
 
 jobs:
-  Test:
+  Quality:
     name: SonarQube analysis
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - name: Checkout the repository
@@ -35,13 +29,3 @@ jobs:
         run: .github/workflows/scripts/quality.sh . ${{ secrets.SONARQUBE_TOKEN }}
 
 # mark to insert step for additonal artifact #
-  test-failed:
-    name: Canceling curent execution
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure' }}
-    steps:
-      - name: Test Pipeline failed
-        run: echo "The test pipeline for the commit ${{ github.sha }} has failed, the current execution of the quality workflow will be canceled."
-
-      - name: cancelling
-        uses: andymckay/cancel-action@0.2
