@@ -309,6 +309,7 @@ function removeLocalBranches {
 
     git checkout $originalBranch
 
+    # delete branch
     git branch -D ${sourceBranch}
 }
 
@@ -356,6 +357,8 @@ function removePipeline {
 
 function undoPreviousSteps {
     # free all resources
+
+    removePipelineFiles
 
     if [ ${undoStage} -gt 2 ]; then
         echo "Removing pipeline with id: ${pipelineId}"
