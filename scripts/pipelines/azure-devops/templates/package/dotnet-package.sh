@@ -34,7 +34,9 @@ done
 
 # We define the tag using the version set in the cs.proj # So far this assumes that we are building the example application.     # TODO: change to correct path of projectFile
 # Change to use the dotnet project file
-version=$(echo 'cat //Project/ItemGroup/PackageReference[@Include="Devon4Net.Infrastructure.WebAPI"]/@Version' | xmllint --shell ./Devon4Net.Application.WebAPI.csproj | awk -F'[="]' '!/>/{print $(NF-1)}')
+version=$(echo 'cat //Project/ItemGroup/PackageReference[@Include="Devon4Net.Infrastructure.Common"]/@Version' | xmllint --shell ./Templates/WebAPI/Devon4Net.Application.WebAPI/Devon4Net.Application.WebAPI.csproj | awk -F'[="]' '!/>/{print $(NF-1)}')
+
+echo "Publishing version ${version}"
 
 # We get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
 branch_short=$(echo "$branch" | awk -F '/' '{ print $NF }')
