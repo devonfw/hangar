@@ -23,7 +23,7 @@ do
         r) registry=${OPTARG};;
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
-        t) csProjectFile=${OPTARG};;
+        t) projectFile=${OPTARG};;
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
@@ -32,7 +32,8 @@ do
     esac
 done
 
-# We define the tag using the version set in the cs.proj # So far this assumes that we are building the example application.     # TODO: change to correct path of csProjectFile
+# We define the tag using the version set in the cs.proj # So far this assumes that we are building the example application.     # TODO: change to correct path of projectFile
+# Change to use the dotnet project file
 version=$(echo 'cat //Project/ItemGroup/PackageReference[@Include="Devon4Net.Infrastructure.WebAPI"]/@Version' | xmllint --shell ./Devon4Net.Application.WebAPI.csproj | awk -F'[="]' '!/>/{print $(NF-1)}')
 
 # We get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
