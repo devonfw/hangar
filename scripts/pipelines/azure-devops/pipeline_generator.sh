@@ -323,42 +323,12 @@ function removeRemoteBranches {
     git push origin --delete ${sourceBranch}
 }
 
-function removePipelineFiles {
-    # clear the generated pipeline-files
-    cd "${localDirectory}"
-
-    if [ $pipelinesDirectoryAlreadyExists ]; then
-        cd "./pipelines"
-
-        case $configFile in 
-            *"build"*)
-                rm -rf "build"*;;
-            *"common"*)
-                rm -rf "common"*;;
-            *"library-package"*)
-                rm -rf "library-package"*;;
-            *"package"*)
-                rm -rf "package"*;;
-            *"quality"*)
-                rm -rf "quality"*;;
-            *"test"*)
-                rm -rf "test"*;;            
-            *)  
-                echo "Can´t remove files matching the string $configFile";;
-        esac              
-    else 
-        rm -rf "./pipelines"
-    fi
-}
-
 function removePipeline {
     az pipelines delete --id ${pipelineId}
 }
 
 function undoPreviousSteps {
-    # free all resources
-
-    removePipelineFiles
+    # undo all actions taken
 
     if [ ${undoStage} -gt 2 ]; then
         echo "Removing pipeline with id: ${pipelineId}"
@@ -366,9 +336,8 @@ function undoPreviousSteps {
     fi
 
     if [ ${undoStage} -gt 1 ]; then
-        echo "Removing all pipeline-files and remote branches!"
+        echo "Removing all remote branches!"
 
-        removePipelineFiles
         removeRemoteBranches
     fi
 
@@ -399,11 +368,15 @@ obtainHangarPath
 
 createNewBranch
 
-copyYAMLFile
+copyYAMLFile 
 
 copyCommonScript
 
-type copyScript &> /dev/null && copyScript
+type copyScript &> /dev/null && copyScript || {
+    undoPreviousSteps
+    
+    exit 127
+}
 
 commitCommonFiles
 
