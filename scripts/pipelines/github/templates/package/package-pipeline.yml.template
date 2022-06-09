@@ -5,6 +5,25 @@ on:
     workflows: $qualityPipelineName
     types: completed
   worflow_dispatch:
+    inputs:
+      relativeDockerfilePath:
+        required: false
+        default: $dockerFile
+      settingsFile:
+        required: false
+        default: $settingsFile
+      registry:
+        required: false
+        default: $registry
+      imageName:
+        required: false
+        default: $imageName
+      region:
+        required: false
+        default: $awsRegion
+      isECR:
+        required: false
+        default: $isECR
 # mark to insert additional artifact input #
 
 permissions:
@@ -12,6 +31,12 @@ permissions:
 
 env:
   quality_pipeline: 'quality-pipeline.yml'
+  relativeDockerfilePath: ${{ github.event.inputs.relativeDockerfilePath || '$dockerFile' }}
+  settingsFile: ${{ github.event.inputs.settingsFile || '$settingsFile' }}
+  registry: ${{ github.event.inputs.registry || '$registry' }}
+  imageName: ${{ github.event.inputs.imageName || '$imageName' }}
+  region: ${{ github.event.inputs.region || '$awsRegion' }}
+  isECR: ${{ github.event.inputs.isECR || '$isECR' }}
 # mark to insert additional artifact env var #
 
 jobs:
@@ -28,6 +53,14 @@ jobs:
       with:
         workflow: 'build-pipeline.yml'
         commit: ${{ github.event.pull_request.head.sha }}
+    
+    - name: Build and push image to registry
+      run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.settingsFile }} -c $GITHUB_WORKSPACE -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}  -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_HEAD_REF
+      if: ${{ env.isECR == '' }}
+
+    - name: Build and push image to registry (AWS)
+      run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.settingsFile }} -c $GITHUB_WORKSPACE -a ${{ secrets.AWS_ACCESS_KEY }} -s ${{ secrets.AWS_SECRET_ACCESS_KEY }} -l ${{ env.region }} -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_HEAD_REF
+      if: ${{ env.isECR == 'true' }}
     
   # mark to insert step for additional artifact #
   on-failure:
