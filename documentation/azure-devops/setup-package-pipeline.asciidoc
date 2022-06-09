@@ -79,7 +79,6 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 ```
 
 ===== AWS ECR
-
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
