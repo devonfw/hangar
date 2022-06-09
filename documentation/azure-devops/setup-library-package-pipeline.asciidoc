@@ -5,7 +5,7 @@ toc::[]
 
 = Setting up a library package pipeline using Azure DevOps
 
-In this section we will create a package pipeline to generate a distributable of a library and push it to a feed in Azure DevOps. This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed. It consumes the artifact produced by the build pipeline.
+In this section we will create a package pipeline to generate a distributable of a library and push it to a feed in Azure DevOps. This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed. When Java is used, it also consumes the artifact produced by the build pipeline.
 
 The creation of this pipeline will follow the project workflow, so a new branch named feature/library-package-pipeline will be created. The YAML file and the bash script for the pipeline will be pushed to it, as well as a generated file containing required credentials for connecting to the feed.
 
@@ -41,7 +41,7 @@ NOTE: The config file for the library package pipeline is located at `/scripts/p
 -n, --pipeline-name            [Required] Name that will be set to the pipeline.
 -l, --language                 [Required] Language or framework of the project.
 -d, --local-directory          [Required] Local directory of your project.
-    --build-pipeline-name      [Required] Build pipeline name.
+    --build-pipeline-name      [Required, if Java/Maven] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
