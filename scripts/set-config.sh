@@ -4,7 +4,7 @@ tfvars="./terraform.tfvars"
 
 red='\e[0;31m'
     
-list_of_args=${$@//=/ }
+list_of_args=${@//=/ }
 pingpong="pong"
 for arg in $list_of_args
 do
