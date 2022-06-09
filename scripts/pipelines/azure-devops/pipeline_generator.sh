@@ -222,7 +222,7 @@ function createPipeline {
     echo -ne ${white}
 
     # This line go to the localDirectory of the repo and gets the repo name 
-    repoName="$(basename -s .git $(git config --get remote.origin.url))"
+    repoName="$(basename -s .git "$(git config --get remote.origin.url)")"
     # This line gets the organization name
     orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
     
