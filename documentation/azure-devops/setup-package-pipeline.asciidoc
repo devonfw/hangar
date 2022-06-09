@@ -61,27 +61,27 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 
 ==== Quarkus project
 
-===== Non-AWS
+===== Generic container registry
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality -i username/quarkus-project -u username -p password -b develop -w
 ```
 
-===== AWS
+===== AWS ECR
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality -i username/quarkus-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
-
 ```
 
 
-==== Node project
+==== Node.js project
+
  
-===== Non-AWS
+===== Generic container registry
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project -u username -p password -b develop -w
 ```
 
-===== AWS
+===== AWS ECR
+
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
-
 ```
