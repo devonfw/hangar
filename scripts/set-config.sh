@@ -4,7 +4,7 @@ tfvars="./terraform.tfvars"
 
 red='\e[0;31m'
     
-list_of_args=$(echo "$@" | sed 's/=/ /g')
+list_of_args=${$@//=/ }
 pingpong="pong"
 for arg in $list_of_args
 do
@@ -14,7 +14,7 @@ do
            exit 1
         fi
         pingpong="ping"
-        key=$(echo $arg | sed 's/-//g')
+        key=${arg//-/}
     else
         if [[ "$pingpong" == "pong" ]]; then
            echo -e "${red}ERROR: Received two values for variable $key or variable not properly passed as flag"
@@ -22,8 +22,7 @@ do
         fi
         pingpong="pong"
         value=$arg
-        grep -qe "$key *= *" $tfvars
-        if [ $? -eq 0 ]
+        if grep -qe "$key *= *" $tfvars
         then
             sed -i "s|\($key *= *\).*|\1\"$value\"|" "$tfvars"
         else
