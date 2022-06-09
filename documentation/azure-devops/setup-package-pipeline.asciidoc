@@ -61,7 +61,14 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 
 ==== Quarkus project
 
+===== Quarkus native project
+
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality -i username/quarkus-project -u username -p password -b develop -w
 ```
 
+===== Quarkus project using JVM
+
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality -i username/quarkus-project -u username -p password -b develop -w
+```
