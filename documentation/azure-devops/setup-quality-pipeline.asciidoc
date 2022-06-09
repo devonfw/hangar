@@ -39,7 +39,7 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 -l, --language               [Required] Language or framework of the project.
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
--d, --local-directory        [Required] Local directory of your project (the path should always be using '/' and not '\').
+-d, --local-directory        [Required] Local directory of your project.
     --build-pipeline-name    [Required] Build pipeline name.
     --test-pipeline-name     [Required] Test pipeline name.
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
@@ -53,5 +53,3 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --test-pipeline-name quarkus-project-test  -b develop -w
 ```
-
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
