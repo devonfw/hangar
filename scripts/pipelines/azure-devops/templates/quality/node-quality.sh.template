@@ -1,7 +1,4 @@
 #!/bin/bash
-cd "$(dirname "$0")"
-cd "../.."
-
 projectKey=$(python -c "from json import load; print(load(open('./package.json', 'r'))['name']);")
 
 npx sonar-scanner -Dsonar.host.url="${sonarUrl}" -Dsonar.login="${sonarToken}" -Dsonar.projectKey=$projectKey -Dsonar.sources="."
