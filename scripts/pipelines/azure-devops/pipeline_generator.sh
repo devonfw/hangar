@@ -84,7 +84,7 @@ function help {
     echo "Library package pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "      --quality-pipeline-name [Required] Quality pipeline name."
-    echo "      --build-pipeline-name   [Required, if Java / Maven] Build pipeline name."    
+    echo "      --build-pipeline-name   [Required, if Java/Maven] Build pipeline name."    
     echo ""
     echo "Deploy pipeline flags:"
     echo ""
