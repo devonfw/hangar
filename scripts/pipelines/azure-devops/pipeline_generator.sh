@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -11,6 +11,7 @@ while true; do
         -a | --artifact-path)     artifactPath=$2; shift 2;;
         -b | --target-branch)     targetBranch=$2; shift 2;;
         -l | --language)          language=$2; shift 2;;
+        -t | --target-directory)  targetDirectory=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
@@ -50,13 +51,14 @@ function help {
     echo "Common flags:"
     echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
     echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -d, --local-directory       [Required] Local directory of your project."
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
     echo "Build pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
     echo ""
     echo "Test pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
@@ -143,6 +145,19 @@ function checkInstallations {
     fi
 }
 
+function ensurePathFormat {
+    currentDirectory=$(pwd)
+
+    # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a 
+    # Unix-style path using forward slashes (e.g. "/c/Users").
+    localDirectory=${localDirectory//'\'/"/"}
+    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
+    localDirectory=$(pwd)
+
+    # Return to initial directory
+    cd "$currentDirectory"
+}
+
 function obtainHangarPath { 
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
@@ -156,8 +171,6 @@ function createNewBranch {
 
     # Create the new branch.
     cd "${localDirectory}"
-    [ $? != "0" ] && echo -e "${red}The local directory: '${localDirectory}' cannot be found, please check the path." && exit 1
-
     git checkout -b ${sourceBranch}
 }
 
@@ -167,7 +180,6 @@ function copyYAMLFile {
 
     # Create .pipelines and scripts if they do not exist.
     mkdir -p "${localDirectory}/.pipelines/scripts"
-
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
@@ -287,6 +299,8 @@ if [[ "$help" == "true" ]]; then help; fi
 importConfigFile
 
 checkInstallations
+
+ensurePathFormat
 
 obtainHangarPath
 
