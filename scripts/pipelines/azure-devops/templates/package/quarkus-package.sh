@@ -39,7 +39,7 @@ echo $branch | grep release && tag_completed="${tag}"
 echo $branch | grep release || tag_completed="${tag}_${branch_short}"
 
 # We build the image
-echo "docker build -f "$dockerFile" -t "$imageName":"$tag_completed" $context"
+echo docker build -f "$dockerFile" -t "$imageName:$tag_completed" "$context"
 
 docker build -f "$dockerFile" -t "$imageName":"$tag_completed" "$context"
 
