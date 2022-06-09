@@ -49,6 +49,14 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 
 ==== Quarkus project
 
+===== Quarkus native project
+
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build -b develop -w
+```
+
+===== Quarkus project using JVM
+
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build -b develop -w
 ```
