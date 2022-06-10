@@ -3,6 +3,9 @@ trigger:
     include:
     - '*'
 
+variables:
+  targetPath: target
+
 pool:
   vmImage: ubuntu-latest
 
@@ -14,4 +17,4 @@ steps:
 
 - publish: $(Build.Repository.LocalPath)/$(targetPath)
   displayName: "Publish Artifact"
-  artifact: BuildOutput
+  artifact: target
