@@ -109,18 +109,17 @@ function obtainHangarPath {
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
-
 }
 
 function createPipeline {
     echo -e "${green}Generating the pipeline from the YAML template..."
     echo -ne ${white}
 
-    # This line go to the localDirectory of the repo and gets the repo name
+    # This line go to the localDirectory of the repo and gets the repo name 
     repoName="$(basename -s .git "$(git config --get remote.origin.url)")"
     # This line gets the organization name
     orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
-
+    
     azRepoShow=$(az repos show -r "$repoName")
     projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
 
