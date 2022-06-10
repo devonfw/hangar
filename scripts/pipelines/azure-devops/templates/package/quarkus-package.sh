@@ -49,7 +49,7 @@ then
 
     if test -z $password 
     then
-        read -p "Please enter your password for the docker-hub to continue..." $password
+        read -p "Please enter your password for the docker-hub to continue..." password
     fi
 
     docker login -u="$username" -p="$password" $registry
@@ -58,7 +58,7 @@ else
 
     if test -z $aws_secret_access_key
     then 
-        read -p "Please enter your secret access key for aws..." $aws_secret_access_key
+        read -p "Please enter your secret access key for aws..." aws_secret_access_key
     fi
 
     aws configure set aws_secret_access_key "$aws_secret_access_key"
