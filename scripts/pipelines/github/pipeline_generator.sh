@@ -102,10 +102,9 @@ function help {
 }
 
 function obtainHangarPath {
-pipelineGeneratorFullPath=$(readlink -f "$(pwd)/$0")
-pipelineGeneratorRepoPath='/scripts/pipelines/github/pipeline_generator.sh'
-# replace the repo path in the full path with an empty string
-hangarPath=${pipelineGeneratorFullPath/$pipelineGeneratorRepoPath}
+
+    # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
+    hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 }
 
 # Function that adds the variables to be used in the pipeline.
