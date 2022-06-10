@@ -105,131 +105,22 @@ function help {
     exit
 }
 
-function importConfigFile {
-    # Import config file.
-    source $configFile
-    IFS=, read -ra flags <<< "$mandatoryFlags"
-
-    # Check if the config file was supplied.
-    if test -z "$configFile"
-    then
-        echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
-        exit 2
-    fi
-
-    # Check if the required flags in the config file have been activated.
-    for flag in "${flags[@]}"
-    do
-        if test -z $flag
-        then
-            echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
-            echo -e "${red}Use -h or --help flag to display help." >&2
-            exit 2
-        fi
-    done
-}
-
-function checkInstallations {
-    # Check if Git is installed
-    if ! [ -x "$(command -v git)" ]; then
-        echo -e "${red}Error: Git is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Azure CLI is installed
-    if ! [ -x "$(command -v az)" ]; then
-        echo -e "${red}Error: Azure CLI is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Python is installed
-    if ! [ -x "$(command -v python)" ]; then
-        echo -e "${red}Error: Python is not installed." >&2
-        exit 127
-    fi
-}
-
-function ensurePathFormat {
-    currentDirectory=$(pwd)
-
-    # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a 
-    # Unix-style path using forward slashes (e.g. "/c/Users").
-    localDirectory=${localDirectory//'\'/"/"}
-    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
-    localDirectory=$(pwd)
-
-    # Return to initial directory
-    cd "$currentDirectory"
-}
-
-function obtainHangarPath { 
+function obtainHangarPath {
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 
 }
 
-function createNewBranch {
-    echo -e "${green}Creating the new branch: ${sourceBranch}..."
-    echo -ne ${white}
-
-    # Create the new branch.
-    cd "${localDirectory}"
-    git checkout -b ${sourceBranch}
-}
-
-function copyYAMLFile {
-    echo -e "${green}Copying the corresponding files into your directory..."
-    echo -ne ${white}
-
-    # Create .pipelines and scripts if they do not exist.
-    mkdir -p "${localDirectory}/.pipelines/scripts"
-    # Generate pipeline YAML from template and put it in the repository.
-    # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
-
-    # Check if an extra artifact to store is supplied.
-    if test ! -z "$artifactPath"
-    then
-        # Add the extra step to the YAML.
-        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
-    fi
-}
-
-function copyCommonScript {
-    echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
-    echo -ne ${white}
-
-    cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
-}
-
-function commitCommonFiles {
-    echo -e "${green}Commiting and pushing into Git remote..."
-    echo -ne ${white}
-
-    # Move into the project's directory and pushing the template into the Azure DevOps repository.
-    cd ${localDirectory}
-
-    # Add the YAML files.
-    git add .pipelines -f
-
-    # Git commit and push it into the repository.
-    # changing all files to be executable
-    find .pipelines -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
-
-    git commit -m "Adding the source YAML"
-    git push -u origin ${sourceBranch}
-}
-
 function createPipeline {
     echo -e "${green}Generating the pipeline from the YAML template..."
     echo -ne ${white}
 
-    # This line go to the localDirectory of the repo and gets the repo name 
+    # This line go to the localDirectory of the repo and gets the repo name
     repoName="$(basename -s .git "$(git config --get remote.origin.url)")"
     # This line gets the organization name
     orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
-    
+
     azRepoShow=$(az repos show -r "$repoName")
     projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
 
@@ -310,8 +201,6 @@ ensurePathFormat
 importConfigFile
 
 checkInstallations
-
-ensurePathFormat
 
 obtainHangarPath
 
