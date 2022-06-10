@@ -47,9 +47,19 @@ if test -z "$aws_access_key"
 then
     echo "docker login -u=**** -p=**** $registry"
 
+    if test -z $password 
+    then
+        read -p "Please enter your password for the docker-hub to continue..." $password
+    fi
+
     docker login -u="$username" -p="$password" $registry
 else
     aws configure set aws_access_key_id "$aws_access_key"
+
+    if test -z $aws_secret_access_key
+    then 
+        read -p "Please enter your secret access key for aws..." $aws_secret_access_key
+    fi
 
     aws configure set aws_secret_access_key "$aws_secret_access_key"
     echo "aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry"
