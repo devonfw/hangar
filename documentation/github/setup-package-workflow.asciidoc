@@ -35,3 +35,6 @@ pipeline_generator.sh \
 
 NOTE: The config file for the package workflow is located at `/scripts/pipelines/github/templates/package/package-pipeline.cfg`.
 
+=== Flags
+```
+
