@@ -187,6 +187,8 @@ checkInstallations
 
 createNewBranch
 
+type addPipelineVariables &> /dev/null && addPipelineVariables
+
 copyYAMLFile
 
 copyCommonScript
@@ -195,8 +197,6 @@ type copyScript &> /dev/null && copyScript
 
 # This function does not exists for the github pipeline generator at this moment, but I let the line with 'type' to keep the same structure as the others pipeline generator
 type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
-
-type addPipelineVariables &> /dev/null && addPipelineVariables
 
 commitCommonFiles
 
