@@ -44,7 +44,7 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 -n, --pipeline-name            [Required] Name that will be set to the pipeline.
 -l, --language                 [Required, if dockerfile not set] Language or framework of the project.
     --dockerfile               [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one.
--d, --local-directory          [Required] Local directory of your project (the path should always be using '/' and not '\').
+-d, --local-directory          [Required] Local directory of your project.
     --build-pipeline-name      [Required] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
