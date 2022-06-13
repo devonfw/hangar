@@ -1,16 +1,19 @@
 name: $pipelineName
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
-      target:
+      target: 
+        description: 'Target directory of build process.'
         required: false
-        default: 'target'
+        type: string  
+        default: '$targetDirectory'
 
 # mark to insert additional artifact input #
 
 env:
-  targetPath: ${{ github.event_name == 'push' && format('target') || github.event.inputs.target }}
+  targetPath: ${{ github.event.inputs.target || 'target' }}
 
 # mark to insert additional artifact env var #
 
@@ -29,7 +32,7 @@ jobs:
     - name: Publish Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: target
+        name: ${{ env.targetPath }}
         path: ${{ env.targetPath }}
         
 # mark to insert step for additonal artifact #
