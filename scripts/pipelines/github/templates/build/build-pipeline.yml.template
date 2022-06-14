@@ -32,7 +32,7 @@ jobs:
     - name: Publish Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.targetPath }}
+        name: BuildOutput
         path: ${{ env.targetPath }}
         
 # mark to insert step for additonal artifact #
