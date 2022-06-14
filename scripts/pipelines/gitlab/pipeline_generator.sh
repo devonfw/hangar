@@ -102,9 +102,10 @@ function help {
 }
 
 function obtainHangarPath {
-
-    # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
-    hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
+pipelineGeneratorFullPath=$(readlink -f "$(pwd)/$0")
+pipelineGeneratorRepoPath='/scripts/pipelines/github/pipeline_generator.sh'
+# replace the repo path in the full path with an empty string
+hangarPath=${pipelineGeneratorFullPath/$pipelineGeneratorRepoPath}
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -121,8 +122,8 @@ function addCommonPipelineVariables {
         grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathInput="    inputs:\n      artifactPath:\n       required: false\n       default: \"${artifactPath//\//\\/}\""
         sed -i "s/# mark to insert additional artifact input #/$textArtifactPathInput/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         # add the env var for the additional artifact
-        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event.inputs.artifactPath || '${artifactPath//\//\\/}' }}"
-        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event.inputs.artifactPath || '${artifactPath//\//\\/}' }}"
+        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: \${{ (github.event_name == 'push' || github.event_name == 'workflow_run') \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
+        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event_name == 'push' \&\& format('${artifactPath//\//\\/}') || github.event.inputs.artifactPath }}"
         # Add the extra artifact to store variable.
         sed -i "s/# mark to insert additional artifact env var #/$textArtifactPathVar/" "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
@@ -187,8 +188,6 @@ checkInstallations
 
 createNewBranch
 
-type addPipelineVariables &> /dev/null && addPipelineVariables
-
 copyYAMLFile
 
 copyCommonScript
@@ -197,6 +196,8 @@ type copyScript &> /dev/null && copyScript
 
 # This function does not exists for the github pipeline generator at this moment, but I let the line with 'type' to keep the same structure as the others pipeline generator
 type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
+
+type addPipelineVariables &> /dev/null && addPipelineVariables
 
 commitCommonFiles
 

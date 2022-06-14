@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
+
+FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -11,6 +12,7 @@ while true; do
         -a | --artifact-path)     artifactPath=$2; shift 2;;
         -b | --target-branch)     targetBranch=$2; shift 2;;
         -l | --language)          language=$2; shift 2;;
+        -t | --target-directory)  targetDirectory=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
@@ -53,13 +55,14 @@ function help {
     echo "Common flags:"
     echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
     echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -d, --local-directory       [Required] Local directory of your project."
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
     echo "Build pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
     echo ""
     echo "Test pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
@@ -103,17 +106,25 @@ function help {
 }
 
 function obtainHangarPath {
-  pipelineGeneratorFullPath=$(readlink -f "$(pwd)/$0")
-  pipelineGeneratorRepoPath='/scripts/pipelines/azure-devops/pipeline_generator.sh'
-  # replace the repo path in the full path with an empty string
-  hangarPath=${pipelineGeneratorFullPath/$pipelineGeneratorRepoPath}
+
+    # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
+    hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 }
 
 function createPipeline {
     echo -e "${green}Generating the pipeline from the YAML template..."
     echo -ne ${white}
+
+    # This line go to the localDirectory of the repo and gets the repo name 
+    repoName="$(basename -s .git "$(git config --get remote.origin.url)")"
+    # This line gets the organization name
+    orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
+    
+    azRepoShow=$(az repos show -r "$repoName")
+    projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
+
     # Create Azure Pipeline
-    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true
+    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true --organization "https://dev.azure.com/$orgName" --project "$projectName" --repository "$repoName" --repository-type tfsgit
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -189,6 +200,8 @@ ensurePathFormat
 importConfigFile
 
 checkInstallations
+
+obtainHangarPath
 
 createNewBranch
 
