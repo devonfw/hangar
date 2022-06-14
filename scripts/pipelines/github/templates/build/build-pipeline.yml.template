@@ -23,16 +23,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v2
+      - name: Checkout the repository
+        uses: actions/checkout@v2
 
-    - name: Build the application
-      run: .github/workflows/scripts/build.sh
+      - name: Build the application
+        run: .github/workflows/scripts/build.sh
 
-    - name: Publish Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: BuildOutput
-        path: ${{ env.targetPath }}
-        
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+          
 # mark to insert step for additonal artifact #
