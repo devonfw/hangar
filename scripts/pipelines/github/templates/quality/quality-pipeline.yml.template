@@ -7,6 +7,7 @@ on:
 
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
+  ciPipelineYamlName: 'ci-pipeline.yml'
 # mark to insert additional artifact env var #
 
 jobs:
@@ -18,12 +19,33 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
-      - name: Download artifact
+
+      - name: Download artifact from this workflow
+        uses: actions/download-artifact@v2
+        id: dowloadFromSamePipeline
+        continue-on-error: true
+        with:
+          name: buildOutput
+
+      - name: Download artifact from build pipeline
         uses: dawidd6/action-download-artifact@v2
+        id: downloadFromBuild
+        continue-on-error: true
+        if: ${{ steps.dowloadFromSamePipeline.outcome == 'failure' }}
         with:
           workflow: ${{ env.buildPipelineYamlName }}
           commit: ${{ github.sha }}
           check_artifacts:  true
+          name: buildOutput
+
+      - name: Download artifact from ci pipeline
+        uses: dawidd6/action-download-artifact@v2
+        if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.ciPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: buildOutput
 
       - name: SonarQube analysis
         run: .github/workflows/scripts/quality.sh . ${{ secrets.SONARQUBE_TOKEN }}
