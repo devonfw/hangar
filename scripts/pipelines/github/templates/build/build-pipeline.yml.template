@@ -13,7 +13,7 @@ on:
 # mark to insert additional artifact input #
 
 env:
-  targetPath: ${{ github.event.inputs.target || 'target' }}
+  targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
 
 # mark to insert additional artifact env var #
 
