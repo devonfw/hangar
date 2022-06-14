@@ -5,12 +5,9 @@ on:
     workflows: $qualityPipelineName
     types: completed
     branches:
-      - 'release/*'
-      - 'develop'
+      - release/*
+      - develop
   worflow_dispatch:
-    branches:
-      - 'release/*'
-      - 'develop'
     inputs:
       relativeDockerfilePath:
         required: false
