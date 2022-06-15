@@ -65,6 +65,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
     --cluster-name       [Required] Name for the cluster."
     --s3-bucket          [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
     --s3-key-path        [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
+    --cluster-operation             Operation to be performed on EKS cluster to create or destroy it. Default is create.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -95,7 +96,12 @@ kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller
 Rancher will be available on `https://<ingress controller domain>/dashboard`.
 
 == Appendix: Destroying the cluster
-To destroy the resources provisioned, use the destroy pipeline located at `/scripts/pipelines/azure-devops/templates/eks/eks-destroy.yml.template`.
+To destroy the resources provisioned, pass the clusterOperation parameter value as `destroy`.
+=== Example
+
+```
+./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w --cluster-operation destroy
+```
 
 == Appendix: Rancher resources
 
