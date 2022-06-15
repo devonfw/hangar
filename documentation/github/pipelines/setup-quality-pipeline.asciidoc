@@ -1,6 +1,6 @@
 = Setting up a Quality workflow on Github Actions
 
-In this section we will create a quality workflow for analyzing project code with SonarQube. This workflow will be configured in order to be triggered every time the test workflow is executed successfully on a commit, and consumes the artifact produced by the build workflow.
+In this section we will create a quality workflow for analyzing project code with SonarQube. This workflow will be configured in order to be executed manually or  inside a CI workflow (see documentation about the CI workflow for more info: <link to it when it will be done>), and consumes the artifact produced by the build workflow.
 
 The creation of this workflow will follow the project workflow, so a new branch named `feature/quality-pipeline` will be created and the YAML file for the workflow will be pushed to it.
 
@@ -24,7 +24,6 @@ pipeline_generator.sh \
   --sonar-url <sonarqube url> \
   --sonar-token <sonarqube token> \
   -d <project local path> \
-  --test-pipeline-name <test pipeline name> \
   [-b <branch>] \
   [-w]
 ```
@@ -39,7 +38,6 @@ NOTE: The config file for the quality workflow is located at `/scripts/pipelines
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
 -d, --local-directory        [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --test-pipeline-name     [Required] Test workflow name.
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -49,7 +47,11 @@ NOTE: The config file for the quality workflow is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project --test-pipeline-name quarkus-project-test  -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
 ```
 
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
+==== Node.js project
+
+```
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project -b develop -w
+```
