@@ -3,6 +3,16 @@ trigger:
     include:
     - '*'
 
+parameters:
+  - name: artifactPath
+    displayName: Artifact Path
+    default: $(targetPath)
+    type: string
+  - name: artifactName
+    displayName: Artifact Name
+    default: BuildOutput
+    type: string
+
 pool:
   vmImage: ubuntu-latest
 
@@ -12,6 +22,6 @@ steps:
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/build.sh'
 
-- publish: $(Build.Repository.LocalPath)/$(targetPath)
+- publish: $(Build.Repository.LocalPath)/${{ parameters.artifactPath }}
   displayName: "Publish Artifact"
-  artifact: BuildOutput
+  artifact: ${{ parameters.artifactName }}
