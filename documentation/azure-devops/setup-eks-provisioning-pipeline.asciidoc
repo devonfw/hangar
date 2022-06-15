@@ -97,15 +97,7 @@ Rancher will be available on `https://<ingress controller domain>/dashboard`.
 
 == Appendix: Destroying the cluster
 
-To destroy the resources provisioned, pass the clusterOperation parameter value as `destroy`.
-
-=== Example
-
-```
-./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project 
---cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w 
---cluster-operation destroy
-```
+To destroy the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
 
 == Appendix: Rancher resources
 
