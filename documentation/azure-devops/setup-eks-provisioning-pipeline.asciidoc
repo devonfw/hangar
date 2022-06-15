@@ -102,7 +102,9 @@ To destroy the resources provisioned, pass the clusterOperation parameter value 
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w --cluster-operation destroy
+./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project 
+--cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w 
+--cluster-operation destroy
 ```
 
 == Appendix: Rancher resources
