@@ -25,7 +25,6 @@ while true; do
         --cluster-name)           clusterName=$2; shift 2;;
         --s3-bucket)              s3Bucket=$2; shift 2;;
         --s3-key-path)            s3KeyPath=$2; shift 2;;
-        --cluster-operation)      clusterOperation=$2; shift 2;;
         --quality-pipeline-name)  export qualityPipelineName=$2; shift 2;;
         --test-pipeline-name)     export testPipelineName=$2; shift 2;;
         --dockerfile)             dockerFile=$2; shift 2;;
