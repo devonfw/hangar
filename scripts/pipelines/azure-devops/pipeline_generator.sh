@@ -311,7 +311,7 @@ function createPR {
 function validateLoginCredentials {
     # if the user chose to push to a registry, ensure the passwords
 
-    if [ -v "$dockerUser"]
+    if [ -v "$dockerUser" ]
     then
         read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
     fi
