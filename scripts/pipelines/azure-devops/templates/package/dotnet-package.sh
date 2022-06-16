@@ -32,9 +32,9 @@ do
     esac
 done
 
-# We define the tag using the version set in the cs.proj # So far this assumes that we are building the example application.     # TODO: change to correct path of projectFile
-# Change to use the dotnet project file
-version=$(echo 'cat //Project/ItemGroup/PackageReference[@Include="Devon4Net.Infrastructure.Common"]/@Version' | xmllint --shell ./Templates/WebAPI/Devon4Net.Application.WebAPI/Devon4Net.Application.WebAPI.csproj | awk -F'[="]' '!/>/{print $(NF-1)}')
+# We define the tag using the version set in the cs.proj 
+# So far the project-file is only used, to query for the version
+version=$(echo 'cat //Project/ItemGroup/PackageReference[@Include="Devon4Net.Infrastructure.Common"]/@Version' | xmllint --shell $projectFile | awk -F'[="]' '!/>/{print $(NF-1)}')
 
 echo "Publishing version ${version}"
 
@@ -73,5 +73,3 @@ then
     echo "docker push $imageName:latest"
     docker push "$imageName":latest
 fi
-
-
