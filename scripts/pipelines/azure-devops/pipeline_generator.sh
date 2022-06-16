@@ -105,10 +105,9 @@ function help {
     echo "      --storage-container             [Required] Name of the storage container where the Terraform state of the cluster will be stored."
     echo ""
     echo "AWS EKS provisioning pipeline flags:"
-    echo "      --cluster-name                  [Required] Name for the cluster."
-    echo "      --s3-bucket                     [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
-    echo "      --s3-key-path                   [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
-
+    echo "      --cluster-name          [Required] Name for the cluster."
+    echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
+    echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
     exit
 }
 
@@ -214,7 +213,7 @@ function commitCommonFiles {
     echo -ne ${white}
 
     # Move into the project's directory and pushing the template into the Azure DevOps repository.
-    cd ${localDirectory}
+    cd "${localDirectory}"
 
     # Add the YAML files.
     git add .pipelines -f

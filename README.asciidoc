@@ -17,7 +17,7 @@
 **** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package Pipeline]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a Java library Package Pipeline]
 ** Setup Kubernetes deploying environment pipeline
-*** https://github.com/devonfw/hangar/blob/af80ba5f796086882a0efc446986e2f197f06249/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setup EKS provisioning pipeline] [WIP]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setup EKS provisioning pipeline]
 *** https://github.com/devonfw/hangar/blob/eb939e98f6316ca3dc3fd175154a92ec637951f4/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setup AKS provisioning pipeline] [WIP]
 ** https://github.com/devonfw/hangar/blob/d9c53c959803073beb5a8bf5f54df5e0cc7c35df/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up Deploy Pipeline] [WIP]
 ** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
