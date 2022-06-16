@@ -1,4 +1,4 @@
-= Setting up the Azure AKS provisioning pipeline
+= Setting up a Azure AKS provisioning pipeline on Azure DevOps
 
 In this section we will create a pipeline which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently.
 
