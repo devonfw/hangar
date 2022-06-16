@@ -1,0 +1,99 @@
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: AWS_Credentials
+- name: terraformWorkingDirectory
+  value: '$(System.DefaultWorkingDirectory)/.terraform/eks'
+
+steps:
+
+- task: Bash@3
+  condition: eq(variables.operation, 'destroy')
+  displayName: Uninstall Helm charts
+  inputs:
+    targetType: 'inline'
+    script: |
+      aws configure set aws_access_key_id $(ACCESS_KEY)
+      aws configure set aws_secret_access_key $(SECRET_KEY)
+      aws eks update-kubeconfig --name $(clustername) --region $(REGION)
+      helm list --all-namespaces
+      helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 helm delete
+      echo 'LIST OF RELEASES AFTER HELM UNINSTALL..'
+      helm list --all-namespaces
+
+- task: TerraformInstaller@0
+  displayName: 'Install Terraform latest'
+  inputs:
+    terraformVersion: 'latest' 
+
+- task: TerraformTaskV2@2
+  displayName: 'Terraform : init'
+  inputs:
+    provider: 'aws'
+    command: 'init'
+    workingDirectory: "$(terraformWorkingDirectory)"
+    backendServiceAWS: "$(awsServiceConnection)"
+    backendAWSBucketName: "$(s3Bucket)"
+    backendAWSKey: "$(s3KeyPath)"
+
+- task: TerraformTaskV2@2
+  condition: eq(variables.operation, 'create')
+  displayName: 'Terraform : apply'
+  name: terraformApply
+  inputs:
+    provider: aws
+    command: apply
+    commandOptions: '-var cluster_name=$(clustername)'
+    workingDirectory: "$(terraformWorkingDirectory)"
+    environmentServiceNameAWS: "$(awsServiceConnection)"
+
+- task: TerraformTaskV2@2
+  condition: eq(variables.operation, 'destroy')
+  displayName: 'Terraform : destroy'
+  inputs:
+    provider: aws
+    command: apply
+    workingDirectory: '$(terraformWorkingDirectory)'
+    commandOptions: '-destroy -var region=$(region) -var cluster_name=$(clustername)'
+    environmentServiceNameAWS: '$(awsServiceConnection)'
+
+
+- task: Bash@3
+  condition: eq(variables.operation, 'create')
+  displayName: 'Install NGINX Ingress controller'
+  inputs:
+    targetType: inline
+    script: |
+      aws configure set aws_access_key_id $(ACCESS_KEY)
+      aws configure set aws_secret_access_key $(SECRET_KEY)
+      aws eks update-kubeconfig --name $(clustername) --region $(REGION)
+      $(System.DefaultWorkingDirectory)/.pipelines/scripts/install-ingress-controller.sh
+
+- task: Bash@3
+  condition: eq(variables.operation, 'create')
+  displayName: 'Obtain Ingress Controller domain name'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(PAT)
+  inputs:
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/obtain-dns.sh'
+  name: 'ObtainDNS'
+
+- task: Bash@3
+  condition: eq(variables.operation, 'create')
+  displayName: 'Publish Ingress Controller domain name'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(PAT)
+  inputs:
+    targetType: 'inline'
+    script: 'az pipelines variable-group create --organization "$(System.TeamFoundationCollectionUri)" --project "$(System.TeamProject)" --name eks-variables --variables dns_name=$(ObtainDNS.dns) cluster_name=$(clustername) --authorize true'
+
+- task: Bash@3
+  condition: and(eq(variables.installRancher, 'true'), eq(variables.operation, 'create'))
+  displayName: 'Install Rancher'
+  inputs:
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
+    arguments: '$(ObtainDNS.dns)'
