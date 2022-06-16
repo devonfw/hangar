@@ -1,0 +1,10 @@
+name: $pipelineName
+
+on:
+  workflow_dispatch:
+  push:
+
+permissions:
+  actions: write
+
+jobs:
