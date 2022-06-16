@@ -1,1 +1,1 @@
-include::../common_templates/setup-quality-pipeline.asciidoc[]
+include::../../common_templates/setup-quality-pipeline.asciidoc[]
