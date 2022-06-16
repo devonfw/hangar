@@ -308,6 +308,20 @@ function createPR {
     fi
 }
 
+function validateLoginCredentials {
+    # if the user chose to push to a registry, ensure the passwords
+
+    if [ -v "$dockerUser"]
+    then
+        read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
+    fi
+    
+    if [ -v "$awsAccessKey" ]
+    then 
+        read -sp "Please enter your secret access key for aws..." awsSecretAccessKey
+    fi
+}
+
 if [[ "$help" == "true" ]]; then help; fi
 
 if [[ $configFile == *"package-pipeline.cfg" ]]
