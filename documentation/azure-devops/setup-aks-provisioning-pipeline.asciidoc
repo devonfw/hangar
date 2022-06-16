@@ -73,8 +73,6 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state -b develop -w
 ```
 
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
-
 === Appendix: Interacting with the cluster
 
 NOTE: Make sure you have https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] installed.
