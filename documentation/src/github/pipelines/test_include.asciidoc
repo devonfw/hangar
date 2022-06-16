@@ -1,1 +1,2 @@
+:pipeline_type: workflow
 include::../../common_templates/setup-quality-pipeline.asciidoc[]

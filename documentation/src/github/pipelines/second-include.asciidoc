@@ -1,1 +1,2 @@
+:pipeline_type: pipeline
 include::../../common_templates/setup-quality-pipeline.asciidoc[]
