@@ -1,1 +1,1 @@
-include::../common/setup-quality-pipeline.asciidoc
+include::../common/setup-quality-pipeline.asciidoc[]
