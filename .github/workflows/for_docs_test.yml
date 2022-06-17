@@ -2,7 +2,7 @@ name: Build docs
 
 
 on:
-
+  workflow_dispatch:
   push:
     paths:
       - documentation/src/*
