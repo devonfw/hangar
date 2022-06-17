@@ -1,8 +1,10 @@
-:provider: Github
-:pipeline_type: workflow
-:trigger_sentence: This workflow will be configured to be executed inside a CI pipeline after the test or build workflow
-:pipeline_type2: Github action
-:path_provider: github
+:provider: Azure Devops
+:pipeline_type: pipeline
+:trigger_sentence: This pipeline will be configured in order to be triggered every time the test pipeline is executed successfully on a commit
+:pipeline_type2: pipeline
+:path_provider: azure-devops
+:build-pipeline:
+:test-pipeline:
 = Setting up a Quality {pipeline_type} on {provider}
 
 In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -29,6 +31,8 @@ pipeline_generator.sh \
   --sonar-url <sonarqube url> \
   --sonar-token <sonarqube token> \
   -d <project local path> \
+  --build-pipeline-name <build pipeline name> \
+  --test-pipeline-name <test pipeline name> \
   [-b <branch>] \
   [-w]
 ```
@@ -43,6 +47,8 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
 -d, --local-directory        [Required] Local directory of your project.
+    --build-pipeline-name    [Required] Build pipeline name.
+    --test-pipeline-name     [Required] Test pipeline name.
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -53,10 +59,14 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project ifdef::build-pipeline[--build-pipeline-name quarkus-project-build ] ifdef::test-pipeline[--test-pipeline-name quarkus-project-test ] -b develop -w \
+--build-pipeline-name node-project-build \
+--test-pipeline-name node-project-test 
 ```
 
 ==== Node.js project
 
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project -b develop -w \
+--build-pipeline-name node-project-build \
+--test-pipeline-name node-project-test 
 ```
