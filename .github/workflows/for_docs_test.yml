@@ -3,10 +3,9 @@ name: Build docs
 
 on:
 
-  workflow_dispatch:
   push:
     paths:
-      - documentation/github/pipelines/test_include.asciidoc
+      - documentation/src/*
     branches:
       - '**'
 
