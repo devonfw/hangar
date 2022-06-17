@@ -1,6 +1,7 @@
+:pipeline_type: workflow
 = Setting up a Quality Pipeline on Azure DevOps
 
-In this section we will create a quality pipeline for analyzing project code with SonarQube. This pipeline will be configured in order to be triggered every time the test pipeline is executed successfully on a commit, and consumes the artifact produced by the build pipeline.
+In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. This pipeline will be configured in order to be triggered every time the test pipeline is executed successfully on a commit, and consumes the artifact produced by the build pipeline.
 
 The creation of this pipeline will follow the project workflow, so a new branch named `feature/quality-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
