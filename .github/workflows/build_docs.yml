@@ -23,8 +23,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Reduce readme
+      - name: Reduce asciidocs
         run: ./.github/workflows/scripts/reduce_asciidoctor.sh
 
-      - name: Commit readme
+      - name: Commit new docs
         uses: EndBug/add-and-commit@v8
+        message: 'automatic commit dor docs'

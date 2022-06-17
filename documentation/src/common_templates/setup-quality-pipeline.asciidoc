@@ -1,6 +1,6 @@
 = Setting up a Quality {pipeline_type} on {provider}
 
-In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build pipeline.
+In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
 
 The creation of this {pipeline_type2} will follow the project workflow, so a new branch named `feature/quality-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
@@ -13,10 +13,6 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 * Generate a SonarQube https://docs.sonarqube.org/latest/user-guide/user-token/[token] (just follow the section "Generating a token").
 
-ifdef::build-pipeline-name[]
-  --build-pipeline-name <build pipeline name> \
-endif::[]
-
 == Creating the pipeline using provided script
 
 === Usage
@@ -28,10 +24,8 @@ pipeline_generator.sh \
   --sonar-url <sonarqube url> \
   --sonar-token <sonarqube token> \
   -d <project local path> \
-ifdef::build-pipeline-name[]
-  --build-pipeline-name <build pipeline name> \
-endif::[]
-  --test-pipeline-name <test pipeline name> \
+ifdef::build-pipeline[  --build-pipeline-name <build pipeline name> \]
+ifdef::test-pipeline[  --test-pipeline-name <test pipeline name> \]
   [-b <branch>] \
   [-w]
 ```
@@ -46,8 +40,8 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
 -d, --local-directory        [Required] Local directory of your project.
-    --build-pipeline-name    [Required] Build pipeline name.
-    --test-pipeline-name     [Required] Test pipeline name.
+ifdef::build-pipeline[    --build-pipeline-name    [Required] Build pipeline name.]
+ifdef::test-pipeline[    --test-pipeline-name     [Required] Test pipeline name.]
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -57,11 +51,15 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 ==== Quarkus project
 
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build --test-pipeline-name quarkus-project-test  -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project ifdef::build-pipeline[--build-pipeline-name quarkus-project-build ] ifdef::test-pipeline[--test-pipeline-name quarkus-project-test ] -b develop -w \
+ifdef::build-pipeline[--build-pipeline-name node-project-build \]
+ifdef::test-pipeline[--test-pipeline-name node-project-test ]
 ```
 
 ==== Node.js project
 
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --test-pipeline-name node-project-test  -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project -b develop -w \
+ifdef::build-pipeline[--build-pipeline-name node-project-build \]
+ifdef::test-pipeline[--test-pipeline-name node-project-test ]
 ```
