@@ -48,63 +48,6 @@ pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="azure-devops"
 
-function help {
-    echo ""
-    echo "Generates a pipeline on Azure DevOps based on the given definition."
-    echo ""
-    echo "Common flags:"
-    echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
-    echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project."
-    echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
-    echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
-    echo ""
-    echo "Build pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
-    echo ""
-    echo "Test pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo ""
-    echo "Quality pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "      --sonar-url             [Required] Sonarqube URL."
-    echo "      --sonar-token           [Required] Sonarqube token."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --test-pipeline-name    [Required] Test pipeline name."
-    echo ""
-    echo "Package pipeline flags:"
-    echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
-    echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --quality-pipeline-name [Required] Quality pipeline name."
-    echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
-    echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
-    echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
-    echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
-    echo "      --aws-secret-access-key [Required, if AWS] AWS account secret access key."
-    echo "      --aws-region            [Required, if AWS] AWS region for ECR."
-    echo ""
-    echo "Library package pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo ""
-    echo "Deploy pipeline flags:"
-    echo ""
-    echo "Azure AKS provisioning pipeline flags:"
-    echo "      --resource-group        [Required] Name of the resource group for the cluster."
-    echo "      --storage-account       [Required] Name of the storage account for the cluster."
-    echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
-    echo ""
-    echo "AWS EKS provisioning pipeline flags:"
-    echo "      --cluster-name          [Required] Name for the cluster."
-    echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
-    echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
-
-    exit
-}
-
 function obtainHangarPath {
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
@@ -115,11 +58,11 @@ function createPipeline {
     echo -e "${green}Generating the pipeline from the YAML template..."
     echo -ne ${white}
 
-    # This line go to the localDirectory of the repo and gets the repo name 
+    # This line go to the localDirectory of the repo and gets the repo name
     repoName="$(basename -s .git "$(git config --get remote.origin.url)")"
     # This line gets the organization name
     orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
-    
+
     azRepoShow=$(az repos show -r "$repoName")
     projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
 
@@ -188,12 +131,12 @@ function createPR {
     fi
 }
 
-if [[ "$help" == "true" ]]; then help; fi
-
 obtainHangarPath
 
 # Load common functions
 . "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
+
+if [[ "$help" == "true" ]]; then help; fi
 
 ensurePathFormat
 
