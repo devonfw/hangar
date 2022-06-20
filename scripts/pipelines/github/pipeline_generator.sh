@@ -121,7 +121,7 @@ function createPR {
 obtainHangarPath
 
 # Load common functions
-# shellcheck source=scripts/pipelines/common/pipeline_generator.lib
+# shellcheck source=../common/pipeline_generator.lib
 . "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
 
 if [[ "$help" == "true" ]]; then help; fi
