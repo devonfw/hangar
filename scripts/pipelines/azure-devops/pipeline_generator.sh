@@ -16,6 +16,7 @@ while true; do
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
+        -v | --image-tag-file)    imageTagFile=$2; shift 2;;
         -i | --image-name)        imageName=$2; shift 2;;
         -u | --registry-user)     dockerUser=$2; shift 2;;
         -p | --registry-password) dockerPassword=$2; shift 2;;
@@ -78,6 +79,7 @@ function help {
     echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --quality-pipeline-name [Required] Quality pipeline name."
     echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
+    echo "  -v, --image-tag-file        [Required] Path to file containing the app's version number to be used as docker image tag. eg ./package.json for node, ./pom.xml for quarkus"
     echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
     echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
     echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."

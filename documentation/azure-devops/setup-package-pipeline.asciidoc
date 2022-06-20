@@ -24,6 +24,7 @@ pipeline_generator.sh \
   -d <project local path> \
   --build-pipeline-name <build pipeline name> \
   --quality-pipeline-name <quality pipeline name> \
+  -v <image tag file> \
   -i <image name> \
   [-u <registry user>] \
   [-p <registry password>] \
@@ -47,6 +48,7 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 -d, --local-directory          [Required] Local directory of your project.
     --build-pipeline-name      [Required] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
+-v, --image-tag-file           [Required, if language is not node or quarkus] Path to file containing the app's version number to be used as docker image tag. eg package.json for node, pom.xml for quarkus
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 -u, --registry-user            [Required, unless AWS] Container registry login user.
 -p, --registry-password        [Required, unless AWS] Container registry login password.
@@ -70,5 +72,5 @@ CAUTION: Remember to write the path to the local repository with '/' and not '\'
 ==== Node.js project
 
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project -u username -p password -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project -v pom.xml -u username -p password -b develop -w
 ```
