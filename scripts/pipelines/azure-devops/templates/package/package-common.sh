@@ -13,20 +13,10 @@
 #########################################################################################
 set -e
 
-while getopts f:c:u:p:r:i:b:q:a:s:l: flag
+while getopts q: flag
 do
     case "${flag}" in
-        f) dockerFile=${OPTARG};;
-        c) context=${OPTARG};;
-        u) username=${OPTARG};;
-        p) password=${OPTARG};;
-        r) registry=${OPTARG};;
-        i) imageName=${OPTARG};;
-        b) branch=${OPTARG};;
         q) tag=${OPTARG};;
-        a) aws_access_key=${OPTARG};;
-        s) aws_secret_access_key=${OPTARG};;
-        l) region=${OPTARG};;
         *) echo "flag ${flag} not specified"
     esac
 done

@@ -24,9 +24,13 @@ do
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
         t) pomPath=${OPTARG};;
+        a) aws_access_key=${OPTARG};;
+        s) aws_secret_access_key=${OPTARG};;
+        l) region=${OPTARG};;
         *) echo "flag ${flag} not specified"
     esac
 done
+
 # We define the tag using the version set in the pom.xml
 tag=$(grep version "${pomPath}" | grep -v -e '<?xml'| head -n 1 | sed 's/[[:space:]]//g' | sed -E 's/<.{0,1}version>//g' | awk '{print $1}')
 
