@@ -5,4 +5,4 @@
 :path_provider: azure-devops
 :build-pipeline:
 :test-pipeline:
-include::../../common_templates/setup-quality-pipeline.asciidoc[]
+include::../common_templates/setup-quality-pipeline.asciidoc[]
