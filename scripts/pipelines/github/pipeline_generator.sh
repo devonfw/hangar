@@ -1,22 +1,19 @@
 #!/bin/bash
 set -e
-
-FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
         -c | --config-file)       configFile=$2; shift 2;;
-        -n | --pipeline-name)     pipelineName=$2; shift 2;;
+        -n | --pipeline-name)     export pipelineName=$2; shift 2;;
         -d | --local-directory)   localDirectory=$2; shift 2;;
         -a | --artifact-path)     artifactPath=$2; shift 2;;
         -b | --target-branch)     targetBranch=$2; shift 2;;
         -l | --language)          language=$2; shift 2;;
-        -t | --target-directory)  targetDirectory=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
-        -v | --image-tag-file)    imageTagFile=$2; shift 2;;
         -i | --image-name)        imageName=$2; shift 2;;
         -u | --registry-user)     dockerUser=$2; shift 2;;
         -p | --registry-password) dockerPassword=$2; shift 2;;
@@ -44,10 +41,10 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 # Common var
-commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for common files of the pipelines
-pipelinePath=".pipelines" # Path to the pipelines.
-scriptFilePath=".pipelines/scripts" # Path to the scripts.
-export provider="azure-devops"
+commonTemplatesPath="scripts/pipelines/github/templates/common" # Path for common files of the pipelines
+pipelinePath=".github/workflows" # Path to the pipelines.
+scriptFilePath=".github/workflows/scripts" # Path to the scripts.
+export provider="github"
 
 function obtainHangarPath {
 
@@ -55,30 +52,24 @@ function obtainHangarPath {
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 }
 
-function createPipeline {
-    echo -e "${green}Generating the pipeline from the YAML template..."
-    echo -ne ${white}
-
-    # This line go to the localDirectory of the repo and gets the repo name
-    repoName="$(basename -s .git "$(git config --get remote.origin.url)")"
-    # This line gets the organization name
-    orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
-
-    azRepoShow=$(az repos show -r "$repoName")
-    projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
-
-    # Create Azure Pipeline
-    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true --organization "https://dev.azure.com/$orgName" --project "$projectName" --repository "$repoName" --repository-type tfsgit
-}
-
 # Function that adds the variables to be used in the pipeline.
 function addCommonPipelineVariables {
-    if test -z ${artifactPath}
+    if test -z "${artifactPath}"
     then
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
+        # Delete the commentary to set the artifactPath input/var
+        sed -i '/# mark to insert additional artifact input #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+        sed -i '/# mark to insert additional artifact env var #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
     else
+        # add the input for the additional artifact
+        grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathInput="      artifactPath:\n       required: false\n       default: ${artifactPath//\//\\/}"
+        grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathInput="    inputs:\n      artifactPath:\n       required: false\n       default: \"${artifactPath//\//\\/}\""
+        sed -i "s/# mark to insert additional artifact input #/$textArtifactPathInput/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+        # add the env var for the additional artifact
+        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event.inputs.artifactPath || '${artifactPath//\//\\/}' }}"
+        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event.inputs.artifactPath || '${artifactPath//\//\\/}' }}"
         # Add the extra artifact to store variable.
-        az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}"
+        sed -i "s/# mark to insert additional artifact env var #/$textArtifactPathVar/" "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
 }
 
@@ -91,46 +82,41 @@ function createPR {
         exit
     else
         echo -e "${green}Creating a Pull Request..."
-        echo -ne ${white}
+        echo -ne "${white}"
+        repoURL=$(git config --get remote.origin.url)
+        repoNameWithGit="${repoURL/https:\/\/github.com\/}"
+        repoName="${repoNameWithGit/.git}"
         # Create the Pull Request to merge into the specified branch.
-        pr=$(az repos  pr create --source-branch ${sourceBranch} --target-branch $targetBranch --title "Pipeline" --auto-complete true)
+        #debug
+        echo "gh pr create -B \"$targetBranch\" -b \"merge request $sourceBranch\" -H \"$sourceBranch\" -R \"${repoName}\" -t \"$sourceBranch\""
+        pr=$(gh pr create -B "$targetBranch" -b "merge request $sourceBranch" -H "$sourceBranch" -R "${repoName}" -t "$sourceBranch")
 
-        # Obtain the PR id.
-        id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
-
-        # Obtain the PR status.
-        showOutput=$(az repos pr show --id $id)
-        status=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['status'])")
-
-        # Check if the Pull Request merge has succeeded.
-        if test "$status" = "completed"
+        # trying to merge
+        if gh pr merge -s "$pr"
         then
             # Pull Request merged successfully.
             echo -e "${green}Pull Request merged into $targetBranch branch successfully."
             exit
         else
-            # Obtain the PR URL.
-            url=$(echo "$showOutput" | python -c "import sys, json; print(json.load(sys.stdin)['repository']['webUrl'])")
-            prURL="$url/pullrequest/$id"
-
             # Check if the -w flag is activated.
             if [[ "$webBrowser" == "true" ]]
             then
                 # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
                 echo -e "${green}Pull Request successfully created."
                 echo -e "${green}Opening the Pull Request on the web browser..."
-                az repos pr show --id $id --open > /dev/null
+                python -m webbrowser "$pr"
                 exit
             else
                 # -w flag is not activated and the URL to the Pull Request is shown in the console.
                 echo -e "${green}Pull Request successfully created."
                 echo -e "${green}To review the Pull Request and accept it, click on the following link:"
-                echo ${prURL}
+                echo "${pr}"
                 exit
             fi
         fi
     fi
 }
+
 
 obtainHangarPath
 
@@ -145,9 +131,9 @@ importConfigFile
 
 checkInstallations
 
-obtainHangarPath
-
 createNewBranch
+
+type addPipelineVariables &> /dev/null && addPipelineVariables
 
 copyYAMLFile
 
@@ -155,14 +141,13 @@ copyCommonScript
 
 type copyScript &> /dev/null && copyScript
 
+# This function does not exists for the github pipeline generator at this moment, but I let the line with 'type' to keep the same structure as the others pipeline generator
+type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
+
 commitCommonFiles
 
 type commitFiles &> /dev/null && commitFiles
 
-createPipeline
-
-type addPipelineVariables &> /dev/null && addPipelineVariables
-
-addCommonPipelineVariables
+# createPipeline
 
 createPR
