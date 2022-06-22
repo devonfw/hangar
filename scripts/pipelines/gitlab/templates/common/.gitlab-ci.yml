@@ -1,0 +1,12 @@
+include:
+  - '.pipelines/*.yml'
+
+stages:
+  - build
+  - test
+  - quality
+  - package
+
+default:
+  image: maven:3-jdk-11
+  tags: ['docker_ruby']
