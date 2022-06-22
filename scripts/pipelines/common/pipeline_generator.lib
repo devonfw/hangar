@@ -31,7 +31,6 @@ function help {
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo "      --quality-pipeline-name [Required] Quality pipeline name."
-    echo "  -v, --image-tag-file                   Path to file containing the app's version number to be used as docker image tag. (default is ./package.json for node, ./pom.xml for quarkus)"
     echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
     echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
     echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."

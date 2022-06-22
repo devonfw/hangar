@@ -16,7 +16,6 @@ while true; do
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
-        -v | --image-tag-file)    imageTagFile=$2; shift 2;;
         -i | --image-name)        imageName=$2; shift 2;;
         -u | --registry-user)     dockerUser=$2; shift 2;;
         -p | --registry-password) dockerPassword=$2; shift 2;;
