@@ -167,4 +167,3 @@ data "aws_ami" "ubuntu_20_04" {
 output "sonarqube_public_ip" {
   value = aws_eip.sq_eip.public_ip
 }
-
