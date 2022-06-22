@@ -52,6 +52,19 @@ function obtainHangarPath {
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 }
 
+function addAdditionalArtifact {
+  # Check if an extra artifact to store is supplied.
+    if test ! -z "$artifactPath"
+    then
+        # Add the extra step to the YAML.
+        storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
+        sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+    else
+        echo "The '-a' flag has not been set, skipping the step to add additional artifact."
+        sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+    fi
+}
+
 # Function that adds the variables to be used in the pipeline.
 function addCommonPipelineVariables {
     if test -z "${artifactPath}"
@@ -137,6 +150,8 @@ type addPipelineVariables &> /dev/null && addPipelineVariables
 
 copyYAMLFile
 
+addAdditionalArtifact
+
 copyCommonScript
 
 type copyScript &> /dev/null && copyScript
@@ -147,7 +162,5 @@ type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
 commitCommonFiles
 
 type commitFiles &> /dev/null && commitFiles
-
-# createPipeline
 
 createPR
