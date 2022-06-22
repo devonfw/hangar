@@ -1,8 +1,8 @@
-:provider: Azure Devops
-:pipeline_type: Pipeline
-:trigger_sentence: This pipeline will be configured to be triggered every time there is a commit to the Azure Devops repository
-:pipeline_type2: pipeline
-:path_provider: azure-devops
+:provider: Github
+:pipeline_type: workflow
+:trigger_sentence: This workflow will be configures to be executed inside a CI pipeline for the build workflow
+:pipeline_type2: Github action
+:path_provider: github
 = Setting up a Build {pipeline_type} on {provider}
 
 In this section we will create a build {pipeline_type} for compiling project code. {trigger_sentence}, regardless of which branch it is made on.
