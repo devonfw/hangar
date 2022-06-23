@@ -22,6 +22,7 @@ pipeline_generator.sh \
   -l <language or framework> \
   -d <project local path> \
   [-b <branch>] \
+  [-t <target-directory>] \
   [-w]
 ```
 
@@ -34,6 +35,7 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
@@ -41,6 +43,22 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 
 ==== Quarkus project
 
+===== Quarkus native project
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+```
+
+===== Quarkus project using JVM
+```
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+```
+
+==== Node.js project
+```
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n node-project-build -l node -d C:/Users/$USERNAME/Desktop/node-project -b develop -w
+```
+
+==== Angular project
+```
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop -w
 ```

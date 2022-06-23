@@ -62,6 +62,12 @@ steps:
     runId: $(runId)
 
 - task: Bash@3
+  displayName: "Copying build artifact to the repository path"
+  inputs:
+    targetType: inline
+    script: 'cp -a $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
+
+- task: Bash@3
   displayName: "Package and push library to repository"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/library-package.sh'
