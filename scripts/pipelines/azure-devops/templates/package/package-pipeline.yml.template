@@ -67,7 +67,7 @@ steps:
   displayName: "Copying build artifact to the repository path"
   inputs:
     targetType: inline
-    script: 'cp -r $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
+    script: 'cp -a $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
 
 - task: Bash@3
   displayName: 'Build and push image to registry'
