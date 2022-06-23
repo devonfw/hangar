@@ -23,7 +23,6 @@ pipeline_generator.sh \
   -n <pipeline name> \
   -l <language or framework> \
   -d <project local path> \
-  --build-pipeline-name <build pipeline name> \
   [-a <artifact source path>] \
   [-b <branch>] \
   [-w]
@@ -37,7 +36,6 @@ NOTE:  The config file for the test workflow is located at `/scripts/pipelines/g
 -n, --pipeline-name         [Required] Name that will be set to the workflow.
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
-    --build-pipeline-name   [Required] Build pipeline name.
 -a, --artifact-path                    Path to be persisted as an artifact after workflow execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
