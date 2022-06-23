@@ -63,6 +63,7 @@ steps:
 
 - task: Bash@3
   displayName: "Copying build artifact to the repository path"
+  condition: eq(variables['skipBuildPipeline'], false)
   inputs:
     targetType: inline
     script: 'cp -a $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
