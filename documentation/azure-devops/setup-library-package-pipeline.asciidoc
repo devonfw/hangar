@@ -3,7 +3,7 @@ toc::[]
 :idprefix:
 :idseparator: -
 
-= Setting up a Java library package pipeline using Azure DevOps
+= Setting up a Java library package pipeline on Azure DevOps
 
 In this section we will create a package pipeline to generate a distributable of a Java library and push it to a Maven feed in Azure DevOps. This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed. It consumes the artifact produced by the build pipeline.
 
@@ -40,7 +40,7 @@ NOTE: The config file for the library package pipeline is located at `/scripts/p
 -c, --config-file              [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name            [Required] Name that will be set to the pipeline.
 -l, --language                 [Required] Language or framework of the project.
--d, --local-directory          [Required] Local directory of your project (the path should always be using '/' and not '\').
+-d, --local-directory          [Required] Local directory of your project.
     --build-pipeline-name      [Required] Build pipeline name.
     --quality-pipeline-name    [Required] Quality pipeline name.
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
