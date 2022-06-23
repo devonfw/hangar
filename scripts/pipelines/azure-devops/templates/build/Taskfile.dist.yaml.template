@@ -4,11 +4,11 @@ tasks:
   build:
       cmds:
       # Specify the build steps using bash commands here
-      - npm install
+      - 
 
 
   build-configuration:
-      # Specify build target directory here
+      # Specify the build target directory here
       vars: { 
         TARGET_DIRECTORY: "./"
       }
