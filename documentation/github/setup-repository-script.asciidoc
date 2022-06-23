@@ -3,9 +3,11 @@
 By the end of this guide, a repository will be created in an automated way using a script.
 
 == Prerequisites
-* Have a GitHub user registered and GitHub CLI installed and configured. If it is not the case, please go back to corresponding guide.
+* A GitHub user.
 
 * Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
+
+* Install https://cli.github.com/[GitHub CLI].
 
 == Creating repository using provided script
 
@@ -104,24 +106,19 @@ This is not an explanation of Gitflow (there are plenty of them on the web), but
 
 Any other branch part the strategy (feature, release, and hotfix branches) will be created by developers during the lifecycle of the project.
 
-=== Policies
+=== Branch protection rules
 
-It is possible to protect important branches against bad practices using branch policies.
+It is possible to protect important branches against bad practices using branch protection rules.
 
-The following branch policies are applied to `master` and `develop` branches:
+The following branch protection rules are applied to `master` and `develop` branches:
 
-* Require a minimum number of reviewers: ON
-** Minimum number of reviewers: 1
-** Allow requestors to approve their own changes: ON
-** Prohibit the most recent pusher from approving their own changes: OFF
-** Allow completion even if some reviewers vote to wait or reject: OFF
-** When new changes are pushed: Reset all approval votes (does not reset votes to reject or wait)
-* Check for linked work items: OFF
-* Check for comment resolution: REQUIRED
-* Limit merge types: OFF
+* Require a pull request before merging: ON
+** Require approvals: 1
+** Dismiss stale pull request approvals when new commits are pushed: ON
+* Require conversation resolution before merging: ON
 
-The above policies are defined in a configuration file located at `/scripts/repositories/common/config/strategy.cfg`. Feel free to adapt it to your needs.
+The above branch protection rules are defined in a configuration file located at `/scripts/repositories/common/config/strategy.cfg`. Feel free to adapt it to your needs.
 
-NOTE: This is the bare minimum standard for any project. We do not prohibit the most recent pusher from approving their own changes, although being more than recommendable, because if we do, it will block the auto-approval of Pull Requests generated during pipelines creation on the following guides.
+NOTE: This is the bare minimum standard for any project.
 
-You can find more information about branch policies in the https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops[official documentation].
+You can find more information about branch protection rules in the https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches[official documentation].
