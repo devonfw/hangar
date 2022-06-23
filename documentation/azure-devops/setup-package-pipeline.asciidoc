@@ -24,7 +24,6 @@ pipeline_generator.sh \
   -d <project local path> \
   --build-pipeline-name <build pipeline name> \
   --quality-pipeline-name <quality pipeline name> \
-  -v <image tag file> \
   -i <image name> \
   [-u <registry user>] \
   [-p <registry password>] \
