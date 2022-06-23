@@ -16,7 +16,7 @@ steps:
   displayName: "Copying build artifact to the ArtifactStagingDirectory"
   inputs:
     targetType: inline
-    script: 'cp -r $(Build.Repository.LocalPath)/$(targetPath) $(Build.ArtifactStagingDirectory)'
+    script: 'cp -a $(Build.Repository.LocalPath)/$(targetPath) $(Build.ArtifactStagingDirectory)'
 
 - publish: $(Build.ArtifactStagingDirectory)
   displayName: "Publish Artifact"
