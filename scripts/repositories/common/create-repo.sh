@@ -261,7 +261,7 @@ function prepare_push_existing_repo {
 
     if [ "$user_input_remote_url" = 'Y' ]
     then
-      prepare_push_existing_repo_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+      prepare_push_existing_repo_content "$1" "$2" "$3" "$4" "$5" "$6" "$7"
       git remote set-url origin "$URL_space_converted"
     else
       exit
@@ -270,7 +270,7 @@ function prepare_push_existing_repo {
     echo ""
     echo "Adding remote URL as no URL was previously set."
 
-    prepare_push_existing_repo_content_2 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+    prepare_push_existing_repo_content "$1" "$2" "$3" "$4" "$5" "$6" "$7"
     git remote add origin "$URL_space_converted"
     echo ""
   fi
