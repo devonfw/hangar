@@ -1,0 +1,22 @@
+version: '3'
+
+tasks:
+  build:
+    deps:
+    - task: configuration
+      
+      # Specify the build target directory here
+      vars: { 
+        TARGET_DIRECTORY: "./" 
+      }
+
+    cmds:
+    # Specify the build steps using bash commands here
+    - npm install
+
+
+  # DO NOT CHANGE THIS!
+  configuration:
+    cmds:
+    - echo "##vso[task.setvariable variable=targetPath;]{{.TARGET_DIRECTORY}}"
+
