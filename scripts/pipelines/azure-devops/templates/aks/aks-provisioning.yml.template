@@ -1,0 +1,69 @@
+trigger:
+  - none
+
+variables:
+  terraformWorkingDirectory: $(System.DefaultWorkingDirectory)/.terraform/aks
+  organization: $(System.TeamFoundationCollectionUri)
+  
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: TerraformInstaller@0
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: latest
+
+- task: HelmInstaller@0
+  displayName: 'Install Helm'
+  inputs:
+    helmVersion: '2.14.1'
+    installKubectl: true
+
+- task: TerraformTaskV2@2
+  displayName: 'Terraform - init'
+  inputs:
+    command: 'init'
+    workingDirectory: '$(terraformWorkingDirectory)'
+    backendServiceArm: '$(serviceConnection)'
+    backendAzureRmResourceGroupName: '$(resourceGroupName)'
+    backendAzureRmStorageAccountName: '$(StorageAccountName)'
+    backendAzureRmContainerName: '$(storageContainerName)'
+    backendAzureRmKey: 'terraform.tfstate'
+
+- task: TerraformTaskV2@2
+  displayName: 'Terraform - apply'
+  inputs:
+    command: 'apply'
+    workingDirectory: '$(terraformWorkingDirectory)'
+    environmentServiceNameAzureRm: '$(serviceConnection)'
+
+- task: Bash@3
+  displayName: 'Install nginx-ingress controller'
+  env:
+    KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/install-nginx-ingress.sh'
+
+- task: AzureCLI@2
+  displayName: 'Obtain DNS name'
+  env:
+    KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
+  inputs:
+    azureSubscription: '$(serviceConnection)'
+    scriptType: 'bash'
+    scriptLocation: 'scriptPath'
+    scriptPath: '$(Build.Repository.LocalPath)/.pipelines/scripts/obtain-dns.sh'
+    arguments: $(terraformWorkingDirectory) $(organization)
+
+- publish: $(terraformWorkingDirectory)/kubeconfig
+  displayName: 'Publish kubeconfig'
+  artifact: kubeconfig
+
+- task: Bash@3
+  displayName: 'Publish DNS name'
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(pat)
+  inputs:
+    targetType: 'inline'
+    script: 'az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name aks-variables --variables dns_name=$(dns) --authorize true'
