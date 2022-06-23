@@ -106,12 +106,12 @@ function validateLoginCredentials {
     # prompt the user
     if [ -v dockerUser ] && [ ! -v dockerPassword ] 
     then
-        read -sp "Please enter Docker registry password..." dockerPassword
+        read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
     fi
     
     if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
     then 
-        read -sp "Please enter AWS secret access key..." awsSecretAccessKey
+        read -sp "Please enter your secret access key for aws..." awsSecretAccessKey
     fi
 }
 
@@ -156,20 +156,6 @@ function checkInstallations {
     if ! [ -x "$(command -v python)" ]; then
         echo -e "${red}Error: Python is not installed." >&2
         exit 127
-    fi
-}
-
-function validateLoginCredentials {
-    # if the user chose to push to a registry and the user has not already given a password
-    # prompt the user
-    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
-    then
-        read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
-    fi
-    
-    if [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
-    then 
-        read -sp "Please enter your secret access key for aws..." awsSecretAccessKey
     fi
 }
 
@@ -331,8 +317,6 @@ fi
 importConfigFile
 
 checkInstallations
-
-validateLoginCredentials
 
 ensurePathFormat
 
