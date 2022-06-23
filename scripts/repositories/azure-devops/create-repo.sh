@@ -29,11 +29,7 @@ function import_repo_content {
     az repos import create --git-url "$1" --organization "${2}" --project "$3" --repository "$4" > /dev/null
 }
 
-function prepare_push_existing_repo_content_1 {
-    URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
-}
-
-function prepare_push_existing_repo_content_2 {
+function prepare_push_existing_repo_content {
     URL_space_converted=$(echo "${1}/${5}/_git/$3" | sed 's/\ /%20/g')
 }
 
