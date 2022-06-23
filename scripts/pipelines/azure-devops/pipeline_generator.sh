@@ -101,6 +101,20 @@ function help {
     exit
 }
 
+function validateLoginCredentials {
+    # if the user chose to push to a registry and the user has not already given a password
+    # prompt the user
+    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
+    then
+        read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
+    fi
+    
+    if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
+    then 
+        read -sp "Please enter your secret access key for aws..." awsSecretAccessKey
+    fi
+}
+
 function importConfigFile {
     # Import config file.
     source $configFile
@@ -142,20 +156,6 @@ function checkInstallations {
     if ! [ -x "$(command -v python)" ]; then
         echo -e "${red}Error: Python is not installed." >&2
         exit 127
-    fi
-}
-
-function validateLoginCredentials {
-    # if the user chose to push to a registry and the user has not already given a password
-    # prompt the user
-    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
-    then
-        read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
-    fi
-    
-    if [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
-    then 
-        read -sp "Please enter your secret access key for aws..." awsSecretAccessKey
     fi
 }
 
@@ -310,11 +310,13 @@ function createPR {
 
 if [[ "$help" == "true" ]]; then help; fi
 
+if [[ $configFile == *"package-pipeline.cfg" ]]
+    then validateLoginCredentials
+fi
+ 
 importConfigFile
 
 checkInstallations
-
-validateLoginCredentials
 
 ensurePathFormat
 
