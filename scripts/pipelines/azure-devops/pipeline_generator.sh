@@ -159,20 +159,6 @@ function checkInstallations {
     fi
 }
 
-function validateLoginCredentials {
-    # if the user chose to push to a registry and the user has not already given a password
-    # prompt the user
-    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
-    then
-        read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
-    fi
-    
-    if [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
-    then 
-        read -sp "Please enter your secret access key for aws..." awsSecretAccessKey
-    fi
-}
-
 function ensurePathFormat {
     currentDirectory=$(pwd)
 
@@ -331,8 +317,6 @@ fi
 importConfigFile
 
 checkInstallations
-
-validateLoginCredentials
 
 ensurePathFormat
 
