@@ -52,11 +52,7 @@ function import_repo_content {
     git push --mirror https://github.com/$6/$4.git
 }
 
-function prepare_push_existing_repo_content_1 {
-    URL_space_converted="https://github.com/$6/$3.git"
-}
-
-function prepare_push_existing_repo_content_2 {
+function prepare_push_existing_repo_content {
     URL_space_converted="https://github.com/$6/$3.git"
 }
 
