@@ -1,9 +1,7 @@
 name: $pipelineName
 
 on:
-  workflow_run:
-    workflows: $buildPipelineName
-    types: completed
+  workflow_call:
   workflow_dispatch:
 # mark to insert additional artifact input #
 
@@ -12,22 +10,43 @@ permissions:
 
 env:
   build_pipeline: 'build-pipeline.yml'
+  ciPipelineYamlName: 'ci-pipeline.yml'
 # mark to insert additional artifact env var #
 
 jobs:
     on-success:
       name: Test
       runs-on: ubuntu-latest
-      if: ${{ github.event.workflow_run.conclusion == 'success' }}
       steps:
       - name: Checkout repository code
         uses: actions/checkout@v2
 
-      - name: Download Build Pipeline Artifact
-        uses: dawidd6/action-download-artifact@v2
+      - name: Download artifact from this workflow
+        uses: actions/download-artifact@v2
+        id: dowloadFromSamePipeline
+        continue-on-error: true
         with:
-          workflow: build-pipeline.yml
-          commit: ${{github.event.pull_request.head.sha}}
+          name: buildOutput
+
+      - name: Download artifact from build pipeline
+        uses: dawidd6/action-download-artifact@v2
+        id: downloadFromBuild
+        continue-on-error: true
+        if: ${{ steps.dowloadFromSamePipeline.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.buildPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: buildOutput
+
+      - name: Download artifact from ci pipeline
+        uses: dawidd6/action-download-artifact@v2
+        if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.ciPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: buildOutput
 
       - name: Test
         run: .github/workflows/scripts/test.sh
@@ -39,10 +58,3 @@ jobs:
           files: '**/TEST-*.xml'
 
     # mark to insert step for additonal artifact #
-    on-failure:
-      name: Build Pipeline Failed
-      runs-on: ubuntu-latest
-      if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-      steps:
-        - name: Cancel Pipeline
-          uses: andymckay/cancel-action@0.2
