@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn test -B -Dmaven.install.skip=true -Pnative 
+mvn --quiet test -B -Dmaven.install.skip=true -Pnative 
