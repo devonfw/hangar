@@ -1,13 +1,13 @@
 version: '3'
 
 tasks:
-  build:
+  steps:
       cmds:
       # Specify the build steps using bash commands here
-      - 
+      - echo "Building"
 
 
-  build-configuration:
+  config:
       # Specify the build target directory here
       vars: { 
         TARGET_DIRECTORY: "./"
