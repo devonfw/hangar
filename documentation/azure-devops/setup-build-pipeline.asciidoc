@@ -66,5 +66,3 @@ NOTE: The config file for the build pipeline is located at `/scripts/pipelines/a
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n dotnet-project-build -l dotnet -d C:/Users/$USERNAME/Desktop/dotnet-project -b develop -w
 ```
-
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
