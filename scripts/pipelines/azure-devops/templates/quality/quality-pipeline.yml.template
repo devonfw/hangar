@@ -17,7 +17,7 @@ parameters:
     type: string
 
 variables:
-  projectPath: $(Pipeline.Workspace)
+  projectPath: $(Build.Repository.LocalPath)
 
 pool:
   vmImage: ubuntu-latest
@@ -65,6 +65,12 @@ steps:
     runVersion: 'specific'
     downloadPath: '$(Pipeline.Workspace)'
     runId: $(runId)
+
+- task: Bash@3
+  displayName: "Copying build artifact to the repository path"
+  inputs:
+    targetType: inline
+    script: 'cp -a $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
 
 - task: Bash@3
   displayName: "SonarQube Analysis"
