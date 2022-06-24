@@ -350,13 +350,6 @@ function undoPreviousSteps {
 
 if [[ "$help" == "true" ]]; then help; fi
 
-# check if the .pipeline-directory already existed
-pipelinesDirectoryAlreadyExists=false
-
-if [ -d "./.pipelines" ]; then
-    pipelinesDirectoryAlreadyExists=true
-fi;
-
 # Undo-Level for the script. Used to clean up the resources in case of a failure
 undoStage=0
 
