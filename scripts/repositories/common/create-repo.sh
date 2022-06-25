@@ -492,7 +492,7 @@ then
   MSG_ERROR "Cloning empty repo."  "$ret_value2"
   git checkout -b master
   cp "$absoluteFolderScriptPath/README.md" .
-  git a dd -A
+  git add -A
   git commit -m "Adding README"
   git push -u origin --all
   if [ "$strategy" != "" ]
