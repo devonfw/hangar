@@ -102,7 +102,17 @@ if [ "$directory" != "" ]
 then
   [ "$action" == "create" ] && mkdir -p "$directory"
   cd "$directory"
-  MSG_ERROR "Cding into the directory given." $?
+   #check if the directory exists! 
+  ret_value3="$?"
+  if [ "$ret_value3" != "0" ]
+  then
+    cd ..
+    rm -rf "$directory"
+    az repos delete --id "$repo_id"  --org "$organization" -p "$project" --yes
+    echo -e "${red}The repository made will be deleted, try again!"
+  fi
+  
+  MSG_ERROR "Cding into the directory given." "$ret_value3"
 fi
 directory_name=$(basename "$(pwd)")
 
@@ -458,9 +468,28 @@ then
   fi
 elif [ "$action" = "create" ]
 then
-  MSG_ERROR "Cding into the directory given." "$?"
+  #cd "$directory"
+  #Check when starting if everything is OK?
+  ret_value="$?"
+  if [ "$ret_value" != "0" ]
+  then
+    cd ..
+    rm -rf "$directory"
+    az repos delete --id "$repo_id"  --org "$organization" -p "$project" --yes
+    echo -e "${red}The repository made will be deleted, try again!"
+  fi
+  MSG_ERROR "Cding into the directory given." "$ret_value"
   clone_git_project_create
-  MSG_ERROR "Cloning empty repo." $?
+   #Check after cloning!
+  ret_value2="$?"
+  if [ "$ret_value2" != "0" ]
+  then
+    cd ..
+    rm -rf "$directory"
+    az repos delete --id "$repo_id"  --org "$organization" -p "$project" --yes
+    echo -e "${red}You're trying to clone an empty repository, The repository made will be deleted, try again!"
+  fi
+  MSG_ERROR "Cloning empty repo."  "$ret_value2"
   git checkout -b master
   cp "$absoluteFolderScriptPath/README.md" .
   git a dd -A
