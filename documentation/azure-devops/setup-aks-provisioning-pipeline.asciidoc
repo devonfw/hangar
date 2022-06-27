@@ -98,6 +98,8 @@ In order to install Rancher to manage your Kubernetes cluster execute the `pipel
 ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
 ```
 
+To get the domain name in order to access Rancher go into Azure DevOps > Pipelines > Library > aks-variables.
+
 You will be able to access the Rancher dashborad through the URL: https://<domain name>.
 
 When accessing the URL you will be asked to introduce the inital password which you can obtain bey executing the following command on your console:

@@ -66,6 +66,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
     --cluster-name       [Required] Name for the cluster."
     --s3-bucket          [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
     --s3-key-path        [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
+    --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -87,12 +88,26 @@ Now you can use `kubectl` tool to communicate with the cluster.
 
 To enable an IAM user to connect to the EKS cluster, please refer https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html[here].
 
+=== Appendix: Installing Rancher
+
+In order to install Rancher to manage your Kubernetes cluster execute the `pipeline_generator.sh` script with the `--rancher` flag:
+
+```
+./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state --rancher -b develop -w
+```
+
 To get the DNS name of the NGINX Ingress controller on the EKS cluster, run the below command:
 ```
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
 ```
 
 Rancher will be available on `https://<ingress controller domain>/dashboard`.
+
+When accessing the URL you will be asked to introduce the inital password which you can obtain bey executing the following command on your console:
+
+```
+kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
+```
 
 == Appendix: Destroying the cluster
 
