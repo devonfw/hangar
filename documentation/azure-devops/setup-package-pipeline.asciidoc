@@ -94,5 +94,3 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
-
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
