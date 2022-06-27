@@ -105,3 +105,7 @@ When accessing the URL you will be asked to introduce the inital password which 
 ```
 kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
 ```
+
+=== Appendix: Destroying the cluster
+
+To destory the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
