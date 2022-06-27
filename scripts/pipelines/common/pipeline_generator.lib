@@ -53,6 +53,7 @@ function help {
     echo "      --cluster-name          [Required] Name for the cluster."
     echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
+    echo "      --rancher                          Install Rancher to manage the cluster."
 
     exit
 }
