@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn package --quiet -B
+mvn package -B
