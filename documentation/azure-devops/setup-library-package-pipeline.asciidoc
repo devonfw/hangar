@@ -3,9 +3,9 @@ toc::[]
 :idprefix:
 :idseparator: -
 
-= Setting up a library package pipeline using Azure DevOps
+= Setting up a library package pipeline on Azure DevOps
 
-In this section we will create a package pipeline to generate a distributable of a library and push it to a feed in Azure DevOps. This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed. When Java is used, it also consumes the artifact produced by the build pipeline.
+In this section we will create a package pipeline to generate a distributable of a library and push it to a feed in Azure DevOps. This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed. Depending on the language, it consumes the artifact produced by the build pipeline.
 
 The creation of this pipeline will follow the project workflow, so a new branch named feature/library-package-pipeline will be created. The YAML file and the bash script for the pipeline will be pushed to it, as well as a generated file containing required credentials for connecting to the feed.
 
