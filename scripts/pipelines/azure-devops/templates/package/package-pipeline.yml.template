@@ -62,17 +62,23 @@ steps:
     runVersion: 'specific'
     downloadPath: $(Pipeline.Workspace)
     runId: $(runId)
+    
+- task: Bash@3
+  displayName: "Copying build artifact to the repository path"
+  inputs:
+    targetType: inline
+    script: 'cp -a $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
 
 - task: Bash@3
   displayName: 'Build and push image to registry'
   inputs:
     targetType: 'inline'
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/$(imageTagFile)  -c $(Build.Repository.LocalPath) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
   condition: eq(variables['isECR'], '')
 
 - task: Bash@3
   displayName: 'Build and push image to registry (AWS)'
   inputs:
     targetType: 'inline'
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -a $(aws_access_key) -s $(aws_secret_access_key) -l $(region) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/$(imageTagFile)  -c $(Build.Repository.LocalPath) -a $(aws_access_key) -s $(aws_secret_access_key) -l $(region) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
   condition: eq(variables['isECR'], 'true')
