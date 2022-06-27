@@ -106,12 +106,12 @@ function validateLoginCredentials {
     # prompt the user
     if [ -v dockerUser ] && [ ! -v dockerPassword ] 
     then
-        read -sp "Please enter your password for the docker-hub to continue..." dockerPassword
+        read -sp "Please enter Docker registry password..." dockerPassword
     fi
     
     if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
     then 
-        read -sp "Please enter your secret access key for aws..." awsSecretAccessKey
+        read -sp "Please enter AWS secret access key..." awsSecretAccessKey
     fi
 }
 
