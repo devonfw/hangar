@@ -46,11 +46,9 @@ docker build -f "$dockerFile" -t "$imageName":"$tag_completed" "$context"
 if test -z "$aws_access_key"
 then
     echo "docker login -u=**** -p=**** $registry"
-
     docker login -u="$username" -p="$password" $registry
 else
     aws configure set aws_access_key_id "$aws_access_key"
-
     aws configure set aws_secret_access_key "$aws_secret_access_key"
     echo "aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry"
     aws ecr get-login-password --region "$region" | docker login --username AWS --password-stdin "$registry"
