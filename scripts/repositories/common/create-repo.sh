@@ -93,8 +93,13 @@ then
    
    # do all or nothing ! In case something goes wrong while creating or importing a repository, the created repository and the local directory will be deleted.
    cd ..
-   rm -rf "$directory"
+  
    az repos delete --id "$repo_id"  --org "$organization" -p "$project" --yes
+   if  [ "$?" == 0 ]
+   then
+    rm -rf "$directory"
+   fi
+
    echo -e "${red}The repository made will be deleted, try again!"
 
    echo -e "${red}A problem occured in the step: $1."
