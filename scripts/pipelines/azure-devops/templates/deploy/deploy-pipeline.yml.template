@@ -1,0 +1,117 @@
+trigger: none
+
+resources:
+  pipelines:
+  - pipeline: 'Package-Pipeline'
+    source: '$packagePipelineName'
+    trigger:
+      branches:
+        include:
+        - 'release/*'
+        - develop
+        exclude:
+        - 'feature/*'
+        - master
+
+variables:
+  - group: registry_info 
+  - name: deploymentYamlPath
+    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)/application-deployment.yaml" 
+  - name: ingressYamlPath
+    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)/ingress.yaml"  
+  - name: deployFilesPath
+    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)"
+  - name: artifact
+    value: "kubeconfig"  
+  - name: kubeconfigPath
+    value: "$(Pipeline.Workspace)/$(artifact)"  
+    
+pool:
+  vmImage: ubuntu-latest
+jobs:
+- job: Checking_provision_pipeline_status
+  steps:
+  - task: Bash@3
+    displayName: 'Checking last Provision pipeline execution status'
+    env:
+      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+    inputs:
+      targetType: inline
+      script: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/check-pipeline-exec.sh $(ProvisionPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+
+  - bash: 'echo "The Provision pipeline executed for this commit has failed.";exit 1'
+    displayName: 'Provision pipeline failed'
+    condition: eq(variables['result'], 'failed')
+
+  - bash: 'echo "The Provision pipeline executed for this commit has been canceled.";exit 1'
+    displayName: 'Provision pipeline canceled'
+    condition: eq(variables['result'], 'canceled')
+
+  - bash: 'echo "The Provision pipeline for this commit is not over yet.";exit 1'
+    displayName: 'Provision pipeline not over'
+    condition: eq(variables['result'], 'None')
+
+
+- job: Deploy_to_AKS
+  condition: eq(variables.deployCluster, 'AKS')
+  variables:
+  - ${{ if eq(variables.deployCluster, 'AKS') }}:
+    - group: aks-variables # DNS available for this job
+  steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: "Download AKS Kubeconfig"
+    inputs:
+      buildType: 'specific'
+      project: '$(System.TeamProjectId)'
+      definition: '$(ProvisionPipelineName)'
+      buildVersionToDownload: 'latest'
+      artifactName: '$(artifact)'
+      targetPath: '$(Pipeline.Workspace)'  
+    
+  - task: Bash@3
+    displayName: "Deploy app to AKS" 
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/aks-deploy.sh'
+      arguments: '$(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(k8sNamespace) $(kubeconfigPath)'
+  
+  - task: Bash@3
+    condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
+    displayName: 'Create secrets for AKS'
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/acr-secrets.sh'
+      arguments: '$(k8sNamespace) $(secretsName) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath) $(kubeconfigPath)'
+ 
+- job: Deploy_to_EKS
+  condition: eq(variables.deployCluster, 'EKS')
+  variables:
+  - ${{ if eq(variables.deployCluster, 'EKS') }}:
+    - group: AWS_Credentials
+  - ${{ if eq(variables.deployCluster, 'EKS') }}:
+    - group: eks_variables # DNS available for this job
+  steps:
+  - task: Bash@3
+    displayName: Connect to EKS
+    inputs:
+      targetType: 'inline'
+      script: |
+        # connecting to EKS cluster using accesskey and secrets key, Update kubeconfig context.
+        aws configure set aws_access_key_id $(ACCESS_KEY)
+        aws configure set aws_secret_access_key $(SECRET_KEY)
+        aws eks update-kubeconfig --name $(CLUSTER_NAME) --region $(REGION)
+        
+  - task: Bash@3
+    displayName: Deploy app to EKS
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/eks-deploy.sh'
+      arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
+
+  - task: Bash@3
+    condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
+    displayName: 'Create secrets for EKS'
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/ecr-secrets.sh'
+      arguments: '$(k8sNamespace) $(secretsName) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
+
+  
+
+  
