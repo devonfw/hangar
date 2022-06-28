@@ -16,11 +16,11 @@ resources:
 variables:
   - group: registry_info 
   - name: deploymentYamlPath
-    value: "$(Build.Repository.LocalPath)/$(deployFiles)/application-deployment.yaml" 
+    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)/application-deployment.yaml" 
   - name: ingressYamlPath
-    value: "$(Build.Repository.LocalPath)/$(deployFiles)/ingress.yaml"  
+    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)/ingress.yaml"  
   - name: deployFilesPath
-    value: "$(Build.Repository.LocalPath)/$(deployFiles)"
+    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)"
   - name: artifact
     value: "kubeconfig"  
   - name: kubeconfigPath
@@ -37,7 +37,7 @@ jobs:
       AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
     inputs:
       targetType: inline
-      script: '$(Build.Repository.LocalPath)/.pipelines/scripts/check-pipeline-exec.sh $(ProvisionPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
+      script: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/check-pipeline-exec.sh $(ProvisionPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
 
   - bash: 'echo "The Provision pipeline executed for this commit has failed.";exit 1'
     displayName: 'Provision pipeline failed'
@@ -71,14 +71,14 @@ jobs:
   - task: Bash@3
     displayName: "Deploy app to AKS" 
     inputs:
-      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/aks-deploy.sh'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/aks-deploy.sh'
       arguments: '$(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(k8sNamespace) $(kubeconfigPath)'
   
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
     displayName: 'Create secrets for AKS'
     inputs:
-      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/acr-secrets.sh'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/acr-secrets.sh'
       arguments: '$(k8sNamespace) $(secretsName) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath) $(kubeconfigPath)'
  
 - job: Deploy_to_EKS
@@ -102,14 +102,14 @@ jobs:
   - task: Bash@3
     displayName: Deploy app to EKS
     inputs:
-      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/eks-deploy.sh'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/eks-deploy.sh'
       arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
 
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
     displayName: 'Create secrets for EKS'
     inputs:
-      filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/ecr-secrets.sh'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/ecr-secrets.sh'
       arguments: '$(k8sNamespace) $(secretsName) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
 
   
