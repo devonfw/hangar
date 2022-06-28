@@ -69,17 +69,21 @@ jobs:
       targetPath: '$(Pipeline.Workspace)'  
     
   - task: Bash@3
-    displayName: "Deploy app to AKS" 
+    displayName: "Deploy app to AKS"
+    env:
+      KUBECONFIG: $(kubeconfigPath)
     inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/aks-deploy.sh'
-      arguments: '$(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(k8sNamespace) $(kubeconfigPath)'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
+      arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
   
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
     displayName: 'Create secrets for AKS'
+    env:
+      KUBECONFIG: $(kubeconfigPath)
     inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/acr-secrets.sh'
-      arguments: '$(k8sNamespace) $(secretsName) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath) $(kubeconfigPath)'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
+      arguments: '$(k8sNamespace) $(secretsName) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath)'
  
 - job: Deploy_to_EKS
   condition: eq(variables.deployCluster, 'EKS')
@@ -102,14 +106,14 @@ jobs:
   - task: Bash@3
     displayName: Deploy app to EKS
     inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/eks-deploy.sh'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
       arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
 
   - task: Bash@3
     condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
     displayName: 'Create secrets for EKS'
     inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/ecr-secrets.sh'
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
       arguments: '$(k8sNamespace) $(secretsName) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
 
   
