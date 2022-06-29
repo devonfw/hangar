@@ -1,10 +1,9 @@
-:provider: Azure Devops
-:pipeline_type: pipeline
-:trigger_sentence: This pipeline will be configured in order to be triggered every time the test pipeline is executed successfully on a commit
-:pipeline_type2: pipeline
-:path_provider: azure-devops
-:build-pipeline:
-:quality-pipeline:
+:provider: Github
+:pipeline_type: workflow
+:trigger_sentence: This workflow will be configured to be executed after a successful CI pipeline
+:pipeline_type2: Github action
+:path_provider: github
+:ci-pipeline:
 = Setting up a Package {pipeline_type} on {provider}
 
 In this section we will create a package {pipeline_type} to build and push a container image of the project application into the specified container registry. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -29,8 +28,7 @@ pipeline_generator.sh \
   -l <language or framework> \
   --dockerfile <dockerfile path> \
   -d <project local path> \
-  --build-pipeline-name <build pipeline name> \
-  --quality-pipeline-name <quality pipeline name> \
+  --ci-pipeline-name <ci pipeline name> \
   -i <image name> \
   [-u <registry user>] \
   [-p <registry password>] \
@@ -52,8 +50,7 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 -l, --language                 [Required, if dockerfile not set] Language or framework of the project.
     --dockerfile               [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one.
 -d, --local-directory          [Required] Local directory of your project.
-    --build-pipeline-name      [Required] Build pipeline name.
-    --quality-pipeline-name    [Required] Quality pipeline name.
+    --ci-pipeline-name    [Required] CI pipeline name.
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 -u, --registry-user            [Required, unless AWS] Container registry login user.
 -p, --registry-password        [Required, unless AWS] Container registry login password.
@@ -71,15 +68,13 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ===== Generic container registry
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project -u username -p password -b develop -w \
---build-pipeline-name node-project-build \
---quality-pipeline-name quarkus-project-quality 
+--ci-pipeline-name quarkus-project-ci 
 ```
 
 ===== AWS ECR
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w \
---build-pipeline-name node-project-build \
---quality-pipeline-name quarkus-project-quality 
+--ci-pipeline-name quarkus-project-ci 
 ```
 
 ==== Node.js project
@@ -87,13 +82,11 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ===== Generic container registry
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project -u username -p password -b develop -w \
---build-pipeline-name node-project-build \
---quality-pipeline-name node-project-quality 
+--ci-pipeline-name node-project-ci 
 ```
 
 ===== AWS ECR
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w \
---build-pipeline-name node-project-build \
---quality-pipeline-name node-project-quality 
+--ci-pipeline-name node-project-ci 
 ```
