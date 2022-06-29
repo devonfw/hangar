@@ -90,16 +90,14 @@ jobs:
       id: installnginx
       run: |      
         aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region ${{ github.event.inputs.aws_region }}        
-        helm repo add bitnami "https://charts.bitnami.com/bitnami"        
-        helm repo update        
-        helm upgrade --install nginx-ingress "nginx-ingress-controller" --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo "https://charts.bitnami.com/bitnami" --namespace nginx-ingress --create-namespace
+        ../common/install-ingress-controller.sh
       
     - name: Obtain Ingress Controller domain name
       if: ${{ github.event.inputs.cluster_operation == 'create' }}    
       id: obtaindns
       run: | 
        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region ${{ github.event.inputs.aws_region }}
-       dnsname=$(./modules/scripts/obtain-dns.sh)
+       dnsname=$(./scripts/obtain-dns.sh)
        echo "::set-output name=dnsname::$dnsname"
   
     - name: Publish Ingress Controller domain name
@@ -124,5 +122,5 @@ jobs:
       id: installrancher
       if: ${{ github.event.inputs.install_rancher == 'true' && github.event.inputs.cluster_operation == 'create'}}
       run: |
-        ./modules/scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}
+        ./scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}
 
