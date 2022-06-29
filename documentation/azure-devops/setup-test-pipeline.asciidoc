@@ -45,7 +45,7 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 -n, --pipeline-name         [Required] Name that will be set to the pipeline.
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
-  --build-pipeline-name <build pipeline name> \
+    --build-pipeline-name    [Required] Build pipeline name.
 -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
