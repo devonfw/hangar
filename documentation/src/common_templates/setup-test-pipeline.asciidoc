@@ -31,7 +31,9 @@ ifdef::build-pipeline[  --build-pipeline-name <build pipeline name> \]
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
 
+ifeval::[{provider} == Azure Devops]
 NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the "additional pipeline output" artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
+endif::[]
 
 === Flags
 ```
