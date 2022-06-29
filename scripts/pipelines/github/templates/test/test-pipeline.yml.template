@@ -9,15 +9,15 @@ permissions:
   actions: write
 
 env:
-  build_pipeline: 'build-pipeline.yml'
+  buildPipelineYamlName: 'build-pipeline.yml'
   ciPipelineYamlName: 'ci-pipeline.yml'
 # mark to insert additional artifact env var #
 
 jobs:
-    on-success:
-      name: Test
-      runs-on: ubuntu-latest
-      steps:
+  Test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout repository code
         uses: actions/checkout@v2
 
@@ -26,7 +26,7 @@ jobs:
         id: dowloadFromSamePipeline
         continue-on-error: true
         with:
-          name: buildOutput
+          name: BuildOutput
 
       - name: Download artifact from build pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -37,7 +37,7 @@ jobs:
           workflow: ${{ env.buildPipelineYamlName }}
           commit: ${{ github.sha }}
           check_artifacts:  true
-          name: buildOutput
+          name: BuildOutput
 
       - name: Download artifact from ci pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -46,7 +46,7 @@ jobs:
           workflow: ${{ env.ciPipelineYamlName }}
           commit: ${{ github.sha }}
           check_artifacts:  true
-          name: buildOutput
+          name: BuildOutput
 
       - name: Test
         run: .github/workflows/scripts/test.sh
@@ -57,4 +57,4 @@ jobs:
         with:
           files: '**/TEST-*.xml'
 
-    # mark to insert step for additonal artifact #
+# mark to insert step for additonal artifact #
