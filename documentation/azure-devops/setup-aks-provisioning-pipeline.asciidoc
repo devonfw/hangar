@@ -102,4 +102,4 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 
 === Appendix: Destroying the cluster
 
-To destory the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
+To destroy the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
