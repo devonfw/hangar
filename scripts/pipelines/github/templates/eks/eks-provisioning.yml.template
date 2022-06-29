@@ -1,0 +1,128 @@
+name: $pipelineName
+
+on: 
+  workflow_dispatch:
+    inputs:
+      cluster_name:
+        description: 'Name for the cluster.'
+        required: true
+        type: string
+        default: $clusterName
+      s3_bucket:
+        description: 'Name of the S3 bucket where the Terraform state of the cluster will be stored.'
+        required: true
+        type: string
+        default: $s3Bucket
+      s3_keypath:
+        description: 'Path within the S3 bucket where the Terraform state of the cluster will be stored.'
+        required: true
+        type: string
+        default: $s3KeyPath
+      aws_region:
+        description: 'AWS Region where to provision resources.'
+        required: true
+        type: string
+        default: $region
+      install_rancher:
+        description: 'Installs Rancher on EKS when set to true.'
+        required: true
+        type: string
+        default: $installRancher 
+      cluster_operation:
+        description: 'Operation to be performed on EKS Cluster. create or destroy'
+        required: false
+        type: string
+        default: 'create'           
+
+env:
+  TERRAFORM_WORKING_DIRECTORY: ".terraform/eks"
+
+jobs:
+  terraform-actions:
+    name: Provisioning EKS
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@master
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ github.event.inputs.aws_region }}
+
+    - name: Uninstall Helm charts
+      if: ${{ github.event.inputs.cluster_operation == 'destroy' }}     
+      id: uninstallhelmcharts
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region eu-west-1
+        helm list --all-namespaces
+        helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 helm delete
+        echo 'LIST OF RELEASES AFTER HELM UNINSTALL..'
+        helm list --all-namespaces
+
+    - name: Terraform Init
+      if:     
+      id: init
+      working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
+      run: terraform init -backend-config=bucket=${{ github.event.inputs.s3_bucket }} -backend-config=key=${{ github.event.inputs.s3_keypath }} -backend-config=region=${{ github.event.inputs.aws_region }}
+      continue-on-error: false
+
+    - name: Terraform Apply
+      if: ${{ github.event.inputs.cluster_operation == 'create' }}    
+      id: apply
+      working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
+      run: terraform apply -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
+      continue-on-error: false
+
+    - name: Terraform Destroy
+      if: ${{ github.event.inputs.cluster_operation == 'destroy' }}        
+      id: destroy
+      working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
+      run: terraform apply -destroy -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
+      continue-on-error: false
+      
+    - name: Install NGINX Ingress controller
+      if: ${{ github.event.inputs.cluster_operation == 'create' }}    
+      id: installnginx
+      run: |      
+        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region ${{ github.event.inputs.aws_region }}        
+        helm repo add bitnami "https://charts.bitnami.com/bitnami"        
+        helm repo update        
+        helm upgrade --install nginx-ingress "nginx-ingress-controller" --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo "https://charts.bitnami.com/bitnami" --namespace nginx-ingress --create-namespace
+      
+    - name: Obtain Ingress Controller domain name
+      if: ${{ github.event.inputs.cluster_operation == 'create' }}    
+      id: obtaindns
+      run: | 
+       aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region ${{ github.event.inputs.aws_region }}
+       dnsname=$(./modules/scripts/obtain-dns.sh)
+       echo "::set-output name=dnsname::$dnsname"
+  
+    - name: Publish Ingress Controller domain name
+      if: ${{ github.event.inputs.cluster_operation == 'create' }}    
+      id: publishdns
+      run: |
+        cd .github
+        mkdir vars
+        cd vars
+        touch "eks_variables.env"
+        echo "cluster_name=${{ github.event.inputs.cluster_name }}" >> eks_variables.env
+        echo "dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> eks_variables.env
+      
+    - name: Push EKS variables
+      if: ${{ github.event.inputs.cluster_operation == 'create' }}
+      uses: EndBug/add-and-commit@v7
+      with:
+        default_author: github_actions
+        cwd: '.github/vars/'
+        
+    - name: Install Rancher
+      id: installrancher
+      if: ${{ github.event.inputs.install_rancher == 'true' && github.event.inputs.cluster_operation == 'create'}}
+      run: |
+        ./modules/scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}
+
