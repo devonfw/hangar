@@ -1,0 +1,7 @@
+:provider: Github
+:pipeline_type: workflow
+:trigger_sentence: This workflow will be configured to be executed after a successful CI pipeline
+:pipeline_type2: Github action
+:path_provider: github
+:ci-pipeline:
+include::../common_templates/setup-package-pipeline.asciidoc[]
