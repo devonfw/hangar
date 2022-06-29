@@ -94,7 +94,7 @@ To get the DNS name of the NGINX Ingress controller on the EKS cluster, run the 
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
 ```
 
-Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved from the cluster:
+Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
 
 ```
 kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
