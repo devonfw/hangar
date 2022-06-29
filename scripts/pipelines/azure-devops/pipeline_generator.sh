@@ -48,6 +48,20 @@ pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="azure-devops"
 
+function validateLoginCredentials {
+    # if the user chose to push to a registry and the user has not already given a password
+    # prompt the user
+    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
+    then
+        read -sp "Please enter Docker registry password..." dockerPassword
+    fi
+    
+    if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
+    then 
+        read -sp "Please enter AWS secret access key..." awsSecretAccessKey
+    fi
+}
+
 function obtainHangarPath {
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
@@ -137,6 +151,8 @@ obtainHangarPath
 . "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
 
 if [[ "$help" == "true" ]]; then help; fi
+
+validateLoginCredentials
 
 ensurePathFormat
 
