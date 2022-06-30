@@ -78,11 +78,11 @@ jobs:
           path: ${{ env.targetPath }}
 
       - name: Build and push image to registry
-        run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.imageTagFile }} -c $GITHUB_WORKSPACE -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}  -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_REF
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "$GITHUB_REF"
         if: ${{ env.isECR != 'true' }}
 
       - name: Build and push image to registry (AWS)
-        run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.imageTagFile }} -c $GITHUB_WORKSPACE -a ${{ secrets.AWS_ACCESS_KEY }} -s ${{ secrets.AWS_SECRET_ACCESS_KEY }} -l ${{ env.region }} -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_HEAD_REF
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "$GITHUB_HEAD_REF"
         if: ${{ env.isECR == 'true' }}
 
 # mark to insert step for additional artifact #
