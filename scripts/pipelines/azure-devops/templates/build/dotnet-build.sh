@@ -1,2 +1,2 @@
 #!/bin/bash 
-dotnet build -c Release 
+dotnet build -c Release -o  $BUILDTARGETPATH
