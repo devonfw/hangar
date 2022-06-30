@@ -29,4 +29,4 @@ jobs:
       - name: Commit new docs
         uses: EndBug/add-and-commit@v9
         with:
-          message: 'automatic commit dor docs'
+          message: 'Automatic generation of documentation'
