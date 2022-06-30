@@ -8,10 +8,6 @@ parameters:
     displayName: Artifact Path
     default: $(targetPath)
     type: string
-  - name: artifactName
-    displayName: Artifact Name
-    default: BuildOutput
-    type: string
 
 pool:
   vmImage: ubuntu-latest
@@ -30,4 +26,4 @@ steps:
 
 - publish: $(Build.ArtifactStagingDirectory)
   displayName: "Publish Artifact"
-  artifact: ${{ parameters.artifactName }}
+  artifact: BuildOutput
