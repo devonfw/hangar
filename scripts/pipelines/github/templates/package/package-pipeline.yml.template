@@ -2,19 +2,19 @@ name: $pipelineName
 
 on:
   workflow_run:
-    workflows: $qualityPipelineName
+    workflows: $ciPipelineName
     types: completed
     branches:
       - release/*
       - develop
-  worflow_dispatch:
+  workflow_dispatch:
     inputs:
       relativeDockerfilePath:
         required: false
         default: $dockerFile
-      settingsFile:
+      imageTagFile:
         required: false
-        default: $settingsFile
+        default: $imageTagFile
       registry:
         required: false
         default: $registry
@@ -27,49 +27,69 @@ on:
       isECR:
         required: false
         default: $isECR
+      targetPath:
+        required: false
+        default: $targetDirectory
 # mark to insert additional artifact input #
 
 permissions:
   actions: write
 
 env:
-  quality_pipeline: 'quality-pipeline.yml'
+  buildPipelineYamlName: 'build-pipeline.yml'
+  ciPipelineYamlName: 'ci-pipeline.yml'
   relativeDockerfilePath: ${{ github.event.inputs.relativeDockerfilePath || '$dockerFile' }}
-  settingsFile: ${{ github.event.inputs.settingsFile || '$settingsFile' }}
+  imageTagFile: ${{ github.event.inputs.imageTagFile || '$imageTagFile' }}
   registry: ${{ github.event.inputs.registry || '$registry' }}
   imageName: ${{ github.event.inputs.imageName || '$imageName' }}
   region: ${{ github.event.inputs.region || '$awsRegion' }}
   isECR: ${{ github.event.inputs.isECR || '$isECR' }}
+  targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
 # mark to insert additional artifact env var #
 
 jobs:
-  on-success:
+  on-success-or-manual:
     name: Package
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     steps:
-    - name: Checkout repository code
-      uses: actions/checkout@v2
+      - name: Checkout repository code
+        uses: actions/checkout@v2
 
-    - name: Download Build Pipeline Artifact
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        workflow: 'build-pipeline.yml'
-        commit: ${{ github.event.pull_request.head.sha }}
-    
-    - name: Build and push image to registry
-      run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.settingsFile }} -c $GITHUB_WORKSPACE -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}  -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_HEAD_REF
-      if: ${{ env.isECR == '' }}
+      - name: Download artifact from build pipeline
+        uses: dawidd6/action-download-artifact@v2
+        id: downloadFromBuild
+        continue-on-error: true
+        with:
+          workflow: ${{ env.buildPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
 
-    - name: Build and push image to registry (AWS)
-      run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.settingsFile }} -c $GITHUB_WORKSPACE -a ${{ secrets.AWS_ACCESS_KEY }} -s ${{ secrets.AWS_SECRET_ACCESS_KEY }} -l ${{ env.region }} -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_HEAD_REF
-      if: ${{ env.isECR == 'true' }}
-    
-  # mark to insert step for additional artifact #
+      - name: Download artifact from ci pipeline
+        uses: dawidd6/action-download-artifact@v2
+        if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.ciPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Build and push image to registry
+        run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.imageTagFile }} -c $GITHUB_WORKSPACE -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}  -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_REF
+        if: ${{ env.isECR != 'true' }}
+
+      - name: Build and push image to registry (AWS)
+        run: .github/workflows/scripts/package.sh -f $GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }} -t $GITHUB_WORKSPACE/${{ env.imageTagFile }} -c $GITHUB_WORKSPACE -a ${{ secrets.AWS_ACCESS_KEY }} -s ${{ secrets.AWS_SECRET_ACCESS_KEY }} -l ${{ env.region }} -r ${{ env.registry }} -i ${{ env.imageName }} -b $GITHUB_HEAD_REF
+        if: ${{ env.isECR == 'true' }}
+
+# mark to insert step for additional artifact #
   on-failure:
     name: Quality Pipeline Failed
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
-    - name: Cancel Pipeline
-      uses: andymckay/cancel-action@0.2
+      - name: Cancel Pipeline
+        uses: andymckay/cancel-action@0.2

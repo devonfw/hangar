@@ -30,7 +30,8 @@ function help {
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --quality-pipeline-name [Required] Quality pipeline name."
+    [ "$provider" == "azure-devops" ] && echo "      --quality-pipeline-name [Required] Quality pipeline name."
+    [ "$provider" == "github" ] && echo "      --ci-pipeline-name      [Required] CI pipeline name."
     echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
     echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
     echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
@@ -134,7 +135,7 @@ function copyYAMLFile {
 
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    commonEnvSubstList='${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineName}'
+    commonEnvSubstList='${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineName} ${ciPipelineName}'
     envsubst "${commonEnvSubstList} ${specificEnvSubstList}" < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
 
     # Check if an extra artifact to store is supplied.
