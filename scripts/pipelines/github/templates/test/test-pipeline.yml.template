@@ -3,6 +3,9 @@ name: $pipelineName
 on:
   workflow_call:
   workflow_dispatch:
+    targetPath:
+      required: false
+      default: $targetDirectory
 # mark to insert additional artifact input #
 
 permissions:
@@ -15,6 +18,8 @@ permissions:
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
   ciPipelineYamlName: 'ci-pipeline.yml'
+  targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
+
 # mark to insert additional artifact env var #
 
 jobs:
@@ -31,6 +36,7 @@ jobs:
         continue-on-error: true
         with:
           name: BuildOutput
+          path: ${{ env.targetPath }}
 
       - name: Download artifact from build pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -42,6 +48,7 @@ jobs:
           commit: ${{ github.sha }}
           check_artifacts:  true
           name: BuildOutput
+          path: ${{ env.targetPath }}
 
       - name: Download artifact from ci pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -51,6 +58,7 @@ jobs:
           commit: ${{ github.sha }}
           check_artifacts:  true
           name: BuildOutput
+          path: ${{ env.targetPath }}
 
       - name: Test
         run: .github/workflows/scripts/test.sh
