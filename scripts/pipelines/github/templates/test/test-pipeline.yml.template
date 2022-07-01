@@ -29,8 +29,6 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.sha }}
 
       - name: Download artifact from this workflow
         uses: actions/download-artifact@v2
