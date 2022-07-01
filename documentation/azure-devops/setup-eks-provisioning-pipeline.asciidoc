@@ -41,7 +41,6 @@ Example: reusing existing VPC and subnets:
 ```
 ./set-terraform-variables.sh --region <region name> --instance_type <workers instance type> --existing_vpc_id <vpc id> --existing_vpc_private_subnets <array of subnet ids>
 ```
-* Rancher is installed by default on the cluster after provisioning. If you wish to change this, please update `eks-pipeline.cfg` accordingly.
 
 === Usage
 ```
@@ -66,6 +65,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
     --cluster-name       [Required] Name for the cluster."
     --s3-bucket          [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
     --s3-key-path        [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
+    --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -73,8 +73,10 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w
+./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state --rancher -b develop -w
 ```
+
+NOTE: Rancher is installed on the cluster after provisioning when using the above command.
 
 == Appendix: Interacting with the cluster
 
@@ -92,7 +94,11 @@ To get the DNS name of the NGINX Ingress controller on the EKS cluster, run the 
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
 ```
 
-Rancher will be available on `https://<ingress controller domain>/dashboard`.
+Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
+
+```
+kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
+```
 
 == Appendix: Destroying the cluster
 
