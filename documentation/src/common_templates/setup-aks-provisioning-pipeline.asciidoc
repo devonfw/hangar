@@ -46,6 +46,7 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
+  --resource-group <cluster name> \
   --resource-group <resource group name> \
   --storage-account <storage account name> \
   --storage-container <storage container name> \
@@ -61,6 +62,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --resource-group     [Required] Name for the cluster.
     --resource-group     [Required] Name of the resource group for the cluster.
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
