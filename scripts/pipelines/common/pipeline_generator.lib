@@ -56,6 +56,20 @@ function help {
     exit
 }
 
+function validateRegistryLoginCredentials {
+    # if the user chose to push to a registry and the user has not already given a password
+    # then prompt the user
+    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
+    then
+        read -rsp "Please enter Docker registry password..." dockerPassword
+    fi
+    
+    if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
+    then 
+        read -rsp "Please enter AWS secret access key..." awsSecretAccessKey
+    fi
+}
+
 function ensurePathFormat {
     currentDirectory=$(pwd)
 
@@ -181,3 +195,5 @@ function commitCommonFiles {
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
 }
+
+validateRegistryLoginCredentials
