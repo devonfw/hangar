@@ -16,11 +16,11 @@ resources:
 variables:
   - group: registry_info 
   - name: deploymentYamlPath
-    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)/application-deployment.yaml" 
+    value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)/application-deployment.yaml" 
   - name: ingressYamlPath
-    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)/ingress.yaml"  
+    value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)/ingress.yaml"  
   - name: deployFilesPath
-    value: "$(System.DefaultWorkingDirectory)/$(deployFiles)"
+    value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)"
   - name: artifact
     value: "kubeconfig"  
   - name: kubeconfigPath
@@ -29,33 +29,10 @@ variables:
 pool:
   vmImage: ubuntu-latest
 jobs:
-- job: Checking_provision_pipeline_status
-  steps:
-  - task: Bash@3
-    displayName: 'Checking last Provision pipeline execution status'
-    env:
-      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
-    inputs:
-      targetType: inline
-      script: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/check-pipeline-exec.sh $(ProvisionPipelineName) $(Build.SourceVersion) $(Build.SourceBranch)'
-
-  - bash: 'echo "The Provision pipeline executed for this commit has failed.";exit 1'
-    displayName: 'Provision pipeline failed'
-    condition: eq(variables['result'], 'failed')
-
-  - bash: 'echo "The Provision pipeline executed for this commit has been canceled.";exit 1'
-    displayName: 'Provision pipeline canceled'
-    condition: eq(variables['result'], 'canceled')
-
-  - bash: 'echo "The Provision pipeline for this commit is not over yet.";exit 1'
-    displayName: 'Provision pipeline not over'
-    condition: eq(variables['result'], 'None')
-
-
 - job: Deploy_to_AKS
-  condition: eq(variables.deployCluster, 'AKS')
+  condition: eq(variables.k8sProvider, 'AKS')
   variables:
-  - ${{ if eq(variables.deployCluster, 'AKS') }}:
+  - ${{ if eq(variables.k8sProvider, 'AKS') }}:
     - group: aks-variables # DNS available for this job
   steps:
   - task: DownloadPipelineArtifact@2
@@ -63,59 +40,54 @@ jobs:
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProjectId)'
-      definition: '$(ProvisionPipelineName)'
+      definition: '$(envProvisionPipelineName)'
       buildVersionToDownload: 'latest'
       artifactName: '$(artifact)'
       targetPath: '$(Pipeline.Workspace)'  
-    
+
   - task: Bash@3
-    displayName: "Deploy app to AKS"
+    condition: ne(variables.k8sImagePullSecret, '')
+    displayName: 'Create and set imagePullSecret'
+    env:
+      KUBECONFIG: $(kubeconfigPath)
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
+      arguments: '$(k8sNamespace) $(k8sImagePullSecret) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath)'
+
+  - task: Bash@3
+    displayName: "Deploy app"
     env:
       KUBECONFIG: $(kubeconfigPath)
     inputs:
       filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
       arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
-  
-  - task: Bash@3
-    condition: and(eq(variables.deployCluster, 'AKS'), ne(variables.secretsName, ''))
-    displayName: 'Create secrets for AKS'
-    env:
-      KUBECONFIG: $(kubeconfigPath)
-    inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
-      arguments: '$(k8sNamespace) $(secretsName) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath)'
  
 - job: Deploy_to_EKS
-  condition: eq(variables.deployCluster, 'EKS')
+  condition: eq(variables.k8sProvider, 'EKS')
   variables:
-  - ${{ if eq(variables.deployCluster, 'EKS') }}:
+  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
     - group: AWS_Credentials
-  - ${{ if eq(variables.deployCluster, 'EKS') }}:
+  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
     - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
-    displayName: Connect to EKS
+    displayName: Download EKS Kubeconfig
     inputs:
       targetType: 'inline'
       script: |
-        # connecting to EKS cluster using accesskey and secrets key, Update kubeconfig context.
         aws configure set aws_access_key_id $(ACCESS_KEY)
         aws configure set aws_secret_access_key $(SECRET_KEY)
         aws eks update-kubeconfig --name $(CLUSTER_NAME) --region $(REGION)
-        
+
   - task: Bash@3
-    displayName: Deploy app to EKS
+    condition: ne(variables.k8sImagePullSecret, '')
+    displayName: 'Create and set imagePullSecret'
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
+      arguments: '$(k8sNamespace) $(k8sImagePullSecret) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
+
+  - task: Bash@3
+    displayName: Deploy app
     inputs:
       filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
       arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
-
-  - task: Bash@3
-    condition: and(eq(variables.deployCluster, 'EKS'), ne(variables.secretsName, ''))
-    displayName: 'Create secrets for EKS'
-    inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
-      arguments: '$(k8sNamespace) $(secretsName) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
-
-  
-
-  

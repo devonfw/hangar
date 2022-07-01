@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,package-pipeline-name:,provision-pipeline-name:,deploy-cluster:,k8s-namespace:,deploy-files:,secrets-name:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,rancher:,package-pipeline-name:,env-provision-pipeline-name:,k8s-provider:,k8s-namespace:,k8s-deploy-files-path:,k8s-image-pull-secret-name:,help" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
@@ -30,12 +30,12 @@ while true; do
         --aws-access-key)           awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)    awsSecretAccessKey="$2"; shift 2;;
         --aws-region)               awsRegion="$2"; shift 2;;
-        --provision-pipeline-name)  ProvisionPipelineName="$2"; shift 2;;
+      	--package-pipeline-name)    export packagePipelineName=$2; shift 2;;
+        --env-provision-pipeline-name)  envProvisionPipelineName="$2"; shift 2;;
+      	--k8s-provider)             k8sProvider=$2; shift 2;; 
         --k8s-namespace)            k8sNamespace="$2"; shift 2;;
-      	--deploy-files)             deployFiles=$2; shift 2;; 
-	      --deploy-cluster)           deployCluster=$2; shift 2;; 
-        --secrets-name)             secretsName=$2; shift 2;; 
-	      --package-pipeline-name)    export packagePipelineName=$2; shift 2;;
+      	--k8s-deploy-files-path)    k8sDeployFiles=$2; shift 2;; 
+        --k8s-image-pull-secret-name)  k8sImagePullSecret=$2; shift 2;; 
         -h | --help)                help="true"; shift 1;;
         -w)                         webBrowser="true"; shift 1;;
         --) shift; break;;
