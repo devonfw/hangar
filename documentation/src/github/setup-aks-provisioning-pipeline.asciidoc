@@ -5,4 +5,4 @@
 :path_provider: github
 :cmd_add: ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
 :aks_variables: .github > vars > `aks-variables.env`
-include::../common_templates/setup-build-pipeline.asciidoc[]  
+include::../common_templates/setup-aks-provisioning-pipeline.asciidoc[]  
