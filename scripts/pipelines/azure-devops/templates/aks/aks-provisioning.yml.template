@@ -33,6 +33,7 @@ steps:
 
 - task: TerraformTaskV2@2
   displayName: 'Terraform - apply'
+  condition: eq(variables.operation, 'create')
   inputs:
     command: 'apply'
     workingDirectory: '$(terraformWorkingDirectory)'
@@ -40,6 +41,7 @@ steps:
 
 - task: Bash@3
   displayName: 'Install nginx-ingress controller'
+  condition: eq(variables.operation, 'create')
   env:
     KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
   inputs:
@@ -47,6 +49,7 @@ steps:
 
 - task: AzureCLI@2
   displayName: 'Obtain DNS name'
+  condition: eq(variables.operation, 'create')
   env:
     KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
   inputs:
@@ -58,12 +61,32 @@ steps:
 
 - publish: $(terraformWorkingDirectory)/kubeconfig
   displayName: 'Publish kubeconfig'
+  condition: eq(variables.operation, 'create')
   artifact: kubeconfig
 
 - task: Bash@3
   displayName: 'Publish DNS name'
+  condition: eq(variables.operation, 'create')
   env:
     AZURE_DEVOPS_EXT_PAT: $(pat)
   inputs:
     targetType: 'inline'
     script: 'az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name aks-variables --variables dns_name=$(dns) --authorize true'
+
+- task: Bash@3
+  displayName: 'Install Rancher'
+  condition: and(eq(variables.installRancher, 'true'), eq(variables.operation, 'create'))
+  env:
+    KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
+  inputs:
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
+    arguments: $(dns)
+
+- task: TerraformTaskV2@2
+  displayName: 'Terraform - destroy'
+  condition: eq(variables.operation, 'destroy')
+  inputs:
+    provider: 'azurerm'
+    command: 'destroy'
+    workingDirectory: '$(terraformWorkingDirectory)'
+    environmentServiceNameAzureRm: '$(serviceConnection)'

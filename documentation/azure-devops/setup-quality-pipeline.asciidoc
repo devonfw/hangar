@@ -70,3 +70,9 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 --build-pipeline-name node-project-build \
 --test-pipeline-name node-project-test 
 ```
+
+==== Angular project
+
+```
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n angular-project-quality -l angular --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --test-pipeline-name angular-project-test  -b develop -w
+```

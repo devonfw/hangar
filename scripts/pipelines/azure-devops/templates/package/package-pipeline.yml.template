@@ -13,6 +13,36 @@ resources:
         - 'feature/*'
         - master
 
+parameters:
+  - name: docker_username
+    displayName: Docker username (non-AWS only)
+    default: $(docker_username)
+    type: string
+  - name: docker_password
+    displayName: Docker password (non-AWS only)
+    default: $(docker_password)
+    type: string
+  - name: aws_access_key
+    displayName: AWS access key (AWS only)
+    default: $(aws_access_key)
+    type: string
+  - name: aws_secret_access_key
+    displayName: AWS secret access key (AWS only)
+    default: $(aws_secret_access_key)
+    type: string
+  - name: region
+    displayName: AWS region (AWS only)
+    default: $(region)
+    type: string
+  - name: imageName
+    displayName: Image name
+    default: $(imageName)
+    type: string
+  - name: registry
+    displayName: Image registry
+    default: $(registry)
+    type: string
+
 variables:
 - group: registry_info
 
@@ -62,17 +92,23 @@ steps:
     runVersion: 'specific'
     downloadPath: $(Pipeline.Workspace)
     runId: $(runId)
+    
+- task: Bash@3
+  displayName: "Copying build artifact to the repository path"
+  inputs:
+    targetType: inline
+    script: 'cp -a $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
 
 - task: Bash@3
   displayName: 'Build and push image to registry'
   inputs:
     targetType: 'inline'
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -u $(docker_username) -p $(docker_password) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/$(imageTagFile)  -c $(Build.Repository.LocalPath) -u ${{ parameters.docker_username }}  -p ${{ parameters.docker_password }} -r ${{ parameters.registry }} -i ${{ parameters.imageName }} -b $(Build.SourceBranch)'
   condition: eq(variables['isECR'], '')
 
 - task: Bash@3
   displayName: 'Build and push image to registry (AWS)'
   inputs:
     targetType: 'inline'
-    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/pom.xml  -c $(Pipeline.Workspace) -a $(aws_access_key) -s $(aws_secret_access_key) -l $(region) -r $(registry) -i $(imageName) -b $(Build.SourceBranch)'
+    script: '$(Build.Repository.LocalPath)/.pipelines/scripts/package.sh -f $(Build.Repository.LocalPath)/$(relativeDockerfilePath) -t $(Build.Repository.LocalPath)/$(imageTagFile)  -c $(Build.Repository.LocalPath) -a ${{ parameters.aws_access_key }} -s ${{ parameters.aws_secret_access_key }} -l ${{ parameters.region }} -r ${{ parameters.registry }} -i ${{ parameters.imageName }} -b $(Build.SourceBranch)'
   condition: eq(variables['isECR'], 'true')
