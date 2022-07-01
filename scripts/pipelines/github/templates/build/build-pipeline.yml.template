@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.sha }}
 
       - name: Build the application
         run: .github/workflows/scripts/build.sh
