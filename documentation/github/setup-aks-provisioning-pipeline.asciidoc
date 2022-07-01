@@ -1,0 +1,8 @@
+:provider: Github
+:pipeline_type: workflow
+:trigger_sentence: * Add AZURE credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository and name it `AZURE_USERNAME`,`AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.
+:pipeline_type2: Github action
+:path_provider: github
+:cmd_add: ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
+:aks_variables: .github > vars > `aks-variables.env`
+Unresolved directive in setup-aks-provisioning-pipeline.asciidoc - include::../common_templates/setup-build-pipeline.asciidoc[]
