@@ -3,9 +3,10 @@ name: $pipelineName
 on:
   workflow_call:
   workflow_dispatch:
-    targetPath:
-      required: false
-      default: $targetDirectory
+    inputs:
+      targetPath:
+        required: false
+        default: $targetDirectory
 # mark to insert additional artifact input #
 
 permissions:
