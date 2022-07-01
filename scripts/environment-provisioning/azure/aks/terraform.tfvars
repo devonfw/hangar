@@ -1,8 +1,8 @@
-cluster_name = "hangar-k8s"
+#cluster_name = "hangar-k8s"
 
 location = "westeurope"
 
-resource_group_name = "hangar-aks-rg"
+resource_group_name = "az-devops-rg"
 
 instance_type = "Standard_DS2_v2"
 
