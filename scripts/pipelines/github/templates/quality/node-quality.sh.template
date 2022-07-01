@@ -1,4 +1,0 @@
-#!/bin/bash
-projectKey=$(python -c "from json import load; print(load(open('./package.json', 'r'))['name']);")
-
-npx sonar-scanner -Dsonar.host.url="${sonarUrl}" -Dsonar.login="${2}" -Dsonar.projectKey=$projectKey -Dsonar.projectBaseDir="${1}" -Dsonar.sources="."

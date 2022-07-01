@@ -76,7 +76,7 @@ steps:
   displayName: "SonarQube Analysis"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
-    env:
-      PROJECT_PATH: $(projectPath)
-      SONAR_URL: ${{ parameters.sonarUrl }}
-      SONAR_TOKEN: ${{ parameters.sonarToken }}
+  env:
+    PROJECT_PATH: $(projectPath)
+    SONAR_URL: ${{ parameters.sonarUrl }}
+    SONAR_TOKEN: ${{ parameters.sonarToken }}

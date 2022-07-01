@@ -3,11 +3,18 @@ name: $pipelineName
 on:
   workflow_call:
   workflow_dispatch:
+    inputs:
+      sonarUrl:
+        required: false
+        default: $sonarUrl
+
+
 # mark to insert additional artifact input #
 
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
   ciPipelineYamlName: 'ci-pipeline.yml'
+  sonarUrl: ${{ github.event.inputs.sonarUrl || '$sonarUrl' }}
 # mark to insert additional artifact env var #
 
 jobs:
@@ -26,6 +33,7 @@ jobs:
         continue-on-error: true
         with:
           name: BuildOutput
+          path: ${{ env.targetPath }}
 
       - name: Download artifact from build pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -37,6 +45,7 @@ jobs:
           commit: ${{ github.sha }}
           check_artifacts:  true
           name: BuildOutput
+          path: ${{ env.targetPath }}
 
       - name: Download artifact from ci pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -46,8 +55,14 @@ jobs:
           commit: ${{ github.sha }}
           check_artifacts:  true
           name: BuildOutput
+          path: ${{ env.targetPath }}
 
       - name: SonarQube analysis
-        run: .github/workflows/scripts/quality.sh . ${{ secrets.SONARQUBE_TOKEN }}
+        run: .github/workflows/scripts/quality.sh
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          SONAR_URL: ${{ env.sonarUrl }}
+          PROJECT_PATH: .
+
 
 # mark to insert step for additonal artifact #
