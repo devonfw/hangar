@@ -5,4 +5,4 @@
 :path_provider: azure-devops
 :cmd_add: ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
 :aks_variables: Azure DevOps > Pipelines > Library > `aks-variables`
-include::../common_templates/setup-build-pipeline.asciidoc[]
+include::../common_templates/setup-aks-provisioning-pipeline.asciidoc[]
