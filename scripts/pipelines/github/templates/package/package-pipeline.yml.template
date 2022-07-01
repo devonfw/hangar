@@ -55,6 +55,8 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_commit.id || github.sha }}
 
       - name: Download artifact from build pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -62,7 +64,7 @@ jobs:
         continue-on-error: true
         with:
           workflow: ${{ env.buildPipelineYamlName }}
-          commit: ${{ github.sha }}
+          commit: ${{ github.event.workflow_run.head_commit.id || github.sha }}
           check_artifacts:  true
           name: BuildOutput
           path: ${{ env.targetPath }}
@@ -72,17 +74,17 @@ jobs:
         if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
         with:
           workflow: ${{ env.ciPipelineYamlName }}
-          commit: ${{ github.sha }}
+          commit: ${{ github.event.workflow_run.head_commit.id || github.sha }}
           check_artifacts:  true
           name: BuildOutput
           path: ${{ env.targetPath }}
 
       - name: Build and push image to registry
-        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "$GITHUB_REF"
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.head_ref }}"
         if: ${{ env.isECR != 'true' }}
 
       - name: Build and push image to registry (AWS)
-        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "$GITHUB_HEAD_REF"
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.head_ref }}"
         if: ${{ env.isECR == 'true' }}
 
 # mark to insert step for additional artifact #

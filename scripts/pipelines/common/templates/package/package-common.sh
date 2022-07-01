@@ -70,5 +70,5 @@ then
     echo "Also pushing the image as 'latest' if this is a release"
     docker tag "$imageName:$tag_completed" "$imageName:latest"
     echo "docker push $imageName:latest"
-    docker push" $imageName":latest
+    docker push "$imageName":latest
 fi
