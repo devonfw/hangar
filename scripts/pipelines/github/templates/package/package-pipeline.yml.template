@@ -15,12 +15,6 @@ on:
       imageTagFile:
         required: false
         default: $imageTagFile
-      registry:
-        required: false
-        default: $registry
-      imageName:
-        required: false
-        default: $imageName
       region:
         required: false
         default: $awsRegion
@@ -40,8 +34,6 @@ env:
   ciPipelineYamlName: 'ci-pipeline.yml'
   relativeDockerfilePath: ${{ github.event.inputs.relativeDockerfilePath || '$dockerFile' }}
   imageTagFile: ${{ github.event.inputs.imageTagFile || '$imageTagFile' }}
-  registry: ${{ github.event.inputs.registry || '$registry' }}
-  imageName: ${{ github.event.inputs.imageName || '$imageName' }}
   region: ${{ github.event.inputs.region || '$awsRegion' }}
   isECR: ${{ github.event.inputs.isECR || '$isECR' }}
   targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
@@ -57,6 +49,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.workflow_run.head_commit.id || github.sha }}
+
+      - name: Loading registry infos
+        run: sed "" ".github/workflows/scripts/registry_info.env" >> $GITHUB_ENV
 
       - name: Download artifact from build pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -89,7 +84,7 @@ jobs:
 
 # mark to insert step for additional artifact #
   on-failure:
-    name: Quality Pipeline Failed
+    name: Ci Pipeline Failed
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
