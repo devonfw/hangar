@@ -18,7 +18,6 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 == Prerequisites
 
 
-
   * Add AZURE credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.
 
 * An Azure resource group in the desired cluster location (e.g. `westeurope`). You can use an existing one or create a new one with the following command:
