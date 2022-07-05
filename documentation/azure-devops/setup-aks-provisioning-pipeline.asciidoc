@@ -1,15 +1,18 @@
 :provider: Azure Devops
 :pipeline_type: Pipeline
-:trigger_sentence:  * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps. * Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.
+:trigger_sentence_1: Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
+:trigger_sentence_2: Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.
 :pipeline_type2: pipeline
 :path_provider: azure-devops
-:cmd_add: ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
+:Usage:
+:flags:
+:cmd_add:
 :aks_variables: Azure DevOps > Pipelines > Library > `aks-variables`
 = Setting up a Azure AKS provisioning {pipeline_type} on {provider}
 
 In this section we will create a {pipeline_type} which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the {pipeline_type} and the terraform files for creating the cluster will be pushed to it.
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the workflow and the terraform files for creating the cluster will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropiate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
@@ -17,7 +20,10 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 
 == Prerequisites
 
-{trigger_sentence}
+* {trigger_sentence_1}
+{trigger_sentence_2}
+
+* Add AZURE credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.
 
 * An Azure resource group in the desired cluster location (e.g. `westeurope`). You can use an existing one or create a new one with the following command:
 
@@ -53,7 +59,7 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
-  --resource-group <cluster name> \
+  {Usage} \
   --resource-group <resource group name> \
   --storage-account <storage account name> \
   --storage-container <storage container name> \
@@ -69,7 +75,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --resource-group     [Required] Name for the cluster.
+    {flags}
     --resource-group     [Required] Name of the resource group for the cluster.
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
@@ -81,7 +87,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
+./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project {cmd_add} --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
