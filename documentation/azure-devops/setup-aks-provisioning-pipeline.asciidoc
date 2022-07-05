@@ -1,13 +1,9 @@
 :provider: Azure Devops
 :pipeline_type: Pipeline
-:trigger_sentence_1: Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
-:trigger_sentence_2: Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.
+:trigger_sentence_azure:
 :pipeline_type2: pipeline
 :path_provider: azure-devops
-:Usage:
-:flags:
-:cmd_add:
-:aks_variables: Azure DevOps > Pipelines > Library > `aks-variables`
+:aks_variables_path: Azure DevOps > Pipelines > Library > `aks-variables`
 = Setting up a Azure AKS provisioning {pipeline_type} on {provider}
 
 In this section we will create a {pipeline_type} which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
