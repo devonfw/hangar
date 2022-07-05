@@ -10,10 +10,10 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 
 == Prerequisites
 
-* {trigger_sentence_1}
-{trigger_sentence_2}
-
-* Add AZURE credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.
+ifdef::trigger_sentence_github[ * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.]
+ifdef::trigger_sentence_github[ *Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.]
+ifdef::trigger_sentence_github[  * Add AZURE credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.]
+ifdef::cluster_name[  --cluster-name       [Required] Name for the cluster.]
 
 * An Azure resource group in the desired cluster location (e.g. `westeurope`). You can use an existing one or create a new one with the following command:
 
@@ -49,7 +49,7 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
-  {Usage} \
+ifdef::cluster_name[  --cluster-name <cluster name> \]
   --resource-group <resource group name> \
   --storage-account <storage account name> \
   --storage-container <storage container name> \
@@ -65,7 +65,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
-    {flags}
+ifdef::cluster_name[  --cluster-name       [Required] Name for the cluster.]
     --resource-group     [Required] Name of the resource group for the cluster.
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
@@ -77,7 +77,8 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project {cmd_add} --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
+./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w \
+ifdef::cluster_name[  --cluster-name devon-hangar]
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
@@ -97,7 +98,7 @@ kubectl <command>
 kubectl <command> --kubeconfig=<path to downloaded kubeconfig>
 ```
 
-To get the DNS name of the NGINX Ingress controller on the AKS cluster, go into {aks_variables}.
+To get the DNS name of the NGINX Ingress controller on the AKS cluster, go into {aks_variables_path}.
 
 Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
 
