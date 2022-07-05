@@ -1,0 +1,11 @@
+:provider: Azure Devops
+:pipeline_type: Pipeline
+:trigger_sentence_1: Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps. 
+:trigger_sentence_2: Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.
+:pipeline_type2: pipeline
+:path_provider: azure-devops
+:Usage: 
+:flags: 
+:cmd_add: 
+:aks_variables: Azure DevOps > Pipelines > Library > `aks-variables`
+include::../common_templates/setup-aks-provisioning-pipeline.asciidoc[]
