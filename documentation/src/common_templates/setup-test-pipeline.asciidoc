@@ -66,11 +66,11 @@ ifdef::build-pipeline[    --build-pipeline-name   [Required] Build pipeline name
 ==== Node.js project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop -w
 ```
 
 ==== Angular project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop -w
 ```
