@@ -5,4 +5,7 @@
 :path_provider: azure-devops
 :build-pipeline:
 :quality-pipeline:
+:extra_args_quarkus: --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality
+:extra_args_node: --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality
+:extra_args_angular: --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality
 include::../common_templates/setup-package-pipeline.asciidoc[]

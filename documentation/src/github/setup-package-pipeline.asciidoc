@@ -4,4 +4,7 @@
 :pipeline_type2: Github action
 :path_provider: github
 :ci-pipeline:
+:extra_args_quarkus: --ci-pipeline-name quarkus-project-ci
+:extra_args_node: --ci-pipeline-name node-project-ci
+:extra_args_angular: --ci-pipeline-name angular-project-ci
 include::../common_templates/setup-package-pipeline.asciidoc[]
