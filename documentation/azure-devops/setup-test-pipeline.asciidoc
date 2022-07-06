@@ -7,6 +7,7 @@
 :extra_args_quarkus: --build-pipeline-name quarkus-project-build
 :extra_args_node: --build-pipeline-name node-project-build
 :extra_args_angular: --build-pipeline-name angular-project-build
+[subs=attributes+]
 = Setting up a Test {pipeline_type} on {provider}
 
 In this section we will create a test {pipeline_type} on {provider} for running project test cases. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
