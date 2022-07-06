@@ -60,17 +60,17 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 ===== Quarkus project using JVM
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w \
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w {extra_args_quarkus}
 ```
 
 ==== Node.js project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w \
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w {extra_args_node}
 ```
 
 ==== Angular project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w \
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w {extra_args_angular}
 ```
