@@ -41,8 +41,6 @@ function help {
     echo "Library package pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo ""
-    echo "Deploy pipeline flags:"
-    echo ""
     echo "Azure AKS provisioning pipeline flags:"
     echo "      --resource-group        [Required] Name of the resource group for the cluster."
     echo "      --storage-account       [Required] Name of the storage account for the cluster."
@@ -54,6 +52,16 @@ function help {
     echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --rancher                          Install Rancher to manage the cluster."
+    echo ""
+    echo "Deploy pipeline flags:"
+    echo ""
+    echo "      --package-pipeline-name         [Required] Package pipeline name."
+    echo "      --env-provision-pipeline-name   [Required] Environment provisioning pipeline name."
+    echo "      --k8s-provider                  [Required] Kubernetes cluster provider name. Accepted values: EKS, AKS."
+    echo "      --k8s-namespace                 [Required] Kubernetes namespace where the application will be deployed."
+    echo "      --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory."
+    echo "      --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images."
+    echo ""
 
     exit
 }
