@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn package
+mvn package -B -Pnative

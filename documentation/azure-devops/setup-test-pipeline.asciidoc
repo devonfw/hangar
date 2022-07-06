@@ -1,12 +1,21 @@
-= Setting up a Test Pipeline on Azure DevOps
+:provider: Azure DevOps
+:pipeline_type: pipeline
+:trigger_sentence: This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit
+:pipeline_type2: pipeline
+:path_provider: azure-devops
+:build-pipeline:
+:extra_args_quarkus: --build-pipeline-name quarkus-project-build
+:extra_args_node: --build-pipeline-name node-project-build
+:extra_args_angular: --build-pipeline-name angular-project-build
+= Setting up a Test {pipeline_type} on {provider}
 
-In this section we will create a test pipeline on Azure DevOps for running project test cases. This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit, and consumes the artifact produced by the build pipeline.
+In this section we will create a test {pipeline_type} on {provider} for running project test cases. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
 
-The creation of this pipeline will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
+The creation of this {pipeline_type2} will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the {pipeline_type} will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create new branch, create a test pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
+The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create new branch, create a test {pipeline_type} based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
 
@@ -14,7 +23,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 * [Optional] Having some knowledge about the application, in particular knowing if, when tested, it produces a log file or some other blob (e.g. performance profiling data) interesting to be kept as an artifact.
 
-== Creating the pipeline using provided script
+== Creating the {pipeline_type} using provided script
 
 === Usage
 ```
@@ -29,16 +38,15 @@ pipeline_generator.sh \
   [-w]
 ```
 
-NOTE:  The config file for the test pipeline is located at `/scripts/pipelines/azure-devops/templates/test/test-pipeline.cfg`.
+NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
 
-NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the "additional pipeline output" artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
 
 === Flags
 ```
 -c, --config-file           [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name         [Required] Name that will be set to the pipeline.
 -l, --language              [Required] Language or framework of the project.
--d, --local-directory       [Required] Local directory of your project (the path should always be using '/' and not '\').
+-d, --local-directory       [Required] Local directory of your project.
     --build-pipeline-name   [Required] Build pipeline name.
 -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
@@ -49,8 +57,30 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 
 ==== Quarkus project
 
+===== Quarkus native project
+
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name quarkus-project-build -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
 ```
 
-CAUTION: Remember to write the path to the local repository with '/' and not '\' on Windows.
+===== Quarkus project using JVM
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
+```
+
+==== Node.js project
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop -w
+```
+
+==== Angular project
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop -w
+```
