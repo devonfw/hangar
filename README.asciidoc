@@ -1,6 +1,6 @@
 # devonfw Hangar
 
-### Use case: Quarkus-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
+### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
 
 * https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
@@ -15,9 +15,29 @@
 *** App
 **** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
 **** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package Pipeline]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a Java library Package Pipeline]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package Pipeline]
 ** Setup Kubernetes deploying environment pipeline
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning pipeline]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning pipeline]
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy Pipeline]
 ** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
+
+### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
+
+* https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
+* https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Setting up a repository on GitHub]
+* Setup GitHub workflows:
+** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-build-pipeline.asciidoc[Setting up a Build workflow]
+** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-test-pipeline.asciidoc[Setting up a Test workflow]
+** Quality
+*** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS]
+*** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-quality-pipeline.asciidoc[Setting up a Quality workflow]
+** Package
+*** App
+**** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
+**** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package workflow]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package workflow]
+** Setup Kubernetes deploying environment workflow
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
