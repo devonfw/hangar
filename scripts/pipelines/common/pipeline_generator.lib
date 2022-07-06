@@ -195,5 +195,3 @@ function commitCommonFiles {
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
 }
-
-validateRegistryLoginCredentials
