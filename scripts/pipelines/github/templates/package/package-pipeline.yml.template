@@ -50,8 +50,10 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_commit.id || github.sha }}
 
-      - name: Loading registry infos
-        run: sed "" ".github/workflows/scripts/registry_info.env" >> $GITHUB_ENV
+      - name: Loading vars
+        uses: tw3lveparsecs/github-actions-setvars@v0.1
+        with:
+          envFilePath: ".github/vars/*"
 
       - name: Download artifact from build pipeline
         uses: dawidd6/action-download-artifact@v2
@@ -75,11 +77,11 @@ jobs:
           path: ${{ env.targetPath }}
 
       - name: Build and push image to registry
-        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.head_ref }}"
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
         if: ${{ env.isECR != 'true' }}
 
       - name: Build and push image to registry (AWS)
-        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.head_ref }}"
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
         if: ${{ env.isECR == 'true' }}
 
 # mark to insert step for additional artifact #
