@@ -6,4 +6,5 @@
 :extra_args_quarkus:
 :extra_args_node:
 :extra_args_angular:
+:extra_sentence_ci: In order to have a complete CI, you will need to create a CI workflow: xref:setup-ci-pipeline.asciidoc[].
 include::../common_templates/setup-test-pipeline.asciidoc[]
