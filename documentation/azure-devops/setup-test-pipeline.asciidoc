@@ -61,24 +61,23 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 ===== Quarkus native project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w \
---build-pipeline-name quarkus-project-build 
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
 ```
 
 ===== Quarkus project using JVM
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w {extra_args_quarkus}
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
 ```
 
 ==== Node.js project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w {extra_args_node}
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop -w
 ```
 
 ==== Angular project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w {extra_args_angular}
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop -w
 ```

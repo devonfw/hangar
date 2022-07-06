@@ -1,7 +1,9 @@
-:provider: Github
+:provider: GitHub
+
 :pipeline_type: workflow
 :trigger_sentence: This workflow will be configured to be executed inside a CI pipeline after the build workflow
-:pipeline_type2: Github action
+:pipeline_type2: GitHub action
+
 :path_provider: github
 = Setting up a Test {pipeline_type} on {provider}
 
@@ -54,23 +56,23 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 ===== Quarkus native project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w \
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
 ```
 
 ===== Quarkus project using JVM
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w {extra_args_quarkus}
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
 ```
 
 ==== Node.js project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w {extra_args_node}
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop -w
 ```
 
 ==== Angular project
 
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project -b develop -w {extra_args_angular}
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -a ./.pipelines/target/ -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop -w
 ```
