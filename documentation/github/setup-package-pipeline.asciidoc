@@ -4,6 +4,9 @@
 :pipeline_type2: Github action
 :path_provider: github
 :ci-pipeline:
+:extra_args_quarkus: --ci-pipeline-name quarkus-project-ci
+:extra_args_node: --ci-pipeline-name node-project-ci
+:extra_args_angular: --ci-pipeline-name angular-project-ci
 = Setting up a Package {pipeline_type} on {provider}
 
 In this section we will create a package {pipeline_type} to build and push a container image of the project application into the specified container registry. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -66,27 +69,28 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ==== Quarkus project
 
 ===== Generic container registry
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project -u username -p password -b develop -w \
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project -u username -p password {extra_args_quarkus} -b develop -w
 --ci-pipeline-name quarkus-project-ci 
 ```
 
 ===== AWS ECR
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w \
---ci-pipeline-name quarkus-project-ci 
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_quarkus} -b develop -w
 ```
 
 ==== Node.js project
 
 ===== Generic container registry
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project -u username -p password -b develop -w \
---ci-pipeline-name node-project-ci 
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project -u username -p password {extra_args_node} -b develop -w
 ```
 
 ===== AWS ECR
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w \
---ci-pipeline-name node-project-ci 
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_node} -b develop -w
 ```
