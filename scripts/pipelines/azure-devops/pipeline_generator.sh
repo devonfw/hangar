@@ -1,38 +1,43 @@
 #!/bin/bash
 set -e
-
-FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
-
+FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,rancher:,package-pipeline-name:,env-provision-pipeline-name:,k8s-provider:,k8s-namespace:,k8s-deploy-files-path:,k8s-image-pull-secret-name:,help" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
-        -c | --config-file)       configFile=$2; shift 2;;
-        -n | --pipeline-name)     pipelineName=$2; shift 2;;
-        -d | --local-directory)   localDirectory=$2; shift 2;;
-        -a | --artifact-path)     artifactPath=$2; shift 2;;
-        -b | --target-branch)     targetBranch=$2; shift 2;;
-        -l | --language)          language=$2; shift 2;;
-        -t | --target-directory)  targetDirectory=$2; shift 2;;
-        --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
-        --sonar-url)              sonarUrl=$2; shift 2;;
-        --sonar-token)            sonarToken=$2; shift 2;;
-        -i | --image-name)        imageName=$2; shift 2;;
-        -u | --registry-user)     dockerUser=$2; shift 2;;
-        -p | --registry-password) dockerPassword=$2; shift 2;;
-        --resource-group)         resourceGroupName=$2; shift 2;;
-        --storage-account)        storageAccountName=$2; shift 2;;
-        --storage-container)      storageContainerName=$2; shift 2;;
-        --cluster-name)           clusterName=$2; shift 2;;
-        --s3-bucket)              s3Bucket=$2; shift 2;;
-        --s3-key-path)            s3KeyPath=$2; shift 2;;
-        --quality-pipeline-name)  export qualityPipelineName=$2; shift 2;;
-        --test-pipeline-name)     export testPipelineName=$2; shift 2;;
-        --dockerfile)             dockerFile=$2; shift 2;;
-        --aws-access-key)         awsAccessKey="$2"; shift 2;;
-        --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
-        --aws-region)             awsRegion="$2"; shift 2;;
-        -h | --help)              help="true"; shift 1;;
-        -w)                       webBrowser="true"; shift 1;;
+        -c | --config-file)         configFile=$2; shift 2;;
+        -n | --pipeline-name)       pipelineName=$2; shift 2;;
+        -d | --local-directory)     localDirectory=$2; shift 2;;
+        -a | --artifact-path)       artifactPath=$2; shift 2;;
+        -b | --target-branch)       targetBranch=$2; shift 2;;
+        -l | --language)            language=$2; shift 2;;
+        -t | --target-directory)    targetDirectory=$2; shift 2;;
+        --build-pipeline-name)      export buildPipelineName=$2; shift 2;;
+        --sonar-url)                sonarUrl=$2; shift 2;;
+        --sonar-token)              sonarToken=$2; shift 2;;
+        -i | --image-name)          imageName=$2; shift 2;;
+        -u | --registry-user)       dockerUser=$2; shift 2;;
+        -p | --registry-password)   dockerPassword=$2; shift 2;;
+        --resource-group)           resourceGroupName=$2; shift 2;;
+        --storage-account)          storageAccountName=$2; shift 2;;
+        --storage-container)        storageContainerName=$2; shift 2;;
+        --rancher)                  installRancher="true"; shift 1;;
+        --cluster-name)             clusterName=$2; shift 2;;
+        --s3-bucket)                s3Bucket=$2; shift 2;;
+        --s3-key-path)              s3KeyPath=$2; shift 2;;
+        --quality-pipeline-name)    export qualityPipelineName=$2; shift 2;;
+        --test-pipeline-name)       export testPipelineName=$2; shift 2;;
+        --dockerfile)               dockerFile=$2; shift 2;;
+        --aws-access-key)           awsAccessKey="$2"; shift 2;;
+        --aws-secret-access-key)    awsSecretAccessKey="$2"; shift 2;;
+        --aws-region)               awsRegion="$2"; shift 2;;
+      	--package-pipeline-name)    export packagePipelineName=$2; shift 2;;
+        --env-provision-pipeline-name)  envProvisionPipelineName="$2"; shift 2;;
+      	--k8s-provider)             k8sProvider=$2; shift 2;; 
+        --k8s-namespace)            k8sNamespace="$2"; shift 2;;
+      	--k8s-deploy-files-path)    k8sDeployFiles=$2; shift 2;; 
+        --k8s-image-pull-secret-name)  k8sImagePullSecret=$2; shift 2;; 
+        -h | --help)                help="true"; shift 1;;
+        -w)                         webBrowser="true"; shift 1;;
         --) shift; break;;
     esac
 done
@@ -43,190 +48,26 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 # Common var
-commonTemplatesPath="scripts/pipelines/azure-devops/templates/common"
+commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for common files of the pipelines
+pipelinePath=".pipelines" # Path to the pipelines.
+scriptFilePath=".pipelines/scripts" # Path to the scripts.
+export provider="azure-devops"
 
-function help {
-    echo ""
-    echo "Generates a pipeline on Azure DevOps based on the given definition."
-    echo ""
-    echo "Common flags:"
-    echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
-    echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
-    echo "  -d, --local-directory       [Required] Local directory of your project."
-    echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
-    echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
-    echo ""
-    echo "Build pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
-    echo ""
-    echo "Test pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo ""
-    echo "Quality pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo "      --sonar-url             [Required] Sonarqube URL."
-    echo "      --sonar-token           [Required] Sonarqube token."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --test-pipeline-name    [Required] Test pipeline name."
-    echo ""
-    echo "Package pipeline flags:"
-    echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
-    echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
-    echo "      --build-pipeline-name   [Required] Build pipeline name."
-    echo "      --quality-pipeline-name [Required] Quality pipeline name."
-    echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
-    echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
-    echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
-    echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
-    echo "      --aws-secret-access-key [Required, if AWS] AWS account secret access key."
-    echo "      --aws-region            [Required, if AWS] AWS region for ECR."
-    echo ""
-    echo "Library package pipeline flags:"
-    echo "  -l, --language              [Required] Language or framework of the project."
-    echo ""
-    echo "Deploy pipeline flags:"
-    echo ""
-    echo "Azure AKS provisioning pipeline flags:"
-    echo "      --resource-group        [Required] Name of the resource group for the cluster."
-    echo "      --storage-account       [Required] Name of the storage account for the cluster."
-    echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
-    echo ""
-    echo "AWS EKS provisioning pipeline flags:"
-    echo "      --cluster-name          [Required] Name for the cluster."
-    echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
-    echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
-
-    exit
-}
-
-function importConfigFile {
-    # Import config file.
-    source $configFile
-    IFS=, read -ra flags <<< "$mandatoryFlags"
-
-    # Check if the config file was supplied.
-    if test -z "$configFile"
-    then
-        echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
-        exit 2
-    fi
-
-    # Check if the required flags in the config file have been activated.
-    for flag in "${flags[@]}"
-    do
-        if test -z $flag
-        then
-            echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
-            echo -e "${red}Use -h or --help flag to display help." >&2
-            exit 2
-        fi
-    done
-}
-
-function checkInstallations {
-    # Check if Git is installed
-    if ! [ -x "$(command -v git)" ]; then
-        echo -e "${red}Error: Git is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Azure CLI is installed
-    if ! [ -x "$(command -v az)" ]; then
-        echo -e "${red}Error: Azure CLI is not installed." >&2
-        exit 127
-    fi
-
-    # Check if Python is installed
-    if ! [ -x "$(command -v python)" ]; then
-        echo -e "${red}Error: Python is not installed." >&2
-        exit 127
-    fi
-}
-
-function ensurePathFormat {
-    currentDirectory=$(pwd)
-
-    # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a 
-    # Unix-style path using forward slashes (e.g. "/c/Users").
-    localDirectory=${localDirectory//'\'/"/"}
-    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
-    localDirectory=$(pwd)
-
-    # Return to initial directory
-    cd "$currentDirectory"
-}
-
-function obtainHangarPath { 
+function obtainHangarPath {
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
-
-}
-
-function createNewBranch {
-    echo -e "${green}Creating the new branch: ${sourceBranch}..."
-    echo -ne ${white}
-
-    # Create the new branch.
-    cd "${localDirectory}"
-    git checkout -b ${sourceBranch}
-}
-
-function copyYAMLFile {
-    echo -e "${green}Copying the corresponding files into your directory..."
-    echo -ne ${white}
-
-    # Create .pipelines and scripts if they do not exist.
-    mkdir -p "${localDirectory}/.pipelines/scripts"
-    # Generate pipeline YAML from template and put it in the repository.
-    # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    envsubst '${buildPipelineName} ${testPipelineName} ${qualityPipelineName}' < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
-
-    # Check if an extra artifact to store is supplied.
-    if test ! -z "$artifactPath"
-    then
-        # Add the extra step to the YAML.
-        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
-    fi
-}
-
-function copyCommonScript {
-    echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
-    echo -ne ${white}
-
-    cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
-}
-
-function commitCommonFiles {
-    echo -e "${green}Commiting and pushing into Git remote..."
-    echo -ne ${white}
-
-    # Move into the project's directory and pushing the template into the Azure DevOps repository.
-    cd ${localDirectory}
-
-    # Add the YAML files.
-    git add .pipelines -f
-
-    # Git commit and push it into the repository.
-    # changing all files to be executable
-    find .pipelines -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
-
-    git commit -m "Adding the source YAML"
-    git push -u origin ${sourceBranch}
 }
 
 function createPipeline {
     echo -e "${green}Generating the pipeline from the YAML template..."
     echo -ne ${white}
 
-    # This line go to the localDirectory of the repo and gets the repo name 
+    # This line go to the localDirectory of the repo and gets the repo name
     repoName="$(basename -s .git "$(git config --get remote.origin.url)")"
     # This line gets the organization name
     orgName="$(git remote -v | grep fetch | cut -d'/' -f4)"
-    
+
     azRepoShow=$(az repos show -r "$repoName")
     projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
 
@@ -295,13 +136,18 @@ function createPR {
     fi
 }
 
+obtainHangarPath
+
+# Load common functions
+. "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
+
 if [[ "$help" == "true" ]]; then help; fi
+
+ensurePathFormat
 
 importConfigFile
 
 checkInstallations
-
-ensurePathFormat
 
 obtainHangarPath
 

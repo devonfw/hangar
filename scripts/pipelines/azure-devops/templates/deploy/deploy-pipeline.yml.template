@@ -1,0 +1,93 @@
+trigger: none
+
+resources:
+  pipelines:
+  - pipeline: 'Package-Pipeline'
+    source: '$packagePipelineName'
+    trigger:
+      branches:
+        include:
+        - 'release/*'
+        - develop
+        exclude:
+        - 'feature/*'
+        - master
+
+variables:
+  - group: registry_info 
+  - name: deploymentYamlPath
+    value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)/application-deployment.yaml" 
+  - name: ingressYamlPath
+    value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)/ingress.yaml"  
+  - name: deployFilesPath
+    value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)"
+  - name: artifact
+    value: "kubeconfig"  
+  - name: kubeconfigPath
+    value: "$(Pipeline.Workspace)/$(artifact)"  
+    
+pool:
+  vmImage: ubuntu-latest
+jobs:
+- job: Deploy_to_AKS
+  condition: eq(variables.k8sProvider, 'AKS')
+  variables:
+  - ${{ if eq(variables.k8sProvider, 'AKS') }}:
+    - group: aks-variables # DNS available for this job
+  steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: "Download AKS Kubeconfig"
+    inputs:
+      buildType: 'specific'
+      project: '$(System.TeamProjectId)'
+      definition: '$(envProvisionPipelineName)'
+      buildVersionToDownload: 'latest'
+      artifactName: '$(artifact)'
+      targetPath: '$(Pipeline.Workspace)'  
+
+  - task: Bash@3
+    condition: ne(variables.k8sImagePullSecret, '')
+    displayName: 'Create and set imagePullSecret'
+    env:
+      KUBECONFIG: $(kubeconfigPath)
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
+      arguments: '$(k8sNamespace) $(k8sImagePullSecret) $(docker_username) $(docker_password) $(registry) $(deploymentYamlPath)'
+
+  - task: Bash@3
+    displayName: "Deploy app"
+    env:
+      KUBECONFIG: $(kubeconfigPath)
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
+      arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
+ 
+- job: Deploy_to_EKS
+  condition: eq(variables.k8sProvider, 'EKS')
+  variables:
+  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
+    - group: AWS_Credentials
+  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
+    - group: eks_variables # DNS available for this job
+  steps:
+  - task: Bash@3
+    displayName: Download EKS Kubeconfig
+    inputs:
+      targetType: 'inline'
+      script: |
+        aws configure set aws_access_key_id $(ACCESS_KEY)
+        aws configure set aws_secret_access_key $(SECRET_KEY)
+        aws eks update-kubeconfig --name $(CLUSTER_NAME) --region $(REGION)
+
+  - task: Bash@3
+    condition: ne(variables.k8sImagePullSecret, '')
+    displayName: 'Create and set imagePullSecret'
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/secrets.sh'
+      arguments: '$(k8sNamespace) $(k8sImagePullSecret) $(aws_access_key) $(aws_secret_access_key) $(registry) $(deploymentYamlPath)'
+
+  - task: Bash@3
+    displayName: Deploy app
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
+      arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
