@@ -138,8 +138,6 @@ obtainHangarPath
 
 if [[ "$help" == "true" ]]; then help; fi
 
-validateRegistryLoginCredentials
-
 ensurePathFormat
 
 importConfigFile
@@ -147,6 +145,8 @@ importConfigFile
 checkInstallations
 
 obtainHangarPath
+
+validateRegistryLoginCredentials
 
 createNewBranch
 

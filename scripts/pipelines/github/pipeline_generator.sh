@@ -131,6 +131,8 @@ importConfigFile
 
 checkInstallations
 
+validateRegistryLoginCredentials
+
 createNewBranch
 
 type addPipelineVariables &> /dev/null && addPipelineVariables
