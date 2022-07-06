@@ -24,7 +24,6 @@
 
 ### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
 
-* https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
 * https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Setting up a repository on GitHub]
 * Setup GitHub workflows:
