@@ -75,8 +75,6 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project -u username -p password {extra_args_quarkus} -b develop -w
---build-pipeline-name node-project-build \
---quality-pipeline-name quarkus-project-quality 
 ```
 
 ===== AWS ECR
