@@ -31,7 +31,7 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v2
 
-      - name: Download artifact from this workflow
+      - name: Download artifact from build job (current workflow)
         uses: actions/download-artifact@v2
         id: dowloadFromSamePipeline
         continue-on-error: true
@@ -39,7 +39,7 @@ jobs:
           name: BuildOutput
           path: ${{ env.targetPath }}
 
-      - name: Download artifact from build pipeline
+      - name: Download artifact from build workflow
         uses: dawidd6/action-download-artifact@v2
         id: downloadFromBuild
         continue-on-error: true
@@ -51,7 +51,7 @@ jobs:
           name: BuildOutput
           path: ${{ env.targetPath }}
 
-      - name: Download artifact from ci pipeline
+      - name: Download artifact from CI workflow
         uses: dawidd6/action-download-artifact@v2
         if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
         with:
