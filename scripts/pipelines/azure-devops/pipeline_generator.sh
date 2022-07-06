@@ -221,6 +221,11 @@ obtainHangarPath
 
 createNewBranch
 
+cd "${localDirectory}"
+
+# store current branch into a variable (only used for rollback/undo) 
+originalBranch=$(git branch --show-current)
+
 undoStage=1
 
 copyYAMLFile 
