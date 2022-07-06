@@ -1,7 +1,7 @@
-:provider: Github
+:provider: GitHub
 :pipeline_type: workflow
-:trigger_sentence: This workflow will be configures to be executed inside a CI pipeline for the build workflow
-:pipeline_type2: Github action
+:trigger_sentence: This workflow will be configured to be executed inside a CI pipeline
+:pipeline_type2: GitHub action
 :path_provider: github
 = Setting up a Build {pipeline_type} on {provider}
 

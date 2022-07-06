@@ -1,6 +1,6 @@
-:provider: Azure Devops
-:pipeline_type: Pipeline
-:trigger_sentence: This pipeline will be configured to be triggered every time there is a commit to the Azure Devops repository
+:provider: Azure DevOps
+:pipeline_type: pipeline
+:trigger_sentence: This pipeline will be configured to be triggered every time there is a commit to the Azure DevOps repository
 :pipeline_type2: pipeline
 :path_provider: azure-devops
 = Setting up a Build {pipeline_type} on {provider}
@@ -26,8 +26,8 @@ pipeline_generator.sh \
   -n <pipeline name> \
   -l <language or framework> \
   -d <project local path> \
-  [-t <target-directory>] \
   [-b <branch>] \
+  [-t <target-directory>] \
   [-w]
 ```
 
@@ -39,8 +39,8 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
--t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
