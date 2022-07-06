@@ -1,3 +1,3 @@
 #!/bin/bash
-# We define the tag using the version set in the pom.xml
-tag=$(echo 'cat //Project/ItemGroup/PackageReference[@Include="Devon4Net.Infrastructure.Common"]/@Version' | xmllint --shell "${imageTagFilePath}" | awk -F'[="]' '!/>/{print $(NF-1)}')
+# We define the tag using the version set in one of the modules (since there is no version given in a template!)
+tag=tag=$(xmllint --xpath "string(//Project/PropertyGroup/Version/text())" "${imageTagFilePath}")
