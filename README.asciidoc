@@ -19,5 +19,5 @@
 ** Setup Kubernetes deploying environment pipeline
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning pipeline]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning pipeline]
-** https://github.com/devonfw/hangar/blob/d9c53c959803073beb5a8bf5f54df5e0cc7c35df/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy Pipeline] [WIP]
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy Pipeline]
 ** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
