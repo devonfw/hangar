@@ -54,7 +54,6 @@ scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="azure-devops"
 
 function obtainHangarPath {
-
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 }
@@ -72,7 +71,20 @@ function createPipeline {
     projectName=$(echo "$azRepoShow" | python -c "import sys, json; print(json.load(sys.stdin)['project']['name'])")
 
     # Create Azure Pipeline
-    az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true --organization "https://dev.azure.com/$orgName" --project "$projectName" --repository "$repoName" --repository-type tfsgit
+    
+    pipelineResult=$(az pipelines create --name $pipelineName --yml-path "${pipelinePath}/${yamlFile}" --skip-first-run true --organization "https://dev.azure.com/$orgName" --project "$projectName" --repository "$repoName" --repository-type tfsgit) || {
+        # if the script fails, clean pollution
+        echo "There was an error creating the pipeline! Please check if you specified the name and got all settings right!"
+
+        undoPreviousSteps
+
+        exit 127
+    }
+    
+    pipelineId=$(echo "$pipelineResult" | python -c "import sys, json; print(json.load(sys.stdin)['id'])")
+
+    # pipeline got created successfully     
+    undoStage=3
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -82,7 +94,15 @@ function addCommonPipelineVariables {
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
     else
         # Add the extra artifact to store variable.
-        az pipelines variable create --name "artifactPath" --pipeline-name "$pipelineName" --value "${artifactPath}"
+        $(az pipelines variable create --pipeline-name "$pipelineName" --value "${artifactPath}") || {
+            # if the variable-creation fails, clean up
+
+            echo "There was an error creating the pipeline-artifact-path variable!. Exiting"
+
+            undoPreviousSteps
+
+            exit 127
+        }
     fi
 }
 
@@ -136,6 +156,56 @@ function createPR {
     fi
 }
 
+function removeLocalBranches {
+    # visit the directory and switch to the branch which was present before
+    cd "${localDirectory}"
+
+    git checkout $originalBranch
+
+    # delete branch
+    git branch -D ${sourceBranch}
+}
+
+function removeRemoteBranches {
+    cd "${localDirectory}"
+
+    # update list of remotes
+    git fetch
+
+    # delete mapped remote-branch
+    git push origin --delete ${sourceBranch}
+}
+
+function removePipeline {
+    az pipelines delete --id ${pipelineId}
+}
+
+function undoPreviousSteps {
+    # undo all actions taken
+
+    if [ ${undoStage} -gt 2 ]; then
+        echo "Removing pipeline with id: ${pipelineId}"
+        removePipeline
+    fi
+
+    if [ ${undoStage} -gt 1 ]; then
+        echo "Removing all remote branches!"
+
+        removeRemoteBranches
+    fi
+
+    if [ ${undoStage} -gt 0 ]; then 
+        echo "Removing all local branches!"
+
+        removeLocalBranches
+    fi
+}  
+
+if [[ "$help" == "true" ]]; then help; fi
+
+# Undo-Level for the script. Used to clean up the resources in case of a failure
+undoStage=0
+
 obtainHangarPath
 
 # Load common functions
@@ -149,19 +219,35 @@ importConfigFile
 
 checkInstallations
 
-obtainHangarPath
+cd "${localDirectory}"
+
+# store current branch into a variable (only used for rollback/undo) 
+originalBranch=$(git branch --show-current)
 
 createNewBranch
+
+undoStage=1
 
 copyYAMLFile
 
 copyCommonScript
 
-type copyScript &> /dev/null && copyScript
+type copyScript &> /dev/null && copyScript || {
+    undoPreviousSteps
+    
+    exit 127
+}
 
 commitCommonFiles
 
-type commitFiles &> /dev/null && commitFiles
+# clean up remote-branches
+undoStage=2
+
+type commitFiles &> /dev/null && commitFiles || {
+    undoPreviousSteps
+
+    exit 127
+}
 
 createPipeline
 
