@@ -143,6 +143,7 @@ ensurePathFormat
 importConfigFile
 
 checkInstallations
+
 validateRegistryLoginCredentials
 
 createNewBranch
