@@ -12,6 +12,8 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 
 This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
 
+To have a functional workflow you will need to have at least an existing build workflow. please refer to: xref:setup-build-pipeline.asciidoc[].
+
 == Creating the pipeline using provided script
 
 === Usage
