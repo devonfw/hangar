@@ -1,4 +1,5 @@
-:provider: Azure Devops
+:provider: Azure DevOps
+
 :pipeline_type: pipeline
 :trigger_sentence: This pipeline will be configured in order to be triggered every time the test pipeline is executed successfully on a commit
 :pipeline_type2: pipeline
