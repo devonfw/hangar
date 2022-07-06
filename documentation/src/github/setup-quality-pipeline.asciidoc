@@ -1,10 +1,7 @@
 :provider: GitHub
-
 :pipeline_type: workflow
 :trigger_sentence: This workflow will be configured to be executed inside a CI pipeline after the test (or build, if no test) workflow
-
 :pipeline_type2: GitHub action
-
 :path_provider: github
 :extra_args_quarkus:
 :extra_args_node:
