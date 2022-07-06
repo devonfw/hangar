@@ -15,7 +15,7 @@
 *** App
 **** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
 **** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package Pipeline]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a Java library Package Pipeline]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package Pipeline]
 ** Setup Kubernetes deploying environment pipeline
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning pipeline]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning pipeline]
@@ -36,7 +36,7 @@
 *** App
 **** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
 **** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package workflow]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a Java library Package workflow]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package workflow]
 ** Setup Kubernetes deploying environment workflow
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
