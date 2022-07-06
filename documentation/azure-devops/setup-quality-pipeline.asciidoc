@@ -5,6 +5,9 @@
 :path_provider: azure-devops
 :build-pipeline:
 :test-pipeline:
+:extra_args_quarkus: --build-pipeline-name quarkus-project-build --test-pipeline-name quarkus-project-test
+:extra_args_node: --build-pipeline-name node-project-build --test-pipeline-name node-project-test
+:extra_args_angular: --build-pipeline-name angular-project-build --test-pipeline-name angular-project-test
 = Setting up a Quality {pipeline_type} on {provider}
 
 In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -57,22 +60,14 @@ NOTE: The config file for the quality pipeline is located at `/scripts/pipelines
 
 ==== Quarkus project
 
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project ifdef::build-pipeline[--build-pipeline-name quarkus-project-build ] ifdef::test-pipeline[--test-pipeline-name quarkus-project-test ] -b develop -w \
---build-pipeline-name node-project-build \
---test-pipeline-name node-project-test 
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
 ```
 
 ==== Node.js project
 
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project -b develop -w \
---build-pipeline-name node-project-build \
---test-pipeline-name node-project-test 
-```
-
-==== Angular project
-
-```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n angular-project-quality -l angular --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --test-pipeline-name angular-project-test  -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project {extra_args_quarkus} -b develop -w
 ```
