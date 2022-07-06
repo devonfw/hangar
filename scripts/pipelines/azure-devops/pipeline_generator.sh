@@ -206,6 +206,8 @@ if [[ "$help" == "true" ]]; then help; fi
 # Undo-Level for the script. Used to clean up the resources in case of a failure
 undoStage=0
 
+obtainHangarPath
+
 # Load common functions
 . "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
 
@@ -217,18 +219,16 @@ importConfigFile
 
 checkInstallations
 
-obtainHangarPath
-
-createNewBranch
-
 cd "${localDirectory}"
 
 # store current branch into a variable (only used for rollback/undo) 
 originalBranch=$(git branch --show-current)
 
+createNewBranch
+
 undoStage=1
 
-copyYAMLFile 
+copyYAMLFile
 
 copyCommonScript
 
@@ -243,7 +243,11 @@ commitCommonFiles
 # clean up remote-branches
 undoStage=2
 
-type commitFiles &> /dev/null && commitFiles
+type commitFiles &> /dev/null && commitFiles || {
+    undoPreviousSteps
+
+    exit 127
+}
 
 createPipeline
 
