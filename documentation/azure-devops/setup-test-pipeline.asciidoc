@@ -1,4 +1,4 @@
-:provider: Azure Devops
+:provider: Azure DevOps
 :pipeline_type: pipeline
 :trigger_sentence: This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit
 :pipeline_type2: pipeline
@@ -40,7 +40,6 @@ pipeline_generator.sh \
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
 
-NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the "additional pipeline output" artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
 
 === Flags
 ```
