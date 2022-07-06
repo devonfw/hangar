@@ -221,6 +221,8 @@ obtainHangarPath
 
 createNewBranch
 
+undoStage=1
+
 copyYAMLFile 
 
 copyCommonScript
