@@ -149,7 +149,7 @@ importConfigFile
 
 checkInstallations
 
-obtainHangarPath
+validateRegistryLoginCredentials
 
 createNewBranch
 
