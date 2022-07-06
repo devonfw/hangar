@@ -1,6 +1,6 @@
 = Setting up a Azure AKS provisioning pipeline on Azure DevOps
 
-In this section we will create a pipeline which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently.
+In this section we will create a pipeline which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
 
@@ -49,6 +49,7 @@ pipeline_generator.sh \
   --resource-group <resource group name> \
   --storage-account <storage account name> \
   --storage-container <storage container name> \
+  [--rancher] \
   [-b <branch>] \
   [-w]
 ```
@@ -63,6 +64,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
     --resource-group     [Required] Name of the resource group for the cluster.
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
+    --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -70,8 +72,10 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state -b develop -w
+./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
 ```
+
+NOTE: Rancher is installed on the cluster after provisioning when using the above command.
 
 === Appendix: Interacting with the cluster
 
@@ -87,3 +91,15 @@ kubectl <command>
 # via command-line flag
 kubectl <command> --kubeconfig=<path to downloaded kubeconfig>
 ```
+
+To get the DNS name of the NGINX Ingress controller on the EKS cluster, go into Azure DevOps > Pipelines > Library > `aks-variables`.
+
+Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
+
+```
+kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
+```
+
+=== Appendix: Destroying the cluster
+
+To destroy the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.

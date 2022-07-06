@@ -50,9 +50,9 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 -u, --registry-user            [Required, unless AWS] Container registry login user.
 -p, --registry-password        [Required, unless AWS] Container registry login password.
-    --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
-    --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
-    --aws-region               [Required, if AWS] AWS region for ECR."
+    --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials.
+    --aws-secret-access-key    [Required, if AWS] AWS account secret access key.
+    --aws-region               [Required, if AWS] AWS region for ECR.
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -72,7 +72,7 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 ```
 
 ==== Node.js project
- 
+
 ===== Generic container registry
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project -u username -p password -b develop -w
@@ -81,4 +81,16 @@ NOTE: The config file for the package pipeline is located at `/scripts/pipelines
 ===== AWS ECR
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
+```
+
+==== Angular project
+
+===== Generic container registry
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project -u username -p password -b develop -w
+```
+
+===== AWS ECR
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
