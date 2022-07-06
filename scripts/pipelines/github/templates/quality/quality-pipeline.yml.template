@@ -7,14 +7,20 @@ on:
       sonarUrl:
         required: false
         default: $sonarUrl
-
-
+      sonarToken:
+        required: false
+        default:
+      targetPath:
+        required: false
+        default: $targetDirectory
 # mark to insert additional artifact input #
 
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
   ciPipelineYamlName: 'ci-pipeline.yml'
   sonarUrl: ${{ github.event.inputs.sonarUrl || '$sonarUrl' }}
+  sonarToken: ${{ github.event.inputs.sonarToken || secrets.SONARQUBE_TOKEN }}
+  targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
 # mark to insert additional artifact env var #
 
 jobs:
