@@ -21,8 +21,8 @@ pipeline_generator.sh \
   -n <pipeline name> \
   -l <language or framework> \
   -d <project local path> \
-  [-b <branch>] \
   [-t <target-directory>] \
+  [-b <branch>] \
   [-w]
 ```
 
