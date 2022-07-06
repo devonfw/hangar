@@ -3,5 +3,5 @@
 :trigger_sentence: This workflow will be configured to be executed inside a CI pipeline
 :pipeline_type2: GitHub action
 :path_provider: github
-:extra_sentence_ci: This workflow will need to be call from a CI workflow, please refer to: xref:setup-ci-pipeline.asciidoc
+:extra_sentence_ci: This workflow will need to be call from a CI workflow, please refer to: xref:setup-ci-pipeline.asciidoc[]
 include::../common_templates/setup-build-pipeline.asciidoc[]
