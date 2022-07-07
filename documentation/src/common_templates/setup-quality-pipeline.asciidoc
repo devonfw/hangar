@@ -20,16 +20,17 @@ endif::[]
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   --sonar-url <sonarqube url> \
   --sonar-token <sonarqube token> \
   -d <project local path> \
-ifdef::build-pipeline[  --build-pipeline-name <build pipeline name> \]
-ifdef::test-pipeline[  --test-pipeline-name <test pipeline name> \]
+ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
+ifdef::test-pipeline[  --test-pipeline-name <test {pipeline_type} name> \]
   [-b <branch>] \
   [-w]
 ```
@@ -37,15 +38,16 @@ ifdef::test-pipeline[  --test-pipeline-name <test pipeline name> \]
 NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/quality/quality-pipeline.cfg`.
 
 === Flags
+[subs=attributes+]
 ```
--c, --config-file            [Required] Configuration file containing pipeline definition.
--n, --pipeline-name          [Required] Name that will be set to the pipeline.
+-c, --config-file            [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name          [Required] Name that will be set to the {pipeline_type}.
 -l, --language               [Required] Language or framework of the project.
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
 -d, --local-directory        [Required] Local directory of your project.
-ifdef::build-pipeline[    --build-pipeline-name    [Required] Build pipeline name.]
-ifdef::test-pipeline[    --test-pipeline-name     [Required] Test pipeline name.]
+ifdef::build-pipeline[    --build-pipeline-name    [Required] Build {pipeline_type} name.]
+ifdef::test-pipeline[    --test-pipeline-name     [Required] Test {pipeline_type} name.]
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```

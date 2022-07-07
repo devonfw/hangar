@@ -21,13 +21,14 @@ endif::[]
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-ifdef::build-pipeline[  --build-pipeline-name <build pipeline name> \]
+ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
   [-a <artifact source path>] \
   [-b <branch>] \
   [-w]
@@ -40,13 +41,14 @@ NOTE: If the test pipeline failed, check the logs for the failed test case(s) su
 endif::[]
 
 === Flags
+[subs=attributes+]
 ```
--c, --config-file           [Required] Configuration file containing pipeline definition.
--n, --pipeline-name         [Required] Name that will be set to the pipeline.
+-c, --config-file           [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name         [Required] Name that will be set to the {pipeline_type}.
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
-ifdef::build-pipeline[    --build-pipeline-name   [Required] Build pipeline name.]
--a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime.
+ifdef::build-pipeline[    --build-pipeline-name   [Required] Build {pipeline_type} name.]
+-a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
