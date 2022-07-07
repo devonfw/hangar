@@ -2,7 +2,7 @@
 
 location = "westeurope"
 
-resource_group_name = "az-devops-rg"
+resource_group_name = "hangar-aks-rg"
 
 instance_type = "Standard_DS2_v2"
 
