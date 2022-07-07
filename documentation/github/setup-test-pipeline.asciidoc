@@ -1,6 +1,6 @@
 :provider: GitHub
 :pipeline_type: workflow
-:trigger_sentence: This workflow will be configured to be executed inside a CI pipeline after the build workflow
+:trigger_sentence: This workflow will be configured to be executed as a job inside a CI workflow after the build job
 :pipeline_type2: GitHub action
 :path_provider: github
 :extra_args_quarkus:
@@ -25,10 +25,11 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
   [-a <artifact source path>] \
@@ -40,12 +41,13 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 
 
 === Flags
+[subs=attributes+]
 ```
--c, --config-file           [Required] Configuration file containing pipeline definition.
--n, --pipeline-name         [Required] Name that will be set to the pipeline.
+-c, --config-file           [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name         [Required] Name that will be set to the {pipeline_type}.
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
--a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime.
+-a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```

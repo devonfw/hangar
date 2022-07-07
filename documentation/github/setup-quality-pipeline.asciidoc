@@ -1,6 +1,6 @@
 :provider: GitHub
 :pipeline_type: workflow
-:trigger_sentence: This workflow will be configured to be executed inside a CI pipeline after the test (or build, if no test) workflow
+:trigger_sentence: This workflow will be configured to be executed as a job inside a CI workflow after the test (or build, if no test) job
 :pipeline_type2: GitHub action
 :path_provider: github
 :extra_args_quarkus:
@@ -24,10 +24,11 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   --sonar-url <sonarqube url> \
   --sonar-token <sonarqube token> \
@@ -39,9 +40,10 @@ pipeline_generator.sh \
 NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/quality/quality-pipeline.cfg`.
 
 === Flags
+[subs=attributes+]
 ```
--c, --config-file            [Required] Configuration file containing pipeline definition.
--n, --pipeline-name          [Required] Name that will be set to the pipeline.
+-c, --config-file            [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name          [Required] Name that will be set to the {pipeline_type}.
 -l, --language               [Required] Language or framework of the project.
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
