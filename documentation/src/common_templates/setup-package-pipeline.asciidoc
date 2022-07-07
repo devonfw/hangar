@@ -1,6 +1,6 @@
 = Setting up a Package {pipeline_type} on {provider}
 
-In this section we will create a package {pipeline_type} to build and push a container image of the project application into the specified container registry. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
+In this section we will create a package {pipeline_type} to build and push a container image of the project application into the specified container registry. {trigger_sentence}. It consumes the artifact produced by the build {pipeline_type}.
 
 The creation of the {pipeline_type2} will follow the project workflow, so a new branch named `feature/package-pipeline` will be created and the YAML file for the {pipeline_type} will be pushed to it.
 
@@ -18,13 +18,13 @@ This script will commit and push the corresponding YAML template into your repos
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   --dockerfile <dockerfile path> \
   -d <project local path> \
-ifdef::build-pipeline[  --build-pipeline-name <build pipeline name> \]
-ifdef::quality-pipeline[  --quality-pipeline-name <quality pipeline name> \]
-ifdef::ci-pipeline[  --ci-pipeline-name <ci pipeline name> \]
+ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
+ifdef::quality-pipeline[  --quality-pipeline-name <quality {pipeline_type} name> \]
+ifdef::ci-pipeline[  --ci-pipeline-name <ci {pipeline_type} name> \]
   -i <image name> \
   [-u <registry user>] \
   [-p <registry password>] \
@@ -41,14 +41,14 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 
 === Flags
 ```
--c, --config-file              [Required] Configuration file containing pipeline definition.
--n, --pipeline-name            [Required] Name that will be set to the pipeline.
+-c, --config-file              [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name            [Required] Name that will be set to the {pipeline_type}.
 -l, --language                 [Required, if dockerfile not set] Language or framework of the project.
     --dockerfile               [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one.
 -d, --local-directory          [Required] Local directory of your project.
-ifdef::build-pipeline[    --build-pipeline-name      [Required] Build pipeline name.]
-ifdef::quality-pipeline[    --quality-pipeline-name    [Required] Quality pipeline name.]
-ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI pipeline name.]
+ifdef::build-pipeline[    --build-pipeline-name      [Required] Build {pipeline_type} name.]
+ifdef::quality-pipeline[    --quality-pipeline-name    [Required] Quality {pipeline_type} name.]
+ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} name.]
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 -u, --registry-user            [Required, unless AWS] Container registry login user.
 -p, --registry-password        [Required, unless AWS] Container registry login password.
@@ -64,13 +64,11 @@ ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI pipeline name.]
 ==== Quarkus project
 
 ===== Generic container registry
-[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project -u username -p password {extra_args_quarkus} -b develop -w
 ```
 
 ===== AWS ECR
-[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_quarkus} -b develop -w
 ```
@@ -78,13 +76,11 @@ ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI pipeline name.]
 ==== Node.js project
 
 ===== Generic container registry
-[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project -u username -p password {extra_args_node} -b develop -w
 ```
 
 ===== AWS ECR
-[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_node} -b develop -w
 ```
