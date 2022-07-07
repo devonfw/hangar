@@ -1,12 +1,12 @@
-= Setting up a ci Pipeline on Github
+= Setting up a CI workflow on GitHub
 
-In this section we will create a ci workflow for compiling project code. This workflow will be configured to be triggered every time there is a commit to the Github repository, regardless of which branch it is made on. This ci pipeline will execute the build workflow, and depending on the flags given, will execute the test and quality workflow.
+In this section we will create a CI workflow for the project. This workflow will be configured to be triggered every time there is a commit to the GitHub repository, regardless of which branch it is made on. This CI workflow will execute the build workflow, and depending on the flags given, also the test and quality workflows, as its jobs.
 
-The creation of the Github action will follow the project workflow, so a new branch named `feature/ci-pipeline` will be created and the YAML file for the workflow will be pushed to it.
+The creation of the GitHub action will follow the project workflow, so a new branch named `feature/ci-pipeline` will be created and the YAML file for the workflow will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
+The script located at `/scripts/pipelines/github/pipeline_generator.sh` will automatically create this new branch, create a CI workflow based on a YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
 
@@ -14,37 +14,37 @@ This script will commit and push the corresponding YAML template into your repos
 
 To have a functional workflow you will need to have at least an existing build workflow. please refer to: xref:setup-build-pipeline.asciidoc[].
 
-== Creating the pipeline using provided script
+== Creating the workflow using provided script
 
 === Usage
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <workflow name> \
   -d <project local path> \
-  --build-pipeline-name <build pipeline name> \
-  [--test-pipeline-name <test pipeline name>] \
-  [--quality-pipeline-name <quality pipeline name>] \
+  --build-pipeline-name <build workflow name> \
+  [--test-pipeline-name <test workflow name>] \
+  [--quality-pipeline-name <quality workflow name>] \
   [-b <branch>] \
   [-w]
 ```
 
-NOTE: The config file for the build pipeline is located at `/scripts/pipelines/azure-devops/templates/ci/ci-pipeline.cfg`.
+NOTE: The config file for the CI workflow is located at `/scripts/pipelines/github/templates/ci/ci-pipeline.cfg`.
 
 === Flags
 ```
--c, --config-file         [Required] Configuration file containing pipeline definition.
--n, --pipeline-name       [Required] Name that will be set to the pipeline.
--d, --local-directory     [Required] Local directory of your project.
-    --build-pipeline-name [Required] Name of the job calling the build workflow.
-    --test-pipeline-name             Name of the job calling the test workflow.
-    --quality-pipeline-name          Name of the job calling the quality workflow.
--b, --target-branch                  Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                   Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+-c, --config-file            [Required] Configuration file containing workflow definition.
+-n, --pipeline-name          [Required] Name that will be set to the workflow.
+-d, --local-directory        [Required] Local directory of your project.
+    --build-pipeline-name    [Required] Name of the job calling the build workflow.
+    --test-pipeline-name                Name of the job calling the test workflow.
+    --quality-pipeline-name             Name of the job calling the quality workflow.
+-b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
 === Examples
 
 ```
-./pipeline_generator.sh -c ./templates/ci/ci-pipeline.cfg -n ci-pipeline -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name build_workflow --test-pipeline-name test_workflow --quality-pipeline-name quality_workflow -b develop -w
+./pipeline_generator.sh -c ./templates/ci/ci-pipeline.cfg -n ci-pipeline -d C:/Users/$USERNAME/Desktop/quarkus-project --build-pipeline-name build --test-pipeline-name test --quality-pipeline-name quality -b develop -w
 ```
