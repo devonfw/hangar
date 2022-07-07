@@ -46,6 +46,7 @@ commonTemplatesPath="scripts/pipelines/github/templates/common" # Path for commo
 pipelinePath=".github/workflows" # Path to the pipelines.
 scriptFilePath=".github/workflows/scripts" # Path to the scripts.
 export provider="github"
+pipeline_type="workflow"
 
 function obtainHangarPath {
 
