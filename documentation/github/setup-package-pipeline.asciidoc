@@ -24,6 +24,7 @@ This script will commit and push the corresponding YAML template into your repos
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
@@ -47,6 +48,7 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 
 
 === Flags
+[subs=attributes+]
 ```
 -c, --config-file              [Required] Configuration file containing {pipeline_type} definition.
 -n, --pipeline-name            [Required] Name that will be set to the {pipeline_type}.
@@ -69,11 +71,13 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ==== Quarkus project
 
 ===== Generic container registry
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project -u username -p password {extra_args_quarkus} -b develop -w
 ```
 
 ===== AWS ECR
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n quarkus-project-package -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -i username/quarkus-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_quarkus} -b develop -w
 ```
@@ -81,11 +85,26 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ==== Node.js project
 
 ===== Generic container registry
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project -u username -p password {extra_args_node} -b develop -w
 ```
 
 ===== AWS ECR
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_node} -b develop -w
+```
+==== Angular project
+
+===== Generic container registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project -u username -p password -b develop -w
+```
+
+===== AWS ECR
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
