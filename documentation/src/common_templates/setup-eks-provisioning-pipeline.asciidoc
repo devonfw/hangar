@@ -14,7 +14,10 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 
 === Prerequisites
 
-* Add AWS credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository.
+ifdef::trigger_sentence_github[ * Add AWS credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository.]
+
+ifdef::trigger_sentence_azure[ * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.]
+ifdef::trigger_sentence_azure[ * Create a service connection for connecting to an AWS account (as explained in the above Terraform extension link) and name it `AWS-Terraform-Connection`. If you already have a service connection available or you need a specific connection name, please update `eks-pipeline.cfg` accordingly.]
 
 * A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
 ```
