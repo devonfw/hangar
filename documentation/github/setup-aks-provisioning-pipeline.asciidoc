@@ -8,11 +8,11 @@
 
 In this section we will create a {pipeline_type} which will provision an Azure AKS cluster. This {pipeline_type} will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the {pipeline_type} and the terraform files for creating the cluster will be pushed to it.
+The creation of the {pipeline_type} will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the {pipeline_type} and the terraform files for creating the cluster will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropiate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create the AKS provisioning pipeline based on the YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
+The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create the AKS provisioning {pipeline_type} based on the YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
 
