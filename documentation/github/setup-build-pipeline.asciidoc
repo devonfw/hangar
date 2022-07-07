@@ -3,7 +3,7 @@
 :trigger_sentence: This workflow will be configured to be executed as a job inside a CI workflow
 :pipeline_type2: GitHub action
 :path_provider: github
-:extra_sentence_ci: Please note that *this workflow*, although manually triggerable, *is designed to be executed as part of a CI workflow*, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
+:extra_sentence_ci: Please note that pass:quotes[*this workflow*], although manually triggerable, pass:quotes[*is designed to be executed as part of a CI workflow*], which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
 = Setting up a Build {pipeline_type} on {provider}
 
 In this section we will create a build {pipeline_type} for compiling project code. {trigger_sentence}, regardless of which branch it is made on.
