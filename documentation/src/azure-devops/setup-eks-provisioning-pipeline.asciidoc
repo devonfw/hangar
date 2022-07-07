@@ -1,4 +1,5 @@
 :provider: Azure DevOps
 :pipeline_type: pipeline
 :path_provider: azure-devops
+:trigger_sentence_azure: This workflow will be configured to be executed inside a CI pipeline
 include::../common_templates/setup-eks-provisioning-pipeline.asciidoc[]  
