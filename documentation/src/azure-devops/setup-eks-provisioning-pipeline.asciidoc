@@ -1,0 +1,4 @@
+:provider: Azure DevOps
+:pipeline_type: pipeline
+:path_provider: azure-devops
+include::../common_templates/setup-eks-provisioning-pipeline.asciidoc[]  
