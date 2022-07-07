@@ -127,9 +127,11 @@ if [[ "$help" == "true" ]]; then help; fi
 
 ensurePathFormat
 
-importConfigFile
-
 checkInstallations
+
+validateRegistryLoginCredentials
+
+importConfigFile
 
 createNewBranch
 
