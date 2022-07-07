@@ -1,0 +1,10 @@
+:provider: GitHub
+:pipeline_type: workflow
+:trigger_sentence: This workflow will be configured to be executed as a job inside a CI workflow after the test (or build, if no test) job
+:pipeline_type2: GitHub action
+:path_provider: github
+:extra_args_quarkus:
+:extra_args_node:
+:extra_args_angular:
+include::../common_templates/setup-quality-pipeline.asciidoc[]
+

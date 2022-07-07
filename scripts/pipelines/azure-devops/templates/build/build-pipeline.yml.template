@@ -3,6 +3,12 @@ trigger:
     include:
     - '*'
 
+parameters:
+  - name: artifactPath
+    displayName: Build Artifact Path
+    default: $(targetPath)
+    type: string
+
 pool:
   vmImage: ubuntu-latest
 
@@ -16,7 +22,7 @@ steps:
   displayName: "Copying build artifact to the ArtifactStagingDirectory"
   inputs:
     targetType: inline
-    script: 'cp -a $(Build.Repository.LocalPath)/$(targetPath) $(Build.ArtifactStagingDirectory)'
+    script: 'cp -a $(Build.Repository.LocalPath)/${{ parameters.artifactPath }} $(Build.ArtifactStagingDirectory)'
 
 - publish: $(Build.ArtifactStagingDirectory)
   displayName: "Publish Artifact"

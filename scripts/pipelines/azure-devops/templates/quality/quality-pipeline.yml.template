@@ -6,6 +6,16 @@ resources:
     source: '$testPipelineName'
     trigger: true
 
+parameters:
+  - name: sonarUrl
+    displayName: Sonar URL
+    default: $(sonarUrl)
+    type: string
+  - name: sonarToken
+    displayName: Sonar Token
+    default: $(sonarToken)
+    type: string
+
 variables:
   projectPath: $(Build.Repository.LocalPath)
 
@@ -66,4 +76,7 @@ steps:
   displayName: "SonarQube Analysis"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
-    arguments: $(projectPath)
+  env:
+    PROJECT_PATH: $(projectPath)
+    SONAR_URL: ${{ parameters.sonarUrl }}
+    SONAR_TOKEN: ${{ parameters.sonarToken }}
