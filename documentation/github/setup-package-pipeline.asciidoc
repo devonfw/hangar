@@ -1,7 +1,7 @@
-:provider: Github
+:provider: GitHub
 :pipeline_type: workflow
-:trigger_sentence: This workflow will be configured to be executed after a successful CI pipeline
-:pipeline_type2: Github action
+:trigger_sentence: This workflow will be configured in order to be triggered every time CI workflow is executed successfully on a commit for release/* and develop branches, requiring manual launch for other branches but still enforcing that CI workflow has passed
+:pipeline_type2: GitHub action
 :path_provider: github
 :ci-pipeline:
 :extra_args_quarkus: --ci-pipeline-name quarkus-project-ci

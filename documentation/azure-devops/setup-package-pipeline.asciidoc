@@ -1,4 +1,4 @@
-:provider: Azure Devops
+:provider: Azure DevOps
 :pipeline_type: pipeline
 :trigger_sentence: This pipeline will be configured in order to be triggered every time quality pipeline is executed successfully on a commit for release/* and develop branches, requiring manual launch for other branches but still enforcing that quality pipeline has passed
 :pipeline_type2: pipeline
