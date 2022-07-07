@@ -36,6 +36,7 @@ steps:
   condition: eq(variables.operation, 'create')
   inputs:
     command: 'apply'
+    commandOptions: '-var cluster_name=$(clusterName)'
     workingDirectory: '$(terraformWorkingDirectory)'
     environmentServiceNameAzureRm: '$(serviceConnection)'
 
@@ -88,5 +89,6 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'destroy'
+    commandOptions: '-destroy -var cluster_name=$(clusterName)'
     workingDirectory: '$(terraformWorkingDirectory)'
     environmentServiceNameAzureRm: '$(serviceConnection)'
