@@ -58,8 +58,8 @@ function addAdditionalArtifact {
     if test ! -z "$artifactPath"
     then
         # Add the extra step to the YAML.
-        grep "  artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" && storeExtraPathContent="      - \"$artifactPath\""
-        grep "  artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" || storeExtraPathContent="\n  artifacts:\n    - name: addtionalArtifactOutput\n      paths:\n      - \"$artifactPath\""
+        grep "  artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && storeExtraPathContent="      - \"$artifactPath\""
+        grep "  artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || storeExtraPathContent="\n  artifacts:\n    paths:\n      - \"$artifactPath\""
         sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
     else
         echo "The '-a' flag has not been set, skipping the step to add additional artifact."
@@ -109,7 +109,7 @@ function createPR {
         echo -e "${green}Creating a Pull Request..."
         echo -ne "${white}"
         repoURL=$(git config --get remote.origin.url)
-        repoNameWithGit="${repoURL/https:\/\/github.com\/}"
+        repoNameWithGit="${repoURL/https:\/\/gitlab.com\/}"
         repoName="${repoNameWithGit/.git}"
         # Create the Pull Request to merge into the specified branch.
         #debug
