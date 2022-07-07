@@ -145,11 +145,11 @@ if [[ "$help" == "true" ]]; then help; fi
 
 ensurePathFormat
 
-importConfigFile
-
 checkInstallations
 
-obtainHangarPath
+validateRegistryLoginCredentials
+
+importConfigFile
 
 createNewBranch
 
