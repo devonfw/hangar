@@ -69,13 +69,13 @@ function help {
 function validateRegistryLoginCredentials {
     # if the user chose to push to a registry and the user has not already given a password
     # then prompt the user
-    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
+    if [ -v dockerUser ] && [ ! -v dockerPassword ]
     then
         read -rsp "Please enter Docker registry password..." dockerPassword
     fi
-    
+
     if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
-    then 
+    then
         read -rsp "Please enter AWS secret access key..." awsSecretAccessKey
     fi
 }
@@ -204,4 +204,12 @@ function commitCommonFiles {
 
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
+}
+
+function setTargetDirectory {
+  case $language in
+      node | angular) targetDirectory="./" ;;
+      quarkus*) targetDirectory="./target/" ;;
+      *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
+  esac
 }
