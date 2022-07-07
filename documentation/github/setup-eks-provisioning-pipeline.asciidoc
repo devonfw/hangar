@@ -18,7 +18,7 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 
 === Prerequisites
 
-* Add AWS credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository.
+
 
 * A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
 ```
