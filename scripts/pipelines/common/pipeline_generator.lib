@@ -212,3 +212,11 @@ function commitCommonFiles {
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
 }
+
+function setTargetDirectory {
+  case $language in
+      node | angular) targetDirectory="./" ;;
+      quarkus*) targetDirectory="./target/" ;;
+      *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
+  esac
+}
