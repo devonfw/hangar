@@ -6,7 +6,7 @@
 :extra_args_quarkus:
 :extra_args_node:
 :extra_args_angular:
-:extra_sentence_ci: In order to have a complete CI, you will need to create a CI workflow: xref:setup-ci-pipeline.asciidoc[].
+:extra_sentence_ci: Please note that *this workflow*, although manually triggerable, *is designed to be executed as part of a CI workflow*, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
 = Setting up a Quality {pipeline_type} on {provider}
 
 In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
