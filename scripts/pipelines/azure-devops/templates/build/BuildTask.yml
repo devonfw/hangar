@@ -1,0 +1,19 @@
+version: '3'
+
+tasks:
+  steps:
+      cmds:
+      # Specify the build steps using bash commands here
+      - echo "Building"
+
+
+  config:
+      # Specify the build target directory here
+      vars: { 
+        TARGET_DIRECTORY: "./"
+      }
+
+      cmds:
+      # DO NOT CHANGE THIS!
+      - echo "##vso[task.setvariable variable=targetPath;]{{.TARGET_DIRECTORY}}"
+
