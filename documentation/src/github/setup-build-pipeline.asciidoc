@@ -1,6 +1,6 @@
 :provider: GitHub
 :pipeline_type: workflow
-:trigger_sentence: This workflow will be configured to be executed inside a CI pipeline
+:trigger_sentence: This workflow will be configured to be executed inside a CI workflow
 :pipeline_type2: GitHub action
 :path_provider: github
 include::../common_templates/setup-build-pipeline.asciidoc[]  
