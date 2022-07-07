@@ -1,6 +1,7 @@
 :provider: GitHub
 :pipeline_type: workflow
 :path_provider: github
+:trigger_sentence: This workflow will be configured to be executed inside a CI pipeline
 :toc: macro
 toc::[]
 :idprefix:
