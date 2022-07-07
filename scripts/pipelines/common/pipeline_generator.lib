@@ -26,6 +26,12 @@ function help {
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build pipeline name."
     [ "$provider" == "azure-devops" ] && echo "      --test-pipeline-name    [Required] Test pipeline name."
     echo ""
+    [ "$provider" == "github" ] && echo ""
+    [ "$provider" == "github" ] && echo "CI pipeline flags"
+    [ "$provider" == "github" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
+    [ "$provider" == "github" ] && echo "      --test-pipeline-name [Required, unless quality is set] Test $pipeline_type name."
+    [ "$provider" == "github" ] && echo "      --quality-pipeline-name [Required, unless test is set] Quality $pipeline_type name."
+    [ "$provider" == "github" ] && echo ""
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
@@ -69,13 +75,13 @@ function help {
 function validateRegistryLoginCredentials {
     # if the user chose to push to a registry and the user has not already given a password
     # then prompt the user
-    if [ -v dockerUser ] && [ ! -v dockerPassword ] 
+    if [ -v dockerUser ] && [ ! -v dockerPassword ]
     then
         read -rsp "Please enter Docker registry password..." dockerPassword
     fi
-    
+
     if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
-    then 
+    then
         read -rsp "Please enter AWS secret access key..." awsSecretAccessKey
     fi
 }
