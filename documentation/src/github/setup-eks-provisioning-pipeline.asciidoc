@@ -1,0 +1,4 @@
+:provider: GitHub
+:pipeline_type: workflow
+:path_provider: github
+include::../common_templates/setup-eks-provisioning-pipeline.asciidoc[]  
