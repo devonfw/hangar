@@ -6,9 +6,9 @@
 :aks_variables_path: Azure DevOps > Pipelines > Library > `aks-variables`
 = Setting up a Azure AKS provisioning {pipeline_type} on {provider}
 
-In this section we will create a {pipeline_type} which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
+In this section we will create a {pipeline_type} which will provision an Azure AKS cluster. This {pipeline_type} will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the workflow and the terraform files for creating the cluster will be pushed to it.
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the {pipeline_type} and the terraform files for creating the cluster will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropiate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
@@ -45,7 +45,7 @@ az storage container create -n <storage container name> --account-name <storage 
 Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables.sh` script located at `/scripts/environment-provisioning/azure/aks`, which allows you to create or update values for the required variables, passing them as flags. As a full example:
 
 ```
-./set-terraform-variables.sh --cluster_name <cluster name> --location <location> --resource_group_name <resource group name> --instance_type <worker instance type> --worker_node_count <number of worker nodes> --dns_prefix <dns prefix>
+./set-terraform-variables.sh --location <location> --resource_group_name <resource group name> --instance_type <worker instance type> --worker_node_count <number of worker nodes> --dns_prefix <dns prefix>
 ```
 
 === Usage
@@ -54,6 +54,7 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
+  --cluster-name <cluster name> \
   --resource-group <resource group name> \
   --storage-account <storage account name> \
   --storage-container <storage container name> \
@@ -62,13 +63,14 @@ pipeline_generator.sh \
   [-w]
 ```
 
-NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/pipelines/{path_provider}/templates/aks/aks-pipeline.cfg`.
+NOTE: The config file for the AKS provisioning {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/aks/aks-pipeline.cfg`.
 
 === Flags
 ```
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --cluster-name       [Required] Name for the cluster.
     --resource-group     [Required] Name of the resource group for the cluster.
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
@@ -80,7 +82,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w \
+./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
@@ -89,7 +91,7 @@ NOTE: Rancher is installed on the cluster after provisioning when using the abov
 
 NOTE: Make sure you have https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] installed.
 
-In order to interact with your cluster you will need to download the artifact `kubeconfig` generated by the cluster provisioning pipeline on the location it is expected by default (`~/.kube/config`) or either:
+In order to interact with your cluster you will need to download the artifact `kubeconfig` generated by the cluster provisioning {pipeline_type} on the location it is expected by default (`~/.kube/config`) or either:
 
 ```
 # via environment variable (you can add this on your profile)
@@ -110,4 +112,4 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 
 === Appendix: Destroying the cluster
 
-To destroy the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
+To destroy the provisioned resources, set `operation` {pipeline_type} variable value to `destroy` and run the {pipeline_type}.
