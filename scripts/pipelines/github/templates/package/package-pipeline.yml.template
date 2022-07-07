@@ -55,7 +55,7 @@ jobs:
         with:
           envFilePath: ".github/vars/*"
 
-      - name: Download artifact from build pipeline
+      - name: Download artifact from build workflow
         uses: dawidd6/action-download-artifact@v2
         id: downloadFromBuild
         continue-on-error: true
@@ -66,7 +66,7 @@ jobs:
           name: BuildOutput
           path: ${{ env.targetPath }}
 
-      - name: Download artifact from ci pipeline
+      - name: Download artifact from CI workflow
         uses: dawidd6/action-download-artifact@v2
         if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
         with:
@@ -86,9 +86,9 @@ jobs:
 
 # mark to insert step for additional artifact #
   on-failure:
-    name: Ci Pipeline Failed
+    name: CI Workflow Failed
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
-      - name: Cancel Pipeline
+      - name: Cancel Workflow
         uses: andymckay/cancel-action@0.2
