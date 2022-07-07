@@ -92,15 +92,3 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n node-project-package -l node -d C:/Users/$USERNAME/Desktop/node-project -i username/node-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_node} -b develop -w
 ```
-
-==== Angular project
-
-===== Generic container registry
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project -i username/angular-project -u username -p password {extra_args_angular} -b develop -w
-```
-
-===== AWS ECR
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 {extra_args_angular} -b develop -w
-```
