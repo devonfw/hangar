@@ -21,7 +21,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 * A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
 ```
 aws s3 mb <bucket name>
-# Example: aws s3 mb s3://terraformStateBucket
+# Example: aws s3 mb s3://terraform-state-bucket
 ```
 
 * An AWS IAM user with https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[required permissions] to provision the EKS cluster.
@@ -73,7 +73,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state --rancher -b develop -w
+./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraform-state-bucket --s3-key-path eks/state --rancher -b develop -w
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
