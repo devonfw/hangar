@@ -2,9 +2,6 @@ name: $pipelineName
 
 on:
   workflow_call:
-    secrets:
-      SONARQUBE_TOKEN:
-        required: true
   workflow_dispatch:
     inputs:
       sonarUrl:

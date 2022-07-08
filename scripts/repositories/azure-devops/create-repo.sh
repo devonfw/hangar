@@ -54,4 +54,4 @@ function clone_git_project_create {
     git clone "${organization}/${project_convertido}/_git/${name// /%20}" .
 }
 
-source ../common/create-repo.sh $@
+source ../common/create-repo.sh
