@@ -24,6 +24,6 @@ steps:
     targetType: inline
     script: 'tar cvf $(Build.ArtifactStagingDirectory)/BuildOutput.tar $(Build.Repository.LocalPath)/${{ parameters.artifactPath }}'
 
-- publish: $(Build.ArtifactStagingDirectory)
+- publish: $(Build.ArtifactStagingDirectory)/BuildOutput.tar
   displayName: "Publish Artifact"
   artifact: BuildOutput
