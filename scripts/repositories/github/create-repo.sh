@@ -74,4 +74,4 @@ function clone_git_project_create {
     git clone "https://github.com/$ghuser/$name.git" .
 }
 
-source ../common/create-repo.sh
+source "$(dirname $0)/../common/create-repo.sh"
