@@ -6,6 +6,7 @@
 :extra_args_quarkus:
 :extra_args_node:
 :extra_args_angular:
+:extra_sentence_ci: Please note that this workflow, although manually triggerable, is designed to be executed as part of a CI workflow, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
 = Setting up a Quality {pipeline_type} on {provider}
 
 In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -16,6 +17,8 @@ Then, a Pull Request (PR) will be created in order to merge the new branch into 
 
 The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create a quality {pipeline_type} based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
 
+{extra_sentence_ci}
+
 == Prerequisites
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
@@ -24,10 +27,11 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   --sonar-url <sonarqube url> \
   --sonar-token <sonarqube token> \
@@ -39,9 +43,10 @@ pipeline_generator.sh \
 NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/quality/quality-pipeline.cfg`.
 
 === Flags
+[subs=attributes+]
 ```
--c, --config-file            [Required] Configuration file containing pipeline definition.
--n, --pipeline-name          [Required] Name that will be set to the pipeline.
+-c, --config-file            [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name          [Required] Name that will be set to the {pipeline_type}.
 -l, --language               [Required] Language or framework of the project.
     --sonar-url              [Required] SonarQube URL.
     --sonar-token            [Required] SonarQube token.
