@@ -22,7 +22,7 @@ steps:
   displayName: "Archiving build artifact to the ArtifactStagingDirectory"
   inputs:
     targetType: inline
-    script: 'tar cvf $(Build.ArtifactStagingDirectory)/BuildOutput.tar $(Build.Repository.LocalPath)/${{ parameters.artifactPath }}'
+    script: 'tar -cvf $(Build.ArtifactStagingDirectory)/BuildOutput.tar -C $(Build.Repository.LocalPath)/${{ parameters.artifactPath }} .'
 
 - publish: $(Build.ArtifactStagingDirectory)/BuildOutput.tar
   displayName: "Publish Artifact"
