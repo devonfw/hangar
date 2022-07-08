@@ -67,10 +67,10 @@ steps:
     runId: $(runId)
 
 - task: Bash@3
-  displayName: "Copying build artifact to the repository path"
+  displayName: "Unarchiving build artifact to the repository path"
   inputs:
     targetType: inline
-    script: 'cp -a $(Pipeline.Workspace)/BuildOutput/. $(Build.Repository.LocalPath)'
+    script: 'tar -C $(Build.Repository.LocalPath) -xf $(Pipeline.Workspace)/BuildOutput/BuildOutput.tar'
 
 - task: Bash@3
   displayName: "SonarQube Analysis"

@@ -19,10 +19,10 @@ steps:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/build.sh'
 
 - task: Bash@3
-  displayName: "Copying build artifact to the ArtifactStagingDirectory"
+  displayName: "Archiving build artifact to the ArtifactStagingDirectory"
   inputs:
     targetType: inline
-    script: 'cp -a $(Build.Repository.LocalPath)/${{ parameters.artifactPath }} $(Build.ArtifactStagingDirectory)'
+    script: 'tar cvf $(Build.ArtifactStagingDirectory)/BuildOutput.tar $(Build.Repository.LocalPath)/${{ parameters.artifactPath }}'
 
 - publish: $(Build.ArtifactStagingDirectory)
   displayName: "Publish Artifact"
