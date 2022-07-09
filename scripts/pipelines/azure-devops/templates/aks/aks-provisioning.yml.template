@@ -3,8 +3,7 @@ trigger:
 
 variables:
   terraformWorkingDirectory: $(System.DefaultWorkingDirectory)/.terraform/aks
-  organization: $(System.TeamFoundationCollectionUri)
-  
+ 
 pool:
   vmImage: ubuntu-latest
 
@@ -58,7 +57,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'scriptPath'
     scriptPath: '$(Build.Repository.LocalPath)/.pipelines/scripts/obtain-dns.sh'
-    arguments: $(terraformWorkingDirectory) $(organization)
+    arguments: $(terraformWorkingDirectory) $(clusterName)
 
 - publish: $(terraformWorkingDirectory)/kubeconfig
   displayName: 'Publish kubeconfig'
