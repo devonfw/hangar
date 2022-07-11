@@ -4,10 +4,10 @@ on:
   workflow_call:
   workflow_dispatch:
     inputs:
-      targetPath: 
+      targetPath:
         description: 'Target directory of build process.'
         required: false
-        type: string  
+        type: string
         default: '$targetDirectory'
 
 # mark to insert additional artifact input #
@@ -29,10 +29,13 @@ jobs:
       - name: Build the application
         run: .github/workflows/scripts/build.sh
 
+      - name: Archiving artifact
+        run: pwd;ls -l;tar -cvf ./BuildOutput.tar -C ${{ env.targetPath }}/ .
+
       - name: Publish Artifact
         uses: actions/upload-artifact@v3
         with:
           name: BuildOutput
-          path: ${{ env.targetPath }}
-          
+          path: ./BuildOutput.tar
+
 # mark to insert step for additonal artifact #
