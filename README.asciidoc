@@ -32,10 +32,11 @@
 ** Quality
 *** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS]
 *** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-quality-pipeline.asciidoc[Setting up a Quality workflow]
+** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-ci-pipeline.asciidoc[Setting up a CI workflow]
 ** Package
 *** App
 **** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
-**** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package workflow]
+**** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-package-pipeline.asciidoc[Setting up a Package workflow]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package workflow]
 ** Setup Kubernetes deploying environment workflow
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]

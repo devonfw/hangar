@@ -52,6 +52,7 @@ commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="azure-devops"
+pipeline_type="pipeline"
 
 function obtainHangarPath {
 
