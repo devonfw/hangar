@@ -10,7 +10,7 @@ on:
         default: $clusterName
       install_rancher:
         description: 'Installs Rancher on AKS when set to true.'
-        required: true
+        required: false
         type: string
         default: $installRancher
       cluster_operation:
