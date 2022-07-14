@@ -1,25 +1,17 @@
-:provider: Azure Devops
-:pipeline_type: pipeline
-:trigger_sentence_azure:
-:pipeline_type2: pipeline
-:path_provider: azure-devops
-:aks_variables_path: Azure DevOps > Pipelines > Library > `aks-variables`
-= Setting up a Azure AKS provisioning {pipeline_type} on {provider}
+= Setting up a Azure AKS provisioning pipeline on Azure DevOps
 
-In this section we will create a {pipeline_type} which will provision an Azure AKS cluster. This {pipeline_type} will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
+In this section we will create a pipeline which will provision an Azure AKS cluster. This pipeline will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
 
-The creation of the {pipeline_type} will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the {pipeline_type} and the terraform files for creating the cluster will be pushed to it.
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/aks-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropiate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create the AKS provisioning {pipeline_type} based on the YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
+The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create the AKS provisioning pipeline based on the YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
 
- * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
- * Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.
-
-
+* Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
+* Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.
 * An Azure resource group in the desired cluster location (e.g. `westeurope`). You can use an existing one or create a new one with the following command:
 
 ```
@@ -40,7 +32,7 @@ az storage container create -n <storage container name> --account-name <storage 
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
-== Creating the {pipeline_type} using provided script
+== Creating the pipeline using provided script
 
 Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables.sh` script located at `/scripts/environment-provisioning/azure/aks`, which allows you to create or update values for the required variables, passing them as flags. As a full example:
 
@@ -63,7 +55,7 @@ pipeline_generator.sh \
   [-w]
 ```
 
-NOTE: The config file for the AKS provisioning {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/aks/aks-pipeline.cfg`.
+NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/pipelines/azure-devops/templates/aks/aks-pipeline.cfg`.
 
 === Flags
 ```
@@ -91,7 +83,7 @@ NOTE: Rancher is installed on the cluster after provisioning when using the abov
 
 NOTE: Make sure you have https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] installed.
 
-In order to interact with your cluster you will need to download the artifact `kubeconfig` generated by the cluster provisioning {pipeline_type} on the location it is expected by default (`~/.kube/config`) or either:
+In order to interact with your cluster you will need to download the artifact `kubeconfig` generated by the cluster provisioning pipeline on the location it is expected by default (`~/.kube/config`) or either:
 
 ```
 # via environment variable (you can add this on your profile)
@@ -102,7 +94,7 @@ kubectl <command>
 kubectl <command> --kubeconfig=<path to downloaded kubeconfig>
 ```
 
-To get the DNS name of the NGINX Ingress controller on the AKS cluster, go into {aks_variables_path}.
+To get the DNS name of the NGINX Ingress controller on the EKS cluster, go into Azure DevOps > Pipelines > Library > `aks-variables`.
 
 Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
 
@@ -112,4 +104,4 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 
 === Appendix: Destroying the cluster
 
-To destroy the provisioned resources, set `operation` {pipeline_type} variable value to `destroy` and run the {pipeline_type}.
+To destroy the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
