@@ -3,8 +3,9 @@ trigger:
 
 variables:
   terraformWorkingDirectory: $(System.DefaultWorkingDirectory)/.terraform/aks
-  organization: $(System.TeamFoundationCollectionUri)
-  
+  variableGroupName: 'common-k8s-variables'
+  variableName: 'aks_dns_name'
+
 pool:
   vmImage: ubuntu-latest
 
@@ -36,6 +37,7 @@ steps:
   condition: eq(variables.operation, 'create')
   inputs:
     command: 'apply'
+    commandOptions: '-var cluster_name=$(clusterName)'
     workingDirectory: '$(terraformWorkingDirectory)'
     environmentServiceNameAzureRm: '$(serviceConnection)'
 
@@ -57,7 +59,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'scriptPath'
     scriptPath: '$(Build.Repository.LocalPath)/.pipelines/scripts/obtain-dns.sh'
-    arguments: $(terraformWorkingDirectory) $(organization)
+    arguments: '$(clusterName)'
 
 - publish: $(terraformWorkingDirectory)/kubeconfig
   displayName: 'Publish kubeconfig'
@@ -70,8 +72,10 @@ steps:
   env:
     AZURE_DEVOPS_EXT_PAT: $(pat)
   inputs:
-    targetType: 'inline'
-    script: 'az pipelines variable-group create --organization $(System.TeamFoundationCollectionUri) --project "$(System.TeamProject)" --name aks-variables --variables dns_name=$(dns) --authorize true'
+    scriptType: 'bash'
+    scriptLocation: 'scriptPath'
+    filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh'
+    arguments: '"$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "$(variableName)" "$(dns)"'
 
 - task: Bash@3
   displayName: 'Install Rancher'
@@ -80,13 +84,14 @@ steps:
     KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
   inputs:
     filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
-    arguments: $(dns)
+    arguments: '$(dns)'
 
 - task: TerraformTaskV2@2
   displayName: 'Terraform - destroy'
   condition: eq(variables.operation, 'destroy')
   inputs:
     provider: 'azurerm'
-    command: 'destroy'
+    command: 'apply'
+    commandOptions: '-destroy -var cluster_name=$(clusterName)'
     workingDirectory: '$(terraformWorkingDirectory)'
     environmentServiceNameAzureRm: '$(serviceConnection)'
