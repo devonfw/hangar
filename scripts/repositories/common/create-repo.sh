@@ -90,6 +90,18 @@ function MSG_ERROR {
 if [ "$2" != 0 ]
 then
    echo ""
+   
+   # do all or nothing ! In case something goes wrong while creating or importing a repository, the created repository and the local directory will be deleted.
+   cd ..
+  
+   az repos delete --id "$repo_id"  --org "$organization" -p "$project" --yes
+   if  [ "$?" == 0 ]
+   then
+    rm -rf "$directory"
+   fi
+
+   echo -e "${red}The repository made will be deleted, try again!"
+
    echo -e "${red}A problem occured in the step: $1."
    echo -e "Stopping the script..."
    echo -e "${white}"
@@ -100,7 +112,8 @@ fi
 [ "$directory_tmp" != "" ] && directory=$(echo "$directory_tmp" | sed 's/\\/\//g')
 if [ "$directory" != "" ]
 then
-  [ "$action" == "create" ] && mkdir -p "$directory"
+  [ "$action" == "create" ] 
+  mkdir -p "$directory"
   cd "$directory"
   MSG_ERROR "Cding into the directory given." $?
 fi
@@ -458,12 +471,13 @@ then
   fi
 elif [ "$action" = "create" ]
 then
-  MSG_ERROR "Cding into the directory given." "$?"
+  #cd "$directory"
+  MSG_ERROR "Cding into the directory given." $?
   clone_git_project_create
-  MSG_ERROR "Cloning empty repo." $?
+  MSG_ERROR "Cloning empty repo."  $?
   git checkout -b master
   cp "$absoluteFolderScriptPath/README.md" .
-  git a dd -A
+  git add -A
   git commit -m "Adding README"
   git push -u origin --all
   if [ "$strategy" != "" ]
