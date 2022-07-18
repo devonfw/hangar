@@ -69,8 +69,3 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop -w
 ```
-
-==== .Net project
-```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n dotnet-project-build -l dotnet -d C:/Users/$USERNAME/Desktop/dotnet-project -b develop -w
-```
