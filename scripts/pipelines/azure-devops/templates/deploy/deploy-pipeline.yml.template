@@ -15,6 +15,7 @@ resources:
 
 variables:
   - group: registry_info 
+  - group: common-k8s-variables
   - name: deploymentYamlPath
     value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)/application-deployment.yaml" 
   - name: ingressYamlPath
@@ -31,9 +32,6 @@ pool:
 jobs:
 - job: Deploy_to_AKS
   condition: eq(variables.k8sProvider, 'AKS')
-  variables:
-  - ${{ if eq(variables.k8sProvider, 'AKS') }}:
-    - group: aks-variables # DNS available for this job
   steps:
   - task: DownloadPipelineArtifact@2
     displayName: "Download AKS Kubeconfig"
@@ -64,11 +62,6 @@ jobs:
  
 - job: Deploy_to_EKS
   condition: eq(variables.k8sProvider, 'EKS')
-  variables:
-  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
-    - group: AWS_Credentials
-  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
-    - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
     displayName: Download EKS Kubeconfig
