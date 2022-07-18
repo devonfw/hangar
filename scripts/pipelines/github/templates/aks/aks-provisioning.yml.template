@@ -79,7 +79,7 @@ jobs:
           mkdir -p vars
           cd vars
           touch "common-k8s-variables.env"
-          echo "dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> common-k8s-variables.env
+          echo "aks_dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> common-k8s-variables.env
           cat common-k8s-variables.env
           
       - name: Publish kubeconfig
