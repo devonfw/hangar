@@ -76,12 +76,12 @@ jobs:
         id: publishdns
         run: |   
           cd .github
-          mkdir vars
+          mkdir -p vars
           cd vars
-          touch "aks_variables.env"
-          echo "dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> aks_variables.env
-          cat aks_variables.env
-
+          touch "common-k8s-variables.env"
+          echo "dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> common-k8s-variables.env
+          cat common-k8s-variables.env
+          
       - name: Publish kubeconfig
         uses: actions/upload-artifact@v3.1.0
         if: ${{ github.event.inputs.cluster_operation == 'create' }}

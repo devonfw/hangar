@@ -3,7 +3,8 @@ trigger:
 
 variables:
   terraformWorkingDirectory: $(System.DefaultWorkingDirectory)/.terraform/aks
- 
+  organization: $(System.TeamFoundationCollectionUri)
+  
 pool:
   vmImage: ubuntu-latest
 
@@ -35,7 +36,6 @@ steps:
   condition: eq(variables.operation, 'create')
   inputs:
     command: 'apply'
-    commandOptions: '-var cluster_name=$(clusterName)'
     workingDirectory: '$(terraformWorkingDirectory)'
     environmentServiceNameAzureRm: '$(serviceConnection)'
 
@@ -57,7 +57,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'scriptPath'
     scriptPath: '$(Build.Repository.LocalPath)/.pipelines/scripts/obtain-dns.sh'
-    arguments: $(terraformWorkingDirectory) $(clusterName)
+    arguments: $(terraformWorkingDirectory) $(organization)
 
 - publish: $(terraformWorkingDirectory)/kubeconfig
   displayName: 'Publish kubeconfig'
@@ -87,7 +87,6 @@ steps:
   condition: eq(variables.operation, 'destroy')
   inputs:
     provider: 'azurerm'
-    command: 'apply'
-    commandOptions: '-destroy -var cluster_name=$(clusterName)'
+    command: 'destroy'
     workingDirectory: '$(terraformWorkingDirectory)'
     environmentServiceNameAzureRm: '$(serviceConnection)'
