@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -25,6 +25,7 @@ while true; do
         --s3-key-path)            s3KeyPath=$2; shift 2;;
         --quality-pipeline-name)  export qualityPipelineName=$2; shift 2;;
         --test-pipeline-name)     export testPipelineName=$2; shift 2;;
+        --ci-pipeline-name)       export ciPipelineName=$2; shift 2;;
         --dockerfile)             dockerFile=$2; shift 2;;
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
@@ -45,6 +46,7 @@ commonTemplatesPath="scripts/pipelines/github/templates/common" # Path for commo
 pipelinePath=".github/workflows" # Path to the pipelines.
 scriptFilePath=".github/workflows/scripts" # Path to the scripts.
 export provider="github"
+pipeline_type="workflow"
 
 function obtainHangarPath {
 
@@ -127,9 +129,11 @@ if [[ "$help" == "true" ]]; then help; fi
 
 ensurePathFormat
 
-importConfigFile
-
 checkInstallations
+
+validateRegistryLoginCredentials
+
+importConfigFile
 
 createNewBranch
 

@@ -1,0 +1,85 @@
+name: $pipelineName
+
+on:
+  workflow_run:
+    workflows: $ciPipelineName
+    types: completed
+    branches:
+      - release/*
+      - develop
+  workflow_dispatch:
+    inputs:
+      relativeDockerfilePath:
+        required: false
+        default: $dockerFile
+      targetPath:
+        required: false
+        default: $targetDirectory
+# mark to insert additional artifact input #
+
+permissions:
+  actions: write
+
+env:
+  buildPipelineYamlName: 'build-pipeline.yml'
+  ciPipelineYamlName: 'ci-pipeline.yml'
+  relativeDockerfilePath: ${{ github.event.inputs.relativeDockerfilePath || '$dockerFile' }}
+  targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
+# mark to insert additional artifact env var #
+
+jobs:
+  on-success-or-manual:
+    name: Package
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_commit.id || github.sha }}
+
+      - name: Loading vars
+        uses: tw3lveparsecs/github-actions-setvars@v0.1
+        with:
+          envFilePath: ".github/vars/*"
+
+      - name: Download artifact from build workflow
+        uses: dawidd6/action-download-artifact@v2
+        id: downloadFromBuild
+        continue-on-error: true
+        with:
+          workflow: ${{ env.buildPipelineYamlName }}
+          commit: ${{ github.event.workflow_run.head_commit.id || github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Download artifact from CI workflow
+        uses: dawidd6/action-download-artifact@v2
+        if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.ciPipelineYamlName }}
+          commit: ${{ github.event.workflow_run.head_commit.id || github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Extracting archive
+        run: tar -C ${{ env.targetPath }} -xf ./BuildOutput.tar
+
+      - name: Build and push image to registry
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
+        if: ${{ env.isECR != 'true' }}
+
+      - name: Build and push image to registry (AWS)
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
+        if: ${{ env.isECR == 'true' }}
+
+# mark to insert step for additional artifact #
+  on-failure:
+    name: CI Workflow Failed
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Cancel Workflow
+        uses: andymckay/cancel-action@0.2

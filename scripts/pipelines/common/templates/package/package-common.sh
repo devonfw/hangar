@@ -13,7 +13,7 @@
 #########################################################################################
 set -e
 
-while getopts f:c:u:p:r:i:b:t:a:s:l: flag
+while getopts f:c:u:p:r:i:b:a:s:l: flag
 do
     case "${flag}" in
         f) dockerFile=${OPTARG};;
@@ -23,7 +23,6 @@ do
         r) registry=${OPTARG};;
         i) imageName=${OPTARG};;
         b) branch=${OPTARG};;
-        t) imageTagFilePath=${OPTARG};;
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
@@ -32,9 +31,9 @@ do
     esac
 done
 
-# Load language specific script. 
+# Load language specific script.
 # (File was renamed from '${language}-package.sh' to package-extra.sh in ./package-pipeline.cfg)
-. "./.pipelines/scripts/package-extra.sh"
+. "$(dirname "$0")/package-extra.sh"
 
 # we get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
 branch_short=$(echo "$branch" | awk -F '/' '{ print $NF }')
@@ -70,5 +69,5 @@ then
     echo "Also pushing the image as 'latest' if this is a release"
     docker tag "$imageName:$tag_completed" "$imageName:latest"
     echo "docker push $imageName:latest"
-    docker push" $imageName":latest
+    docker push "$imageName":latest
 fi
