@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 # Add image name, dns_name and tag.
-source "$7"
+# Run package-extra.sh to ${tag}
+. "$7"
 export image="$2" tag="${tag}" dns="$3"
 yq eval '.spec.template.spec.containers[0].image = "'"$image:$tag"'"' -i "$4"
 yq eval '.spec.rules[0].host = "'"$dns"'"' -i "$5"
