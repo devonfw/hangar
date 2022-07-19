@@ -26,7 +26,7 @@ variables:
     value: "kubeconfig"  
   - name: kubeconfigPath
     value: "$(Pipeline.Workspace)/$(artifact)"  
-  - name: path
+  - name: packageTagScript
     value: "$(System.DefaultWorkingDirectory)/.pipelines/scripts/package-extra.sh"
 
 pool:
@@ -60,7 +60,7 @@ jobs:
       KUBECONFIG: $(kubeconfigPath)
     inputs:
       filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
-      arguments: '$(k8sNamespace) $(imagename) $(aks_dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(path)'
+      arguments: '$(k8sNamespace) $(imagename) $(aks_dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(packageTagScript)'
  
 - job: Deploy_to_EKS
   condition: eq(variables.k8sProvider, 'EKS')
@@ -85,4 +85,4 @@ jobs:
     displayName: Deploy app
     inputs:
       filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
-      arguments: '$(k8sNamespace) $(imagename) $(eks_dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(path)'
+      arguments: '$(k8sNamespace) $(imagename) $(eks_dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(packageTagScript)'
