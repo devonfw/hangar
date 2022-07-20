@@ -1,3 +1,4 @@
+#!/bin/bash
 groupid=$(az pipelines variable-group list --group-name "$1" --query '[0].id' -o  json)
 if test -z $groupid
 then
