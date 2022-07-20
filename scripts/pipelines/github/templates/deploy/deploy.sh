@@ -3,6 +3,13 @@ set -e
 # Add image name, dns_name and tag.
 # Run package-extra.sh to ${tag}
 . "$7"
+# we get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
+branch_short=$(echo "$8" | awk -F '/' '{ print $NF }')
+
+# We change the name of the tag depending if it is a release or another branch
+echo "tag_completed: $8" | grep release && tag_completed="${tag}"
+echo "tag_completed_branch: $8" | grep release || tag_completed="${tag}_${branch_short}"
+
 export image="$2" tag="${tag}" dns="$3"
 yq eval '.spec.template.spec.containers[0].image = "'"$image:$tag"'"' -i "$4"
 yq eval '.spec.rules[0].host = "'"$dns"'"' -i "$5"
