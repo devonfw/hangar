@@ -93,7 +93,7 @@ steps:
     targetType: 'inline'
     script: |
       '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "eks_dns_name" "$(ObtainDNS.dns)"
-      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "eks-cluster-name" "$(clustername)"
+      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "eks-cluster-name" "$(clusterName)"
 
 - task: Bash@3
   condition: and(eq(variables.installRancher, 'true'), eq(variables.operation, 'create'))
