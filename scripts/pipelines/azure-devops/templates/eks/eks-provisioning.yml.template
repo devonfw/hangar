@@ -8,6 +8,8 @@ variables:
 - group: AWS_Credentials
 - name: terraformWorkingDirectory
   value: '$(System.DefaultWorkingDirectory)/.terraform/eks'
+- name: variableGroupName
+  value: 'common-k8s-variables'  
 
 steps:
 
@@ -89,7 +91,9 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
     targetType: 'inline'
-    script: 'az pipelines variable-group create --organization "$(System.TeamFoundationCollectionUri)" --project "$(System.TeamProject)" --name eks-variables --variables dns_name=$(ObtainDNS.dns) cluster_name=$(clustername) --authorize true'
+    script: |
+      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "eks_dns_name" "$(ObtainDNS.dns)"
+      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "eks-cluster-name" "$(clustername)"
 
 - task: Bash@3
   condition: and(eq(variables.installRancher, 'true'), eq(variables.operation, 'create'))
