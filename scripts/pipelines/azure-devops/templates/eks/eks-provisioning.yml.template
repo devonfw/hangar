@@ -5,11 +5,11 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- group: AWS_Credentials
+- group: deployment-env-variables
 - name: terraformWorkingDirectory
   value: '$(System.DefaultWorkingDirectory)/.terraform/eks'
-- name: variableGroupName
-  value: 'common-k8s-variables'  
+- name: deployEnvVariableGroup
+  value: 'deployment-env-variables'  
 
 steps:
 
@@ -92,8 +92,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "eks_dns_name" "$(ObtainDNS.dns)"
-      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "eks-cluster-name" "$(clusterName)"
+      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(deployEnvVariableGroup)" "eks_dns_name" "$(ObtainDNS.dns)"
+      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(deployEnvVariableGroup)" "eks_cluster_name" "$(clusterName)"
 
 - task: Bash@3
   condition: and(eq(variables.installRancher, 'true'), eq(variables.operation, 'create'))
