@@ -51,9 +51,10 @@ pipeline_generator.sh \
   --cluster-name <cluster name> \  
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
-  --aws-access-key <aws access key> \
-  --aws-secret-access-key <aws secret access key> \  
-  --aws-region <aws region> \  
+  [--aws-access-key <aws access key>] \
+  [--aws-secret-access-key <aws secret access key>] \
+  [--aws-region <aws region>] \
+  [--rancher] \
   [-b <branch>] \
   [-w]
 ```
