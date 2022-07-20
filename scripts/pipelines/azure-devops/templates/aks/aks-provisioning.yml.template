@@ -3,8 +3,7 @@ trigger:
 
 variables:
   terraformWorkingDirectory: $(System.DefaultWorkingDirectory)/.terraform/aks
-  variableGroupName: 'common-k8s-variables'
-  variableName: 'aks_dns_name'
+  k8sVariableGroupName: 'common-k8s-variables'
 
 pool:
   vmImage: ubuntu-latest
@@ -75,7 +74,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'scriptPath'
     filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh'
-    arguments: '"$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(variableGroupName)" "$(variableName)" "$(dns)"'
+    arguments: '"$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(k8sVariableGroupName)" aks_dns_name "$(dns)"'
 
 - task: Bash@3
   displayName: 'Install Rancher'
