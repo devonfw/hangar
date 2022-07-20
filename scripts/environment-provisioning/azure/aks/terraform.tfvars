@@ -1,4 +1,4 @@
-cluster_name = "hangar-k8s"
+#cluster_name = "hangar-k8s"
 
 location = "westeurope"
 

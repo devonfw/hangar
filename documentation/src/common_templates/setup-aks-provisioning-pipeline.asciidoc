@@ -1,9 +1,3 @@
-:provider: Azure Devops
-:pipeline_type: pipeline
-:trigger_sentence_azure:
-:pipeline_type2: pipeline
-:path_provider: azure-devops
-:aks_variables_path: Azure DevOps > Pipelines > Library > `aks-variables`
 = Setting up a Azure AKS provisioning {pipeline_type} on {provider}
 
 In this section we will create a {pipeline_type} which will provision an Azure AKS cluster. This {pipeline_type} will be configured to be manually triggered by the user. As part of AKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `aks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
@@ -16,9 +10,10 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 
 == Prerequisites
 
- * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.
- * Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.
+ifdef::trigger_sentence_azure[ * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.]
+ifdef::trigger_sentence_azure[ * Create a https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#create-a-service-connection[service connection] to Azure Resource Manager and name it `aks-connection`. If you already have a service connection available or you need a specific connection name, please update `aks-pipeline.cfg` accordingly.]
 
+ifdef::trigger_sentence_github[  * Add AZURE credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.]
 
 * An Azure resource group in the desired cluster location (e.g. `westeurope`). You can use an existing one or create a new one with the following command:
 
@@ -82,7 +77,7 @@ NOTE: The config file for the AKS provisioning {pipeline_type} is located at `/s
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
+./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w 
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
