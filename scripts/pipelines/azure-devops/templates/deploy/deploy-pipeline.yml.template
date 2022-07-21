@@ -15,7 +15,7 @@ resources:
 
 variables:
   - group: registry_info 
-  - group: common-k8s-variables
+  - group: deployment-env-variables
   - name: deploymentYamlPath
     value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)/application-deployment.yaml" 
   - name: ingressYamlPath
