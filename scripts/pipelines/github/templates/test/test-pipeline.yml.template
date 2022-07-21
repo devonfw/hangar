@@ -62,7 +62,7 @@ jobs:
           path: ${{ env.targetPath }}
 
       - name: Extracting archive
-        run: tar -C ${{ env.targetPath }} -xf ./BuildOutput.tar
+        run: tar -C ${{ env.targetPath }} -xf ${{ env.targetPath }}/BuildOutput.tar
 
       - name: Test
         run: .github/workflows/scripts/test.sh
