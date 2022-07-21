@@ -11,8 +11,8 @@ branch_short=$(echo "$8" | awk -F '/' '{ print $NF }')
 echo "tag_completed: $8" | grep release && tag_completed="${tag}"
 echo "tag_completed_branch: $8" | grep release || tag_completed="${tag}_${branch_short}"
 
-export image="$2" tag="${tag}" dns="$3"
-yq eval '.spec.template.spec.containers[0].image = "'"$image:$tag"'"' -i "$4"
+export image="$2" tag_completedag="${tag_completed}" dns="$3"
+yq eval '.spec.template.spec.containers[0].image = "'"$image:$tag_completed"'"' -i "$4"
 yq eval '.spec.rules[0].host = "'"$dns"'"' -i "$5"
 # Create namespace if not exists 
 kubectl get namespace | grep -q "^$1" || kubectl create namespace "$1"
