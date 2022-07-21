@@ -71,7 +71,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
     --s3-key-path               [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
     --aws-access-key            [Required, on first run] AWS account access key ID. 
     --aws-secret-access-key     [Required, on first run] AWS account secret access key.
-    --aws-region                [Required, on first run] AWS Region to provision the resources.
+    --aws-region                [Required, on first run] AWS region for provisioning resources.
     --rancher                              Install Rancher to manage the cluster.
 -b, --target-branch                        Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                         Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
