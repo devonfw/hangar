@@ -5,9 +5,11 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- group: AWS_Credentials
+- group: deployment-env-variables
 - name: terraformWorkingDirectory
   value: '$(System.DefaultWorkingDirectory)/.terraform/eks'
+- name: deployEnvVariableGroup
+  value: 'deployment-env-variables'  
 
 steps:
 
@@ -19,7 +21,7 @@ steps:
     script: |
       aws configure set aws_access_key_id $(ACCESS_KEY)
       aws configure set aws_secret_access_key $(SECRET_KEY)
-      aws eks update-kubeconfig --name $(clustername) --region $(REGION)
+      aws eks update-kubeconfig --name $(clusterName) --region $(REGION)
       helm list --all-namespaces
       helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 helm delete
       echo 'LIST OF RELEASES AFTER HELM UNINSTALL..'
@@ -47,7 +49,7 @@ steps:
   inputs:
     provider: aws
     command: apply
-    commandOptions: '-var cluster_name=$(clustername)'
+    commandOptions: '-var cluster_name=$(clusterName)'
     workingDirectory: "$(terraformWorkingDirectory)"
     environmentServiceNameAWS: "$(awsServiceConnection)"
 
@@ -58,7 +60,7 @@ steps:
     provider: aws
     command: apply
     workingDirectory: '$(terraformWorkingDirectory)'
-    commandOptions: '-destroy -var region=$(region) -var cluster_name=$(clustername)'
+    commandOptions: '-destroy -var region=$(region) -var cluster_name=$(clusterName)'
     environmentServiceNameAWS: '$(awsServiceConnection)'
 
 
@@ -70,7 +72,7 @@ steps:
     script: |
       aws configure set aws_access_key_id $(ACCESS_KEY)
       aws configure set aws_secret_access_key $(SECRET_KEY)
-      aws eks update-kubeconfig --name $(clustername) --region $(REGION)
+      aws eks update-kubeconfig --name $(clusterName) --region $(REGION)
       $(System.DefaultWorkingDirectory)/.pipelines/scripts/install-ingress-controller.sh
 
 - task: Bash@3
@@ -89,7 +91,9 @@ steps:
     AZURE_DEVOPS_EXT_PAT: $(PAT)
   inputs:
     targetType: 'inline'
-    script: 'az pipelines variable-group create --organization "$(System.TeamFoundationCollectionUri)" --project "$(System.TeamProject)" --name eks-variables --variables dns_name=$(ObtainDNS.dns) cluster_name=$(clustername) --authorize true'
+    script: |
+      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(deployEnvVariableGroup)" "eks_dns_name" "$(ObtainDNS.dns)"
+      '$(System.DefaultWorkingDirectory)/.pipelines/scripts/update-variable-group.sh' "$(System.TeamFoundationCollectionUri)" "$(System.TeamProject)" "$(deployEnvVariableGroup)" "eks_cluster_name" "$(clusterName)"
 
 - task: Bash@3
   condition: and(eq(variables.installRancher, 'true'), eq(variables.operation, 'create'))
