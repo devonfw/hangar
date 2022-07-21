@@ -70,9 +70,9 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        aws configure set aws_access_key_id $(ACCESS_KEY)
-        aws configure set aws_secret_access_key $(SECRET_KEY)
-        aws eks update-kubeconfig --name $(CLUSTER_NAME) --region $(REGION)
+        aws configure set aws_access_key_id $(aws_access_key)
+        aws configure set aws_secret_access_key $(aws_secret_access_key)
+        aws eks update-kubeconfig --name $(eks_cluster_name) --region $(aws_region)
 
   - task: Bash@3
     condition: ne(variables.k8sImagePullSecret, '')
