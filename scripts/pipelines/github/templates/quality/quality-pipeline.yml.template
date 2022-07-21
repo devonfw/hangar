@@ -64,7 +64,7 @@ jobs:
           path: ${{ env.targetPath }}
 
       - name: Extracting archive
-        run: tar -C ${{ env.targetPath }} -xf ./BuildOutput.tar
+        run: tar -C ${{ env.targetPath }} -xf ${{ env.targetPath }}/BuildOutput.tar
 
       - name: SonarQube analysis
         run: .github/workflows/scripts/quality.sh

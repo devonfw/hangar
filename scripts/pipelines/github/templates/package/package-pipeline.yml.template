@@ -12,15 +12,6 @@ on:
       relativeDockerfilePath:
         required: false
         default: $dockerFile
-      imageTagFile:
-        required: false
-        default: $imageTagFile
-      region:
-        required: false
-        default: $awsRegion
-      isECR:
-        required: false
-        default: $isECR
       targetPath:
         required: false
         default: $targetDirectory
@@ -28,14 +19,11 @@ on:
 
 permissions:
   actions: write
-
+  contents: read
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
   ciPipelineYamlName: 'ci-pipeline.yml'
   relativeDockerfilePath: ${{ github.event.inputs.relativeDockerfilePath || '$dockerFile' }}
-  imageTagFile: ${{ github.event.inputs.imageTagFile || '$imageTagFile' }}
-  region: ${{ github.event.inputs.region || '$awsRegion' }}
-  isECR: ${{ github.event.inputs.isECR || '$isECR' }}
   targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
 # mark to insert additional artifact env var #
 
@@ -76,12 +64,15 @@ jobs:
           name: BuildOutput
           path: ${{ env.targetPath }}
 
+      - name: Extracting archive
+        run: tar -C ${{ env.targetPath }} -xf ${{ env.targetPath }}/BuildOutput.tar
+
       - name: Build and push image to registry
-        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
         if: ${{ env.isECR != 'true' }}
 
       - name: Build and push image to registry (AWS)
-        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -t "$GITHUB_WORKSPACE/${{ env.imageTagFile }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
+        run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
         if: ${{ env.isECR == 'true' }}
 
 # mark to insert step for additional artifact #
