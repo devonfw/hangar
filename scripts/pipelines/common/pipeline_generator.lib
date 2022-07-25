@@ -142,6 +142,9 @@ function checkInstallations {
     elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
         echo -e "${red}Error: Azure CLI is not installed." >&2
         exit 127
+    elif ([ "$provider" == "gitlab" ] && ! [ -x "$(command -v glab)" ]); then
+        echo -e "${red}Error: Azure CLI is not installed." >&2
+        exit 127
     fi
 
     # Check if Python is installed
@@ -171,25 +174,6 @@ function copyYAMLFile {
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     commonEnvSubstList='${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineName} ${ciPipelineName} ${packagePipelineName}'
     envsubst "${commonEnvSubstList} ${specificEnvSubstList}" < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
-
-    # Check if an extra artifact to store is supplied.
-    if test ! -z "$artifactPath"
-    then
-        # Add the extra step to the YAML.
-        if [ "$provider" == "azure-devops" ]
-        then
-            cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
-        elif [ "$provider" == "github" ]
-        then
-            storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
-            sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
-        fi
-    else
-        if [ "$provider" == "github" ]
-        then
-            sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
-        fi
-    fi
 }
 
 function copyCommonScript {

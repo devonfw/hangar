@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -25,7 +25,6 @@ while true; do
         --s3-key-path)            s3KeyPath=$2; shift 2;;
         --quality-pipeline-name)  export qualityPipelineName=$2; shift 2;;
         --test-pipeline-name)     export testPipelineName=$2; shift 2;;
-        --ci-pipeline-name)       export ciPipelineName=$2; shift 2;;
         --dockerfile)             dockerFile=$2; shift 2;;
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
@@ -42,11 +41,11 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 # Common var
-commonTemplatesPath="scripts/pipelines/github/templates/common" # Path for common files of the pipelines
-pipelinePath=".github/workflows" # Path to the pipelines.
-scriptFilePath=".github/workflows/scripts" # Path to the scripts.
-export provider="github"
-pipeline_type="workflow"
+commonTemplatesPath="scripts/pipelines/gitlab/templates/common" # Path for common files of the pipelines
+pipelinePath=".pipelines" # Path to the pipelines.
+scriptFilePath=".pipelines/scripts" # Path to the scripts.
+gitlabCiFile=".gitlab-ci.yml"
+export provider="gitlab"
 
 function obtainHangarPath {
 
@@ -59,7 +58,8 @@ function addAdditionalArtifact {
     if test ! -z "$artifactPath"
     then
         # Add the extra step to the YAML.
-        storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
+        grep "  artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && storeExtraPathContent="      - \"$artifactPath\""
+        grep "  artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || storeExtraPathContent="\n  artifacts:\n    paths:\n      - \"$artifactPath\""
         sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
     else
         echo "The '-a' flag has not been set, skipping the step to add additional artifact."
@@ -73,19 +73,29 @@ function addCommonPipelineVariables {
     then
         echo "Skipping creation of the variable artifactPath as the flag has not been used."
         # Delete the commentary to set the artifactPath input/var
-        sed -i '/# mark to insert additional artifact input #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
         sed -i '/# mark to insert additional artifact env var #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
     else
         # add the input for the additional artifact
-        grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathInput="      artifactPath:\n       required: false\n       default: ${artifactPath//\//\\/}"
-        grep "    inputs:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathInput="    inputs:\n      artifactPath:\n       required: false\n       default: \"${artifactPath//\//\\/}\""
-        sed -i "s/# mark to insert additional artifact input #/$textArtifactPathInput/" "${localDirectory}/${pipelinePath}/${yamlFile}"
-        # add the env var for the additional artifact
-        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: \${{ github.event.inputs.artifactPath || '${artifactPath//\//\\/}' }}"
-        grep "^env:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathVar="env:\n  artifactPath: \${{ github.event.inputs.artifactPath || '${artifactPath//\//\\/}' }}"
-        # Add the extra artifact to store variable.
+        grep "variables:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && textArtifactPathVar="  artifactPath: ${artifactPath//\//\\/}"
+        grep "variables:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null || textArtifactPathVar="variables:\n  artifactPath: \"${artifactPath//\//\\/}\""
         sed -i "s/# mark to insert additional artifact env var #/$textArtifactPathVar/" "${localDirectory}/${pipelinePath}/${yamlFile}"
     fi
+}
+
+function addCiFile {
+  echo -e "${green}Copying and commiting the gitlab ci file."
+  echo -ne ${white}
+
+  cp "${hangarPath}/${commonTemplatesPath}/${gitlabCiFile}" "${localDirectory}/${gitlabCiFile}"
+  testCommit=$(git status)
+  if echo "$testCommit" | grep "nothing to commit, working tree clean" > /dev/null
+  then
+    echo "gilab-ci file already present with same content, nothing to commit."
+  else
+    git add "${gitlabCiFile}" -f
+    git commit -m "adding gitlab-ci.yml"
+    git push
+  fi
 }
 
 function createPR {
@@ -99,15 +109,15 @@ function createPR {
         echo -e "${green}Creating a Pull Request..."
         echo -ne "${white}"
         repoURL=$(git config --get remote.origin.url)
-        repoNameWithGit="${repoURL/https:\/\/github.com\/}"
+        repoNameWithGit="${repoURL/https:\/\/gitlab.com\/}"
         repoName="${repoNameWithGit/.git}"
         # Create the Pull Request to merge into the specified branch.
         #debug
-        echo "gh pr create -B \"$targetBranch\" -b \"merge request $sourceBranch\" -H \"$sourceBranch\" -R \"${repoName}\" -t \"$sourceBranch\""
-        pr=$(gh pr create -B "$targetBranch" -b "merge request $sourceBranch" -H "$sourceBranch" -R "${repoName}" -t "$sourceBranch")
+        echo "glab mr create -b \"$targetBranch\" -d \"merge request $sourceBranch\" -s \"$sourceBranch\" -H \"${repoName}\" -t \"merge $sourceBranch\""
+        pr=$(glab mr create -b "$targetBranch" -d "merge request $sourceBranch" -s "$sourceBranch" -H "${repoName}" -t "merge $sourceBranch")
 
         # trying to merge
-        if gh pr merge -s "$pr"
+        if glab mr merge -s $(basename "$pr") -y
         then
             # Pull Request merged successfully.
             echo -e "${green}Pull Request merged into $targetBranch branch successfully."
@@ -142,11 +152,9 @@ if [[ "$help" == "true" ]]; then help; fi
 
 ensurePathFormat
 
-checkInstallations
-
-validateRegistryLoginCredentials
-
 importConfigFile
+
+checkInstallations
 
 createNewBranch
 
@@ -166,5 +174,7 @@ type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
 commitCommonFiles
 
 type commitFiles &> /dev/null && commitFiles
+
+addCiFile
 
 createPR

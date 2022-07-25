@@ -60,6 +60,17 @@ function obtainHangarPath {
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
 }
 
+function addAdditionalArtifact {
+  # Check if an extra artifact to store is supplied.
+    if test ! -z "$artifactPath"
+    then
+        # Add the extra step to the YAML.
+        cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+    else
+        echo "The '-a' flag has not been set, skipping the step to add additional artifact."
+    fi
+}
+
 function createPipeline {
     echo -e "${green}Generating the pipeline from the YAML template..."
     echo -ne ${white}
@@ -155,6 +166,8 @@ importConfigFile
 createNewBranch
 
 copyYAMLFile
+
+addAdditionalArtifact
 
 copyCommonScript
 
