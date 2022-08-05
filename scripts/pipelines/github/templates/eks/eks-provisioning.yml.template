@@ -27,7 +27,7 @@ on:
         description: 'Installs Rancher on EKS when set to true.'
         required: true
         type: string
-        default: $installRancher 
+        default: '$installRancher' 
       cluster_operation:
         description: 'Operation to be performed on EKS Cluster. create or destroy'
         required: false
@@ -65,7 +65,6 @@ jobs:
         helm list --all-namespaces
 
     - name: Terraform Init
-      if:     
       id: init
       working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
       run: terraform init -backend-config=bucket=${{ github.event.inputs.s3_bucket }} -backend-config=key=${{ github.event.inputs.s3_keypath }} -backend-config=region=${{ github.event.inputs.aws_region }}
@@ -90,14 +89,14 @@ jobs:
       id: installnginx
       run: |      
         aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region ${{ github.event.inputs.aws_region }}        
-        ../common/install-ingress-controller.sh
+        .github/workflows/scripts/install-ingress-controller.sh 
       
     - name: Obtain Ingress Controller domain name
       if: ${{ github.event.inputs.cluster_operation == 'create' }}    
       id: obtaindns
       run: | 
        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region ${{ github.event.inputs.aws_region }}
-       dnsname=$(./scripts/obtain-dns.sh)
+       dnsname=$(.github/workflows/scripts/obtain-dns.sh)
        echo "::set-output name=dnsname::$dnsname"
   
     - name: Publish Ingress Controller domain name
@@ -122,5 +121,5 @@ jobs:
       id: installrancher
       if: ${{ github.event.inputs.install_rancher == 'true' && github.event.inputs.cluster_operation == 'create'}}
       run: |
-        ./scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}
+        .github/workflows/scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}
 
