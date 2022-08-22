@@ -25,7 +25,7 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 * A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
 ```
 aws s3 mb <bucket name>
-# Example: aws s3 mb s3://terraform-state-bucket
+# Example: aws s3 mb s3://terraformStateBucket
 ```
 
 * An AWS IAM user with https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[required permissions] to provision the EKS cluster.
@@ -56,10 +56,6 @@ pipeline_generator.sh \
   --cluster-name <cluster name> \
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
-  [--aws-access-key <aws access key>] \
-  [--aws-secret-access-key <aws secret access key>] \
-  [--aws-region <aws region>] \
-  [--rancher] \
   [-b <branch>] \
   [-w]
 ```
