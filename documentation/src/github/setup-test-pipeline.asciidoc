@@ -1,9 +1,10 @@
 :provider: GitHub
 :pipeline_type: workflow
-:trigger_sentence: This workflow will be configured to be executed inside a CI pipeline after the build workflow
+:trigger_sentence: This workflow will be configured to be executed as a job inside a CI workflow after the build job
 :pipeline_type2: GitHub action
 :path_provider: github
 :extra_args_quarkus:
 :extra_args_node:
 :extra_args_angular:
+:extra_sentence_ci: Please note that this workflow, although manually triggerable, is designed to be executed as part of a CI workflow, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
 include::../common_templates/setup-test-pipeline.asciidoc[]

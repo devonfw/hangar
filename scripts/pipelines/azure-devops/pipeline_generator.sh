@@ -32,10 +32,10 @@ while true; do
         --aws-region)               awsRegion="$2"; shift 2;;
       	--package-pipeline-name)    export packagePipelineName=$2; shift 2;;
         --env-provision-pipeline-name)  envProvisionPipelineName="$2"; shift 2;;
-      	--k8s-provider)             k8sProvider=$2; shift 2;; 
+      	--k8s-provider)             k8sProvider=$2; shift 2;;
         --k8s-namespace)            k8sNamespace="$2"; shift 2;;
-      	--k8s-deploy-files-path)    k8sDeployFiles=$2; shift 2;; 
-        --k8s-image-pull-secret-name)  k8sImagePullSecret=$2; shift 2;; 
+      	--k8s-deploy-files-path)    k8sDeployFiles=$2; shift 2;;
+        --k8s-image-pull-secret-name)  k8sImagePullSecret=$2; shift 2;;
         -h | --help)                help="true"; shift 1;;
         -w)                         webBrowser="true"; shift 1;;
         --) shift; break;;
@@ -52,6 +52,7 @@ commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="azure-devops"
+pipeline_type="pipeline"
 
 function obtainHangarPath {
 

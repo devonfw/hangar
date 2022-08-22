@@ -7,7 +7,7 @@
 
 In this section we will create a build {pipeline_type} for compiling project code. {trigger_sentence}, regardless of which branch it is made on.
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
+The creation of the {pipeline_type2} will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the {pipeline_type} will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
@@ -20,10 +20,11 @@ This script will commit and push the corresponding YAML template into your repos
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
   [-t <target-directory>] \
@@ -34,9 +35,10 @@ pipeline_generator.sh \
 NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/build/build-pipeline.cfg`.
 
 === Flags
+[subs=attributes+]
 ```
--c, --config-file        [Required] Configuration file containing pipeline definition.
--n, --pipeline-name      [Required] Name that will be set to the pipeline.
+-c, --config-file        [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.

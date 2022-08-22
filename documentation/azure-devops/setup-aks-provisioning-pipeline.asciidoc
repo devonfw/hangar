@@ -37,7 +37,7 @@ az storage container create -n <storage container name> --account-name <storage 
 Before executing the script you will need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables.sh` script located at `/scripts/environment-provisioning/azure/aks`, which allows you to create or update values for the required variables, passing them as flags. As a full example:
 
 ```
-./set-terraform-variables.sh --cluster_name <cluster name> --location <location> --resource_group_name <resource group name> --instance_type <worker instance type> --worker_node_count <number of worker nodes> --dns_prefix <dns prefix>
+./set-terraform-variables.sh --location <location> --resource_group_name <resource group name> --instance_type <worker instance type> --worker_node_count <number of worker nodes> --dns_prefix <dns prefix>
 ```
 
 === Usage
@@ -46,6 +46,7 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
+  --cluster-name <cluster name> \
   --resource-group <resource group name> \
   --storage-account <storage account name> \
   --storage-container <storage container name> \
@@ -61,6 +62,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --cluster-name       [Required] Name for the cluster.
     --resource-group     [Required] Name of the resource group for the cluster.
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
@@ -72,7 +74,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
+./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
