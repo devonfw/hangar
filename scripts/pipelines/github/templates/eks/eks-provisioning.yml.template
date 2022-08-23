@@ -104,7 +104,7 @@ jobs:
       id: publishdns
       run: |
         cd .github
-        mkdir vars
+        mkdir -p vars
         cd vars
         touch "eks_variables.env"
         echo "cluster_name=${{ github.event.inputs.cluster_name }}" >> eks_variables.env
