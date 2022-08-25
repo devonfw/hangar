@@ -108,7 +108,7 @@ jobs:
         cd vars
         touch "eks_variables.env"
         echo "cluster_name=${{ github.event.inputs.cluster_name }}" >> eks_variables.env
-        echo "dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> eks_variables.env
+        echo "eks_dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> eks_variables.env
       
     - name: Push EKS variables
       if: ${{ github.event.inputs.cluster_operation == 'create' }}
