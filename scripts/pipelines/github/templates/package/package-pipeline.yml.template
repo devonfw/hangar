@@ -19,7 +19,7 @@ on:
 
 permissions:
   actions: write
-
+  contents: read
 env:
   buildPipelineYamlName: 'build-pipeline.yml'
   ciPipelineYamlName: 'ci-pipeline.yml'
@@ -65,7 +65,7 @@ jobs:
           path: ${{ env.targetPath }}
 
       - name: Extracting archive
-        run: tar -C ${{ env.targetPath }} -xf ./BuildOutput.tar
+        run: tar -C ${{ env.targetPath }} -xf ${{ env.targetPath }}/BuildOutput.tar
 
       - name: Build and push image to registry
         run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -c "$GITHUB_WORKSPACE" -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"  -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
