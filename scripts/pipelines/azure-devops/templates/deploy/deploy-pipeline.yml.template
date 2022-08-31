@@ -15,6 +15,7 @@ resources:
 
 variables:
   - group: registry_info 
+  - group: deployment-env-variables
   - name: deploymentYamlPath
     value: "$(System.DefaultWorkingDirectory)/$(k8sDeployFiles)/application-deployment.yaml" 
   - name: ingressYamlPath
@@ -25,15 +26,14 @@ variables:
     value: "kubeconfig"  
   - name: kubeconfigPath
     value: "$(Pipeline.Workspace)/$(artifact)"  
-    
+  - name: packageTagScript
+    value: "$(System.DefaultWorkingDirectory)/.pipelines/scripts/package-extra.sh"
+
 pool:
   vmImage: ubuntu-latest
 jobs:
 - job: Deploy_to_AKS
   condition: eq(variables.k8sProvider, 'AKS')
-  variables:
-  - ${{ if eq(variables.k8sProvider, 'AKS') }}:
-    - group: aks-variables # DNS available for this job
   steps:
   - task: DownloadPipelineArtifact@2
     displayName: "Download AKS Kubeconfig"
@@ -60,24 +60,19 @@ jobs:
       KUBECONFIG: $(kubeconfigPath)
     inputs:
       filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
-      arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
+      arguments: '$(k8sNamespace) $(imagename) $(aks_dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(packageTagScript) $(Build.SourceBranch)'
  
 - job: Deploy_to_EKS
   condition: eq(variables.k8sProvider, 'EKS')
-  variables:
-  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
-    - group: AWS_Credentials
-  - ${{ if eq(variables.k8sProvider, 'EKS') }}:
-    - group: eks_variables # DNS available for this job
   steps:
   - task: Bash@3
     displayName: Download EKS Kubeconfig
     inputs:
       targetType: 'inline'
       script: |
-        aws configure set aws_access_key_id $(ACCESS_KEY)
-        aws configure set aws_secret_access_key $(SECRET_KEY)
-        aws eks update-kubeconfig --name $(CLUSTER_NAME) --region $(REGION)
+        aws configure set aws_access_key_id $(aws_access_key)
+        aws configure set aws_secret_access_key $(aws_secret_access_key)
+        aws eks update-kubeconfig --name $(eks_cluster_name) --region $(aws_region)
 
   - task: Bash@3
     condition: ne(variables.k8sImagePullSecret, '')
@@ -90,4 +85,4 @@ jobs:
     displayName: Deploy app
     inputs:
       filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/deploy.sh'
-      arguments: '$(k8sNamespace) $(imagename) $(dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath)'
+      arguments: '$(k8sNamespace) $(imagename) $(eks_dns_name) $(deploymentYamlPath) $(ingressYamlPath) $(deployFilesPath) $(packageTagScript) $(Build.SourceBranch)'
