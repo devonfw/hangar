@@ -75,6 +75,17 @@ jobs:
         run: .github/workflows/scripts/package.sh -f "$GITHUB_WORKSPACE/${{ env.relativeDockerfilePath }}" -c "$GITHUB_WORKSPACE" -a "${{ secrets.AWS_ACCESS_KEY }}" -s "${{ secrets.AWS_SECRET_ACCESS_KEY }}" -l "${{ env.region }}" -r "${{ env.registry }}" -i "${{ env.imageName }}" -b "${{ github.event.workflow_run.head_branch || github.ref }}"
         if: ${{ env.isECR == 'true' }}
 
+      - name: store workflow_run info
+        run: |
+          echo "branch_package_workflow=${{ github.event.workflow_run.head_branch || github.ref }}" >> package_workflow_info.env
+          echo "commit_package_workflow=${{ github.event.workflow_run.head_commit.id || github.sha }}" >> package_workflow_info.env
+
+      - name: Publish workflow_run info
+        uses: actions/upload-artifact@v3
+        with:
+          name: package_workflow_info
+          path: package_workflow_info.env
+
 # mark to insert step for additional artifact #
   on-failure:
     name: CI Workflow Failed
