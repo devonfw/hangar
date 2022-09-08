@@ -1,0 +1,7 @@
+:provider: Gitlab
+:pipeline_type: pipeline
+:trigger_sentence_gitlab: 
+:pipeline_type2: gitlab
+:path_provider: gitlab
+:aks_variables_path: Group > ci_cd  settings > Variables (devon-hangar > ci_cd  settings > Variables)
+include::../common_templates/setup-aks-provisioning-pipeline.asciidoc[]  

@@ -13,17 +13,17 @@ workflow:
 
 variables:
   CLUSTER_NAME:
-    value: $clusterName
+    value: "$clusterName"
     description: "Name for the AWS EKS cluster to be created"
   OPERATION: 
-    value: $operation 
+    value: "$operation" 
     description: "Operation to perform on cluster. Create or Destroy." 
   INSTALL_RANCHER:
-    value: $installRancher   
+    value: "$installRancher"   
     description: "Installs Rancher on AKS when set to true."       
   #CLUSTER_NAME: devon-hangar 
   #OPERATION: create   
-  TF_STATE_NAME: $storageContainerName #"TF_AKS_STATE_FILE"
+  TF_STATE_NAME: "$storageContainerName" #"TF_AKS_STATE_FILE"
   TF_CACHE_KEY: default
   TF_ROOT: "${CI_PROJECT_DIR}/azure/aks"
   TF_USERNAME: ${GITLAB_USER_NAME}
@@ -156,7 +156,7 @@ Install-rancher:
     - chmod 755 install-rancher.sh
     - ./install-rancher.sh ${aks_dns_name}
   rules:
-    - if: '$INSTALL_RANCHER == "true"'
+    - if: '$INSTALL_RANCHER == "true" && $OPERATION == "create"'
       when: always
 
 Destroy-terraform:
