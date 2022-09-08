@@ -3,5 +3,5 @@
 :trigger_sentence_github: 
 :pipeline_type2: Github action
 :path_provider: github
-:aks_variables_path: .github > vars > `aks-variables.env`
+:aks_variables_path: .github > vars > `deployment-env-variables.env`
 include::../common_templates/setup-aks-provisioning-pipeline.asciidoc[]  
