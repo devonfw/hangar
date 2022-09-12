@@ -17,24 +17,12 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 == Prerequisites
 
 
- * Add AZURE credentials as [Variables] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.
+ * Add AZURE credentials as https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project[Variables] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.
 
 * An Azure resource group in the desired cluster location (e.g. `westeurope`). You can use an existing one or create a new one with the following command:
 
 ```
 az group create -n <resource group name> -l <location>
-```
-
-* An Azure storage account within the previous resource group. You can use an existing one or create a new one with the following command:
-
-```
-az storage account create -n <storage account name> -g <resource group name> -l <location>
-```
-
-* An Azure storage container in Azure within the previous storage account. You can use an existing one or create a new one with the following command:
-
-```
-az storage container create -n <storage container name> --account-name <storage account name>
 ```
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
