@@ -24,7 +24,6 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 ```
 az group create -n <resource group name> -l <location>
 ```
-
 * An Azure storage account within the previous resource group. You can use an existing one or create a new one with the following command:
 
 ```
