@@ -21,6 +21,7 @@ ifdef::trigger_sentence_gitlab[ * Add AZURE credentials as [Variables] in your r
 az group create -n <resource group name> -l <location>
 ```
 ifndef::trigger_sentence_azure,trigger_sentence_github[]
+
 * An Azure storage account within the previous resource group. You can use an existing one or create a new one with the following command:
 
 ```
@@ -80,7 +81,7 @@ ifdef::trigger_sentence_azure,trigger_sentence_github[    --storage--account   [
 ```
 ifdef::trigger_sentence_azure,trigger_sentence_github[ ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w ] 
 
-ifdef::trigger_sentence_gitlab[ ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --storage-container aks-state --rancher -b develop -w ]
+ifdef::trigger_sentence_gitlab[ ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --storage-container aks-state --rancher -b develop -w ]
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
