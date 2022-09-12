@@ -20,10 +20,8 @@ variables:
     description: "Operation to perform on cluster. Create or Destroy." 
   INSTALL_RANCHER:
     value: "$installRancher"   
-    description: "Installs Rancher on AKS when set to true."       
-  #CLUSTER_NAME: devon-hangar 
-  #OPERATION: create   
-  TF_STATE_NAME: "$storageContainerName" #"TF_AKS_STATE_FILE"
+    description: "Installs Rancher on AKS when set to true."         
+  TF_STATE_NAME: "$storageContainerName"
   TF_CACHE_KEY: default
   TF_ROOT: "${CI_PROJECT_DIR}/azure/aks"
   TF_USERNAME: ${GITLAB_USER_NAME}
@@ -68,17 +66,14 @@ variables:
   - unzip -qq terraform_1.2.6_linux_amd64.zip
   - sudo mv terraform /usr/local/bin
 
-.configure_kubeconfig: &configure_kubeconfig
-  # - "curl 'https://gitlab.com/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/${CI_COMMIT_REF_NAME}/raw/kubeconfig?job=$CI_JOB_STAGE&JOB-TOKEN=$CI_JOB_TOKEN'"
-  - export KUBECONFIG=${KUBECONFIG}
+.configure_glab_auth: &glab_auth
+  - curl -s https://raw.githubusercontent.com/profclems/glab/trunk/scripts/install.sh | sudo sh
+  - glab auth login --token $GITLAB_PAT
 
 Provision:
   <<: *Prerequisites_install
   script: 
-    - echo "hello $CLUSTER_NAME:$OPERATION, $TF_STATE_NAME"    
     - *install-terraform
-    - mkdir -p ${CI_PROJECT_DIR}/scripts
-    - cd ${CI_PROJECT_DIR}/scripts
     - *login_azcli
     - cd ..
     - terraform --version
@@ -86,16 +81,8 @@ Provision:
     - terraform init -var cluster_name=${CLUSTER_NAME}
     - terraform apply -var cluster_name=${CLUSTER_NAME} --auto-approve
     - mv ${TF_ROOT}/kubeconfig ${CI_PROJECT_DIR}
-    - curl -s https://raw.githubusercontent.com/profclems/glab/trunk/scripts/install.sh | sudo sh
-    - glab auth login --token $GITLAB_PAT
+    - *glab_auth
     - cat ${CI_PROJECT_DIR}/kubeconfig | glab variable set -g devon-hangar KUBECONFIG -t "file"
-  artifacts:
-    paths:
-      - "./kubeconfig"
-  cache:    
-    key: "scripts"
-    paths:
-      - "${CI_PROJECT_DIR}/scripts"
   rules:
   - if: '$OPERATION == "create"'
     when: always  
@@ -103,58 +90,42 @@ Provision:
 Install_nginx:
   <<: *Prerequisites_install
   needs: [Provision]
-  cache:    
-    key: "scripts"
-    paths:
-      - "${CI_PROJECT_DIR}/scripts"
   script:
-    - cd ${CI_PROJECT_DIR}/scripts
     - *configure_packages
-    - *configure_kubeconfig
-    - chmod 755 install-nginx-ingress.sh
-    - ./install-nginx-ingress.sh
+    - export KUBECONFIG=${KUBECONFIG}
+    - chmod 755 .pipelines/scripts/install-nginx-ingress.sh
+    - ./.pipelines/scripts/install-nginx-ingress.sh
   rules:
   - if: '$OPERATION == "create"'
     when: always  
 
 Obtain_dns:
   <<: *Prerequisites_install
+  needs: [Install_nginx]
   script:
-    - cd ${CI_PROJECT_DIR}/scripts
     - *configure_packages
     - *login_azcli
-    - *configure_kubeconfig
+    - export KUBECONFIG=${KUBECONFIG}
     # Obtain-dns
-    - chmod 755 obtain-dns.sh
-    - ./obtain-dns.sh ${CLUSTER_NAME}  
+    - chmod 755 .pipelines/scripts/obtain-dns.sh
+    - ./.pipelines/scripts/obtain-dns.sh ${CLUSTER_NAME}  
     - dnsname="${CLUSTER_NAME}.westeurope.cloudapp.azure.com"
     # Create aks_dns_name variable 
-    - curl -s https://raw.githubusercontent.com/profclems/glab/trunk/scripts/install.sh | sudo sh
-    - glab auth login --token $GITLAB_PAT
+    - *glab_auth
     - glab variable set -g devon-hangar aks_dns_name -v "$dnsname" -t "env_var"
   rules:
   - if: '$OPERATION == "create"'
     when: always  
-  needs:
-    - Provision
-    #- Install_nginx
 
 Install-rancher:
   <<: *Prerequisites_install
-  needs: 
-    - Provision
-    - Obtain_dns
-  cache:    
-    key: "scripts"
-    paths:
-      - "${CI_PROJECT_DIR}/scripts"
+  needs: [Obtain_dns]
   script:
-    - cd ${CI_PROJECT_DIR}/scripts
     - *configure_packages
-    - *configure_kubeconfig
+    - export KUBECONFIG=${KUBECONFIG}
     # INSTALL RANCHER
-    - chmod 755 install-rancher.sh
-    - ./install-rancher.sh ${aks_dns_name}
+    - chmod 755 .pipelines/scripts/install-rancher.sh
+    - ./.pipelines/scripts/install-rancher.sh ${aks_dns_name}
   rules:
     - if: '$INSTALL_RANCHER == "true" && $OPERATION == "create"'
       when: always
@@ -165,7 +136,6 @@ Destroy-terraform:
     - *install-terraform
     - *configure_packages
     - cd ${TF_ROOT}
-    - ls -lrta
     - terraform init    
     - terraform apply -destroy -var cluster_name=${CLUSTER_NAME} --auto-approve
   rules:

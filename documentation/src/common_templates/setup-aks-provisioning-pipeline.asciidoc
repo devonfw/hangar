@@ -47,11 +47,11 @@ Before executing the script you will need to customize some input variables abou
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+ifdef::trigger_sentence_azure,trigger_sentence_github[  -n <pipeline name> \]
   -d <project local path> \
   --cluster-name <cluster name> \
-  --resource-group <resource group name> \
-  --storage-account <storage account name> \
+ifdef::trigger_sentence_azure,trigger_sentence_github[  --resource-group <resource group name> \]   
+ifdef::trigger_sentence_azure,trigger_sentence_github[  --storage-account <storage account name> \]
   --storage-container <storage container name> \
   [--rancher] \
   [-b <branch>] \
@@ -63,11 +63,11 @@ NOTE: The config file for the AKS provisioning {pipeline_type} is located at `/s
 === Flags
 ```
 -c, --config-file        [Required] Configuration file containing pipeline definition.
--n, --pipeline-name      [Required] Name that will be set to the pipeline.
+ifdef::trigger_sentence_azure,trigger_sentence_github[-n, --pipeline-name      [Required] Name that will be set to the pipeline.]
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
     --cluster-name       [Required] Name for the cluster.
-ifdef::trigger_sentence_azure[    --resource-group     [Required] Name of the resource group for the cluster. ]
-ifdef::trigger_sentence_azure[    --storage--account   [Required] Name of the storage account for the cluster. ]
+ifdef::trigger_sentence_azure,trigger_sentence_github[    --resource-group     [Required] Name of the resource group for the cluster. ]
+ifdef::trigger_sentence_azure,trigger_sentence_github[    --storage--account   [Required] Name of the storage account for the cluster. ]
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
     --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
@@ -77,7 +77,7 @@ ifdef::trigger_sentence_azure[    --storage--account   [Required] Name of the st
 === Example
 
 ```
-ifdef::trigger_sentence_azure[ ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w ] 
+ifdef::trigger_sentence_azure,trigger_sentence_github[ ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w ] 
 
 ifdef::trigger_sentence_gitlab[ ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --storage-container aks-state --rancher -b develop -w ]
 ```
