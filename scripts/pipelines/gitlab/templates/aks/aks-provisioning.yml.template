@@ -9,7 +9,7 @@ workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
-    - when: never
+    - when: always
 
 variables:
   CLUSTER_NAME:
@@ -83,6 +83,9 @@ Provision:
     - mv ${TF_ROOT}/kubeconfig ${CI_PROJECT_DIR}
     - *glab_auth
     - cat ${CI_PROJECT_DIR}/kubeconfig | glab variable set -g devon-hangar KUBECONFIG -t "file"
+  artifacts:
+    paths:
+      - "./kubeconfig"  
   rules:
   - if: '$OPERATION == "create"'
     when: always  
