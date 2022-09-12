@@ -83,7 +83,6 @@ NOTE: The config file for the AKS provisioning {pipeline_type} is located at `/s
 
 ```
  ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --resource-group devonfw --storage-account hangar --storage-container aks-state --rancher -b develop -w 
-
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.

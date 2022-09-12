@@ -1,2 +1,0 @@
-#!/bin/bash
-mvn sonar:sonar -Dsonar.host.url="${sonarUrl}" -Dsonar.login="${sonarToken}" -Dsonar.java.binaries=$1/target/classes

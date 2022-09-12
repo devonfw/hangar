@@ -1,38 +1,43 @@
 #!/bin/bash
 set -e
-
-FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,help" -- "$@")
-
+FLAGS=$(getopt -a --options c:n:d:a:b:l:t:i:u:p:hw --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,target-directory:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,rancher:,package-pipeline-name:,env-provision-pipeline-name:,k8s-provider:,k8s-namespace:,k8s-deploy-files-path:,k8s-image-pull-secret-name:,help" -- "$@")
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
-        -c | --config-file)       configFile=$2; shift 2;;
-        -n | --pipeline-name)     pipelineName=$2; shift 2;;
-        -d | --local-directory)   localDirectory=$2; shift 2;;
-        -a | --artifact-path)     artifactPath=$2; shift 2;;
-        -b | --target-branch)     targetBranch=$2; shift 2;;
-        -l | --language)          language=$2; shift 2;;
-        -t | --target-directory)  targetDirectory=$2; shift 2;;
-        --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
-        --sonar-url)              sonarUrl=$2; shift 2;;
-        --sonar-token)            sonarToken=$2; shift 2;;
-        -i | --image-name)        imageName=$2; shift 2;;
-        -u | --registry-user)     dockerUser=$2; shift 2;;
-        -p | --registry-password) dockerPassword=$2; shift 2;;
-        --resource-group)         resourceGroupName=$2; shift 2;;
-        --storage-account)        storageAccountName=$2; shift 2;;
-        --storage-container)      storageContainerName=$2; shift 2;;
-        --cluster-name)           clusterName=$2; shift 2;;
-        --s3-bucket)              s3Bucket=$2; shift 2;;
-        --s3-key-path)            s3KeyPath=$2; shift 2;;
-        --quality-pipeline-name)  export qualityPipelineName=$2; shift 2;;
-        --test-pipeline-name)     export testPipelineName=$2; shift 2;;
-        --dockerfile)             dockerFile=$2; shift 2;;
-        --aws-access-key)         awsAccessKey="$2"; shift 2;;
-        --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
-        --aws-region)             awsRegion="$2"; shift 2;;
-        -h | --help)              help="true"; shift 1;;
-        -w)                       webBrowser="true"; shift 1;;
+        -c | --config-file)         configFile=$2; shift 2;;
+        -n | --pipeline-name)       pipelineName=$2; shift 2;;
+        -d | --local-directory)     localDirectory=$2; shift 2;;
+        -a | --artifact-path)       artifactPath=$2; shift 2;;
+        -b | --target-branch)       targetBranch=$2; shift 2;;
+        -l | --language)            language=$2; shift 2;;
+        -t | --target-directory)    targetDirectory=$2; shift 2;;
+        --build-pipeline-name)      export buildPipelineName=$2; shift 2;;
+        --sonar-url)                sonarUrl=$2; shift 2;;
+        --sonar-token)              sonarToken=$2; shift 2;;
+        -i | --image-name)          imageName=$2; shift 2;;
+        -u | --registry-user)       dockerUser=$2; shift 2;;
+        -p | --registry-password)   dockerPassword=$2; shift 2;;
+        --resource-group)           resourceGroupName=$2; shift 2;;
+        --storage-account)          storageAccountName=$2; shift 2;;
+        --storage-container)        storageContainerName=$2; shift 2;;
+        --rancher)                  installRancher="true"; shift 1;;
+        --cluster-name)             clusterName=$2; shift 2;;
+        --s3-bucket)                s3Bucket=$2; shift 2;;
+        --s3-key-path)              s3KeyPath=$2; shift 2;;
+        --quality-pipeline-name)    export qualityPipelineName=$2; shift 2;;
+        --test-pipeline-name)       export testPipelineName=$2; shift 2;;
+        --dockerfile)               dockerFile=$2; shift 2;;
+        --aws-access-key)           awsAccessKey="$2"; shift 2;;
+        --aws-secret-access-key)    awsSecretAccessKey="$2"; shift 2;;
+        --aws-region)               awsRegion="$2"; shift 2;;
+      	--package-pipeline-name)    export packagePipelineName=$2; shift 2;;
+        --env-provision-pipeline-name)  envProvisionPipelineName="$2"; shift 2;;
+      	--k8s-provider)             k8sProvider=$2; shift 2;;
+        --k8s-namespace)            k8sNamespace="$2"; shift 2;;
+      	--k8s-deploy-files-path)    k8sDeployFiles=$2; shift 2;;
+        --k8s-image-pull-secret-name)  k8sImagePullSecret=$2; shift 2;;
+        -h | --help)                help="true"; shift 1;;
+        -w)                         webBrowser="true"; shift 1;;
         --) shift; break;;
     esac
 done
@@ -47,6 +52,7 @@ commonTemplatesPath="scripts/pipelines/azure-devops/templates/common" # Path for
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="azure-devops"
+pipeline_type="pipeline"
 
 function obtainHangarPath {
 
@@ -151,11 +157,11 @@ if [[ "$help" == "true" ]]; then help; fi
 
 ensurePathFormat
 
-importConfigFile
-
 checkInstallations
 
-obtainHangarPath
+validateRegistryLoginCredentials
+
+importConfigFile
 
 createNewBranch
 

@@ -1,0 +1,77 @@
+name: $pipelineName
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      sonarUrl:
+        required: false
+        default: $sonarUrl
+      sonarToken:
+        required: false
+        default:
+      targetPath:
+        required: false
+        default: $targetDirectory
+# mark to insert additional artifact input #
+
+env:
+  buildPipelineYamlName: 'build-pipeline.yml'
+  ciPipelineYamlName: 'ci-pipeline.yml'
+  sonarUrl: ${{ github.event.inputs.sonarUrl || '$sonarUrl' }}
+  sonarToken: ${{ github.event.inputs.sonarToken || secrets.SONARQUBE_TOKEN }}
+  targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
+# mark to insert additional artifact env var #
+
+jobs:
+  Quality:
+    name: SonarQube analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+
+      - name: Download artifact from build job (current workflow)
+        uses: actions/download-artifact@v2
+        id: dowloadFromSamePipeline
+        continue-on-error: true
+        with:
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Download artifact from build workflow
+        uses: dawidd6/action-download-artifact@v2
+        id: downloadFromBuild
+        continue-on-error: true
+        if: ${{ steps.dowloadFromSamePipeline.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.buildPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Download artifact from CI workflow
+        uses: dawidd6/action-download-artifact@v2
+        if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.ciPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Extracting archive
+        run: tar -C ${{ env.targetPath }} -xf ${{ env.targetPath }}/BuildOutput.tar
+
+      - name: SonarQube analysis
+        run: .github/workflows/scripts/quality.sh
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          SONAR_URL: ${{ env.sonarUrl }}
+          PROJECT_PATH: .
+
+
+# mark to insert step for additonal artifact #
