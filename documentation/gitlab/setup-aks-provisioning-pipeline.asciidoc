@@ -24,6 +24,7 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 ```
 az group create -n <resource group name> -l <location>
 ```
+
 * An Azure storage account within the previous resource group. You can use an existing one or create a new one with the following command:
 
 ```
@@ -75,7 +76,7 @@ NOTE: The config file for the AKS provisioning {pipeline_type} is located at `/s
 
 ```
 
- ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -n aks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --storage-container aks-state --rancher -b develop -w 
+ ./pipeline_generator.sh -c ./templates/aks/aks-pipeline.cfg -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name devon-hangar --storage-container aks-state --rancher -b develop -w 
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
