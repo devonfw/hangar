@@ -20,7 +20,7 @@ ifdef::trigger_sentence_gitlab[ * Add AZURE credentials as [Variables] in your r
 ```
 az group create -n <resource group name> -l <location>
 ```
-
+ifndef::trigger_sentence_azure,trigger_sentence_github[]
 * An Azure storage account within the previous resource group. You can use an existing one or create a new one with the following command:
 
 ```
@@ -32,6 +32,7 @@ az storage account create -n <storage account name> -g <resource group name> -l 
 ```
 az storage container create -n <storage container name> --account-name <storage account name>
 ```
+endif::[]
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
 
