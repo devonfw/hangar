@@ -15,6 +15,8 @@ ifdef::trigger_sentence_azure[ * Create a https://docs.microsoft.com/en-us/azure
 
 ifdef::trigger_sentence_gitlab[ * Add AZURE credentials as https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project[Variables] in your repository and name it `AZURE_USERNAME`, `AZURE_PASSWORD`. If you already have a available credentials or you need a specific credentials connection, please update `aks-provisioning.yml` accordingly.]
 
+ifdef::trigger_sentence_gitlab[* Create a Gitlab personal access token https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token[PAT], Store in environment variable as `GITLAB_PAT`.]
+
 * An Azure resource group in the desired cluster location (e.g. `westeurope`). You can use an existing one or create a new one with the following command:
 
 ```

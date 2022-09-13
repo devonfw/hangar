@@ -1,6 +1,12 @@
 include:
   - '.pipelines/*.yml'
 
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
+
 # stages:
 #   - build
 #   - test
