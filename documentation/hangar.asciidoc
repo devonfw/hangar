@@ -14,65 +14,127 @@
 :partnums:
 :imagesdir: ./
 
-### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
+== Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
 
-include::setup-project.asciidoc[Setup Azure DevOps project][leveloffset=+2]
-
-<<<<
-
-include::setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS][leveloffset=+2]
+include::setup-project.asciidoc[leveloffset=+1]
 
 <<<<
 
-include::setup-repository-script.asciidoc[Setting up a repository on Azure DevOps][leveloffset=+2]
+include::setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Setup Azure DevOps Pipelines:
-include::setup-build-pipeline.asciidoc[Setting up a Build Pipeline][leveloffset=+2]
+include::setup-repository-script.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::setup-test-pipeline.asciidoc[Setting up a Test Pipeline][leveloffset=+2]
+==== Setup Azure DevOps Pipelines:
+include::setup-build-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-== Quality
-=== Prerequisite: 
-include::setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS][leveloffset=+2]
+include::setup-test-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::setup-quality-pipeline.asciidoc[Setting up a Quality Pipeline][leveloffset=+2]
+=== Quality
+==== Prerequisite: 
+include::setup-sonarqube-instance.asciidoc[leveloffset=+2]
 
 <<<<
 
-== Package
+include::setup-quality-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+=== Package
+==== App
+include::setup-container-image-registry.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-package-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-library-package-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+==== Setup Kubernetes deploying environment pipeline
+
+include::setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-deploy-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
+
+== Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
+
+include::setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-repository-script.asciidoc[leveloffset=+2]
+
+<<<<
+
+==== Setup GitHub workflows:
+include::setup-build-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-test-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+=== Quality
+==== Prerequisite: 
+
+include::setup-sonarqube-instance.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-quality-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+include::setup-ci-pipeline.asciidoc[leveloffset=+2]
+
+<<<<
+
+=== Package
 === App
-include::setup-container-image-registry.asciidoc[Setup Container Image Registry][leveloffset=+2]
+==== Prerequisite: 
+
+include::setup-container-image-registry.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::setup-package-pipeline.asciidoc[Setting up a Package Pipeline][leveloffset=+2]
+include::setup-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::setup-library-package-pipeline.asciidoc[Setting up a library Package Pipeline][leveloffset=+2]
+include::setup-library-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-** Setup Kubernetes deploying environment pipeline
+==== Setup Kubernetes deploying environment workflow
 
-include::setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning pipeline][leveloffset=+2]
-
-<<<<
-
-include::setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning pipeline][leveloffset=+2]
+include::setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::setup-deploy-pipeline.asciidoc[Setting up a Deploy Pipeline][leveloffset=+2]
+include::setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]][leveloffset=+2]
+include::setup-deploy-pipeline.asciidoc[leveloffset=+2]
