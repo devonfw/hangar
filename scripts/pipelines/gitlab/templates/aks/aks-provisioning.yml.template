@@ -48,7 +48,7 @@ variables:
   # INSTALL AZCLI
   - curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
   - az --version  
-  - az login #--username "${AZURE_USERNAME}" --password "${AZURE_PASSWORD}"
+  - az login --username "${AZURE_USERNAME}" --password "${AZURE_PASSWORD}"
 
 .packages: &configure_packages   
   # INSTALL KUBECTL
