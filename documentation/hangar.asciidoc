@@ -1,4 +1,4 @@
-= devonfw Hangar
+= Devonfw Hangar
 
 :description: comprehensive documentation of devonfw hangar.
 :doctype: book
@@ -14,11 +14,9 @@
 :partnums:
 :imagesdir: ./
 
-### Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on Azure DevOps and deployed on either AWS EKS or Azure AKS. 
-
-include::azure-devops/setup-project.asciidoc[leveloffset=+1]
-
-<<<<
+= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD and deployed on either AWS EKS or Azure AKS.
+= CI/CD on Azure DevOps 
+== Setup Azure DevOps workspace:
 
 include::azure-devops/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
 
@@ -28,7 +26,12 @@ include::azure-devops/setup-repository-script.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Setup Azure DevOps Pipelines:
+include::azure-devops/setup-project.asciidoc[leveloffset=+1]
+
+<<<<
+
+== Build and Test:
+
 include::azure-devops/setup-build-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
@@ -37,7 +40,7 @@ include::azure-devops/setup-test-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Quality
+=== Quality:
 ** Prerequisite: 
 include::azure-devops/setup-sonarqube-instance.asciidoc[leveloffset=+2]
 
@@ -47,9 +50,9 @@ include::azure-devops/setup-quality-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Package
-* App
-** Prerequisite: 
+=== Package:
+** App
+*** Prerequisite: 
 include::azure-devops/setup-container-image-registry.asciidoc[leveloffset=+2]
 
 <<<<
@@ -72,13 +75,14 @@ include::azure-devops/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+2]
+include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+2] 
 
 <<<<
 
-** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
+** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]] 
 
-### Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on Github and deployed on either AWS EKS or Azure AKS. 
+= CI/CD on Github
+== Setup GitHub Workspace:
 
 include::github/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
 
@@ -88,7 +92,8 @@ include::github/setup-repository-script.asciidoc[leveloffset=+2]
 
 <<<<
 
-==== Setup GitHub workflows:
+== Setup Github Workflow:
+
 include::github/setup-build-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
@@ -126,7 +131,7 @@ include::github/setup-library-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-==== Setup Kubernetes deploying environment workflow
+=== Setup Kubernetes deploying environment workflow
 
 include::github/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
 
