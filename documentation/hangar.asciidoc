@@ -18,15 +18,15 @@
 
 == Setup Azure DevOps Workspace
 
+include::azure-devops/setup-project.asciidoc[leveloffset=+1]
+
+<<<<
+
 include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
 
 <<<<
 
 include::azure-devops/setup-repository-script.asciidoc[leveloffset=+2]
-
-<<<<
-
-include::azure-devops/setup-project.asciidoc[leveloffset=+1]
 
 <<<<
 
@@ -41,7 +41,7 @@ include::azure-devops/setup-test-pipeline.asciidoc[leveloffset=+2]
 <<<<
 
 === Quality
-** Prerequisite: 
+
 include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+2]
 
 <<<<
@@ -50,9 +50,8 @@ include::azure-devops/setup-quality-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Package
-** App
-*** Prerequisite: 
+=== App Package
+
 include::setup-container-image-registry.asciidoc[leveloffset=+2]
 
 <<<<
@@ -60,6 +59,8 @@ include::setup-container-image-registry.asciidoc[leveloffset=+2]
 include::azure-devops/setup-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
+
+=== Library Package
 
 include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+2]
 
@@ -74,6 +75,8 @@ include::azure-devops/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
 include::azure-devops/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
+
+=== Deploy Workflow
 
 include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+2] 
 
@@ -103,7 +106,7 @@ include::github/setup-test-pipeline.asciidoc[leveloffset=+2]
 <<<<
 
 === Quality
-** Prerequisite: 
+
 include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+2]
 
 <<<<
@@ -112,13 +115,14 @@ include::github/setup-quality-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
+=== Setup CI Pipeline
+
 include::github/setup-ci-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Package
-* App
-** Prerequisite: 
+=== App Package
+
 include::setup-container-image-registry.asciidoc[leveloffset=+2]
 
 <<<<
@@ -127,18 +131,22 @@ include::github/setup-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
+=== Library Package
+
 include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
 === Setup Kubernetes deploying environment workflow
 
-include::github/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
+include::https://github.com/isandesh1986/hangar/blob/EKS_Provisioning_Github/documentation/github/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::github/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
+include::https://github.com/prathibhapadma/hangar/blob/feature/github_aks_provision/documentation/github/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::github/setup-deploy-pipeline.asciidoc[leveloffset=+2]
+=== Deploy Workflow
+
+include::https://github.com/prathibhapadma/hangar/blob/feature/github_deploy_workflow/documentation/github/setup-deploy-pipeline.asciidoc[leveloffset=+2]
