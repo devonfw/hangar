@@ -127,7 +127,7 @@ include::github/setup-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-include::github/setup-library-package-pipeline.asciidoc[leveloffset=+2]
+include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
