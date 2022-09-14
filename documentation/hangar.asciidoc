@@ -81,8 +81,8 @@ include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+2]
 
 * Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]] 
 
-= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on GitHub and deployed on either AWS EKS or Azure AKS.
-== Setup GitHub Actions
+= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on GitHub Actions and deployed on either AWS EKS or Azure AKS.
+== Setup GitHub Actions Workspace
 
 include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
 
