@@ -14,11 +14,11 @@
 :partnums:
 :imagesdir: ./
 
-= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD and deployed on either AWS EKS or Azure AKS.
-= CI/CD on Azure DevOps 
-== Setup Azure DevOps workspace:
+= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on Azure Devops and deployed on either AWS EKS or Azure AKS.
 
-include::azure-devops/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
+== Setup Azure DevOps Workspace
+
+include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
 
 <<<<
 
@@ -30,7 +30,7 @@ include::azure-devops/setup-project.asciidoc[leveloffset=+1]
 
 <<<<
 
-== Build and Test:
+== Setup Azure DevOps Pipelines
 
 include::azure-devops/setup-build-pipeline.asciidoc[leveloffset=+2]
 
@@ -40,9 +40,9 @@ include::azure-devops/setup-test-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Quality:
+=== Quality
 ** Prerequisite: 
-include::azure-devops/setup-sonarqube-instance.asciidoc[leveloffset=+2]
+include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+2]
 
 <<<<
 
@@ -50,10 +50,10 @@ include::azure-devops/setup-quality-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-=== Package:
+=== Package
 ** App
 *** Prerequisite: 
-include::azure-devops/setup-container-image-registry.asciidoc[leveloffset=+2]
+include::setup-container-image-registry.asciidoc[leveloffset=+2]
 
 <<<<
 
@@ -79,12 +79,12 @@ include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+2]
 
 <<<<
 
-** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]] 
+* Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]] 
 
-= CI/CD on Github
-== Setup GitHub Workspace:
+= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on GitHub and deployed on either AWS EKS or Azure AKS.
+== Setup GitHub Actions
 
-include::github/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
+include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
 
 <<<<
 
@@ -92,7 +92,7 @@ include::github/setup-repository-script.asciidoc[leveloffset=+2]
 
 <<<<
 
-== Setup Github Workflow:
+== Setup Github Workflows
 
 include::github/setup-build-pipeline.asciidoc[leveloffset=+2]
 
@@ -104,7 +104,7 @@ include::github/setup-test-pipeline.asciidoc[leveloffset=+2]
 
 === Quality
 ** Prerequisite: 
-include::github/setup-sonarqube-instance.asciidoc[leveloffset=+2]
+include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+2]
 
 <<<<
 
@@ -119,7 +119,7 @@ include::github/setup-ci-pipeline.asciidoc[leveloffset=+2]
 === Package
 * App
 ** Prerequisite: 
-include::github/setup-container-image-registry.asciidoc[leveloffset=+2]
+include::setup-container-image-registry.asciidoc[leveloffset=+2]
 
 <<<<
 
