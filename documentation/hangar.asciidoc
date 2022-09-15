@@ -1,4 +1,4 @@
-= Devonfw Hangar
+= devonfw Hangar
 
 :description: comprehensive documentation of devonfw hangar.
 :doctype: book
@@ -14,139 +14,131 @@
 :partnums:
 :imagesdir: ./
 
-= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on Azure Devops and deployed on either AWS EKS or Azure AKS.
+== Azure DevOps deploying on AWS EKS or Azure AKS
 
-== Setup Azure DevOps Workspace
+=== Setup Azure DevOps workspace
 
-include::azure-devops/setup-project.asciidoc[leveloffset=+1]
-
-<<<<
-
-include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
+include::azure-devops/setup-project.asciidoc[leveloffset=+3]
 
 <<<<
 
-include::azure-devops/setup-repository-script.asciidoc[leveloffset=+2]
+include::azure-devops/setup-repository-script.asciidoc[leveloffset=+3]
 
 <<<<
 
-== Setup Azure DevOps Pipelines
+=== Setup AWS account
 
-include::azure-devops/setup-build-pipeline.asciidoc[leveloffset=+2]
-
-<<<<
-
-include::azure-devops/setup-test-pipeline.asciidoc[leveloffset=+2]
+include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+3]
 
 <<<<
 
-=== Quality
+=== Setup Azure DevOps Pipelines
 
-include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+2]
-
-<<<<
-
-include::azure-devops/setup-quality-pipeline.asciidoc[leveloffset=+2]
+include::azure-devops/setup-build-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
 
-=== App Package
-
-include::setup-container-image-registry.asciidoc[leveloffset=+2]
+include::azure-devops/setup-test-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
 
-include::azure-devops/setup-package-pipeline.asciidoc[leveloffset=+2]
+==== Quality pipeline
+
+include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+4]
 
 <<<<
 
-=== Library Package
-
-include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+2]
+include::azure-devops/setup-quality-pipeline.asciidoc[leveloffset=+4]
 
 <<<<
 
-=== Setup Kubernetes deploying environment pipeline
+==== App Package pipeline
 
-include::azure-devops/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
-
-<<<<
-
-include::azure-devops/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
+include::setup-container-image-registry.asciidoc[leveloffset=+4]
 
 <<<<
 
-=== Deploy Workflow
-
-include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+2] 
+include::azure-devops/setup-package-pipeline.asciidoc[leveloffset=+4]
 
 <<<<
 
-* Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]] 
-
-= Use case: Quarkus/Node.js/Angular-based project hosted with CI/CD on GitHub Actions and deployed on either AWS EKS or Azure AKS.
-== Setup GitHub Actions Workspace
-
-include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+2]
+include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
 
-include::github/setup-repository-script.asciidoc[leveloffset=+2]
+==== Environment provisioning pipeline
+
+include::azure-devops/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+4]
 
 <<<<
 
-== Setup Github Workflows
-
-include::github/setup-build-pipeline.asciidoc[leveloffset=+2]
+include::azure-devops/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+4]
 
 <<<<
 
-include::github/setup-test-pipeline.asciidoc[leveloffset=+2]
+include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+3] 
 
 <<<<
 
-=== Quality
+== GitHub Actions deploying on AWS EKS or Azure AKS
 
-include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+2]
+=== Setup GitHub Actions workspace
 
-<<<<
-
-include::github/setup-quality-pipeline.asciidoc[leveloffset=+2]
+include::github/setup-repository-script.asciidoc[leveloffset=+3]
 
 <<<<
 
-=== Setup CI Pipeline
+=== Setup AWS account
 
-include::github/setup-ci-pipeline.asciidoc[leveloffset=+2]
-
-<<<<
-
-=== App Package
-
-include::setup-container-image-registry.asciidoc[leveloffset=+2]
+include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+3]
 
 <<<<
 
-include::github/setup-package-pipeline.asciidoc[leveloffset=+2]
+=== Setup Github Workflows
+
+include::github/setup-build-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
 
-=== Library Package
-
-include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+2]
+include::github/setup-test-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
 
-=== Setup Kubernetes deploying environment workflow
+==== Quality pipeline
 
-include::https://github.com/isandesh1986/hangar/blob/EKS_Provisioning_Github/documentation/github/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+2]
+include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+4]
+<<<<
+
+include::github/setup-quality-pipeline.asciidoc[leveloffset=+4]
 
 <<<<
 
-include::https://github.com/prathibhapadma/hangar/blob/feature/github_aks_provision/documentation/github/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+2]
+include::github/setup-ci-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
 
-=== Deploy Workflow
+==== App Package pipeline
 
-include::https://github.com/prathibhapadma/hangar/blob/feature/github_deploy_workflow/documentation/github/setup-deploy-pipeline.asciidoc[leveloffset=+2]
+include::setup-container-image-registry.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::github/setup-package-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+==== Environment provisioning pipeline
+
+include::https://github.com/isandesh1986/hangar/blob/EKS_Provisioning_Github/documentation/github/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::https://github.com/prathibhapadma/hangar/blob/feature/github_aks_provision/documentation/github/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::https://github.com/prathibhapadma/hangar/blob/feature/github_deploy_workflow/documentation/github/setup-deploy-pipeline.asciidoc[leveloffset=+3]
