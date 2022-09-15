@@ -1,4 +1,4 @@
-= Hangar
+= devonfw Hangar
 
 :description: comprehensive documentation of devonfw hangar.
 :doctype: book
@@ -13,3 +13,133 @@
 :chapter-label:
 :partnums:
 :imagesdir: ./
+
+== Azure DevOps deploying on AWS EKS or Azure AKS
+
+=== Setup Azure DevOps workspace
+
+include::azure-devops/setup-project.asciidoc[leveloffset=+3]
+
+<<<<
+
+include::azure-devops/setup-repository-script.asciidoc[leveloffset=+3]
+
+<<<<
+
+=== Setup AWS account
+
+include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+3]
+
+<<<<
+
+=== Setup Azure DevOps Pipelines
+
+include::azure-devops/setup-build-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+include::azure-devops/setup-test-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+==== Quality pipeline
+
+include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::azure-devops/setup-quality-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+==== App Package pipeline
+
+include::setup-container-image-registry.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::azure-devops/setup-package-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+==== Environment provisioning pipeline
+
+include::azure-devops/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::azure-devops/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::azure-devops/setup-deploy-pipeline.asciidoc[leveloffset=+3] 
+
+<<<<
+
+== GitHub Actions deploying on AWS EKS or Azure AKS
+
+=== Setup GitHub Actions workspace
+
+include::github/setup-repository-script.asciidoc[leveloffset=+3]
+
+<<<<
+
+=== Setup AWS account
+
+include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+3]
+
+<<<<
+
+=== Setup Github Workflows
+
+include::github/setup-build-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+include::github/setup-test-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+==== Quality pipeline
+
+include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::github/setup-quality-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::github/setup-ci-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+==== App Package pipeline
+
+include::setup-container-image-registry.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::github/setup-package-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+3]
+
+<<<<
+
+==== Environment provisioning pipeline
+
+include::https://github.com/isandesh1986/hangar/blob/EKS_Provisioning_Github/documentation/github/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::https://github.com/prathibhapadma/hangar/blob/feature/github_aks_provision/documentation/github/setup-aks-provisioning-pipeline.asciidoc[leveloffset=+4]
+
+<<<<
+
+include::https://github.com/prathibhapadma/hangar/blob/feature/github_deploy_workflow/documentation/github/setup-deploy-pipeline.asciidoc[leveloffset=+3]
