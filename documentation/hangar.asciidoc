@@ -107,6 +107,7 @@ include::github/setup-test-pipeline.asciidoc[leveloffset=+3]
 ==== Quality pipeline
 
 include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+4]
+
 <<<<
 
 include::github/setup-quality-pipeline.asciidoc[leveloffset=+4]
