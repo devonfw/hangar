@@ -23,7 +23,7 @@ variables:
     description: "Installs Rancher on AKS when set to true."         
   TF_STATE_NAME: "$storageContainerName"
   TF_CACHE_KEY: default
-  TF_ROOT: "${CI_PROJECT_DIR}/azure/aks"
+  TF_ROOT: "${CI_PROJECT_DIR}/.terraform/aks"
   TF_USERNAME: ${GITLAB_USER_NAME}
   TF_PASSWORD: ${GITLAB_PAT}
   TF_ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${TF_STATE_NAME}"
