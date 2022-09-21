@@ -14,7 +14,7 @@ workflow:
 variables:
   CLUSTER_NAME:
     value: "$clusterName"
-    description: "Name for the AWS EKS cluster to be created"
+    description: "Name for the AKS cluster to be created"
   OPERATION: 
     value: "$operation" 
     description: "Operation to perform on cluster. Create or Destroy." 
