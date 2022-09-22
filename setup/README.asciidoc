@@ -1,0 +1,73 @@
+## GCloud Volumes
+
+### Linux
+
+```
+/root/.config/gloud
+~/.config/gcloud
+```
+
+
+### Windows
+
+```
+C:\Users\username\AppData\Roaming\gcloud
+```
+
+## AWS Volumes
+
+### Linux
+
+```
+/root/.aws/credentials
+~/.aws/credentials
+
+~/.aws/config
+/root/.aws/config
+
+~/.aws
+/root/.aws
+```
+
+
+### Windows
+
+```
+C:\Users\username\.aws\config
+C:\Users\username\.aws\credentials
+
+%HOMEPATH%\.aws
+C:\Users\username\.aws
+```
+
+## Azure Volumes
+
+### Linux
+
+```
+/root/.Azure
+~/.Azure
+```
+
+
+### Windows
+
+```
+%HOMEPATH%\.Azure
+C:\Users\username\.Azure
+```
+
+
+## Kubectl Volumes
+
+```
+/root/.kube
+```
+
+## SSH Keys
+
+```
+/root/.ssh
+
+${HOME}/.ssh
+```
