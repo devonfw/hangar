@@ -20,7 +20,8 @@ variables:
     description: "Operation to perform on cluster. Create or Destroy." 
   INSTALL_RANCHER:
     value: "$installRancher"   
-    description: "Installs Rancher on AKS when set to true."         
+    description: "Installs Rancher on AKS when set to true." 
+  organization: "$CI_PROJECT_NAMESPACE"          
   TF_STATE_NAME: "$storageContainerName"
   TF_CACHE_KEY: default
   TF_ROOT: "${CI_PROJECT_DIR}/.terraform/aks"
@@ -82,7 +83,7 @@ Provision:
     - terraform apply -var cluster_name=${CLUSTER_NAME} --auto-approve
     - mv ${TF_ROOT}/kubeconfig ${CI_PROJECT_DIR}
     - *glab_auth
-    - cat ${CI_PROJECT_DIR}/kubeconfig | glab variable set -g devon-hangar KUBECONFIG -t "file"
+    - cat ${CI_PROJECT_DIR}/kubeconfig | glab variable set -g $organization KUBECONFIG -t "file"
   artifacts:
     paths:
       - "./kubeconfig"  
@@ -115,7 +116,7 @@ Obtain_dns:
     - dnsname="${CLUSTER_NAME}.westeurope.cloudapp.azure.com"
     # Create aks_dns_name variable 
     - *glab_auth
-    - glab variable set -g devon-hangar aks_dns_name -v "$dnsname" -t "env_var"
+    - glab variable set -g $organization aks_dns_name -v "$dnsname" -t "env_var"
   rules:
   - if: '$OPERATION == "create"'
     when: always  
