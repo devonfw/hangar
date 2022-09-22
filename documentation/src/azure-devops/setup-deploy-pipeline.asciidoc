@@ -1,6 +1,6 @@
 :provider: Azure Devops
 :pipeline_type: Pipeline
-:trigger_sentence: 
+:trigger_sentence_azure: 
 :pipeline_type2: pipeline
 :path_provider: azure-devops
 include::../common_templates/setup-deploy-pipeline.asciidoc[]  
