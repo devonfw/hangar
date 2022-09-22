@@ -1,0 +1,78 @@
+default:
+  image: ubuntu:latest 
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+
+.Prerequisites_install: &Prerequisites_install
+  before_script: 
+    - apt-get update 
+    - apt-get install sudo -y
+    - apt-get install -y wget
+    - apt-get install curl -y
+    - apt-get install zip -y
+    # INSTALL yq 
+    - wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+    - chmod a+x /usr/local/bin/yq 
+    # INSTALL KUBECTL
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
+    # INSTALL AWS CLI
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - sudo ./aws/install
+
+variables:
+  k8sProvider:
+    value: "$k8sProvider"
+    description: 'Deploy Cluster Name'
+  secretsName: 
+    value: "$k8sImagePullSecret"
+    description: "ImagePullSecret Name"
+  deploymentYamlPath: "$CI_PROJECT_DIR/$k8sDeployFiles/application-deployment.yaml" 
+  ingressYamlPath: "$CI_PROJECT_DIR/$k8sDeployFiles/ingress.yaml"  
+  deployFilesPath: "$CI_PROJECT_DIR/$k8sDeployFiles"
+  packageTagScript: ".pipelines/scripts/package-extra.sh"
+   
+Create secrets AKS:
+  <<: *Prerequisites_install
+  script:
+    - export KUBECONFIG=${KUBECONFIG}
+    - chmod +x .pipelines/scripts/secrets.sh
+    - .pipelines/scripts/secrets.sh "$k8sNamespace" "$k8sImagePullSecret" "$docker_username" "$docker_password" "$registry" "$deploymentYamlPath"
+  rules:
+  - if: '$secretsName != null && $k8sProvider == "AKS"'
+    when: always
+
+Deploy app AKS:
+  <<: *Prerequisites_install
+  script:
+    - export KUBECONFIG=${KUBECONFIG}
+    - chmod +x .pipelines/scripts/deploy.sh  
+    - .pipelines/scripts/deploy.sh "$k8sNamespace" "$imageName" "$aks_dns_name" "$deploymentYamlPath" "$ingressYamlPath" "$deployFilesPath" "$packageTagScript" "$branch" 
+  rules:
+  - if: '$k8sProvider == "AKS"'
+    when: always
+
+Create secrets EKS:
+  <<: *Prerequisites_install
+  script:
+    - aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_REGION}
+    - chmod +x .pipelines/scripts/secrets.sh
+    - .pipelines/scripts/secrets.sh "$k8sNamespace" "$k8sImagePullSecret" "$aws_access_key" "$aws_secret_access_key" "$registry" "$deploymentYamlPath"
+  rules:
+  - if: '$secretsName != null && $k8sProvider == "EKS"'
+    when: always
+
+Deploy app EKS:
+  <<: *Prerequisites_install
+  script:
+    - aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_REGION}
+    - chmod +x .pipelines/scripts/deploy.sh  
+    - .pipelines/scripts/deploy.sh "$k8sNamespace" "$imageName" "$eks_dns_name" "$deploymentYamlPath" "$ingressYamlPath" "$deployFilesPath" "$packageTagScript" "$branch" 
+  rules:
+  - if: '$k8sProvider == "EKS"'
+    when: always 
