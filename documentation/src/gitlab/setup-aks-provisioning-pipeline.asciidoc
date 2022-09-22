@@ -1,7 +1,7 @@
 :provider: Gitlab
 :pipeline_type: pipeline
 :trigger_sentence_gitlab: 
-:pipeline_type2: gitlab
+:pipeline_type2: Gitlab pipeline
 :path_provider: gitlab
 :aks_variables_path: Group > settings > ci_cd > Variables
 include::../common_templates/setup-aks-provisioning-pipeline.asciidoc[]  
