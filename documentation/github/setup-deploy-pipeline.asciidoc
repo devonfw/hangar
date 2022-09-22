@@ -1,6 +1,6 @@
 :provider: Github
 :pipeline_type: workflow
-:trigger_sentence:
+:trigger_sentence_github:
 :pipeline_type2: Github action
 :path_provider: github
 = Setting up a Deploy Pipeline on {provider}
