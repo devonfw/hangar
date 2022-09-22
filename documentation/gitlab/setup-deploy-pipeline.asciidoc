@@ -1,6 +1,6 @@
 :provider: Gitlab
 :pipeline_type: pipeline
-:trigger_sentence:
+:trigger_sentence_gitlab:
 :pipeline_type2: Gitlab pipeline
 :path_provider: gitlab
 = Setting up a Deploy Pipeline on Azure DevOps
@@ -51,6 +51,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 
 ```
 
+ ./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -d C:/Users/$USERNAME/Desktop/quarkus-project --k8s-provider EKS --k8s-namespace hangar --k8s-deploy-files-path k8s -b develop -w
 ```
 
 
