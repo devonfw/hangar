@@ -28,7 +28,7 @@ pipeline_generator.sh \
   -n <pipeline name> \
   -d <project local path> \
   --package-pipeline-name <pipeline name> \
-  --env-provision-pipeline-name <pipeline name>] \
+  --env-provision-pipeline-name <pipeline name> \
   --k8s-provider <provider name> \
   --k8s-namespace <namespace> \
   --k8s-deploy-files-path <manifests path> \
