@@ -5,6 +5,7 @@ workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
+    - when: never  
 
 .Prerequisites_install: &Prerequisites_install
   before_script: 
