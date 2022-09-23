@@ -49,6 +49,8 @@ RUN curl -L https://github.com/cli/cli/releases/download/v2.16.0/gh_2.16.0_linux
 
 FROM cli_install_github as run_env
 
-WORKDIR /
+WORKDIR /scripts
+
+ADD scripts .
 
 CMD ["/bin/bash", "-c"]
