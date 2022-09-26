@@ -31,8 +31,8 @@ create-project.sh \
 
 ```
 -n    [Required] Name of the new project. (6-30 chars, lowercase letters, numbers, and hyphens)
--d               Description for the new project.
--o               Name of the organization for which the project will be configured.
+-d    [Optional] Description for the new project.
+-o    [Optional] Name of the organization for which the project will be configured.
 
 ```
 
