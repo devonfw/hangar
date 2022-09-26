@@ -24,6 +24,7 @@ The script located at `scripts/accounts/gcloud/create-project.sh` enables you to
 create-project.sh \
   -n <name> \
   [-d <description>] \
+  [-f <folder>] \
   [-o <organization>]
 ```
 
@@ -32,10 +33,11 @@ create-project.sh \
 ```
 -n    [Required] Name of the new project. (6-30 chars, lowercase letters, numbers, and hyphens)
 -d    [Optional] Description for the new project.
--o    [Optional] Name of the organization for which the project will be configured.
+-f    [Optional] Numeric ID of the folder for which the project will be configured.
+-o    [Optional] Numeric ID of the organization for which the project will be configured.
 
 ```
 
 == Example
 
-`./create-project.sh -n "project-test-123" -d "This is a sample application" -o devon-hangar`
+`./create-project.sh -n "project-test-123" -d "This is a sample application" -f 12345 -o 2048`
