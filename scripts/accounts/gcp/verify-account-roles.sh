@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts u:g:p:f:c:a:s:r: flag
+while getopts g:p:r:f: flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;

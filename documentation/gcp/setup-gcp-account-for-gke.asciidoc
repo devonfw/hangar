@@ -1,0 +1,128 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+= Setup GCP account IAM for deployment in GKE
+The scope of this section is to prepare a GCP account to be ready for deploying in GCP GKE. By the end of this guide, the GCP account will have the required roles attached.
+
+== Preparing environment
+First of all, install https://cloud.google.com/sdk/docs/install[GCP CLI] and https://www.python.org/downloads/[Python] for your OS.
+
+== Prerequisites
+
+* A GCP account.
+
+==== Required predefined roles
+
+Find them on `/scripts/accounts/gcp/gke-predefined-roles.txt`.
+
+```
+roles/source.admin
+...
+```
+
+==== Required custom roles
+
+Find them on `/scripts/accounts/gcp/gke-custom-role.yaml`.
+
+== Attaching roles to user using provided script
+
+The script located at `/scripts/accounts/gcp/create-bindings.sh` will automatically create the bindings between user and roles, in the context of the provided project.
+
+=== Usage
+```
+create-bindings.sh \
+  -g <Google account> \
+  -p <project ID> \
+  [-r <roles...>] \
+  [-f <roles file path>] \
+  [-c <custom role file path>] \
+  [-u <custom role id>]
+```
+
+=== Flags
+```
+-g      [Required] Google Account for the end user
+-p      [Required] Project ID where the user will be added
+-r      [Optional] Roles (Basic or Predefined) to be attached to the user in the project, splitted by comma
+-f      [Optional] Path to a file containing the roles (Basic or predefined) to be attached to the user in the project
+-c      [Optional] Path to a YAML file containing the custom role to be attached to the user in the project
+-u      [Optional] Custom Role ID
+```
+
+=== Example
+```
+./create-bindings.sh -g example@gmail.com -p ExampleProject -r roles/viewer,roles/editor -f ./gke-predefined-roles.txt -c gke-custom-role.yaml -u gke-custom-role
+```
+NOTE: "ExampleProject" project must exist.
+
+NOTE: Required roles for using GKE are located at `/scripts/accounts/gcp/gke-predefined-policies.txt` and `/scripts/accounts/gcp/gke-custom-role.json`
+
+=== After execution
+On success, the newly created bindings for user in the project will be shown as output:
+```
+Updated IAM policy for project [ExampleProject].
+bindings:
+- members:
+  - user:example@gmail.com
+  role: projects/ExampleProject/roles/gke-custom-role
+- members:
+  - user:example@gmail.com
+  role: roles/editor
+- members:
+  - user:example@gmail.com
+  role: roles/owner
+- members:
+  - user:example@gmail.com
+  role: roles/source.admin
+- members:
+  - user:example@gmail.com
+  role: roles/viewer
+
+```
+
+== Check IAM user roles
+
+The script located at `/scripts/accounts/gcp/verify-account-roles.sh` will check that the necessary roles were attached to the user in the project.
+
+=== Usage
+```
+verify-account-roles.sh \
+  -g <Google account> \
+  -p <project ID> \
+  [-r <roles...>] \
+  [-f <roles file path>] \
+```
+
+=== Flags
+```
+-g      [Required] Google Account for the end user
+-p      [Required] Project ID where the user roles will be checked
+-r      [Optional] Roles (Basic, Predefined or Custom) to be checked for the user in the project, splitted by comma
+-f      [Optional] Path to a file containing the roles (Basic, Predefined or Custom) to be checked for the user in the project
+```
+NOTE: At least one policies flag (`-r` or `-f`) is required.
+
+=== Example
+```
+./verify-account-roles.sh -g example@gmail.com -p ExampleProject -r roles/viewer,roles/editor -f ./gke-required-roles.txt
+```
+After execution, provided roles will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
+
+NOTE: Required roles for using GKE are located at `/scripts/accounts/gcp/gke-required-roles.txt`
+
+== Using GCP CLI [[gcloud]]
+Once you have been provided with an IAM user with the required roles attached to the desired project, login with the GCP CLI using the following command:
+```
+gcloud auth login
+```
+You will be prompted with a message like the one showed below
+```
+Go to the following link in your browser:
+
+    https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=32555940559.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fsdk.cloud.google.com%2Fauthcode.html&scope=openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fsqlservice.login+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth&state=Z3FUXCDbl5q0u5fbwDCeo26KLb6dTD&prompt=consent&access_type=offline&code_challenge=sxe_C_2kTAUZ4LY4tKwAWeLQCJtuFUTJtkLy_bbLGME&code_challenge_method=S256
+
+Enter authorization code:
+```
+Select your Google Cloud account in the web browser and copy the requested authorization code and paste it on the OS terminal.
+Now your GCP CLI is ready to use.
