@@ -39,7 +39,13 @@ if ! [ -x "$(command -v gcloud)" ]; then
   exit 127
 fi
 
-#Posiblemente aqui tengo que meter el gcloud login
+#Authenticate (interactively) with the master user
+gcloud auth login
+if ! [ $? -eq 0 ]
+then
+    echo -e "${red}Error: Authentication process failed. Please make sure you are copying the right verification code." >&2
+    exit 2
+fi
 
 # Create the Google Cloud project.
 echo -e "${green}Creating project..."
