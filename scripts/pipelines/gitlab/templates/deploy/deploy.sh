@@ -3,7 +3,6 @@ set -e
 # Add image name, dns_name and tag.
 # Source package-extra.sh to get ${tag}
 . "$7"
-
 # we get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
 branch_short=$(echo "$8" | awk -F '/' '{ print $NF }')
 
