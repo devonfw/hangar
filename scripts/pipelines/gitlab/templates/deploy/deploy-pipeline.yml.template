@@ -27,10 +27,10 @@ workflow:
     - sudo ./aws/install
 
 variables:
-  k8sProvider:
+  K8SPROVIDER:
     value: "$k8sProvider"
     description: 'Deploy Cluster Name'
-  secretsName: 
+  SECRETSNAME: 
     value: "$k8sImagePullSecret"
     description: "ImagePullSecret Name"
   deploymentYamlPath: "$CI_PROJECT_DIR/$k8sDeployFiles/application-deployment.yaml" 
@@ -45,7 +45,7 @@ Create secrets AKS:
     - chmod +x .pipelines/scripts/secrets.sh
     - .pipelines/scripts/secrets.sh "$k8sNamespace" "$k8sImagePullSecret" "$docker_username" "$docker_password" "$registry" "$deploymentYamlPath"
   rules:
-  - if: '$secretsName != null && $k8sProvider == "AKS"'
+  - if: '$SECRETSNAME != "" && $K8SPROVIDER == "AKS"'
     when: always
 
 Deploy app AKS:
@@ -55,7 +55,7 @@ Deploy app AKS:
     - chmod +x .pipelines/scripts/deploy.sh  
     - .pipelines/scripts/deploy.sh "$k8sNamespace" "$imageName" "$aks_dns_name" "$deploymentYamlPath" "$ingressYamlPath" "$deployFilesPath" "$packageTagScript" "$branch" 
   rules:
-  - if: '$k8sProvider == "AKS"'
+  - if: '$K8SPROVIDER == "AKS"'
     when: always
 
 Create secrets EKS:
@@ -65,7 +65,7 @@ Create secrets EKS:
     - chmod +x .pipelines/scripts/secrets.sh
     - .pipelines/scripts/secrets.sh "$k8sNamespace" "$k8sImagePullSecret" "$aws_access_key" "$aws_secret_access_key" "$registry" "$deploymentYamlPath"
   rules:
-  - if: '$secretsName != null && $k8sProvider == "EKS"'
+  - if: '$SECRETSNAME != "" && $K8SPROVIDER == "EKS"'
     when: always
 
 Deploy app EKS:
@@ -75,5 +75,5 @@ Deploy app EKS:
     - chmod +x .pipelines/scripts/deploy.sh  
     - .pipelines/scripts/deploy.sh "$k8sNamespace" "$imageName" "$eks_dns_name" "$deploymentYamlPath" "$ingressYamlPath" "$deployFilesPath" "$packageTagScript" "$branch" 
   rules:
-  - if: '$k8sProvider == "EKS"'
+  - if: '$K8SPROVIDER == "EKS"'
     when: always 
