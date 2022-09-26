@@ -6,14 +6,16 @@ helpFunction()
    echo ""
    echo -e "\t-n [Required] Name of the new project."
    echo -e "\t-d [Optional] Description for the new project. If not specified, name will be used as description"
-   echo -e "\t-o [Optional] Name of the organization for which the project will be configured."
+   echo -e "\t-f [Optional] Numeric ID of the folder for which the project will be configured."
+   echo -e "\t-o [Optional] Numeric ID of the organization for which the project will be configured."
 }
 
-while getopts "n:d:o:h" opt
+while getopts "n:d:f:o:h" opt
 do
    case "$opt" in
       n ) projectName="$OPTARG" ;;
       d ) description="$OPTARG" ;;
+      f ) organization="$OPTARG" ;;
       o ) organization="$OPTARG" ;;
       h ) helpFunction; exit ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
@@ -50,12 +52,22 @@ fi
 # Create the Google Cloud project.
 echo -e "${green}Creating project..."
 echo -ne ${white}
-if [ -n "$description" ] && [ -n "$organization" ]; then
-   gcloud projects create "$projectName" --name="$description" --organization="$organization"
-elif [ -n "$description" ]; then
-   gcloud projects create "$projectName" --name="$description"
-elif [ -n "$organization" ]; then
-   gcloud projects create "$projectName" --organization="$organization"
-else 
-   gcloud projects create "$projectName"
+
+command="gcloud projects create $projectName"
+
+if [ -n "$description" ]; then
+   command=$command" --name=\"$description\""
+fi
+if [ -n "$folder" ]; then
+   command=$command" --folder=$folder"
+fi
+if [ -n "$organization" ]; then
+   command=$command" --organization=$organization"
+fi
+
+eval $command
+if ! [ $? -eq 0 ]
+then
+    echo -e "${red}Error while creating the project." >&2
+    exit 2
 fi
