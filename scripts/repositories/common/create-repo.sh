@@ -462,7 +462,6 @@ then
   MSG_ERROR "Cding into the directory given." "$?"
   clone_git_project_create
   MSG_ERROR "Cloning empty repo." $?
-  pwd
   cd "$directory/$name"
   git checkout -b master
   cp "$absoluteFolderScriptPath/README.md" .
