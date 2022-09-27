@@ -458,12 +458,15 @@ then
   fi
 elif [ "$action" = "create" ]
 then
+  cd "$directory"
   MSG_ERROR "Cding into the directory given." "$?"
   clone_git_project_create
   MSG_ERROR "Cloning empty repo." $?
+  pwd
+  cd "$directory/$name"
   git checkout -b master
   cp "$absoluteFolderScriptPath/README.md" .
-  git a dd -A
+  git add -A
   git commit -m "Adding README"
   git push -u origin --all
   if [ "$strategy" != "" ]
