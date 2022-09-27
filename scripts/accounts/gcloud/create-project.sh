@@ -15,7 +15,7 @@ do
    case "$opt" in
       n ) projectName="$OPTARG" ;;
       d ) description="$OPTARG" ;;
-      f ) organization="$OPTARG" ;;
+      f ) folder="$OPTARG" ;;
       o ) organization="$OPTARG" ;;
       h ) helpFunction; exit ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
@@ -39,14 +39,6 @@ fi
 if ! [ -x "$(command -v gcloud)" ]; then
   echo -e "${red}Error: GCloud CLI is not installed." >&2
   exit 127
-fi
-
-#Authenticate (interactively) with the master user
-gcloud auth login
-if ! [ $? -eq 0 ]
-then
-    echo -e "${red}Error: Authentication process failed. Please make sure you are copying the right verification code." >&2
-    exit 2
 fi
 
 # Create the Google Cloud project.
