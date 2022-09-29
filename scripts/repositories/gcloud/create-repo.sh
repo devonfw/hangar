@@ -19,13 +19,13 @@ function import_repo_content {
     git clone --bare "$1"
     source_repo_namegit=${1##*/}
     cd "$source_repo_namegit"
-    git config credential.helper gcloud.cmd
+    git config credential.helper gcloud.sh
     git remote add google https://source.developers.google.com/p/$3/r/$4
     git push --all google
 }
 
 function prepare_push_existing_repo_content {
-    git config credential.helper gcloud.cmd
+    git config credential.helper gcloud.sh
     URL_space_converted="https://source.developers.google.com/p/$2/r/$3"
 }
 

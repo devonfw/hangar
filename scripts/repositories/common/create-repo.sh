@@ -1,12 +1,12 @@
 #!/bin/bash
 # Creation: 18/10/2021 Timothé Paty
-# Description: 	Script to create a repo on azure, you can choose between three differents way of creation
+# Description: 	Script to create a repo, you can choose between three differents way of creation
 #
 # Arguments:
 # -a, --action                  [Required] Use case to fulfil: create, import."
 # -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
-# -o, --org               [Azure Required] Name of the Azure DevOps organization (mandatory)."
-# -p, --project           [Azure Required] Name of the Azure DevOps project."
+# -o, --org               [Azure Required] Name of the organization."
+# -p, --project           [Azure, GCloud Required] Name of the project."
 # -n, --name                               Name for the repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
 # -g, --source-git-url                     Source URL of the Git repository to import."
 # -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
@@ -22,20 +22,20 @@
 
 ####################################################################################################
 function help {
-  echo "Creates or imports a repository on Azure DevOps."
+  echo "Creates or imports a repository."
   echo ""
   echo "It allows you to, based on action flag, either:"
   echo ""
   echo "  - Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch."
   echo ""
-  echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to Azure DevOps the development of an existing project"
+  echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to a cloud platform the development of an existing project"
   echo ""
   echo "Flags:"
   echo "  -a, --action                  [Required] Use case to fulfil: create, import."
   echo "  -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
-  echo "  -o, --org               [Azure Required] Name of the Azure DevOps organization (mandatory)."
-  echo "  -p, --project           [Azure Required] Name of the Azure DevOps project."
-  echo "  -n, --name                               Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
+  echo "  -o, --org               [Azure Required] Name of the organization."
+  echo "  -p, --project           [Azure, GCloud Required] Name of the project."
+  echo "  -n, --name                               Name for the repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
   echo "  -g, --source-git-url                     Source URL of the Git repository to import."
   echo "  -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
   echo "  -r, --remove-other-branches              Removes branches other than the (possibly new) default one."
@@ -43,6 +43,7 @@ function help {
   echo "  -f, --force                              Skips any user confirmation."
   echo "      --subpath                            When combined with -g and -r, imports only the specified subpath of the source Git repository."
   echo "  -u, --public                             Repository scope. Private by default"
+
 
   exit
 }
