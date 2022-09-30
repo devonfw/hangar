@@ -19,13 +19,30 @@ function import_repo_content {
     git clone --bare "$1"
     source_repo_namegit=${1##*/}
     cd "$source_repo_namegit"
-    git config credential.helper gcloud.sh
+
+    #Check if is a windows or linux installation (GCloud CLI)
+    if [ -a "$(command -v gcloud.cmd)" ]; then
+        git config credential.helper gcloud.cmd
+    elif [ -a "$(command -v gcloud.sh)" ]; then
+        git config credential.helper gcloud.sh
+    fi
+
     git remote add google https://source.developers.google.com/p/$3/r/$4
     git push --all google
+    cd ..
+    #Remove git clone --bare created dir
+    rm -rf "$source_repo_namegit"
 }
 
 function prepare_push_existing_repo_content {
-    git config credential.helper gcloud.sh
+
+    #Check if is a windows or linux installation (GCloud CLI)
+    if [ -a "$(command -v gcloud.cmd)" ]; then
+        git config credential.helper gcloud.cmd
+    elif [ -a "$(command -v gcloud.sh)" ]; then
+        git config credential.helper gcloud.sh
+    fi
+
     URL_space_converted="https://source.developers.google.com/p/$2/r/$3"
 }
 
@@ -39,7 +56,7 @@ function custom_vars_assignment {
 }
 
 function clone_git_project_import {
-    nothing=""
+    gcloud source repos clone "$name" --project="$project"
 }
 
 function clone_git_project_create {
