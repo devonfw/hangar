@@ -1,0 +1,11 @@
+title: "My Custom Role"
+description: "Roles for demo on 28/09/2022"
+stage: GA
+includedPermissions:
+- source.repos.list
+- source.repos.create
+- source.repos.get
+- run.services.get
+- run.services.list
+- run.services.create
+- iam.serviceAccounts.actAs
