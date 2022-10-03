@@ -1,8 +1,9 @@
 #!/bin/bash
-while getopts g:p:r:f: flag
+while getopts g:s:p:r:f:h: flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
+	s) service_account=${OPTARG};;
         p) project_id=${OPTARG};;
         r) roles=${OPTARG};;
         f) roles_file=${OPTARG};;
@@ -11,10 +12,11 @@ done
 
 if [ "$1" == "-h" ];
 then
-    echo "Checks if a Google account (end user) has the roles provided in a given project."
+    echo "Checks if a Principal has the roles provided in a given project."
     echo ""
     echo "Arguments:"
     echo "  -g     [Required] Google Account for the end user."
+    echo "  -s     [Required] Service Account name."
     echo "  -p     [Required] Project ID where the roles will be checked"
     echo "  -r     [Optional] Roles (Basic or Predefined) to be checked to the user in the project, splitted by comma."
     echo "  -f     [Optional] Path to a file containing the roles (Basic, predefined and custom) to be checkd to the user in the project."
@@ -26,7 +28,7 @@ red='\e[0;31m'
 white='\e[1;37m'
 
 #Argument check
-if [ -z "$google_account" ] || [ -z "$project_id" ] || { [ -z "$roles" ] && [ -z "$roles_file" ] && [ -z "$custom_role" ]; }
+if ([ -z "$google_account" ] && [ -z "$service_account" ]) || [ -z "$project_id" ] || { [ -z "$roles" ] && [ -z "$roles_file" ] && [ -z "$custom_role" ]; }
 then
     echo -e "${red}Error: Missing parameters, -g and -p and (-r or -f or -c) flags are mandatory." >&2
     echo -e "${red}Use -h flag to display help." >&2
@@ -46,25 +48,24 @@ if ! [ -x "$(command -v python)" ]; then
   exit 127
 fi
 
-#Authenticate (interactively) with the master user
-gcloud auth login
-if ! [ $? -eq 0 ]
-then
-    echo -e "${red}Error: Authentication process failed. Please make sure you are copying the right verification code." >&2
-    exit 2
-fi
-
 #Check if the provided project_id exists
 output=$(gcloud projects list --format="json" --filter=$project_id)
-echo $project_id $output
 if [ "$output" == "[]" ]
 then
     echo -e "${red}Error: The provided project ID does not exist" >&2
     exit 2
 fi
 
-#Get ALL user-specific roles in project
-all_roles=$(gcloud projects get-iam-policy $project_id --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep $google_account | cut -d ',' -f2)
+if [ -n "$google_account" ]
+then
+    principal=$google_account
+elif [ -n "$service_account" ]
+then 
+    principal=$service_account
+fi
+
+#Get ALL principal-specific roles in project
+all_roles=$(gcloud projects get-iam-policy $project_id --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep $principal | cut -d ',' -f2)
 all_roles_array=($all_roles)
 
 
@@ -80,7 +81,6 @@ then
 	    echo -e "${green}OK        $role_to_check"
         else
             echo -e "${red}FAILED      $role_to_check"
-            exit 1;
         fi
         echo -e ${white}
 
@@ -100,7 +100,8 @@ then
             echo -e "${green}OK        $role_to_check"
         else
             echo -e "${red}FAILED      $role_to_check"
-            exit 1;
         fi
      done
 fi
+
+echo -e ${white}
