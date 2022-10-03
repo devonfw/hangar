@@ -1,0 +1,18 @@
+= Setting up an artifact registry repository on Google Cloud
+
+Artifact Registry provides a single location for storing and managing packages and Docker container images.
+
+By the end of this guide, an artifact registry repository on Google Cloud will be created.
+
+== Prerequisites
+* Have a Google Cloud project already setup and GCloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
+
+== Creating a repository
+
+Follow the https://cloud.google.com/artifact-registry/docs/repositories/create-repos#gcloud[Create and configure repositories guide] from the Google Cloud docs to create a repository.
+
+=== Docker repo creation example
+
+```
+gcloud artifacts repositories create myreponame --repository-format=docker
+```
