@@ -7,11 +7,7 @@ FROM base as cli_install_gcloud
 WORKDIR /downloaded_assets
 
 # Install gcloud
-RUN curl -L https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-403.0.0-linux-x86_64.tar.gz -o google-cloud-cli.tar.gz && \
-    tar xf google-cloud-cli.tar.gz && \
-    mv google-cloud-sdk /opt/google-cloud-sdk && \
-    ln -s /opt/google-cloud-sdk/bin/* /bin/ && \
-    rm google-cloud-cli.tar.gz
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | tee /usr/share/keyrings/cloud.google.gpg && apt-get update -y && apt-get install google-cloud-sdk -y
 
 FROM cli_install_gcloud as cli_install_aws
 
