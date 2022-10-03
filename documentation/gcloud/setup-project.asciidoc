@@ -25,7 +25,8 @@ create-project.sh \
   -n <name> \
   [-d <description>] \
   [-f <folder>] \
-  [-o <organization>]
+  [-o <organization>] \
+  [-b <billing account>]
 ```
 
 == Flags
@@ -35,6 +36,7 @@ create-project.sh \
 -d    [Optional] Description for the new project.
 -f    [Optional] Numeric ID of the folder for which the project will be configured.
 -o    [Optional] Numeric ID of the organization for which the project will be configured.
+-b    [Optional] Billing account. If not specified, won't be able to enable some services.
 
 ```
 

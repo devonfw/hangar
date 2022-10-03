@@ -8,15 +8,17 @@ helpFunction()
    echo -e "\t-d [Optional] Description for the new project. If not specified, name will be used as description"
    echo -e "\t-f [Optional] Numeric ID of the folder for which the project will be configured."
    echo -e "\t-o [Optional] Numeric ID of the organization for which the project will be configured."
+   echo -e "\t-b [Optional] Billing account. If not specified, won't be able to enable some services."
 }
 
-while getopts "n:d:f:o:h" opt
+while getopts "n:d:f:o:b:h" opt
 do
    case "$opt" in
       n ) projectName="$OPTARG" ;;
       d ) description="$OPTARG" ;;
       f ) folder="$OPTARG" ;;
       o ) organization="$OPTARG" ;;
+      b ) billing="$OPTARG" ;;
       h ) helpFunction; exit ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
    esac
@@ -63,3 +65,15 @@ then
     echo -e "${red}Error while creating the project." >&2
     exit 2
 fi
+
+if ! [ -z "$billing" ]; then
+   echo "Linking project to billing account"
+   gcloud beta billing projects link "$projectName" --billing-account "$billing"
+   echo "Enabling sourcerepo service"
+   gcloud services enable sourcerepo.googleapis.com --project "$projectName"
+   echo "Enabling run service"
+   gcloud services enable run.googleapis.com --project "$projectName"
+   echo "Enabling artifact registry"
+   gcloud services enable artifactregistry.googleapis.com --project "$projectName"
+fi
+
