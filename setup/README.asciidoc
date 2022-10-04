@@ -34,13 +34,13 @@ TIP: If you want to have **persistence between executions** or **map the configu
 For Windows use:
 
 ```
-docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure hangar bash
+docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube hangar bash
 ```
 
 For Linux use:
 
 ```
-docker run --rm -it -v /root/.config/gcloud:/root/.config/gcloud -v /root/.aws:/root/.aws -v /root/.azure:/root/.azure hangar bash
+docker run --rm -it -v /root/.config/gcloud:/root/.config/gcloud -v /root/.aws:/root/.aws -v /root/.azure:/root/.azure -v /root/.kube:/root/.kube hangar bash
 ```
 
 
@@ -104,9 +104,23 @@ Azure CLI configuration on Linux is stored on `/root/.azure`
 
 ### Kubectl Volumes WIP
 
+#### Windows
+
 ```
-/root/.kube
+docker run --rm -it -v /Users/$env:UserName/.kube:/root/.kube hangar bash
 ```
+
+Kubectl configuration on Windows is stored on `C:\Users\username\.kube\` or `$HOME\.kube\` 
+
+
+#### Linux
+
+```
+docker run --rm -it -v /root/.kube:/root/.kube hangar bash
+```
+
+Kubectl configuration on Linux is stored on `/root/.kube`
+
 
 ### Terraform Volumes WIP
 
