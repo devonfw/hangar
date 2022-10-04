@@ -43,111 +43,30 @@ For Linux use:
 docker run --rm -it -v /root/.config/gcloud:/root/.config/gcloud -v /root/.aws:/root/.aws -v /root/.azure:/root/.azure -v /root/.kube:/root/.kube -v /root/.ssh:/root/.ssh hangar bash
 ```
 
+### Volumes Mapping
 
-### GCloud Volumes
+[cols="1,2,2"]
+|===
+|Tool|Windows|Linux
 
-#### Windows
+|GCloud CLI
+|/Users/$env:UserName/AppData/Roaming/gcloud
+|~/.config/gcloud
 
-```
-docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud hangar bash
-```
+|AWS CLI
+|/Users/$env:UserName/.aws
+|~/.aws
 
-GCloud CLI configuration on Windows is stored on `C:\Users\username\AppData\Roaming\gcloud` or `$HOME/AppData/Roaming/gcloud` 
+|Azure CLI
+|/Users/$env:UserName/.azure
+|~/.azure
 
+|Kubectl CLI
+|/Users/$env:UserName/.kube
+|~/.kube
 
-#### Linux
+|SSH Keys
+|/Users/$env:UserName/.ssh
+|~/.ssh
 
-```
-docker run --rm -it -v /root/.config/gcloud:/root/.config/gcloud hangar bash
-```
-
-GCloud CLI configuration on Linux is stored on `/root/.config/gcloud`
-
-### AWS Volumes
-
-#### Windows
-
-```
-docker run --rm -it -v /Users/$env:UserName/.aws:/root/.aws hangar bash
-```
-
-AWS CLI configuration on Windows is stored on `C:\Users\username\.aws\` or `$HOME\.aws\` 
-
-
-#### Linux
-
-```
-docker run --rm -it -v /root/.aws:/root/.aws hangar bash
-```
-
-AWS CLI configuration on Linux is stored on `/root/.aws`
-
-### Azure Volumes
-
-
-#### Windows
-
-```
-docker run --rm -it -v /Users/$env:UserName/.azure:/root/.azure hangar bash
-```
-
-Azure CLI configuration on Windows is stored on `C:\Users\username\.azure\` or `$HOME\.azure\` 
-
-
-#### Linux
-
-```
-docker run --rm -it -v /root/.azure:/root/.azure hangar bash
-```
-
-Azure CLI configuration on Linux is stored on `/root/.azure`
-
-### Kubectl Volumes WIP
-
-#### Windows
-
-```
-docker run --rm -it -v /Users/$env:UserName/.kube:/root/.kube hangar bash
-```
-
-Kubectl configuration on Windows is stored on `C:\Users\username\.kube\` or `$HOME\.kube\` 
-
-
-#### Linux
-
-```
-docker run --rm -it -v /root/.kube:/root/.kube hangar bash
-```
-
-Kubectl configuration on Linux is stored on `/root/.kube`
-
-
-### Terraform Volumes WIP
-
-https://www.terraform.io/cli/config/config-file#locations
-
-### SSH Keys WIP
-
-#### Windows
-
-```
-docker run --rm -it -v /Users/$env:UserName/.ssh:/root/.ssh hangar bash
-```
-
-SSH keys on Windows are stored on `C:\Users\username\.ssh\` or `$HOME\.ssh\` 
-
-
-#### Linux
-
-```
-docker run --rm -it -v /root/.ssh:/root/.ssh hangar bash
-```
-
-SSH keys on Linux are stored on `/root/.ssh`
-
-
-```
-/root/.ssh
-
-${HOME}/.ssh
-```
+|===
