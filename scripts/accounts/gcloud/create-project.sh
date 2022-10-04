@@ -1,17 +1,6 @@
 #!/bin/bash
 
-helpFunction()
-{
-   echo "Usage: $0 -n projectName -d description -o organization. "
-   echo ""
-   echo -e "\t-n [Required] Name of the new project."
-   echo -e "\t-d [Optional] Description for the new project. If not specified, name will be used as description"
-   echo -e "\t-f [Optional] Numeric ID of the folder for which the project will be configured."
-   echo -e "\t-o [Optional] Numeric ID of the organization for which the project will be configured."
-   echo -e "\t-b [Optional] Billing account. If not specified, won't be able to enable some services."
-}
-
-while getopts "n:d:f:o:b:h" opt
+while getopts "n:d:f:o:b:" opt
 do
    case "$opt" in
       n ) projectName="$OPTARG" ;;
@@ -19,21 +8,30 @@ do
       f ) folder="$OPTARG" ;;
       o ) organization="$OPTARG" ;;
       b ) billing="$OPTARG" ;;
-      h ) helpFunction; exit ;;
-      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
    esac
 done
+
+if [ "$1" == "-h" ];
+then
+   echo "Creates a new project and enables billing and required APIs"
+   echo ""
+   echo "Arguments:"
+   echo -e "\t-n [Required] Name of the new project."
+   echo -e "\t-b [Required] Billing account. If not specified, won't be able to enable some services."
+   echo -e "\t-d            Description for the new project. If not specified, name will be used as description"
+   echo -e "\t-f            Numeric ID of the folder for which the project will be configured."
+   echo -e "\t-o            Numeric ID of the organization for which the project will be configured."
+fi
 
 white='\e[1;37m'
 green='\e[1;32m'
 red='\e[0;31m'
 
-# Print helpFunction in case parameters are empty.
-if [ -z "$projectName" ]
+# Mandatory argument check
+if [ -z "$projectName" ] || [ -z "$billing" ];
 then
-   echo -e "${red}Error: Some required parameters are missing." >&2
-   echo -e ${white} >&2
-   helpFunction
+   echo -e "${red}Error: Missing paramenters, -n and -b are mandatory." >&2
+   echo -e "${red}Use -h flag to display help." >&2
    exit 2
 fi
 
@@ -45,7 +43,7 @@ fi
 
 # Create the Google Cloud project.
 echo -e "${green}Creating project..."
-echo -ne ${white}
+echo -ne "${white}"
 
 command="gcloud projects create $projectName"
 
@@ -66,14 +64,13 @@ then
     exit 2
 fi
 
-if ! [ -z "$billing" ]; then
-   echo "Linking project to billing account"
-   gcloud beta billing projects link "$projectName" --billing-account "$billing"
-   echo "Enabling sourcerepo service"
-   gcloud services enable sourcerepo.googleapis.com --project "$projectName"
-   echo "Enabling run service"
-   gcloud services enable run.googleapis.com --project "$projectName"
-   echo "Enabling artifact registry"
-   gcloud services enable artifactregistry.googleapis.com --project "$projectName"
-fi
+echo "Linking project to billing account..."
+gcloud beta billing projects link "$projectName" --billing-account "$billing"
+echo "Enabling Cloud Source Repositories..."
+gcloud services enable sourcerepo.googleapis.com --project "$projectName"
+echo "Enabling CloudRun..."
+gcloud services enable run.googleapis.com --project "$projectName"
+echo "Enabling Artifact Registry..."
+gcloud services enable artifactregistry.googleapis.com --project "$projectName"
+
 

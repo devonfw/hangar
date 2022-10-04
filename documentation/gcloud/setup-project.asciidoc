@@ -1,17 +1,20 @@
 == Setup Google Cloud project
 
-By the end of this guide a new project in Google Cloud will be created.
+By the end of this guide a new project in Google Cloud will be created. Billing and the required APIs to perform tasks like repository or artifact registry creation and using CloudRun will be enabled.
 
 
 == Prerequisites
 
-· Install the https://cloud.google.com/sdk/docs/install?hl=en[Google Cloud CLI].
+. Install the https://cloud.google.com/sdk/docs/install?hl=en[Google Cloud CLI].
 
 == Creating the Google Cloud project
 
 There are two ways of creating a Google Cloud project:
 [loweralpha]
-. Create it manually using the web interface following https://cloud.google.com/resource-manager/docs/creating-managing-projects#console[Google Cloud official guide].
+. Create it and enable biling and APIs manually using the web interface:
+.. Create the project following the https://cloud.google.com/resource-manager/docs/creating-managing-projects#console[Creating a project guide].
+.. Create a billing account and enable it in the project following the https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project[Enable billing for a project guide]
+.. Enable ```Cloud Source Repositories API, Cloud Run Admin API, Artifact Registry API``` following the https://cloud.google.com/endpoints/docs/openapi/enable-api#enabling_an_api[Enablig an API guide]
 . Create it in an automated way using the provided script, as shown below.
  
 == Creating Google Cloud project using provided script
@@ -23,23 +26,25 @@ The script located at `scripts/accounts/gcloud/create-project.sh` enables you to
 ```
 create-project.sh \
   -n <name> \
+  -b <billing account> \
   [-d <description>] \
   [-f <folder>] \
-  [-o <organization>] \
-  [-b <billing account>]
+  [-o <organization>]
+  
 ```
 
 == Flags
 
 ```
 -n    [Required] Name of the new project. (6-30 chars, lowercase letters, numbers, and hyphens)
--d    [Optional] Description for the new project.
--f    [Optional] Numeric ID of the folder for which the project will be configured.
--o    [Optional] Numeric ID of the organization for which the project will be configured.
--b    [Optional] Billing account. If not specified, won't be able to enable some services.
+-b    [Required] Billing account. If not specified, won't be able to enable some services.
+-d               Description for the new project.
+-f               Numeric ID of the folder for which the project will be configured.
+-o               Numeric ID of the organization for which the project will be configured.
+
 
 ```
 
 == Example
 
-`./create-project.sh -n "project-test-123" -d "This is a sample application" -f 12345 -o 2048`
+`./create-project.sh -n "project-test-123" -b XXXXXX-XXXXXX-XXXXXX -d "This is a sample application"` 
