@@ -23,7 +23,7 @@ Following toolkits are included in the solution:
 
 ## How to use
 
-. **Build** the image `docker build -t hangar -f .\setup\Dockerfile .`
+. **Build** the image `docker build -t hangar -f ./setup/Dockerfile .`
 . **Execute** a command inside the image `docker run --rm -it hangar gcloud auth login` or open an **interactive shell** `docker run --rm -it hangar bash`
 
 IMPORTANT: The container is Stateless -- all the information (credentials, configurations, etc.) created inside the session will be lost at the end of the lifecycle of the container. 
