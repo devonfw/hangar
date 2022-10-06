@@ -37,7 +37,7 @@ TIP: If you want to have **persistence between executions** or **map the configu
 For Windows use:
 
 ```
-docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v /Users/$env:UserName/AppData/Roaming/GitHub CLI:/root/.config/gh -v /Users/$env:UserName/.ssh:/root/.ssh hangar bash
+docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v "/Users/$env:UserName/AppData/Roaming/GitHub CLI:/root/.config/gh" -v /Users/$env:UserName/.ssh:/root/.ssh hangar bash
 ```
 
 For Linux use:
