@@ -5,7 +5,8 @@ As a Developer (Client, Capgemini, Third Party, anyone on the Web) I want to be 
 ____
 
 
-This solution uses a *Dockerfile* to create an Image with all the required tools ready to use. 
+This solution uses a *Dockerfile* to create an image with all the required tools ready to use. 
+
 
 ## Included Tools
 
