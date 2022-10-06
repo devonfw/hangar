@@ -48,28 +48,33 @@ docker run --rm -it -v /root/.config/gcloud:/root/.config/gcloud -v /root/.aws:/
 
 ### Volumes Mapping
 
-[cols="1,2,2"]
+[cols="1,2,2,2"]
 |===
-|Tool|Windows|Linux
+|Tool|Windows|Linux|Container
 
 |GCloud CLI
 |/Users/$env:UserName/AppData/Roaming/gcloud
 |~/.config/gcloud
+|/root/.config/gcloud
 
 |AWS CLI
 |/Users/$env:UserName/.aws
 |~/.aws
+|/root/.aws
 
 |Azure CLI
 |/Users/$env:UserName/.azure
 |~/.azure
+|/root/.azure
 
 |Kubectl CLI
 |/Users/$env:UserName/.kube
 |~/.kube
+|/root/.kube
 
 |SSH Keys
 |/Users/$env:UserName/.ssh
 |~/.ssh
+|/root/.ssh
 
 |===
