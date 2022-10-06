@@ -35,13 +35,13 @@ TIP: If you want to have **persistence between executions** or **map the configu
 
 Before mounting the volumes make sure all the folders exist, Rancher will not create them by default. 
 
-For Windows use:
+### Windows
 
 ```
 docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v "/Users/$env:UserName/AppData/Roaming/GitHub CLI:/root/.config/gh" -v /Users/$env:UserName/.ssh:/root/.ssh hangar bash
 ```
 
-### Create host paths on Windows
+#### Create host paths on Windows
 ```
 mkdir /Users/$env:UserName/AppData/Roaming/gcloud
 mkdir /Users/$env:UserName/.aws
@@ -51,13 +51,13 @@ mkdir "/Users/$env:UserName/AppData/Roaming/GitHub CLI"
 mkdir /Users/$env:UserName/.ssh
 ```
 
-For Linux use:
+### Linux
 
 ```
 docker run --rm -it -v ~/.config/gcloud:/root/.config/gcloud -v ~/.aws:/root/.aws -v ~/.azure:/root/.azure -v ~/.kube:/root/.kube -v ~/.config/gh:/root/.config/gh -v ~/.ssh:/root/.ssh hangar bash
 ```
 
-### Create host paths on Linux
+#### Create host paths on Linux
 ```
 mkdir ~/.config/gcloud
 mkdir ~/.aws
