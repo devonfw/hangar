@@ -1,4 +1,4 @@
-# All-in-one solution for AWS, Azure & GCloud Installer
+# All-in-one container image for running Hangar.
 
 ____
 As a Developer (Client, Capgemini, Third Party, anyone on the Web) I want to be able to download a single executable so I will be able to run it without an installation process (run the executable directly from the “Downloads” directory if necessary) and have all the CLIs for Azure, AWS & GCloud available.
