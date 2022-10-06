@@ -26,7 +26,8 @@ Following toolkits are included in the solution:
 . **Build** the image `docker build -t hangar -f ./setup/Dockerfile .`
 . **Execute** a command inside the image `docker run --rm -it hangar gcloud auth login` or open an **interactive shell** `docker run --rm -it hangar bash`
 
-IMPORTANT: The container is Stateless -- all the information (credentials, configurations, etc.) created inside the session will be lost at the end of the lifecycle of the container. 
+WARNING: The container is stateless -- all the information (credentials, configurations, etc.) created inside the session will be lost at the end of the lifecycle of the container. 
+
 
 TIP: If you want to have **persistence between executions** or **map the configuration files from your local host** check the next section for mapping volumes.
 
