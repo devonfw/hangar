@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# exit when any command fails
+set -e
+
 while getopts g:s:p:r:f:h: flag
 do
     case "${flag}" in
@@ -32,6 +36,7 @@ if ([ -z "$google_account" ] && [ -z "$service_account" ]) || [ -z "$project_id"
 then
     echo -e "${red}Error: Missing parameters, -g and -p and (-r or -f or -c) flags are mandatory." >&2
     echo -e "${red}Use -h flag to display help." >&2
+    echo -e "${white}"
     exit 2
 fi
 
@@ -39,23 +44,23 @@ fi
 #Check if GCP CLI is installed
 if ! [ -x "$(command -v gcloud)" ]; then
   echo -e "${red}Error: GCP CLI is not installed." >&2
+  echo -e "${white}"
   exit 127
 fi
 
 #Check if Python is installed
 if ! [ -x "$(command -v python)" ]; then
   echo -e "${red}Error: Python is not installed." >&2
+  echo -e "${white}"
   exit 127
 fi
 
 #Check if the provided project_id exists
-output=$(gcloud projects list --format="json" --filter=$project_id)
-if [ "$output" == "[]" ]
-then
-    echo -e "${red}Error: The provided project ID does not exist" >&2
-    exit 2
+if ! gcloud projects describe $projectName &>/dev/null ; then
+     echo -e "${red}Error: The provided project ID does not exist." >&2
+     echo -e "${white}"
+     exit 2
 fi
-
 if [ -n "$google_account" ]
 then
     principal=$google_account
