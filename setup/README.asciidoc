@@ -8,7 +8,7 @@ ____
 This solution uses a *Dockerfile* to create an image with all the required tools ready to use. 
 
 
-## Included Tools
+## Included tools
 
 Following toolkits are included in the solution:
 
