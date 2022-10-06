@@ -72,6 +72,11 @@ docker run --rm -it -v /root/.config/gcloud:/root/.config/gcloud -v /root/.aws:/
 |~/.kube
 |/root/.kube
 
+|GitHub CLI
+|/Users/$env:UserName/AppData/Roaming/GitHub CLI
+|~/.config/gh
+|/root/.config/gh
+
 |SSH Keys
 |/Users/$env:UserName/.ssh
 |~/.ssh
