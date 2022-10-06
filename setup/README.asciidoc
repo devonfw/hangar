@@ -37,13 +37,13 @@ TIP: If you want to have **persistence between executions** or **map the configu
 For Windows use:
 
 ```
-docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v /Users/$env:UserName/.ssh:/root/.ssh hangar bash
+docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v /Users/$env:UserName/AppData/Roaming/GitHub CLI:/root/.config/gh -v /Users/$env:UserName/.ssh:/root/.ssh hangar bash
 ```
 
 For Linux use:
 
 ```
-docker run --rm -it -v /root/.config/gcloud:/root/.config/gcloud -v /root/.aws:/root/.aws -v /root/.azure:/root/.azure -v /root/.kube:/root/.kube -v /root/.ssh:/root/.ssh hangar bash
+docker run --rm -it -v ~/.config/gcloud:/root/.config/gcloud -v ~/.aws:/root/.aws -v ~/.azure:/root/.azure -v ~/.kube:/root/.kube -v ~/.config/gh:/root/.config/gh -v ~/.ssh:/root/.ssh hangar bash
 ```
 
 ### Volumes Mapping
