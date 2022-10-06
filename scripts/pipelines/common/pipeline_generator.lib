@@ -221,6 +221,7 @@ function setTargetDirectory {
   case $language in
       node | angular) targetDirectory="./" ;;
       quarkus*) targetDirectory="./target/" ;;
+      dotnet) targetDirectory="./build/" ;;
       *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
   esac
 }
