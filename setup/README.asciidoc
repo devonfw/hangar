@@ -1,4 +1,4 @@
-# All-in-one container image for running Hangar.
+# All-in-one container image for running Hangar
 
 ____
 As a Developer (Client, Capgemini, Third Party, anyone on the Web) I want to be able to download a single executable so I will be able to run it without an installation process (run the executable directly from the “Downloads” directory if necessary) and have all the CLIs for Azure, AWS & GCloud available.
@@ -8,9 +8,9 @@ ____
 This solution uses a *Dockerfile* to create an image with all the required tools ready to use. 
 
 
-## Included Tools
+## Included tools
 
-Following toolkits are included in the solution:
+The following toolkits are included in the solution:
 
 - AWS 
 - Azure 
