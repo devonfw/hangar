@@ -1,11 +1,12 @@
-# All-in-one solution for AWS, Azure & GCloud Installer
+# All-in-one container image for running Hangar.
 
 ____
 As a Developer (Client, Capgemini, Third Party, anyone on the Web) I want to be able to download a single executable so I will be able to run it without an installation process (run the executable directly from the “Downloads” directory if necessary) and have all the CLIs for Azure, AWS & GCloud available.
 ____
 
 
-This solution uses a *Dockerfile* to create an Image with all the required tools ready to use. 
+This solution uses a *Dockerfile* to create an image with all the required tools ready to use. 
+
 
 ## Included Tools
 
@@ -22,14 +23,16 @@ Following toolkits are included in the solution:
 
 ## How to use
 
-. **Build** the image `docker build -t hangar -f .\setup\Dockerfile .`
+. **Build** the image `docker build -t hangar -f ./setup/Dockerfile .`
 . **Execute** a command inside the image `docker run --rm -it hangar gcloud auth login` or open an **interactive shell** `docker run --rm -it hangar bash`
 
-IMPORTANT: The container is Stateless -- all the information (credentials, configurations, etc.) created inside the session will be lost at the end of the lifecycle of the container. 
+WARNING: The container is stateless -- all the information (credentials, configurations, etc.) created inside the session will be lost at the end of the lifecycle of the container. 
+
 
 TIP: If you want to have **persistence between executions** or **map the configuration files from your local host** check the next section for mapping volumes.
 
-## Volumes Configuration
+## Running container with persistence
+
 
 For Windows use:
 
