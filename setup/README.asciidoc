@@ -31,7 +31,8 @@ WARNING: The container is stateless -- all the information (credentials, configu
 
 TIP: If you want to have **persistence between executions** or **map the configuration files from your local host** check the next section for mapping volumes.
 
-## Volumes Configuration
+## Running container with persistence
+
 
 For Windows use:
 
