@@ -1,4 +1,13 @@
 #!/bin/bash
+
+
+# exit when any command fails
+set -e
+# keep track of the last executed command
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+# echo an error message before exiting
+trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
+
 while getopts s:p:r:h flag
 do
     case "${flag}" in
@@ -26,6 +35,7 @@ if [ -z "$project" ] || [ -z "$region" ];
 then
     echo -e "${red}Error: Missing parameters, -s, -p and -r are required." >&2
     echo -e "${red}Use -h flag to display help." >&2
+    echo -e "${white}"
     exit 2
 fi
 gcloud run deploy hello-world --image gcr.io/cloudrun/hello --project $project --region $region --allow-unauthenticated
