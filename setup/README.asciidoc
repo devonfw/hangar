@@ -10,7 +10,7 @@ This solution uses a *Dockerfile* to create an image with all the required tools
 
 ## Included tools
 
-Following toolkits are included in the solution:
+The following toolkits are included in the solution:
 
 - AWS 
 - Azure 
