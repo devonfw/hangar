@@ -33,7 +33,7 @@ TIP: If you want to have **persistence between executions** or **map the configu
 
 ## Running container with persistence
 
-Before mounting the volumes make sure all the folders exist, Rancher will not create them by default. 
+IMPORTANT: Before mounting the volumes make sure all the folders exist, Rancher will not create them by default. 
 
 ### Windows
 
