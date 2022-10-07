@@ -43,12 +43,12 @@ docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config
 
 #### Create host paths on Windows
 ```
-mkdir /Users/$env:UserName/AppData/Roaming/gcloud
-mkdir /Users/$env:UserName/.aws
-mkdir /Users/$env:UserName/.azure:/root/.azure
-mkdir /Users/$env:UserName/.kube
-mkdir "/Users/$env:UserName/AppData/Roaming/GitHub CLI"
-mkdir /Users/$env:UserName/.ssh
+mkdir -p /Users/$env:UserName/AppData/Roaming/gcloud
+mkdir -p /Users/$env:UserName/.aws
+mkdir -p /Users/$env:UserName/.azure:/root/.azure
+mkdir -p /Users/$env:UserName/.kube
+mkdir -p "/Users/$env:UserName/AppData/Roaming/GitHub CLI"
+mkdir -p /Users/$env:UserName/.ssh
 ```
 
 ### Linux
@@ -59,12 +59,12 @@ docker run --rm -it -v ~/.config/gcloud:/root/.config/gcloud -v ~/.aws:/root/.aw
 
 #### Create host paths on Linux
 ```
-mkdir ~/.config/gcloud
-mkdir ~/.aws
-mkdir ~/.azure
-mkdir ~/.kube
-mkdir ~/.config/gh
-mkdir ~/.ssh
+mkdir -p ~/.config/gcloud
+mkdir -p ~/.aws
+mkdir -p ~/.azure
+mkdir -p ~/.kube
+mkdir -p ~/.config/gh
+mkdir -p ~/.ssh
 ```
 
 ### Volumes Mapping
