@@ -1,7 +1,7 @@
 on: push
 name: Line ending check
 jobs:
-  runscript:
+  check:
     name: check for CRLF newline
     runs-on: ubuntu-latest
     steps:
