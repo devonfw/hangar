@@ -2,11 +2,11 @@ on: push
 name: Line ending check
 jobs:
   check:
-    name: check for CRLF newline
+    name: Line ending check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - name: Install dos2unix
         run: sudo apt-get install dos2unix
-      - name: call a bash script to check line ending
+      - name: Checking scripts line endings
         run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/line-ending-check.sh scripts
