@@ -1,11 +1,22 @@
 :provider_name: Github
 :provider_path: github
-:usage_optional_flags: [-u <public>]
-:flags_optional_flags: -u, --public                           Repository scope. Private by default
-include::../common_templates/setup-repository-script-part1.asciidoc[]  
+include::../common_templates/setup-repository-script.asciidoc[tag=part1] 
 * A GitHub user. 
 * Install https://cli.github.com/[GitHub CLI].
-include::../common_templates/setup-repository-script-part1.asciidoc[] 
+include::../common_templates/setup-repository-script.asciidoc[tag=part2]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part3]
+include::../common_templates/setup-repository-script.asciidoc[tag=part4]
+    [-u <public>]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part5]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part6]
+include::../common_templates/setup-repository-script.asciidoc[tag=part7]
+-u, --public                           Repository scope. Private by default
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part8]
+
 === Branch protection rules
 
 It is possible to protect important branches against bad practices using branch protection rules.

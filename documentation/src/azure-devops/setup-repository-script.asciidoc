@@ -1,15 +1,26 @@
 :provider_name: Azure DevOps
 :provider_path: azure-devops
-:usage_required_flags:  -o <organization> \ + \
-    -p <project>
-
-:usage_optional_flags: [-u <public>]
-:flags_required_flags: -o, --org                   [Required] Name of the Azure DevOps organization. \ -p, --project               [Required] Name of the Google Cloud project.
-:flags_optional_flags: -u, --public                           Repository scope. Private by default
 :example_required_flags: -o <organization> -p <project>
-include::../common_templates/setup-repository-script-part1.asciidoc[]  
+include::../common_templates/setup-repository-script.asciidoc[tag=part1]
 * Have an Azure DevOps project already setup and Azure CLI installed and configured. If it is not the case, please go back to corresponding guide.
-include::../common_templates/setup-repository-script-part2.asciidoc[] 
+include::../common_templates/setup-repository-script.asciidoc[tag=part2]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part3]
+    -o <organization> \
+    -p <project> \
+include::../common_templates/setup-repository-script.asciidoc[tag=part4]
+    [-u <public>]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part5]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part6]
+-o, --org                   [Required] Name of the Azure DevOps organization. 
+-p, --project               [Required] Name of the Google Cloud project.
+include::../common_templates/setup-repository-script.asciidoc[tag=part7]
+-u, --public                           Repository scope. Private by default
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part8]
+
 === Policies
 
 In Azure DevOps it is possible to protect important branches against bad practices using branch policies.
