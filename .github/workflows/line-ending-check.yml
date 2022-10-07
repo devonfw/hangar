@@ -1,5 +1,5 @@
 on: push
-name: check newline
+name: Line ending check
 jobs:
   runscript:
     name: check for CRLF newline
