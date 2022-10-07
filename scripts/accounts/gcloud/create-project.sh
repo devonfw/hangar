@@ -1,19 +1,7 @@
 #!/bin/bash
 
-while getopts "n:d:f:o:b:" opt
-do
-   case "$opt" in
-      n ) projectName="$OPTARG" ;;
-      d ) description="$OPTARG" ;;
-      f ) folder="$OPTARG" ;;
-      o ) organization="$OPTARG" ;;
-      b ) billing="$OPTARG" ;;
-      * ) 
-   esac
-done
-
-if [ "$1" == "-h" ];
-then
+helpFunction()
+{
    echo "Creates a new project and enables billing and required APIs"
    echo ""
    echo "Arguments:"
@@ -22,7 +10,20 @@ then
    echo -e "\t-d            Description for the new project. If not specified, name will be used as description"
    echo -e "\t-f            Numeric ID of the folder for which the project will be configured."
    echo -e "\t-o            Numeric ID of the organization for which the project will be configured."
-fi
+}
+
+while getopts "n:d:f:o:b:h" opt
+do
+   case "$opt" in
+      n ) projectName="$OPTARG" ;;
+      d ) description="$OPTARG" ;;
+      f ) folder="$OPTARG" ;;
+      o ) organization="$OPTARG" ;;
+      b ) billing="$OPTARG" ;;
+      h ) helpFunction; exit ;;
+      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
+   esac
+done
 
 white='\e[1;37m'
 green='\e[1;32m'
@@ -58,20 +59,13 @@ if [ -n "$organization" ]; then
    command=$command" --organization=$organization"
 fi
 
-eval $command
-if ! [ $? -eq 0 ]
-then
-    echo -e "${red}Error while creating the project." >&2
-    exit 2
-fi
+if ! eval $command; then echo -e "${red}Error while creating the project."; exit 2; fi
 
 echo "Linking project to billing account..."
-gcloud beta billing projects link "$projectName" --billing-account "$billing"
+if ! gcloud beta billing projects link "$projectName" --billing-account "$billing" ; then echo -e "${red}ERROR: Unable to link project to billing account"; exit 2; fi
 echo "Enabling Cloud Source Repositories..."
-gcloud services enable sourcerepo.googleapis.com --project "$projectName"
+if ! gcloud services enable sourcerepo.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable Cloud Source Repositories API"; exit 2; fi
 echo "Enabling CloudRun..."
-gcloud services enable run.googleapis.com --project "$projectName"
+if ! gcloud services enable run.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable CloudRun API"; exit 2; fi
 echo "Enabling Artifact Registry..."
-gcloud services enable artifactregistry.googleapis.com --project "$projectName"
-
-
+if ! gcloud services enable artifactregistry.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable Artifact Registry API"; exit 2; fi
