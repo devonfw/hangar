@@ -8,6 +8,7 @@ do
       f ) folder="$OPTARG" ;;
       o ) organization="$OPTARG" ;;
       b ) billing="$OPTARG" ;;
+      * ) 
    esac
 done
 

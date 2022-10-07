@@ -1,25 +1,26 @@
 == Setup Google Cloud project
 
-By the end of this guide a new project in Google Cloud will be created. Billing and the required APIs to perform tasks like repository or artifact registry creation and using CloudRun will be enabled.
+By the end of this guide a new project in Google Cloud will be created, with Billing and relevant APIs enabled.
 
 
 == Prerequisites
 
 . Install the https://cloud.google.com/sdk/docs/install?hl=en[Google Cloud CLI].
+. Have a billing account. If not, https://cloud.google.com/billing/docs/how-to/manage-billing-account#create_a_new_billing_account[create a new billing account].
 
 == Creating the Google Cloud project
 
 There are two ways of creating a Google Cloud project:
 [loweralpha]
-. Create it and enable biling and APIs manually using the web interface:
-.. Create the project following the https://cloud.google.com/resource-manager/docs/creating-managing-projects#console[Creating a project guide].
-.. Create a billing account and enable it in the project following the https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project[Enable billing for a project guide]
-.. Enable ```Cloud Source Repositories API, Cloud Run Admin API, Artifact Registry API``` following the https://cloud.google.com/endpoints/docs/openapi/enable-api#enabling_an_api[Enablig an API guide]
-. Create it in an automated way using the provided script, as shown below.
+. Manually using the web interface:
+.. Create a project following https://cloud.google.com/resource-manager/docs/creating-managing-projects#console[official guide].
+.. Enable billing for the project following https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project[official guide]
+.. Enable `Cloud Source Repositories`, `Cloud Run Admin`, and `Artifact Registry` APIs following https://cloud.google.com/endpoints/docs/openapi/enable-api#console[official guide]
+. In an automated way using the provided script, as shown below.
  
 == Creating Google Cloud project using provided script
 
-The script located at `scripts/accounts/gcloud/create-project.sh` enables you to create a new Google Cloud project or configure an existing one.
+The script located at `scripts/accounts/gcloud/create-project.sh` enables you to create and configure a new Google Cloud project.
 
 == Usage
 
