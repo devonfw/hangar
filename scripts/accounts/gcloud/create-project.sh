@@ -59,7 +59,7 @@ if [ -n "$organization" ]; then
    command=$command" --organization=$organization"
 fi
 
-if ! eval $command; then echo -e "${red}Error while creating the project."; exit 2; fi
+if ! eval "$command"; then echo -e "${red}Error while creating the project."; exit 2; fi
 
 echo "Linking project to billing account..."
 if ! gcloud beta billing projects link "$projectName" --billing-account "$billing" ; then echo -e "${red}ERROR: Unable to link project to billing account"; exit 2; fi
