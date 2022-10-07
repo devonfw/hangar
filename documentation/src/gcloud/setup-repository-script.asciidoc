@@ -1,0 +1,8 @@
+:provider_name: Google Cloud
+:provider_path: gcloud
+:usage_required_flags: -p <project>
+:flags_required_flags: -p, --project               [Required] Name of the Google Cloud project.
+:example_required_flags: -p <project>
+include::../common_templates/setup-repository-script-part1.asciidoc[]  
+* Have a Google Cloud project already setup with billing and Cloud Source Repositories API enabled and GCloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
+include::../common_templates/setup-repository-script-part2.asciidoc[] 

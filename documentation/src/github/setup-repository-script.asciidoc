@@ -1,0 +1,24 @@
+:provider_name: Github
+:provider_path: github
+:usage_optional_flags: [-u <public>]
+:flags_optional_flags: -u, --public                           Repository scope. Private by default
+include::../common_templates/setup-repository-script-part1.asciidoc[]  
+* A GitHub user. 
+* Install https://cli.github.com/[GitHub CLI].
+include::../common_templates/setup-repository-script-part1.asciidoc[] 
+=== Branch protection rules
+
+It is possible to protect important branches against bad practices using branch protection rules.
+
+The following branch protection rules are applied to `master` and `develop` branches:
+
+* Require a pull request before merging: ON
+** Require approvals: 1
+** Dismiss stale pull request approvals when new commits are pushed: ON
+* Require conversation resolution before merging: ON
+
+The above branch protection rules are defined in a configuration file located at `/scripts/repositories/common/config/strategy.cfg`. Feel free to adapt it to your needs.
+
+NOTE: This is the bare minimum standard for any project.
+
+You can find more information about branch protection rules in the https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches[official documentation].

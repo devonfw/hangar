@@ -1,0 +1,5 @@
+= Setting up a repository on {provider_name}
+
+By the end of this guide, a repository on {provider_name} will be created in an automated way using a script.
+
+== Prerequisites

@@ -1,4 +1,5 @@
 #!/bin/bash
+provider="Github"
 function create_repo_content {
    if [ "$5" == "true" ]
     then
@@ -13,7 +14,7 @@ function set_default_branch_and_policies_content_1 {
 }
 
 function set_default_branch_and_policies_content_2 {
-        if [ "$7" = "true" ] # $8=true to ensure is a public repo. (Only works on public or Github Pro repos)
+        if [ "$7" = "true" ] # $7=true to ensure is a public repo. (Only works on public or Github Pro repos)
         then
           # Enable branch protection and comment resolution policy all in one. Only avaliable to public (or GH Pro) repositories
           if [ "${ENABLE_APPROVE_COUNT}" == "true" ]
@@ -57,6 +58,7 @@ function prepare_push_existing_repo_content {
 }
 
 function arguments_check_content {
+    #Function used to check specific provider required variables. Github has not specific required variables so we do nothing here.
     nothing=""
 }
 
