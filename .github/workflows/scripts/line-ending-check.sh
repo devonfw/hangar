@@ -1,5 +1,5 @@
 #!/bin/bash
-output="$(find '${1:-.}' -not -type d -print0 | xargs -0 dos2unix -ic | cut -c 1-)"
+output=$(find "${1:-.}" -not -type d -print0 | xargs -0 dos2unix -ic | cut -c 1-)
 if [ "$output" == "" ] ; then
     exit 0
 else
