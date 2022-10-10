@@ -1,0 +1,71 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+= Setup GCP account IAM for deployment in GKE
+The scope of this section is to prepare a GCP account to be ready for deploying in GCP GKE. By the end of this guide, the GCP account will have the required roles attached.
+
+== Preparing environment
+First of all, install https://cloud.google.com/sdk/docs/install[GCP CLI] and https://www.python.org/downloads/[Python] for your OS.
+
+== Prerequisites
+
+* A GCP account.
+
+==== Required predefined roles
+
+Find them on `/scripts/accounts/gcp/gke-predefined-roles.txt`.
+
+```
+roles/source.admin
+...
+```
+
+==== Required custom roles
+
+Find them on `/scripts/accounts/gcp/gke-custom-role.yaml`.
+
+== Setting up a principal (Google Account, service account) using provided script
+
+The script located at `/scripts/accounts/gcp/setup-principal-account.sh` will automatically attach the specified roles to the princiapl, in the context of the provided project.
+
+=== Usage
+```
+create-bindings.sh \
+  -g <Google Account> \
+  -s <Service Account Name> \
+  -p <project ID> \
+  [-r <roles...>] \
+  [-f <roles file path>] \
+  [-c <custom role file path>] \
+  [-i <custom role id>]
+```
+
+=== Flags
+```
+-g      [Required] Google Account for the end user (mutual exclusive with -s)
+-s      [Required] Service Account name (mutual exclusive with -g)
+-p      [Required] Project ID where the user will be added
+-r      [Optional] Roles (Basic or Predefined) to be attached to the user in the project, splitted by comma
+-f      [Optional] Path to a file containing the roles (Basic or predefined) to be attached to the user in the project
+-c      [Optional] Path to a YAML file containing the custom role to be attached to the user in the project
+-i     [Optional] Custom Role ID
+```
+
+=== Example
+```
+./setup-principal-account.sh -s ExampleServiceAccount -p ExampleProject -r roles/viewer,roles/editor -f ./gke-predefined-roles.txt -c gke-custom-role.yaml -i gke-custom-role
+```
+NOTE: "ExampleProject" project must exist.
+
+NOTE: Required roles for using GKE are located at `/scripts/accounts/gcp/gke-predefined-roles.txt` and `/scripts/accounts/gcp/gke-custom-role.yaml`
+
+=== After execution
+On success, the newly created bindings for user in the project will be shown as output:
+```
+Attaching provided roles in file gke-predefined-roles.txt to principal in project ExampleProject...
+Attached role roles/viewer to serviceAccount:ExampleServiceAccount@ExampleProject.iam.gserviceaccount.com in project ExampleProject.
+Attached role roles/editor to serviceAccount:ExampleServiceAccount@ExampleProject.iam.gserviceaccount.com in project ExampleProject.
+Attached role roles/source.admin to serviceAccount:ExampleServiceAccount@ExampleProject.iam.gserviceaccount.com in project ExampleProject.
+
+```
