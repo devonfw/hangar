@@ -1,6 +1,7 @@
 FROM python:3.7-slim as base
 
-RUN apt-get update && apt-get install --no-install-recommends curl unzip git wget -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --no-install-recommends curl unzip git wget less -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 FROM base as cli_install_gcloud
 
