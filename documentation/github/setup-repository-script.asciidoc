@@ -1,0 +1,120 @@
+:provider_name: Github
+:provider_path: github
+= Setting up a repository on {provider_name}
+
+By the end of this guide, a repository on {provider_name} will be created in an automated way using a script.
+
+== Prerequisites
+* A GitHub user.
+* Install https://cli.github.com/[GitHub CLI].
+* Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
+
+== Creating repository using provided script
+
+The script located at `/scripts/repositories/{provider_path}/create-repo.sh` allows you to either:
+
+. Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch.
+
+. Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to {provider_name} the development of an existing project.
+
+=== Usage
+```
+create-repo.sh \
+    -a <action> \
+    -d <local directory> \
+    [-n <repository name>] \
+    [-g <giturl>] \
+    [-b <branch>] \
+    [-r] \
+    [-s <branch strategy>] \
+    [-f] \
+    [--subpath <subpath to import>] \
+    [-u <public>]
+```
+=== Flags
+```
+-a, --action                [Required] Use case to fulfil: create, import.
+-d, --directory             [Required] Path to the directory where your repository will be cloned or initialized.
+-n, --name                             Name for the Google Cloud repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
+-g, --source-git-url                   Source URL of the Git repository to import.
+-b, --source-branch                    Source branch to be used as a basis to initialize the repository on import, as master branch.
+-r, --remove-other-branches            Removes branches other than the (possibly new) default one.
+-s, --setup-branch-strategy            Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
+-f, --force                            Skips any user confirmation.
+    --subpath                          When combined with -g and -r, imports only the specified subpath of the source Git repository.
+-u, --public                           Repository scope. Private by default
+```
+=== Typical use cases
+
+TIP: This is non-exhaustive list. Make your own combination of flags if all of the following use cases does not fit your needs.
+
+==== Creating an empty repository
+[subs="attributes"]
+  ./create-repo.sh -a create {example_required_flags} -n <repository name> -d <local destination directory>
+
+In case repository name is not specified, destination directory name will be used.
+
+==== Creating an empty repository with Gitflow branching strategy
+[subs="attributes"]
+  ./create-repo.sh -a create {example_required_flags} -n <repository name> -d <local destination directory> -s gitflow
+
+==== Importing a remote Git repository
+[subs="attributes"]
+  ./create-repo.sh -a import -g <source git url> {example_required_flags} -n <repository name> -d <local destination directory>
+
+In case repository name is not specified, source repository name (in URL) will be used.
+
+==== Importing a specific remote Git repository branch as source for a new repository with Gitflow branching strategy
+[subs="attributes"]
+  ./create-repo.sh -a import {example_required_flags} -g <source git url> -b <source branch> -s gitflow -r -n <repository name> -d <local destination directory>
+
+This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
+
+==== Importing local directory or Git repository
+[subs="attributes"]
+  ./create-repo.sh -a import {example_required_flags} -d <local source directory> -n <repository name>
+
+In case repository name is not specified, source directory name will be used.
+
+==== Importing a specific local Git repository branch as source for a new repository with Gitflow branching strategy
+[subs="attributes"]
+  ./create-repo.sh -a 'import' {example_required_flags} -d <local source directory> -b <source branch> -s gitflow -r -n <repository name>
+
+This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
+
+WARNING: This operation is destructive regarding branches on the local repository.
+
+NOTE: Same command could also be used with a local directory, but then using `-b` and `-r` would be redundant.
+
+
+== Branching strategies
+
+To ensure the quality of development, it is crucial to keep a clean Git workflow. The following branching strategies are supported (using `-s` flag):
+
+=== Gitflow
+
+This is not an explanation of Gitflow (there are plenty of them on the web), but the actions performed by the script to help you start using this worflow.
+
+==== Branches
+
+* `master` is the initial (seed) branch.
+* `develop` branch is created from `master` branch.
+
+Any other branch part the strategy (feature, release, and hotfix branches) will be created by developers during the lifecycle of the project.
+
+=== Branch protection rules
+
+It is possible to protect important branches against bad practices using branch protection rules.
+
+The following branch protection rules are applied to `master` and `develop` branches:
+
+* Require a pull request before merging: ON
+** Require approvals: 1
+** Dismiss stale pull request approvals when new commits are pushed: ON
+* Require conversation resolution before merging: ON
+
+The above branch protection rules are defined in a configuration file located at `/scripts/repositories/common/config/strategy.cfg`. Feel free to adapt it to your needs.
+
+NOTE: This is the bare minimum standard for any project.
+
+You can find more information about branch protection rules in the https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches[official documentation].
