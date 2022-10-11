@@ -37,8 +37,14 @@ IMPORTANT: Before mounting the volumes make sure all the folders exist, Rancher 
 
 ### Windows
 
+#### Using Rancher Desktop
 ```
 docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v "/Users/$env:UserName/AppData/Roaming/GitHub CLI:/root/.config/gh" -v /Users/$env:UserName/.ssh:/root/.ssh hangar bash
+```
+
+#### Using Docker Desktop
+```
+docker run --rm -it -v C:\Users\$env:UserName\AppData\Roaming\gcloud\:/root/.config/gcloud -v C:\Users\$env:UserName\.aws:/root/.aws -v C:\Users\$env:UserName\.azure:/root/.azure -v C:\Users\$env:UserName\.kube:/root/.kube -v "C:\Users\$env:UserName\AppData\Roaming\GitHub CLI:/root/.config/gh" -v C:\Users\$env:UserName\.ssh:/root/.ssh hangar bash
 ```
 
 #### Create host paths on Windows
