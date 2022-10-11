@@ -165,6 +165,61 @@ That is:
 *** `devonacr.azurecr.io/devonfw/my-thai-star/angular:1.5`
 *** `devonacr.azurecr.io/devonfw/quarkus/sample/devon4quarkus-reference:2.0`
 
+== Google Cloud Artifact Registry
+
+=== Prerequisites
+* A Google Cloud project already setup
+* Artifact Repository API enabled for the project
+* GCloud CLI installed and configured
+
+=== Creating an Artifact Registry image repository
+* Login to GCloud using `gcloud auth login`.
+* Create a container image repository with the following command:
+
+[source,shell]
+----
+   gcloud artifacts repositories create <repository-name> --repository-format=docker --location=<repository-location>
+----
+
+*Sample Output*
+[source]
+----
+Create request issued for: [testdockerrepo]
+Waiting for operation [projects/poc-cloudnative-capgemini/locations/europe-southwest1/operations/748b5502-43af-46b9-9f3
+a-eb2f5bd4178c] to complete...done.
+Created repository [testdockerrepo].
+----
+
+* Enable access to your Artifact Registry repository from your local Docker client by using:
+[source,shell]
+----
+gcloud auth configure-docker <location>-docker.pkg.dev
+----
+
+[source]
+----
+Adding credentials for: europe-west9-docker.pkg.dev
+After update, the following will be written to your Docker config file located at
+[C:\Users\mcerverc\.docker\config.json]:
+ {
+  "credHelpers": {
+    "europe-west9-docker.pkg.dev": "gcloud"
+  }
+}
+----
+=== Image Format
+
+* `<location>-docker.pkg.dev/<project-id>/<repository>/<image-name>:<tag>`
+** `<location>`: Regional or multi-regional location of the repository.
+** `<project-id>`: Google Cloud project ID.
+** `<repository>`: Previously chosen repository name.
+** `<image-name>`: Freely chosen project/image-name given by the user.
+** `<tag>`: Some alphanumeric tag which is given as identifier.
+
+==== Examples
+*** `europe-southwest1-docker.pkg.dev/poc-cloudnative-capgemini/testdockerrepo/imagendetest:v1`
+*** `us-east5-docker.pkg.dev/projecttest/repo123/helloworld:latest`
+
 == Provider Documentation
 * link:https://docs.docker.com/docker-hub/[Docker Hub]
 * link:https://docs.aws.amazon.com/ecr/[AWS ECR]
