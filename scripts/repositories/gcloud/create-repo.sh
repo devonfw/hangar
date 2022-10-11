@@ -5,16 +5,6 @@ function create_repo_content {
     MSG_ERROR "Creating repo $1" "$?"
 }
 
-function set_default_branch_and_policies_content_1 {
-    #Is not possible to change the default branch (master) to another in Cloud Source Repos, so we do nothing 
-    nothing=""
-}
-
-function set_default_branch_and_policies_content_2 {
-    #It is not possible to create PR in Cloud Source Repos, so we do nothing here
-    nothing=""
-}
-
 function import_repo_content {
     git clone --bare "$1"
     source_repo_namegit=${1##*/}

@@ -57,11 +57,6 @@ function prepare_push_existing_repo_content {
     URL_space_converted="https://github.com/$6/$3.git"
 }
 
-function arguments_check_content {
-    #Function used to check specific provider required variables. Github has not specific required variables so we do nothing here.
-    nothing=""
-}
-
 function custom_vars_assignment {
     organization=""
     project=""

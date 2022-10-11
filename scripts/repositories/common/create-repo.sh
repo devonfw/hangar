@@ -152,14 +152,14 @@ function set_default_branch_and_policies {
     git checkout -b "$i"
     git push --set-upstream origin "$i"
   done
-  set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+  type set_default_branch_and_policies_content_1 &> /dev/null && set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
   MSG_ERROR "Setting 'master' branch as default branch" $?
   echo ""
   echo -e "${blue}Setting policies for the repository. ${white}"
   STR_BRANCHES_WITH_MASTER="master $STR_BRANCHES"
   for i in $STR_BRANCHES_WITH_MASTER
   do
-    set_default_branch_and_policies_content_2 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+    type set_default_branch_and_policies_content_2 &> /dev/null && set_default_branch_and_policies_content_2 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
   done
   echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
 
@@ -370,7 +370,7 @@ function load_conf {
 
 
 # Arguments check start
-arguments_check_content
+type arguments_check_content &> /dev/null && arguments_check_content
 if [ "$action" = "create" ]
 then
   if [ "$directory" = "" ]
