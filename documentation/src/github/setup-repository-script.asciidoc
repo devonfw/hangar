@@ -1,5 +1,6 @@
 :provider_name: Github
 :provider_path: github
+:example_required_flags:
 include::../common_templates/setup-repository-script.asciidoc[tag=part1] 
 * A GitHub user. 
 * Install https://cli.github.com/[GitHub CLI].
