@@ -93,7 +93,7 @@ then
     if ! gcloud iam service-accounts describe $service_account_email &> /dev/null;
     then
 	echo -e "${white}Creating new service account: $service_account_email..."
-	if ! gcloud iam service-accounts create $service_account --display-name="$service_account" &> /dev/null;
+	if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
 	then
 	     echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
 	     exit 2
@@ -168,7 +168,7 @@ then
 	echo -e "${green}Created custom role $custom_role_id for project $project_id successfully."
     fi
     echo -e "${white}Binding role $custom_role_id to principal $memberValue in project $project_id..."
-    if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role=projects/$project_id/roles/$custom_role_id &> /dev/null;
+    if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role=projects/"$project_id"/roles/"$custom_role_id" &> /dev/null;
     then
         echo -e "${red}Error: Attaching custom role $custom_role_id to $memberValue in project $project_id." >&2
 	exit 2
