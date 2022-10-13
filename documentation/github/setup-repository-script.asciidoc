@@ -1,4 +1,4 @@
-:provider_name: Github
+:provider_name: GitHub
 :provider_path: github
 :example_required_flags:
 = Setting up a repository on {provider_name}
@@ -30,7 +30,7 @@ create-repo.sh \
     [-s <branch strategy>] \
     [-f] \
     [--subpath <subpath to import>] \
-    [-u <public>]
+    [-u]
 ```
 === Flags
 [subs="attributes"]
@@ -44,7 +44,7 @@ create-repo.sh \
 -s, --setup-branch-strategy            Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
 -f, --force                            Skips any user confirmation.
     --subpath                          When combined with -g and -r, imports only the specified subpath of the source Git repository.
--u, --public                           Repository scope. Private by default
+-u, --public                           Sets repository scope to public. Private otherwise.
 ```
 === Typical use cases
 
