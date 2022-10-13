@@ -41,6 +41,7 @@ if [ -z "$google_account" ] && [ -z "$service_account" ] || [ -z "$project_id" ]
 then
     echo -e "${red}Error: Missing parameters, -g or -s (mutually exclusive) and -p flags are mandatory." >&2
     echo -e "${red}Use -h flag to display help." >&2
+    echo -e "${white}"
     exit 2
 fi
 
@@ -49,6 +50,7 @@ if [ -n "$google_account" ] && [ -n "$service_account" ];
 then
     echo -e "${red}Error: Parameters -g or -s are mutually exclusive." >&2
     echo -e "${red}Use -h flag to display help." >&2
+    echo -e "${white}"
     exit 2
 fi
 
@@ -56,18 +58,21 @@ if { [ "$custom_role_file" ] && [ -z "$custom_role_id" ]; } || { [ -z "$custom_r
 then
     echo -e "${red}Error: -c and -i parameters must be used together." >&2
     echo -e "${red}Use -h flag to display help." >&2
+    echo -e "${white}"
     exit 2
 fi
 
 #Check if GCP CLI is installed
 if ! [ -x "$(command -v gcloud)" ]; then
   echo -e "${red}Error: GCP CLI is not installed." >&2
+  echo -e "${white}"
   exit 127
 fi
 
 #Check if Python is installed
 if ! [ -x "$(command -v python)" ]; then
   echo -e "${red}Error: Python is not installed." >&2
+  echo -e "${white}"
   exit 127
 fi
 
@@ -76,15 +81,18 @@ echo -e "${white}Checking provided project $project_id..."
 if ! gcloud projects describe "$project_id" &> /dev/null;
 then
     echo -e "${red}Error: The provided project ID does not exist. Please, create it first." >&2
+    echo -e "${white}"
     exit 2
 else
     echo -e "${white}Setting current project to $project_id..."
     if ! gcloud config set project "$project_id" &> /dev/null;
     then
         echo -e "${red}Error: Could not set current project to $project_id." >&2
+        echo -e "${white}"
 	exit 2
     else
         echo -e "${green}Current project set to $project_id." >&2
+        echo -e "${white}"
     fi
 fi
 
