@@ -7,7 +7,7 @@ include::../common_templates/setup-repository-script.asciidoc[tag=part2]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part3]
     -o <organization> \
-    -p <project> \
+    -p <project name> \
 include::../common_templates/setup-repository-script.asciidoc[tag=part4]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part5]

@@ -6,14 +6,14 @@ include::../common_templates/setup-repository-script.asciidoc[tag=part1]
 include::../common_templates/setup-repository-script.asciidoc[tag=part2]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part3]
-    -p <project> \
+    -p <project id> \
 include::../common_templates/setup-repository-script.asciidoc[tag=part4]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part5]
 [subs="attributes"]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part6]
--p, --project               [Required] Name of the Google Cloud project.
+-p, --project               [Required] Short name (ID) of the Google Cloud project.
 include::../common_templates/setup-repository-script.asciidoc[tag=part7]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part8]

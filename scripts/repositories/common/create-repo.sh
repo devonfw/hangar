@@ -23,7 +23,7 @@ function help {
       ;;
 
     "Google Cloud")
-      echo "  -p, --project           [Required] Name of the project."
+      echo "  -p, --project           [Required] Short name (ID) of the project."
       ;;
 
     *)
