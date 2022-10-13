@@ -9,7 +9,7 @@ function help {
   echo ""
   echo "  - Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch."
   echo ""
-  echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to $provider the development of an existing project"
+  echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to $provider the development of an existing project."
   echo ""
   echo "Flags:"
   case $provider in
@@ -154,7 +154,7 @@ function set_default_branch_and_policies {
     git push --set-upstream origin "$i"
   done
   type set_default_branch_and_policies_content_1 &> /dev/null && set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
-  MSG_ERROR "Setting 'master' branch as default branch" $?
+  MSG_ERROR "Setting 'master' branch as default branch." $?
   echo ""
   echo -e "${blue}Setting policies for the repository."
   echo -e "${white}"
