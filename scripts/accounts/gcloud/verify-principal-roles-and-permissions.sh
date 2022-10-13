@@ -20,13 +20,13 @@ then
     echo "Checks if a Principal (end user or service account) has the specified roles and permissions in a given project."
     echo ""
     echo "Arguments:"
-    echo "  -g     [Required] Google Account for the end user. (mutual exclusive with -s)"
-    echo "  -s     [Required] Service Account name. (mutual exclusive with -g)"
-    echo "  -p     [Required] Project ID where the roles and permissions will be checked"
-    echo "  -r     Roles to be checked for the principal in the project, splitted by comma."
-    echo "  -f     Path to a file containing the roles to be checked for the principal in the project."
-    echo "  -e     Permissions to be checked for the principal in the project, splitted by comma."
-    echo "  -i     Path to a file containing the permissions to be checked for the principal in the project."
+    echo "  -g     [Required] Google Account of an end user. Mutually exclusive with -s."
+    echo "  -s     [Required] Service Account name. Mutually exclusive with -g."
+    echo "  -p     [Required] Short project name (ID) where the roles and permissions will be checked."
+    echo "  -r                Roles to be checked, splitted by comma."
+    echo "  -f                Path to a file containing the roles to be checked."
+    echo "  -e                Permissions to be checked, splitted by comma."
+    echo "  -i                Path to a file containing the permissions to be checked."
     exit
 fi
 
