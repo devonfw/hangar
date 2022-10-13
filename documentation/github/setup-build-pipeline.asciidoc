@@ -23,7 +23,7 @@ This script will commit and push the corresponding YAML template into your repos
 == Creating the {pipeline_type} using provided script
 
 === Usage
-[subs="attributes"]
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
@@ -38,7 +38,7 @@ pipeline_generator.sh \
 NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/build/build-pipeline.cfg`.
 
 === Flags
-[subs="attributes"]
+[subs=attributes+]
 ```
 -c, --config-file        [Required] Configuration file containing {pipeline_type} definition.
 -n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.
