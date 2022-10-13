@@ -195,7 +195,7 @@ Created repository [testdockerrepo].
 ----
 gcloud auth configure-docker <location>-docker.pkg.dev
 ----
-
+*Sample Output*
 [source]
 ----
 Adding credentials for: europe-west9-docker.pkg.dev
