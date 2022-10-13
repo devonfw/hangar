@@ -39,6 +39,7 @@ function arguments_check_content {
     then
     echo -e "${red}You chose an Azure repository as target but one of these mandatory flags is missing: -o, -p."
     echo "Use -h or --help flag to display help."
+    echo -e "${white}"
     exit 1
     fi
 }
