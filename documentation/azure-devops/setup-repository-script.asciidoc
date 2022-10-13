@@ -34,12 +34,13 @@ create-repo.sh \
     [-u <public>]
 ```
 === Flags
+[subs="attributes"]
 ```
 -a, --action                [Required] Use case to fulfil: create, import.
 -d, --directory             [Required] Path to the directory where your repository will be cloned or initialized.
 -o, --org                   [Required] Name of the Azure DevOps organization.
--p, --project               [Required] Name of the Google Cloud project.
--n, --name                             Name for the Google Cloud repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
+-p, --project               [Required] Name of the Azure DevOps project.
+-n, --name                             Name for the {provider_name} repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
 -g, --source-git-url                   Source URL of the Git repository to import.
 -b, --source-branch                    Source branch to be used as a basis to initialize the repository on import, as master branch.
 -r, --remove-other-branches            Removes branches other than the (possibly new) default one.
