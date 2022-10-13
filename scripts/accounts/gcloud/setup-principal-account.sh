@@ -183,16 +183,20 @@ then
     if ! gcloud iam roles create "$custom_role_id" --project="$project_id" --file="$custom_role_file" &> /dev/null;
     then
         echo -e "${red}Error: Creating custom role $custom_role_id for project $project_id." >&2
+        echo -e "${white}"
 	exit 2
     else
 	echo -e "${green}Created custom role $custom_role_id for project $project_id successfully."
+	echo -e "${white}"
     fi
     echo -e "${white}Binding role $custom_role_id to principal $memberValue in project $project_id..."
     if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role=projects/"$project_id"/roles/"$custom_role_id" &> /dev/null;
     then
         echo -e "${red}Error: Attaching custom role $custom_role_id to $memberValue in project $project_id." >&2
+        echo -e "${white}"
 	exit 2
     else
         echo -e "${green}Attached custom role $custom_role_id to $memberValue in project $project_id successfully."
+        echo -e "${white}"
     fi
 fi
