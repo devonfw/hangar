@@ -51,35 +51,35 @@ TIP: This is non-exhaustive list. Make your own combination of flags if all of t
 
 ==== Creating an empty repository
 [subs="attributes"]
-  ./create-repo.sh -a create {example_required_flags} -n <repository name> -d <local destination directory>
+  ./create-repo.sh -a create {example_required_flags} -n &lt;repository name> -d &lt;local destination directory>
 
 In case repository name is not specified, destination directory name will be used.
 
 ==== Creating an empty repository with Gitflow branching strategy
 [subs="attributes"]
-  ./create-repo.sh -a create {example_required_flags} -n <repository name> -d <local destination directory> -s gitflow
+  ./create-repo.sh -a create {example_required_flags} -n &lt;repository name> -d &lt;local destination directory> -s gitflow
 
 ==== Importing a remote Git repository
 [subs="attributes"]
-  ./create-repo.sh -a import -g <source git url> {example_required_flags} -n <repository name> -d <local destination directory>
+  ./create-repo.sh -a import -g &lt;source git url> {example_required_flags} -n &lt;repository name> -d &lt;local destination directory>
 
 In case repository name is not specified, source repository name (in URL) will be used.
 
 ==== Importing a specific remote Git repository branch as source for a new repository with Gitflow branching strategy
 [subs="attributes"]
-  ./create-repo.sh -a import {example_required_flags} -g <source git url> -b <source branch> -s gitflow -r -n <repository name> -d <local destination directory>
+  ./create-repo.sh -a import {example_required_flags} -g &lt;source git url> -b &lt;source branch> -s gitflow -r -n &lt;repository name> -d &lt;local destination directory>
 
 This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
 
 ==== Importing local directory or Git repository
 [subs="attributes"]
-  ./create-repo.sh -a import {example_required_flags} -d <local source directory> -n <repository name>
+  ./create-repo.sh -a import {example_required_flags} -d &lt;local source directory> -n &lt;repository name>
 
 In case repository name is not specified, source directory name will be used.
 
 ==== Importing a specific local Git repository branch as source for a new repository with Gitflow branching strategy
 [subs="attributes"]
-  ./create-repo.sh -a 'import' {example_required_flags} -d <local source directory> -b <source branch> -s gitflow -r -n <repository name>
+  ./create-repo.sh -a 'import' {example_required_flags} -d &lt;local source directory> -b &lt;source branch> -s gitflow -r -n &lt;repository name>
 
 This will create `master` (and `develop` since a branching strategy is specified) from the `<source branch>`, removing any other branch (including `<source branch>`).
 
