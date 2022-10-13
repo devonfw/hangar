@@ -82,21 +82,21 @@ fi
 
 echo "Enabling Cloud Source Repositories..."
 if ! gcloud services enable sourcerepo.googleapis.com --project "$projectName"; then
-   echo -e "${red}ERROR: Unable to enable Cloud Source Repositories API"
+   echo -e "${red}Error: Cannot enable Cloud Source Repositories API"
    echo -e "${white}"
    exit 220
 fi
 
 echo "Enabling CloudRun..."
 if ! gcloud services enable run.googleapis.com --project "$projectName"; then
-   echo -e "${red}ERROR: Unable to enable CloudRun API"
+   echo -e "${red}Error: Cannot enable CloudRun API"
    echo -e "${white}"
    exit 221
 fi
 
 echo "Enabling Artifact Registry..."
 if ! gcloud services enable artifactregistry.googleapis.com --project "$projectName"; then
-   echo -e "${red}ERROR: Unable to enable Artifact Registry API"
+   echo -e "${red}Error: Cannot enable Artifact Registry API"
    echo -e "${white}"
    exit 222
 fi
