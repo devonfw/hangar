@@ -10,6 +10,7 @@ include::../common_templates/setup-repository-script.asciidoc[tag=part4]
     [-u <public>]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part5]
+[subs="attributes"]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part6]
 include::../common_templates/setup-repository-script.asciidoc[tag=part7]
