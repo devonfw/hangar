@@ -23,7 +23,7 @@ create-repo.sh \
     -a <action> \
     -d <local directory> \
     -o <organization> \
-    -p <project> \
+    -p <project name> \
     [-n <repository name>] \
     [-g <giturl>] \
     [-b <branch>] \
