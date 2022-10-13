@@ -190,7 +190,7 @@ a-eb2f5bd4178c] to complete...done.
 Created repository [testdockerrepo].
 ----
 
-* Enable access to your Artifact Registry repository from your local Docker client by using:
+* Enable access to your Artifact Registry repository from your local Docker client using:
 [source,shell]
 ----
 gcloud auth configure-docker <location>-docker.pkg.dev
