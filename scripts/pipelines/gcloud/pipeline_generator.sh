@@ -75,37 +75,10 @@ function merge_branch {
         echo -e "${green}Checking out to the target branch."
         echo -ne "${white}"
         git checkout "$targetBranch"
-        # repoURL=$(git config --get remote.origin.url)
-        # repoNameWithGit="${repoURL/https:\/\/gcloud.com\/}"
-        # repoName="${repoNameWithGit/.git}"
-        # Create the Pull Request to merge into the specified branch.
-        #debug
+        echo "Trying to merge"
         git merge "$sourceBranch"
         git push
         git branch -D "$sourceBranch" ; git push origin --delete "$sourceBranch"
-        # trying to merge
-        # if gh pr merge -s "$pr"
-        # then
-        #     # Pull Request merged successfully.
-        #     echo -e "${green}Pull Request merged into $targetBranch branch successfully."
-        #     exit
-        # else
-        #     # Check if the -w flag is activated.
-        #     if [[ "$webBrowser" == "true" ]]
-        #     then
-        #         # -w flag is activated and a page with the corresponding Pull Request is opened in the web browser.
-        #         echo -e "${green}Pull Request successfully created."
-        #         echo -e "${green}Opening the Pull Request on the web browser..."
-        #         python -m webbrowser "$pr"
-        #         exit
-        #     else
-        #         # -w flag is not activated and the URL to the Pull Request is shown in the console.
-        #         echo -e "${green}Pull Request successfully created."
-        #         echo -e "${green}To review the Pull Request and accept it, click on the following link:"
-        #         echo "${pr}"
-        #         exit
-        #     fi
-        # fi
     fi
 }
 
@@ -114,8 +87,7 @@ function createTrigger {
     gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
     gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
     #debug
-    echo "gcloud beta builds triggers create cloud-source-repositories --repo=\"$gCloudRepo\" --branch-pattern='.*'  --build-config=\"${pipelinePath}/${yamlFile}\" --project=\"$gCloudProject\" --name=\"$pipelineName\" --description=\"$triggerDescription\" --substitutions ${subsitutionVariable}${artifactPathSubStr}"
-    gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern='.*'  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions ${subsitutionVariable}${artifactPathSubStr}
+    gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
 }
 
 obtainHangarPath
