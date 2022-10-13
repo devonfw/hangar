@@ -133,7 +133,7 @@ then
             echo -e "${red}FAILED      $role_to_check"
             exit 1;
         fi
-        echo -e ${white}
+        echo -e "${white}"
 
     done
 fi
@@ -169,7 +169,7 @@ then
 	    echo -e "${red}FAILED      $permission_to_check"
 	    exit 1;
 	fi
-        echo -e ${white}
+        echo -e "${white}"
     done
 fi
 
