@@ -170,7 +170,6 @@ function copyYAMLFile {
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     commonEnvSubstList='${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineName} ${ciPipelineName} ${packagePipelineName}'
-    echo "debug ${specificEnvSubstList}"
     envsubst "${commonEnvSubstList} ${specificEnvSubstList}" < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
 
     # Check if an extra artifact to store is supplied.
