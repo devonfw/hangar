@@ -167,9 +167,11 @@ then
         if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role="$role_to_check" &> /dev/null;
 	then
 	    echo -e "${red}Error: Attaching role $role_to_check to $memberValue in project $project_id." >&2
+	    echo -e "${white}"
 	    exit 2
 	else
             echo -e "${green}Attached role $role_to_check to $memberValue in project $project_id."
+            echo -e "${white}"
         fi
     done
 fi
