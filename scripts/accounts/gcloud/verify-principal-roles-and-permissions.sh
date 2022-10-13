@@ -17,7 +17,7 @@ done
 
 if [ "$1" == "-h" ];
 then
-    echo "Checks if a Principal has the specified roles and permissions in a given project."
+    echo "Checks if a Principal (end user or service account) has the specified roles and permissions in a given project."
     echo ""
     echo "Arguments:"
     echo "  -g     [Required] Google Account for the end user. (mutual exclusive with -s)"
