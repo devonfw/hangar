@@ -31,7 +31,6 @@ create-repo.sh \
     [-s <branch strategy>] \
     [-f] \
     [--subpath <subpath to import>] \
-    [-u <public>]
 ```
 === Flags
 [subs="attributes"]
@@ -47,7 +46,6 @@ create-repo.sh \
 -s, --setup-branch-strategy            Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
 -f, --force                            Skips any user confirmation.
     --subpath                          When combined with -g and -r, imports only the specified subpath of the source Git repository.
--u, --public                           Repository scope. Private by default
 ```
 === Typical use cases
 
