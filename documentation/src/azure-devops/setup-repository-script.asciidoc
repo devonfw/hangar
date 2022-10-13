@@ -9,7 +9,6 @@ include::../common_templates/setup-repository-script.asciidoc[tag=part3]
     -o <organization> \
     -p <project> \
 include::../common_templates/setup-repository-script.asciidoc[tag=part4]
-    [-u <public>]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part5]
 [subs="attributes"]
@@ -18,7 +17,6 @@ include::../common_templates/setup-repository-script.asciidoc[tag=part6]
 -o, --org                   [Required] Name of the Azure DevOps organization. 
 -p, --project               [Required] Name of the Azure DevOps project.
 include::../common_templates/setup-repository-script.asciidoc[tag=part7]
--u, --public                           Repository scope. Private by default
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part8]
 
