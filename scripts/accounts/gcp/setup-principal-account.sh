@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# exit when any command fails
+set -e
+
 while getopts g:s:p:r:f:c:i: flag
 do
     case "${flag}" in
