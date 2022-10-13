@@ -108,17 +108,21 @@ then
 	if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
 	then
 	     echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
+	     echo -e "${white}"
 	     exit 2
 	else
 	     echo -e "${green}Service account $service_account created successfully."
+	     echo -e "${white}"
 	fi
 	echo -e "${white}Creating service-account keys for service account $service_account_email..."
 	if ! gcloud iam service-accounts keys create ./key.json --iam-account="$service_account_email" &> /dev/null;
 	then      
 	    echo -e "${red}Error: Service account key could not be created." >&2
+	    echo -e "${white}"
 	    exit 2
 	else
 	    echo -e "${green}Service account key creation ended successfully."
+	    echo -e "${white}"
 	fi
     else
         echo -e "${white}The service account $service_account_email exists already. Proceeding to use it."
