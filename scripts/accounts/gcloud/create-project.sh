@@ -46,7 +46,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
   exit 127
 fi
 # Check if exists a Google Cloud project with that project ID. 
-if gcloud projects describe $projectName &>/dev/null ; then
+if gcloud projects describe "$projectName" &>/dev/null ; then
      echo -e "${red}Error: Project ID already exists. Try another Project ID for the project." >&2
      echo -e "${white}"
      exit 2
@@ -71,14 +71,14 @@ if ! eval "$command"
 then
     echo -e "${red}Error while creating the project." >&2
     echo -e "${white}"
-    exit 2
+    exit 200
 fi
 
 echo "Linking project to billing account..."
-if ! gcloud beta billing projects link "$projectName" --billing-account "$billing" ; then echo -e "${red}ERROR: Unable to link project to billing account";  echo -e "${white}"; exit 2; fi
+if ! gcloud beta billing projects link "$projectName" --billing-account "$billing" ; then echo -e "${red}ERROR: Unable to link project to billing account";  echo -e "${white}"; exit 210; fi
 echo "Enabling Cloud Source Repositories..."
-if ! gcloud services enable sourcerepo.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable Cloud Source Repositories API"; echo -e "${white}"; exit 2; fi
+if ! gcloud services enable sourcerepo.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable Cloud Source Repositories API"; echo -e "${white}"; exit 220; fi
 echo "Enabling CloudRun..."
-if ! gcloud services enable run.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable CloudRun API"; echo -e "${white}"; exit 2; fi
+if ! gcloud services enable run.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable CloudRun API"; echo -e "${white}"; exit 221; fi
 echo "Enabling Artifact Registry..."
-if ! gcloud services enable artifactregistry.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable Artifact Registry API"; echo -e "${white}"; exit 2; fi
+if ! gcloud services enable artifactregistry.googleapis.com --project "$projectName" ; then echo -e "${red}ERROR: Unable to enable Artifact Registry API"; echo -e "${white}"; exit 222; fi
