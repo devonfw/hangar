@@ -1,0 +1,56 @@
+```
+gcloud config set run/region europe-southwest1
+
+gcloud config set filestore/zone europe-southwest1-a
+
+gcloud filestore instances create my-filestore-instance \
+    --tier=STANDARD \
+    --file-share=name=voltest,capacity=1TiB \
+    --network=name="default"
+
+gcloud compute networks vpc-access connectors create my-vpc-conector-filestore \
+  --region europe-southwest1 \
+  --range "10.8.0.0/28"
+```
+
+https://cloud.google.com/run/docs/tutorials/network-filesystems-filestore#cloudrun_fs_code-java
+
+
+https://cloud.google.com/run/docs/tutorials/network-filesystems-fuse
+
+```
+gcloud config set run/region europe-southwest1
+
+gcloud config set filestore/zone europe-southwest1-a
+
+gcloud filestore instances create my-filestore-instance \
+    --tier=STANDARD \
+    --file-share=name=voltest,capacity=1TiB \
+    --network=name="default"
+
+gcloud compute networks vpc-access connectors create my-vpc-conector-filestore \
+  --region europe-southwest1 \
+  --range "10.8.0.0/28"
+```
+
+
+```
+qatestsfuse
+
+gsutil mb -l europe-southwest1 gs://hangar-my-fuse-bucket
+
+gcloud iam service-accounts create fs-identity
+
+gcloud projects add-iam-policy-binding qatestsfuse \
+     --member "serviceAccount:fs-identity@qatestsfuse.iam.gserviceaccount.com" \
+     --role "roles/storage.objectAdmin"
+
+gcloud beta run deploy filesystem-app --source . \
+    --execution-environment gen2 \
+    --allow-unauthenticated \
+    --service-account fs-identity \
+    --port=9000 \
+    --update-env-vars BUCKET=hangar-my-fuse-bucket
+```
+
+   --port=9000 \
