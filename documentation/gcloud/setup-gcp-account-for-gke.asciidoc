@@ -3,14 +3,14 @@ toc::[]
 :idprefix:
 :idseparator: -
 = Setup GCP account IAM for deployment in GKE
-The scope of this section is to prepare a GCP account to be ready for deploying in GCP GKE. By the end of this guide, the GCP account will have the required roles attached.
+The scope of this section is to prepare a Google Cloud account to be ready for deploying in Google Cloud GKE. By the end of this guide, the Google Cloud account will have the required roles attached.
 
 == Preparing environment
-First of all, install https://cloud.google.com/sdk/docs/install[GCP CLI] and https://www.python.org/downloads/[Python] for your OS.
+First of all, install https://cloud.google.com/sdk/docs/install[gcloud CLI] and https://www.python.org/downloads/[Python] for your OS.
 
 == Prerequisites
 
-* A GCP account.
+* A Google Cloud account.
 
 ==== Required predefined roles
 
@@ -23,15 +23,15 @@ roles/source.admin
 
 ==== Required custom roles
 
-Find them on `/scripts/accounts/gcp/gke-custom-role.yaml`.
+Find them on `/scripts/accounts/gcloud/gke-custom-role.yaml`.
 
 == Setting up a principal (Google Account, service account) using provided script
 
-The script located at `/scripts/accounts/gcp/setup-principal-account.sh` will automatically attach the specified roles to the princiapl, in the context of the provided project.
+The script located at `/scripts/accounts/gcloud/setup-principal-account.sh` will automatically attach the specified roles to the principal, in the context of the provided project.
 
 === Usage
 ```
-create-bindings.sh \
+setup-principal-account.sh \
   -g <Google Account> \
   -s <Service Account Name> \
   -p <project ID> \
@@ -43,13 +43,13 @@ create-bindings.sh \
 
 === Flags
 ```
--g      [Required] Google Account for the end user (mutual exclusive with -s)
--s      [Required] Service Account name (mutual exclusive with -g)
--p      [Required] Project ID where the user will be added
--r      [Optional] Roles (Basic or Predefined) to be attached to the user in the project, splitted by comma
--f      [Optional] Path to a file containing the roles (Basic or predefined) to be attached to the user in the project
--c      [Optional] Path to a YAML file containing the custom role to be attached to the user in the project
--i     [Optional] Custom Role ID
+-g      [Required] Google Account of an end user. Mutually exclusive with -s.
+-s      [Required] Service Account name. Mutually exclusive with -g.
+-p      [Required] Short project name (ID) to which the principal will be enrolled.
+-r                 Roles (basic or predefined) to be attached to the principal in the project, splitted by comma.
+-f                 Path to a file containing the roles (basic or predefined) to be attached to the principal in the project.
+-c                 Path to a YAML file containing the custom role to be attached to the principal in the project. Requires -i.
+-i                 ID to be set to the custom role provided in -c.
 ```
 
 === Example
@@ -58,7 +58,7 @@ create-bindings.sh \
 ```
 NOTE: "ExampleProject" project must exist.
 
-NOTE: Required roles for using GKE are located at `/scripts/accounts/gcp/gke-predefined-roles.txt` and `/scripts/accounts/gcp/gke-custom-role.yaml`
+NOTE: Required roles for using GKE are located at `/scripts/accounts/gcloud/gke-predefined-roles.txt` and `/scripts/accounts/gcloud/gke-custom-role.yaml`
 
 === After execution
 On success, the newly created bindings for user in the project will be shown as output:
@@ -69,3 +69,41 @@ Attached role roles/editor to serviceAccount:ExampleServiceAccount@ExampleProjec
 Attached role roles/source.admin to serviceAccount:ExampleServiceAccount@ExampleProject.iam.gserviceaccount.com in project ExampleProject.
 
 ```
+
+== Checking roles and permissions of a principal (Google Account, service account) using provided script
+
+The script located at `/scripts/accounts/gcloud/verify-principal-roles-and-permissions.sh` will automatically check the roles and permissions bound to the principal, in the context of the provided project.
+
+=== Usage
+```
+verify-principal-roles-and-permissions.sh \
+  -g <Google Account> \
+  -s <Service Account Name> \
+  -p <project ID> \
+  [-r <roles...>] \
+  [-f <roles file path>] \
+  [-e <permissions...>] \
+  [-i <permissions file path>]
+```
+
+=== Flags
+```
+-g      [Required] Google Account of an end user. Mutually exclusive with -s.
+-s      [Required] Service Account name. Mutually exclusive with -g.
+-p      [Required] Short project name (ID) where the roles and permissions will be checked.
+-r                 Roles to be checked, splitted by comma.
+-f                 Path to a file containing the roles to be checked.
+-e                 Permissions to be checked, splitted by comma.
+-i                 Path to a file containing the permissions to be checked.
+```
+
+=== Example
+```
+./verify-principal-roles-and-permissions.sh -s ExampleServiceAccount -p ExampleProject -r roles/viewer,roles/editor -f ./gke-predefined-roles.txt -i ./gke-required-permissions.txt
+```
+NOTE: "ExampleProject" project must exist.
+
+After execution, provided policies will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
+
+NOTE: Required roles for using GKE are located at `/scripts/accounts/gcloud/gke-predefined-roles.txt`
+NOTE: Required permissions for using GKE are located at `/scripts/accounts/gcloud/gke-required-permissions.txt`
