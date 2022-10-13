@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# exit when any command fails
+set -e
 provider="Google Cloud"
 function create_repo_content {
     gcloud source repos create "$1" --project "$3"

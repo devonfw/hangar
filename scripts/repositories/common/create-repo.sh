@@ -1,6 +1,7 @@
 #!/bin/bash
 # Description: 	Script to create a repo, you can choose between three differents way of creation
-
+# exit when any command fails
+set -e
 function help {
   echo "Creates or imports a repository on $provider."
   echo ""
@@ -155,7 +156,8 @@ function set_default_branch_and_policies {
   type set_default_branch_and_policies_content_1 &> /dev/null && set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
   MSG_ERROR "Setting 'master' branch as default branch" $?
   echo ""
-  echo -e "${blue}Setting policies for the repository. ${white}"
+  echo -e "${blue}Setting policies for the repository."
+  echo -e "${white}"
   STR_BRANCHES_WITH_MASTER="master $STR_BRANCHES"
   for i in $STR_BRANCHES_WITH_MASTER
   do
