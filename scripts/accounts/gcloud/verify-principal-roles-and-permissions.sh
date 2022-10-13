@@ -92,7 +92,7 @@ if [ -n "$service_account" ];
 then
     service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
     echo -e "${white}Checking if service account $service_account_email already exists..."
-    if ! gcloud iam service-accounts describe $service_account_email &> /dev/null;
+    if ! gcloud iam service-accounts describe "$service_account_email" &> /dev/null;
     then
         echo -e "${red}Error: Service account $service_account_email does not exist. Please, provide a valid one." >&2
 	exit 2
