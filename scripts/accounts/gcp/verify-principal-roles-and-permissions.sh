@@ -103,7 +103,7 @@ fi
 echo -e "${white}Retrieving roles and permissions for $memberValue in project $project_id..."
 
 #Get ALL member-specific roles in project
-all_roles=$(gcloud projects get-iam-policy "$project_id" --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep "$member_value" | cut -d ',' -f2)
+all_roles=$(gcloud projects get-iam-policy "$project_id" --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep "$memberValue" | cut -d ',' -f2)
 all_roles_array=($all_roles)
 
 #Get ALL member permissions in project
@@ -184,7 +184,7 @@ then
 	then
 	    echo -e "${green}OK        $permission_to_check"
 	else
-            echo -e "${red}FAILED      $permissions_to_check"
+            echo -e "${red}FAILED      $permission_to_check"
 	    exit 1;
 	fi
     done
