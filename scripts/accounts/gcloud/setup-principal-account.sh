@@ -18,7 +18,7 @@ done
 
 if [ "$1" == "-h" ];
 then
-    echo "Enrolls a Principal in a project with the provided roles attached."
+    echo "Enrolls a Principal (end user or service account) in a project with the provided roles attached."
     echo ""
     echo "Arguments:"
     echo "  -g     [Required] Google Account for the end user. (mutual exclusive with -s)"
