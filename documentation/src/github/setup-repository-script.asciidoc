@@ -1,4 +1,4 @@
-:provider_name: Github
+:provider_name: GitHub
 :provider_path: github
 :example_required_flags:
 include::../common_templates/setup-repository-script.asciidoc[tag=part1] 
@@ -8,14 +8,14 @@ include::../common_templates/setup-repository-script.asciidoc[tag=part2]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part3]
 include::../common_templates/setup-repository-script.asciidoc[tag=part4]
-    [-u <public>]
+    [-u]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part5]
 [subs="attributes"]
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part6]
 include::../common_templates/setup-repository-script.asciidoc[tag=part7]
--u, --public                           Repository scope. Private by default
+-u, --public                           Sets repository scope to public. Private otherwise.
 ```
 include::../common_templates/setup-repository-script.asciidoc[tag=part8]
 

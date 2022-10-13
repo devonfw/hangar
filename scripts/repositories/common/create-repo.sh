@@ -42,11 +42,10 @@ function help {
   case $provider in
 
     azure)
-      echo "  -u, --public                             Repository scope. Private by default"
       ;;
 
     github)
-      echo "  -u, --public                             Repository scope. Private by default"
+      echo "  -u, --public                             Sets repository scope to public. Private otherwise."
       ;;
 
     gcloud)

@@ -1,5 +1,5 @@
 #!/bin/bash
-provider="Github"
+provider="GitHub"
 function create_repo_content {
    if [ "$5" == "true" ]
     then

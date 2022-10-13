@@ -1,6 +1,6 @@
 :provider_name: Azure DevOps
 :provider_path: azure-devops
-:example_required_flags: -o <organization> -p <project>
+:example_required_flags: -o <organization> -p <project name>
 include::../common_templates/setup-repository-script.asciidoc[tag=part1]
 * Have an Azure DevOps project already setup and Azure CLI installed and configured. If it is not the case, please go back to corresponding guide.
 include::../common_templates/setup-repository-script.asciidoc[tag=part2]
