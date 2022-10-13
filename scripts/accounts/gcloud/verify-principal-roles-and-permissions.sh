@@ -179,11 +179,12 @@ then
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
         then
 	    echo -e "${green}OK        $permission_to_check"
+	    echo -e "${white}"
 	else
 	    echo -e "${red}FAILED      $permission_to_check"
+	    echo -e "${white}"
 	    exit 1;
 	fi
-        echo -e "${white}"
     done
 fi
 
@@ -197,8 +198,10 @@ then
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
 	then
 	    echo -e "${green}OK        $permission_to_check"
+	    echo -e "${white}"
 	else
             echo -e "${red}FAILED      $permission_to_check"
+            echo -e "${white}"
 	    exit 1;
 	fi
     done
