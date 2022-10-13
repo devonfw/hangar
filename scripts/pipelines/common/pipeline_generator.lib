@@ -173,7 +173,7 @@ function copyYAMLFile {
     envsubst "${commonEnvSubstList} ${specificEnvSubstList}" < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
 
     # Check if an extra artifact to store is supplied.
-    if test ! -z "$artifactPath"
+    if test -n "$artifactPath"
     then
         # Add the extra step to the YAML.
         if [ "$provider" == "azure-devops" ]
@@ -185,7 +185,7 @@ function copyYAMLFile {
             sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         elif [ "$provider" == "gcloud" ]
         then
-            grep -e "^artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && storeExtraPathContent="      - additional_output_\${BUILD_ID}.tar" || storeExtraPathContent="\nartifacts:\n  objects:\n    location: gs:\/\/\${PROJECT_ID}_cloudbuild\/pipelinesArtifacts/${pipelineName}/end_time_\$(date +%Y-%m-%d_%Hh%M)_commit_\${SHORT_SHA}\n    paths:\n      - additional_output_\${BUILD_ID}.tar"
+            grep -e "^artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && storeExtraPathContent="      - additional_output_\${BUILD_ID}.tar" || storeExtraPathContent="\nartifacts:\n  objects:\n    location: gs:\/\/\${PROJECT_ID}_cloudbuild\/pipelinesArtifacts\/${pipelineName}\/end_time_\$(date +%Y-%m-%d_%Hh%M)_commit_\${SHORT_SHA}\n    paths:\n      - additional_output_\${BUILD_ID}.tar"
             sed -i "s/# mark to insert entry in artifact for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
             stepCreateTarArtifact="- name: \${_DOCKER_IMAGE_STEPS}\n  args: ['tar', '-cf', 'additional_output_\${BUILD_ID}.tar', '\${_ARTIFACT_PATH}']"
             sed -i "s/# mark to insert step for additonal artifact #/$stepCreateTarArtifact\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
@@ -194,6 +194,7 @@ function copyYAMLFile {
         if [ "$provider" == "github" ] || [ "$provider" == "gcloud" ]
         then
             sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+            sed -i '/# mark to insert entry in artifact for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
         fi
     fi
 }
