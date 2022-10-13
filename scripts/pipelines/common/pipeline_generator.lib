@@ -9,7 +9,7 @@ function help {
     echo "  -d, --local-directory       [Required] Local directory of your project."
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after $pipeline_type execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    [[ "$provider" != "gcloud" ]] && echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
     echo "Build $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
@@ -59,7 +59,7 @@ function help {
     echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --aws-access-key        [Required, on first run] AWS account access key ID."
-    echo "      --aws-secret-access-key [Required, on first run] AWS account secret access key."      
+    echo "      --aws-secret-access-key [Required, on first run] AWS account secret access key."
     echo "      --aws-region            [Required, on first run] AWS region for provisioning resources."
 
     echo "      --rancher                          Install Rancher to manage the cluster."
@@ -170,6 +170,7 @@ function copyYAMLFile {
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
     commonEnvSubstList='${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineName} ${ciPipelineName} ${packagePipelineName}'
+    echo "debug ${specificEnvSubstList}"
     envsubst "${commonEnvSubstList} ${specificEnvSubstList}" < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
 
     # Check if an extra artifact to store is supplied.
@@ -183,9 +184,15 @@ function copyYAMLFile {
         then
             storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
             sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+        elif [ "$provider" == "gcloud" ]
+        then
+            grep -e "^artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && storeExtraPathContent="      - additional_output_\${BUILD_ID}.tar" || storeExtraPathContent="\nartifacts:\n  objects:\n    location: gs:\/\/\${PROJECT_ID}_cloudbuild\/pipelinesArtifacts/${pipelineName}/end_time_\$(date +%Y-%m-%d_%Hh%M)_commit_\${SHORT_SHA}\n    paths:\n      - additional_output_\${BUILD_ID}.tar"
+            sed -i "s/# mark to insert entry in artifact for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+            stepCreateTarArtifact="- name: \${_DOCKER_IMAGE_STEPS}\n  args: ['tar', '-cf', 'additional_output_\${BUILD_ID}.tar', '\${_ARTIFACT_PATH}']"
+            sed -i "s/# mark to insert step for additonal artifact #/$stepCreateTarArtifact\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         fi
     else
-        if [ "$provider" == "github" ]
+        if [ "$provider" == "github" ] || [ "$provider" == "gcloud" ]
         then
             sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
         fi
