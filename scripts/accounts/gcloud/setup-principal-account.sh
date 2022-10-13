@@ -21,13 +21,13 @@ then
     echo "Enrolls a Principal (end user or service account) in a project with the provided roles attached."
     echo ""
     echo "Arguments:"
-    echo "  -g     [Required] Google Account for the end user. (mutual exclusive with -s)"
-    echo "  -s     [Required] Service Account name. (mutual exclusive with -g)"
-    echo "  -p     [Required] Project ID where the user will be added"
-    echo "  -r     Roles (Basic or Predefined) to be attached to the user in the project, splitted by comma."
-    echo "  -f     Path to a file containing the roles (Basic or predefined) to be attached to the user in the project."   
-    echo "  -c     Path to a YAML file containing the custom role to be attached to the user in the project."
-    echo "  -i     Custom Role ID"
+    echo "  -g     [Required] Google Account of an end user. Mutually exclusive with -s."
+    echo "  -s     [Required] Service Account name. Mutually exclusive with -g."
+    echo "  -p     [Required] Short project name (ID) to which the principal will be enrolled."
+    echo "  -r                Roles (basic or predefined) to be attached to the principal in the project, splitted by comma."
+    echo "  -f                Path to a file containing the roles (basic or predefined) to be attached to the principal in the project."
+    echo "  -c                Path to a YAML file containing the custom role to be attached to the principal in the project. Requires -i."
+    echo "  -i                ID to be set to the custom role provided in -c."
     exit
 fi
 
