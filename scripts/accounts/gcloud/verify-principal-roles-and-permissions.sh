@@ -161,10 +161,10 @@ then
         if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]];
         then
             echo -e "${green}OK        $role_to_check"
-            echo -e "${white}"
+            echo -ne "${white}"
         else
             echo -e "${red}FAILED      $role_to_check"
-            echo -e "${white}"
+            echo -ne "${white}"
             exit 1;
         fi
      done
@@ -179,10 +179,10 @@ then
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
         then
 	    echo -e "${green}OK        $permission_to_check"
-	    echo -e "${white}"
+	    echo -ne "${white}"
 	else
 	    echo -e "${red}FAILED      $permission_to_check"
-	    echo -e "${white}"
+	    echo -ne "${white}"
 	    exit 1;
 	fi
     done
@@ -198,10 +198,10 @@ then
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
 	then
 	    echo -e "${green}OK        $permission_to_check"
-	    echo -e "${white}"
+	    echo -ne "${white}"
 	else
             echo -e "${red}FAILED      $permission_to_check"
-            echo -e "${white}"
+            echo -ne "${white}"
 	    exit 1;
 	fi
     done
