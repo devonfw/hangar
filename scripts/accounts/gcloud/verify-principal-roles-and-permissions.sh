@@ -143,7 +143,6 @@ then
         else
             echo -e "${red}FAILED      $role_to_check"
             echo -ne "${white}"
-            exit 1;
         fi
         echo -ne "${white}"
 
@@ -165,7 +164,6 @@ then
         else
             echo -e "${red}FAILED      $role_to_check"
             echo -ne "${white}"
-            exit 1;
         fi
      done
 fi
@@ -183,7 +181,6 @@ then
 	else
 	    echo -e "${red}FAILED      $permission_to_check"
 	    echo -ne "${white}"
-	    exit 1;
 	fi
     done
 fi
@@ -202,7 +199,6 @@ then
 	else
             echo -e "${red}FAILED      $permission_to_check"
             echo -ne "${white}"
-	    exit 1;
 	fi
     done
 fi
