@@ -152,7 +152,7 @@ fi
 #Check roles (From file)
 if [ -n "$roles_file" ];
 then
-    echo "${white}Checking roles in file..."
+    echo -e "${white}Checking roles in file..."
 
     IFS=$'\r\n' GLOBIGNORE='*' command eval  'roles_file_array=($(cat ${roles_file}))'
     for role_to_check in "${roles_file_array[@]}"
