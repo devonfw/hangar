@@ -95,7 +95,7 @@ then
     if ! gcloud iam service-accounts describe "$service_account_email" &> /dev/null;
     then
         echo -e "${red}Error: Service account $service_account_email does not exist. Please, provide a valid one." >&2
-        echo -e "${white}"
+        echo -ne "${white}"
 	exit 2
     else
         echo -e "${white}The service account $service_account_email is valid."
