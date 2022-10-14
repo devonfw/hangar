@@ -1,48 +1,59 @@
 #!/bin/bash
-# Creation: 18/10/2021 Timothé Paty
-# Description: 	Script to create a repo on azure, you can choose between three differents way of creation
-#
-# Arguments:
-# -a, --action                  [Required] Use case to fulfil: create, import."
-# -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
-# -o, --org               [Azure Required] Name of the Azure DevOps organization (mandatory)."
-# -p, --project           [Azure Required] Name of the Azure DevOps project."
-# -n, --name                               Name for the repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
-# -g, --source-git-url                     Source URL of the Git repository to import."
-# -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
-# -r, --remove-other-branches              Removes branches other than the (possibly new) default one.
-# -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow.
-# -f, --force                              Skips any user confirmation.
-#     --subpath                            When combined with -g and -r, imports only the specified subpath of the source Git repository.
-# -u, --public                             Repository scope. Private by default
-#
-######################################################################################################
-# Modification:		Name									date		Description
-# ex : 				Timothé Paty							20/09/2021	adding something because of a reason
-
-####################################################################################################
+# Description: 	Script to create a repo, you can choose between three differents way of creation
+# exit when any command fails
+set -e
 function help {
-  echo "Creates or imports a repository on Azure DevOps."
+  echo "Creates or imports a repository on $provider."
   echo ""
   echo "It allows you to, based on action flag, either:"
   echo ""
   echo "  - Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch."
   echo ""
-  echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to Azure DevOps the development of an existing project"
+  echo "  - Import an already existing directory or Git repository into your project giving a path or an URL. Useful for taking to $provider the development of an existing project."
   echo ""
   echo "Flags:"
+  case $provider in
+
+    "Azure")
+      echo "  -p, --project           [Required] Name of the project."
+      echo "  -o, --org               [Required] Name of the organization."
+      ;;
+
+    "Github")
+      ;;
+
+    "Google Cloud")
+      echo "  -p, --project           [Required] Short name (ID) of the project."
+      ;;
+
+    *)
+      ;;
+  esac
+
   echo "  -a, --action                  [Required] Use case to fulfil: create, import."
   echo "  -d, --directory               [Required] Path to the directory where your repository will be cloned or initialized."
-  echo "  -o, --org               [Azure Required] Name of the Azure DevOps organization (mandatory)."
-  echo "  -p, --project           [Azure Required] Name of the Azure DevOps project."
-  echo "  -n, --name                               Name for the Azure DevOps repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
+  echo "  -n, --name                               Name for the $provider repository. By default, the source repository or directory name (either new or existing, depending on use case) is used."
   echo "  -g, --source-git-url                     Source URL of the Git repository to import."
   echo "  -b, --source-branch                      Source branch to be used as a basis to initialize the repository on import, as master branch."
   echo "  -r, --remove-other-branches              Removes branches other than the (possibly new) default one."
   echo "  -s, --setup-branch-strategy              Creates branches and policies required for the desired workflow. Requires -b on import. Accepted values: gitflow."
   echo "  -f, --force                              Skips any user confirmation."
   echo "      --subpath                            When combined with -g and -r, imports only the specified subpath of the source Git repository."
-  echo "  -u, --public                             Repository scope. Private by default"
+  case $provider in
+
+    azure)
+      ;;
+
+    github)
+      echo "  -u, --public                             Sets repository scope to public. Private otherwise."
+      ;;
+
+    gcloud)
+      ;;
+
+    *)
+      ;;
+  esac
 
   exit
 }
@@ -141,14 +152,15 @@ function set_default_branch_and_policies {
     git checkout -b "$i"
     git push --set-upstream origin "$i"
   done
-  set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
-  MSG_ERROR "Setting 'master' branch as default branch" $?
+  type set_default_branch_and_policies_content_1 &> /dev/null && set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+  MSG_ERROR "Setting 'master' branch as default branch." $?
   echo ""
-  echo -e "${blue}Setting policies for the repository. ${white}"
+  echo -e "${blue}Setting policies for the repository."
+  echo -e "${white}"
   STR_BRANCHES_WITH_MASTER="master $STR_BRANCHES"
   for i in $STR_BRANCHES_WITH_MASTER
   do
-    set_default_branch_and_policies_content_2 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+    type set_default_branch_and_policies_content_2 &> /dev/null && set_default_branch_and_policies_content_2 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
   done
   echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
 
@@ -179,9 +191,9 @@ function replace_branch_with_reference {
   if [ "$1" != "$2" ]
   then
     git checkout "$2"
-    MSG_ERROR  "Checking out to reference branch"  "$?"
+    MSG_ERROR  "Checking out to reference branch."  "$?"
     git branch | grep "${1}$" > /dev/null && echo "The branch $1 already exists, deleting it." && git branch -D "$1"
-    git branch | grep "${1}$" > /dev/null && MSG_ERROR  "Deleting branch $1"  "$?"
+    git branch | grep "${1}$" > /dev/null && MSG_ERROR  "Deleting branch $1."  "$?"
     git checkout -b "$1"
     git add -A
     git commit -m "Creating $1 from $2"
@@ -202,7 +214,7 @@ function delete_branches_not_in {
     then
       echo "Skipping $1."
     else
-      echo "Deleting Branch $i"
+      echo "Deleting Branch $i."
       git branch -D "$i" > /dev/null
     fi
   done
@@ -226,19 +238,19 @@ function prepare_push_existing_repo {
   isGitRepo="$?"
   if [ $isGitRepo -eq 0 ]
   then
-    echo "$(pwd) is already a git repository, skipping git init and first commit"
+    echo "$(pwd) is already a git repository, skipping git init and first commit."
     echo ""
   else
     echo "$(pwd) is not a git repository, executing git init and commiting all files ..."
     check_emptyness=$(ls)
-    [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file" && cp "$absoluteFolderScriptPath/README.md" .
+    [ "$check_emptyness" = "" ] && echo "Empty folder, adding README.md file." && cp "$absoluteFolderScriptPath/README.md" .
     git init .
 # When using git init, the branch created will be the one you defined with this command 'git config --global init.defaultBranch <branch>', we checkout to master in case the default one of the user is different
-    [ "$init_with_default_branch" != "true" ] && echo "Creating master branch" && git checkout -b master
+    [ "$init_with_default_branch" != "true" ] && echo "Creating master branch." && git checkout -b master
     # We create those two cases because in case we used -r and --subpath we want the default branch to be created and not master
-    [ "$init_with_default_branch" = "true" ] && echo "Creating $default_branch branch again" && git checkout -b "$default_branch"
+    [ "$init_with_default_branch" = "true" ] && echo "Creating $default_branch branch again." && git checkout -b "$default_branch"
     git add -A
-    git commit -m "creation of the repository"
+    git commit -m "Creation of the repository."
   fi
 
 # We check if the repo already have an url set
@@ -359,7 +371,7 @@ function load_conf {
 
 
 # Arguments check start
-arguments_check_content
+type arguments_check_content &> /dev/null && arguments_check_content
 if [ "$action" = "create" ]
 then
   if [ "$directory" = "" ]
@@ -382,7 +394,7 @@ then
   else
     if [ "$giturl_argument" = "" ]
     then
-      echo -e "${yellow}No Giturl has been given, the directory $directory will be imported then ${white}"
+      echo -e "${yellow}No Giturl has been given, the directory $directory will be imported then. ${white}"
       [ "$name" = "" ] && name="$directory_name" && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
     else
       [ "$name" = "" ]  && name_tmp="${giturl_argument##*/}" && name=$(basename "$name_tmp" ".git") && echo -e "${yellow}No name has been given, the repository name will be: ${name} ${white}"
@@ -409,31 +421,31 @@ then
   else
     if [ "$branch" = "" ] && [ "$remove" = "false" ]
     then
-      echo "You have not given a branch name or used the '-r' flag so the repository will be imported as it is"
+      echo "You have not given a branch name or used the '-r' flag so the repository will be imported as it is."
       import_repo "$giturl_argument" "$organization" "$project" "$name" "$public" "$ghuser"
       clone_git_project_import
     elif [ "$remove" = "true" ] && [ "$subpath" != "" ]
     then
       if ! (echo "The combination of the flags '-r' and '--subpath' has been detected, then we clone only the subpath: $subpath from the branch given or the default one."
       mkdir "$name.tmp"
-      MSG_ERROR "Creating folder '$name.tmp'" "$?"
+      MSG_ERROR "Creating folder '$name.tmp'." "$?"
       mkdir "$name"
-      MSG_ERROR "Creating folder '$name'" "$?"
+      MSG_ERROR "Creating folder '$name'." "$?"
       cd "$name.tmp"
-      MSG_ERROR "cding into '$name.tmp'" "$?"
+      MSG_ERROR "cding into '$name.tmp'." "$?"
       echo "We do a git init an empty directory so we can configure the git sparse-checkout to clone only the wanted subpath."
       git init
       MSG_ERROR "git init" "$?"
       git remote add -f origin "$giturl_argument"
       MSG_ERROR "setting the fetch url with: $giturl_argument" "$?"
       git config core.sparseCheckout true
-      MSG_ERROR "Configuring sparseCheckout" "$?"
+      MSG_ERROR "Configuring sparseCheckout." "$?"
       echo "$subpath" >> .git/info/sparse-checkout
       MSG_ERROR "Adding subpath to sparse-checkout" "$?"
       [ "$branch" != "" ] || { init_with_default_branch="true" && default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p' && git pull origin "$default_branch") ; MSG_ERROR "Pulling default branch" "$?"; }
       [ "$branch" = "" ] || { git pull origin "$branch"; MSG_ERROR "Pulling branch: $branch" "$?" ;}
       mv "$subpath" "../$name"
-      MSG_ERROR "moving folder to $name" "$?"
+      MSG_ERROR "moving folder to $name." "$?"
       cd "../$name"
       prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$public" "$branch")
       then
@@ -448,22 +460,24 @@ then
         MSG_ERROR "Cloning the repository with default branch." "$?"
       else # -b || -b -r || -b --subpath
         echo "'-b' flag detected without the combination of '-r' and '--subpath', cloning repo with reference branch: $branch."
-        git clone --branch "$branch" "$giturl_argument" "$name"; MSG_ERROR "Cloning the repository using only the branch $branch" "$?"
+        git clone --branch "$branch" "$giturl_argument" "$name"; MSG_ERROR "Cloning the repository using only the branch $branch." "$?"
         MSG_ERROR "Cloning the repository with reference branch: $branch." "$?"
       fi
       cd "$name"
-      MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'" "$?"
+      MSG_ERROR "Cd into the directory cloned before pushing it, the folder '$name' does not exist in the current directory '$(pwd)'." "$?"
       prepare_push_existing_repo "$organization" "$project" "$name" "$repo_id" "$project_convertido" "$ghuser" "$public" "$branch"
     fi
   fi
 elif [ "$action" = "create" ]
 then
+  cd "$directory"
   MSG_ERROR "Cding into the directory given." "$?"
   clone_git_project_create
   MSG_ERROR "Cloning empty repo." $?
+  cd "$directory/$name"
   git checkout -b master
   cp "$absoluteFolderScriptPath/README.md" .
-  git a dd -A
+  git add -A
   git commit -m "Adding README"
   git push -u origin --all
   if [ "$strategy" != "" ]
