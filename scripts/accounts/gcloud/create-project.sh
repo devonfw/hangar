@@ -34,7 +34,7 @@ if [ -z "$projectName" ] || [ -z "$billing" ];
 then
    echo -e "${red}Error: Missing paramenters, -n and -b are mandatory." >&2
    echo -e "${red}Use -h flag to display help." >&2
-   echo -e "${white}"
+   echo -ne "${white}"
    helpFunction
    exit 2
 fi
@@ -42,13 +42,13 @@ fi
 # Check if GCloud CLI is installed
 if ! [ -x "$(command -v gcloud)" ]; then
   echo -e "${red}Error: GCloud CLI is not installed." >&2
-  echo -e "${white}"
+  echo -ne "${white}"
   exit 127
 fi
 # Check if exists a Google Cloud project with that project ID. 
 if gcloud projects describe "$projectName" &>/dev/null ; then
    echo -e "${red}Error: Project ID already exists. Try another Project ID for the project." >&2
-   echo -e "${white}"
+   echo -ne "${white}"
    exit 2
 fi
 # Create the Google Cloud project.
@@ -69,34 +69,34 @@ fi
 
 if ! eval "$command"; then
    echo -e "${red}Error while creating the project." >&2
-   echo -e "${white}"
+   echo -ne "${white}"
    exit 200
 fi
 
 echo "Linking project to billing account..."
 if ! gcloud beta billing projects link "$projectName" --billing-account "$billing"; then 
    echo -e "${red}ERROR: Unable to link project to billing account"
-   echo -e "${white}"
+   echo -ne "${white}"
    exit 210
 fi
 
 echo "Enabling Cloud Source Repositories..."
 if ! gcloud services enable sourcerepo.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Cloud Source Repositories API"
-   echo -e "${white}"
+   echo -ne "${white}"
    exit 220
 fi
 
 echo "Enabling CloudRun..."
 if ! gcloud services enable run.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable CloudRun API"
-   echo -e "${white}"
+   echo -ne "${white}"
    exit 221
 fi
 
 echo "Enabling Artifact Registry..."
 if ! gcloud services enable artifactregistry.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Artifact Registry API"
-   echo -e "${white}"
+   echo -ne "${white}"
    exit 222
 fi

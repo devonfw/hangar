@@ -43,7 +43,7 @@ function arguments_check_content {
     if [ "$project" = "" ]
     then
         echo -e "${red}You chose a Google Cloud repository as target but -p flag is missing."
-        echo "${white}Use -h or --help flag to display help."
+        echo -e "${white}Use -h or --help flag to display help."
     exit 1
     fi
 }
