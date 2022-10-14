@@ -103,7 +103,7 @@ then
    echo ""
    echo -e "${red}A problem occured in the step: $1."
    echo -e "Stopping the script..."
-   echo -e "${white}"
+   echo -ne "${white}"
    exit 1
 fi
 }
@@ -156,7 +156,7 @@ function set_default_branch_and_policies {
   MSG_ERROR "Setting 'master' branch as default branch." $?
   echo ""
   echo -e "${blue}Setting policies for the repository."
-  echo -e "${white}"
+  echo -ne "${white}"
   STR_BRANCHES_WITH_MASTER="master $STR_BRANCHES"
   for i in $STR_BRANCHES_WITH_MASTER
   do
@@ -164,7 +164,7 @@ function set_default_branch_and_policies {
   done
   echo -e "${blue}According to -s flag we set the branch policies corresponding to $5."
 
-  echo -e "${white}"
+  echo -ne "${white}"
 }
 
 function import_repo {
