@@ -142,10 +142,10 @@ then
 	    echo -e "${green}OK        $role_to_check"
         else
             echo -e "${red}FAILED      $role_to_check"
-            echo -e "${white}"
+            echo -ne "${white}"
             exit 1;
         fi
-        echo -e "${white}"
+        echo -ne "${white}"
 
     done
 fi
