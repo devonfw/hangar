@@ -19,13 +19,14 @@ RUN apk add --update --no-cache bash ca-certificates fuse tini
 COPY --from=fuse-builder /tmp/bin/gcsfuse /usr/local/bin/gcsfuse
 COPY --from=fuse-builder /tmp/sbin/mount.gcsfuse /usr/sbin/mount.gcsfuse
 
-COPY run.sh ./run.sh
-RUN chmod +x ./run.sh
+COPY start.sh ./start.sh
+RUN chmod +x ./start.sh
 
-
+COPY run.sh ./bin/run.sh
+RUN chmod +x ./bin/run.sh
 
 # Use tini to manage zombie processes and signal forwarding
 # https://github.com/krallin/tini
 ENTRYPOINT ["/sbin/tini", "--"]
 
-CMD ["./run.sh"]
+CMD ["./start.sh"]
