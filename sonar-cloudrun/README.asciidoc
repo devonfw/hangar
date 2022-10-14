@@ -34,9 +34,6 @@ gcloud compute networks vpc-access connectors create my-vpc-conector-filestore \
 ```
 
 
-gcloud config set project qatestsfuse
-
-
 ```
 qatestsfuse
 
