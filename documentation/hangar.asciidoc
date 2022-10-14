@@ -1,4 +1,4 @@
-= devonfw Hangar
+= Hangar
 
 :description: comprehensive documentation of devonfw hangar.
 :doctype: book
@@ -16,8 +16,6 @@
 
 == Azure DevOps deploying on AWS EKS or Azure AKS
 
-=== Setup Azure DevOps workspace
-
 include::azure-devops/setup-project.asciidoc[leveloffset=+3]
 
 <<<<
@@ -26,13 +24,9 @@ include::azure-devops/setup-repository-script.asciidoc[leveloffset=+3]
 
 <<<<
 
-=== Setup AWS account
-
 include::aws/setup-aws-account-iam-for-eks.asciidoc[leveloffset=+3]
 
 <<<<
-
-=== Setup Azure DevOps Pipelines
 
 include::azure-devops/setup-build-pipeline.asciidoc[leveloffset=+3]
 
@@ -42,8 +36,6 @@ include::azure-devops/setup-test-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
 
-==== Quality pipeline
-
 include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+4]
 
 <<<<
@@ -51,8 +43,6 @@ include::aws/setup-sonarqube-instance.asciidoc[leveloffset=+4]
 include::azure-devops/setup-quality-pipeline.asciidoc[leveloffset=+4]
 
 <<<<
-
-==== App Package pipeline
 
 include::setup-container-image-registry.asciidoc[leveloffset=+4]
 
@@ -65,8 +55,6 @@ include::azure-devops/setup-package-pipeline.asciidoc[leveloffset=+4]
 include::azure-devops/setup-library-package-pipeline.asciidoc[leveloffset=+3]
 
 <<<<
-
-==== Environment provisioning pipeline
 
 include::azure-devops/setup-eks-provisioning-pipeline.asciidoc[leveloffset=+4]
 
