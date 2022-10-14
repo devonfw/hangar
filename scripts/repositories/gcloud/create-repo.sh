@@ -3,6 +3,10 @@
 # exit when any command fails
 set -e
 provider="Google Cloud"
+
+white='\e[1;37m'
+red='\e[0;31m'
+
 function create_repo_content {
     gcloud source repos create "$1" --project "$3"
     MSG_ERROR "Creating repo $1" "$?"
