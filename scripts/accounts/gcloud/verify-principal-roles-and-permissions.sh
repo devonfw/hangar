@@ -2,21 +2,9 @@
 
 # exit when any command fails
 set -e
-while getopts g:s:p:r:f:e:i: flag
-do
-    case "${flag}" in
-        g) google_account=${OPTARG};;
-	s) service_account=${OPTARG};;
-        p) project_id=${OPTARG};;
-        r) roles=${OPTARG};;
-        f) roles_file=${OPTARG};;
-        e) permissions=${OPTARG};;
-	i) permissions_file=${OPTARG};;
-    esac
-done
 
-if [ "$1" == "-h" ];
-then
+helpFunction()
+{
     echo "Checks if a Principal (end user or service account) has the specified roles and permissions in a given project."
     echo ""
     echo "Arguments:"
@@ -28,7 +16,22 @@ then
     echo "  -e                Permissions to be checked, splitted by comma."
     echo "  -i                Path to a file containing the permissions to be checked."
     exit
-fi
+}
+
+while getopts g:s:p:r:f:e:i: flag
+do
+    case "${flag}" in
+        g) google_account=${OPTARG};;
+	s) service_account=${OPTARG};;
+        p) project_id=${OPTARG};;
+        r) roles=${OPTARG};;
+        f) roles_file=${OPTARG};;
+        e) permissions=${OPTARG};;
+	i) permissions_file=${OPTARG};;
+	h ) helpFunction; exit ;;
+        ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
+    esac
+done
 
 green='\e[1;32m'
 red='\e[0;31m'
