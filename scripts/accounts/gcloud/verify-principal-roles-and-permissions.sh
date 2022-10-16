@@ -134,6 +134,8 @@ if [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
     done
 fi
 
+exitCode = 0
+
 #Inline roles check
 if [ -n "$roles" ];
 then
@@ -146,6 +148,7 @@ then
 	    echo -e "${green}OK        $role_to_check"
         else
             echo -e "${red}FAILED      $role_to_check"
+	    exitCode=3
             echo -ne "${white}"
         fi
         echo -ne "${white}"
@@ -167,6 +170,7 @@ then
             echo -ne "${white}"
         else
             echo -e "${red}FAILED      $role_to_check"
+	    exitCode=3
             echo -ne "${white}"
         fi
      done
@@ -184,6 +188,7 @@ then
 	    echo -ne "${white}"
 	else
 	    echo -e "${red}FAILED      $permission_to_check"
+	    exitCode=3
 	    echo -ne "${white}"
 	fi
     done
@@ -202,7 +207,10 @@ then
 	    echo -ne "${white}"
 	else
             echo -e "${red}FAILED      $permission_to_check"
+	    exitCode=3
             echo -ne "${white}"
 	fi
     done
 fi
+
+exit $exitCode
