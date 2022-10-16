@@ -114,21 +114,25 @@ fi
 echo -e "${white}Retrieving roles and permissions for $memberValue in project $project_id..."
 
 #Get ALL member-specific roles in project
-all_roles=$(gcloud projects get-iam-policy "$project_id" --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep "$memberValue" | cut -d ',' -f2)
-all_roles_array=($all_roles)
+if [ -n "$roles" ] || [ -n "$roles_file" ] || [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
+    all_roles=$(gcloud projects get-iam-policy "$project_id" --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep "$memberValue" | cut -d ',' -f2)
+    all_roles_array=($all_roles)
+fi
 
 #Get ALL member permissions in project
-all_permissions_array=()
-for role_to_check in "${all_roles_array[@]}"; do
-    if [[ "$role_to_check" == *"projects"* ]]; then
-        customRoleName=$(echo "$role_to_check" | cut -d "/" -f 4)
-	role_permissions=$(gcloud iam roles describe "$customRoleName" --project="$project_id" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
-    else
-        role_permissions=$(gcloud iam roles describe "$role_to_check" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
-    fi
-    role_permissions_array=($role_permissions)
-    all_permissions_array+=(${role_permissions_array[@]})
-done
+if [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
+    all_permissions_array=() #TODO: Use a set data structure instead of array
+    for role_to_check in "${all_roles_array[@]}"; do
+        if [[ "$role_to_check" == *"projects"* ]]; then
+            customRoleName=$(echo "$role_to_check" | cut -d "/" -f 4)
+	    role_permissions=$(gcloud iam roles describe "$customRoleName" --project="$project_id" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
+        else
+            role_permissions=$(gcloud iam roles describe "$role_to_check" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
+        fi
+        role_permissions_array=($role_permissions)
+        all_permissions_array+=(${role_permissions_array[@]})
+    done
+fi
 
 #Inline roles check
 if [ -n "$roles" ];
