@@ -3,21 +3,8 @@
 # exit when any command fails
 set -e
 
-while getopts g:s:p:r:f:c:i: flag
-do
-    case "${flag}" in
-        g) google_account=${OPTARG};;
-	s) service_account=${OPTARG};;
-        p) project_id=${OPTARG};;
-        r) roles=${OPTARG};;
-        f) roles_file=${OPTARG};;
-        c) custom_role_file=${OPTARG};;
-	i) custom_role_id=${OPTARG};;
-    esac
-done
-
-if [ "$1" == "-h" ];
-then
+helpFunction()
+{
     echo "Enrolls a Principal (end user or service account) in a project with the provided roles attached."
     echo ""
     echo "Arguments:"
@@ -29,7 +16,22 @@ then
     echo "  -c                Path to a YAML file containing the custom role to be attached to the principal in the project. Requires -i."
     echo "  -i                ID to be set to the custom role provided in -c."
     exit
-fi
+}
+
+while getopts g:s:p:r:f:c:i: flag
+do
+    case "${flag}" in
+        g) google_account=${OPTARG};;
+	s) service_account=${OPTARG};;
+        p) project_id=${OPTARG};;
+        r) roles=${OPTARG};;
+        f) roles_file=${OPTARG};;
+        c) custom_role_file=${OPTARG};;
+	i) custom_role_id=${OPTARG};;
+	h ) helpFunction; exit ;;
+        ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
+    esac
+done
 
 white='\e[1;37m'
 green='\e[1;32m'
