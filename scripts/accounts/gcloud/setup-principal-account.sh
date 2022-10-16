@@ -114,18 +114,18 @@ then
 	     echo -e "${green}Service account $service_account created successfully."
 	     echo -ne "${white}"
 	fi
-	echo -e "${white}Creating service-account keys for service account $service_account_email..."
-	if ! gcloud iam service-accounts keys create ./key.json --iam-account="$service_account_email" &> /dev/null;
-	then      
-	    echo -e "${red}Error: Service account key could not be created." >&2
-	    echo -ne "${white}"
-	    exit 2
-	else
-	    echo -e "${green}Service account key creation ended successfully."
-	    echo -ne "${white}"
-	fi
     else
         echo -e "${white}The service account $service_account_email exists already. Proceeding to use it."
+    fi
+    echo -e "${white}Creating service-account keys for service account $service_account_email..."
+    if ! gcloud iam service-accounts keys create ./key.json --iam-account="$service_account_email" &> /dev/null;
+    then      
+        echo -e "${red}Error: Service account key could not be created." >&2
+        echo -ne "${white}"
+	exit 2
+    else
+        echo -e "${green}Service account key creation ended successfully."
+	echo -ne "${white}"
     fi
 fi
 
