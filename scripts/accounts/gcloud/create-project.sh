@@ -45,7 +45,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
   exit 127
 fi
 # Check if exists a Google Cloud project with that project ID. 
-if gcloud projects describe "$projectName" &>/dev/null ; then
+if gcloud projects describe "$projectName" &>/dev/null && false; then
    echo -e "${red}Error: Project ID already exists. Try another Project ID for the project." >&2
    echo -ne "${white}"
    exit 2
@@ -66,7 +66,7 @@ if [ -n "$organization" ]; then
    command=$command" --organization=$organization"
 fi
 
-if ! eval "$command"; then
+if ! eval "$command || true"; then
    echo -e "${red}Error while creating the project." >&2
    echo -ne "${white}"
    exit 200

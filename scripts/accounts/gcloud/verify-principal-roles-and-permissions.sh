@@ -137,7 +137,7 @@ if [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
     done
 fi
 
-exitCode = 0
+exitCode=0
 
 #Inline roles check
 if [ -n "$roles" ];
