@@ -69,8 +69,7 @@ function merge_branch {
     if test -z "$targetBranch"
     then
         # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
-        echo -e "${green}No branch specified to do the merge, changes left in the ${sourceBranch} branch."
-        exit
+        echo -e "${green}No branch specified to do the merge, changes left in the ${sourceBranch} branch.${white}"
     else
         echo -e "${green}Checking out to the target branch."
         echo -ne "${white}"
@@ -86,7 +85,15 @@ function createTrigger {
     gitOriginUrl=$(git config --get remote.origin.url)
     gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
     gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
-    #debug
+    # We check if the bucket we needed exists, we create it if not
+    if (gcloud storage ls --project="${gCloudProject}" | grep "${gCloudProject}_cloudbuild" >> /dev/null)
+    then
+      echo -e "${green}Bucket ${gCloudProject}_cloudbuild already existing.${white}"
+    else
+      echo -e "${green}The bucket ${gCloudProject}_cloudbuild does not exist, creating it...${white}"
+      gcloud storage buckets create "gs://${gCloudProject}_cloudbuild" --project="${gCloudProject}"
+    fi
+    # We create the trigger
     gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
 }
 
