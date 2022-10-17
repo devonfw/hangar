@@ -1,0 +1,19 @@
+include:
+  - '.pipelines/*.yml'
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
+
+# stages:
+#   - build
+#   - test
+#   - quality
+#   - package
+#   - deploy
+
+# default:
+#   image: maven:3-jdk-11
+#   tags: ['docker_ruby']

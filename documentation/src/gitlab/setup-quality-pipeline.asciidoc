@@ -1,0 +1,11 @@
+:provider: Gitlab
+:pipeline_type: pipeline
+:trigger_sentence_gitlab:
+:trigger_sentence: This pipeline will be configured in order to be triggered every time the test pipeline is executed successfully on a commit
+:pipeline_type2: Gitlab
+:path_provider: gitlab
+:extra_args_quarkus:
+:extra_args_node:
+:extra_args_angular:
+:extra_sentence_ci: Please note that this pipeline, although manually triggerable, is designed to be executed as part of a gitlab CI pipeline.
+include::../common_templates/setup-quality-pipeline.asciidoc[]

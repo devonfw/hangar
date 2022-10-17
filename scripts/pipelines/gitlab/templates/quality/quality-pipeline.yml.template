@@ -1,0 +1,25 @@
+default:
+  image: mcerverc/maven-podman:v2 
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+
+variables:
+  SONAR_URL:
+    value: "$sonarUrl"
+    description: "Sonar URL"
+  SONAR_TOKEN:
+    value: "$sonarToken"
+    description: "Sonar access token"
+  PROJECT_PATH:
+    value: "$targetDirectory"
+    description: "Build artifacts target directory"
+
+SonarQube analysis:
+  script:
+    - "curl --header 'JOB-TOKEN: $CI_JOB_TOKEN' '$CI_JOB_URL/-/jobs/$CI_JOB_ID/artifacts/${CI_COMMIT_REF_NAME}/raw/target?job=build'"
+    - chmod +x .pipelines/scripts/quality.sh
+    - .pipelines/scripts/quality.sh  
+    

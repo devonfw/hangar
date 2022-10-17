@@ -1,43 +1,36 @@
 #!/bin/bash
 function help {
     echo ""
-    echo "Generates a $pipeline_type on $provider based on the given definition."
+    echo "Generates a pipeline on $provider based on the given definition."
     echo ""
     echo "Common flags:"
-    echo "  -c, --config-file           [Required] Configuration file containing $pipeline_type definition."
-    echo "  -n, --pipeline-name         [Required] Name that will be set to the $pipeline_type."
+    echo "  -c, --config-file           [Required] Configuration file containing pipeline definition."
+    echo "  -n, --pipeline-name         [Required] Name that will be set to the pipeline."
     echo "  -d, --local-directory       [Required] Local directory of your project."
-    echo "  -a, --artifact-path                    Path to be persisted as an artifact after $pipeline_type execution, e.g. where the application stores logs or any other blob on runtime."
+    echo "  -a, --artifact-path                    Path to be persisted as an artifact after pipeline execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     echo ""
-    echo "Build $pipeline_type flags:"
+    echo "Build pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
     echo ""
-    echo "Test $pipeline_type flags:"
+    echo "Test pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
-    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
+    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build pipeline name."
     echo ""
-    echo "Quality $pipeline_type flags:"
+    echo "Quality pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
-    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
-    [ "$provider" == "azure-devops" ] && echo "      --test-pipeline-name    [Required] Test $pipeline_type name."
+    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build pipeline name."
+    [ "$provider" == "azure-devops" ] && echo "      --test-pipeline-name    [Required] Test pipeline name."
     echo ""
-    [ "$provider" == "github" ] && echo ""
-    [ "$provider" == "github" ] && echo "CI pipeline flags"
-    [ "$provider" == "github" ] && echo "      --build-pipeline-name   [Required] Name of the job calling the build $pipeline_type."
-    [ "$provider" == "github" ] && echo "      --test-pipeline-name               Name of the job calling the test $pipeline_type."
-    [ "$provider" == "github" ] && echo "      --quality-pipeline-name            Name of the job calling the quality $pipeline_type."
-    [ "$provider" == "github" ] && echo ""
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
-    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
-    [ "$provider" == "azure-devops" ] && echo "      --quality-pipeline-name [Required] Quality $pipeline_type name."
-    [ "$provider" == "github" ] && echo "      --ci-pipeline-name      [Required] CI $pipeline_type name."
+    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build pipeline name."
+    echo "      --quality-pipeline-name [Required] Quality pipeline name."
     echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
     echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
     echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
@@ -45,50 +38,22 @@ function help {
     echo "      --aws-secret-access-key [Required, if AWS] AWS account secret access key."
     echo "      --aws-region            [Required, if AWS] AWS region for ECR."
     echo ""
-    echo "Library package $pipeline_type flags:"
+    echo "Library package pipeline flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo ""
-    echo "Azure AKS provisioning $pipeline_type flags:"
+    echo "Deploy pipeline flags:"
+    echo ""
+    echo "Azure AKS provisioning pipeline flags:"
     echo "      --resource-group        [Required] Name of the resource group for the cluster."
     echo "      --storage-account       [Required] Name of the storage account for the cluster."
     echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
-    echo "      --rancher                          Install Rancher to manage the cluster."
     echo ""
-    echo "AWS EKS provisioning $pipeline_type flags:"
+    echo "AWS EKS provisioning pipeline flags:"
     echo "      --cluster-name          [Required] Name for the cluster."
     echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
-    echo "      --aws-access-key        [Required, on first run] AWS account access key ID."
-    echo "      --aws-secret-access-key [Required, on first run] AWS account secret access key."      
-    echo "      --aws-region            [Required, on first run] AWS region for provisioning resources."
-
-    echo "      --rancher                          Install Rancher to manage the cluster."
-    echo ""
-    echo "Deploy $pipeline_type flags:"
-    echo ""
-    echo "      --package-pipeline-name         [Required] Package $pipeline_type name."
-    echo "      --env-provision-pipeline-name   [Required] Environment provisioning $pipeline_type name."
-    echo "      --k8s-provider                  [Required] Kubernetes cluster provider name. Accepted values: EKS, AKS."
-    echo "      --k8s-namespace                 [Required] Kubernetes namespace where the application will be deployed."
-    echo "      --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory."
-    echo "      --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images."
-    echo ""
 
     exit
-}
-
-function validateRegistryLoginCredentials {
-    # if the user chose to push to a registry and the user has not already given a password
-    # then prompt the user
-    if [ -v dockerUser ] && [ ! -v dockerPassword ]
-    then
-        read -rsp "Please enter Docker registry password..." dockerPassword
-    fi
-
-    if [ -v awsRegion ] && [ -v awsAccessKey ] && [ ! -v awsSecretAccessKey ]
-    then
-        read -rsp "Please enter AWS secret access key..." awsSecretAccessKey
-    fi
 }
 
 function ensurePathFormat {
@@ -112,7 +77,7 @@ function importConfigFile {
     # Check if the config file was supplied.
     if test -z "$configFile"
     then
-        echo -e "${red}Error: $pipeline_type definition configuration file not specified." >&2
+        echo -e "${red}Error: Pipeline definition configuration file not specified." >&2
         exit 2
     fi
 
@@ -142,6 +107,9 @@ function checkInstallations {
     elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
         echo -e "${red}Error: Azure CLI is not installed." >&2
         exit 127
+    # elif ([ "$provider" == "gitlab" ] && ! [ -x "$(command -v glab)" ]); then
+    #     echo -e "${red}Error: Azure CLI is not installed." >&2
+    #     exit 127
     fi
 
     # Check if Python is installed
@@ -169,31 +137,12 @@ function copyYAMLFile {
 
     # Generate pipeline YAML from template and put it in the repository.
     # We cannot use a variable in the definition of resource in the pipeline so we have to use a placeholder to replace it with the value we need
-    commonEnvSubstList='${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineName} ${ciPipelineName} ${packagePipelineName}'
+    commonEnvSubstList='${buildPipelineName} ${testPipelineName} ${qualityPipelineName} ${pipelineName}'
     envsubst "${commonEnvSubstList} ${specificEnvSubstList}" < "${hangarPath}/${templatesPath}/${yamlFile}.template" > "${localDirectory}/${pipelinePath}/${yamlFile}"
-
-    # Check if an extra artifact to store is supplied.
-    if test ! -z "$artifactPath"
-    then
-        # Add the extra step to the YAML.
-        if [ "$provider" == "azure-devops" ]
-        then
-            cat "${hangarPath}/${commonTemplatesPath}/store-extra-path.yml" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
-        elif [ "$provider" == "github" ]
-        then
-            storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
-            sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
-        fi
-    else
-        if [ "$provider" == "github" ]
-        then
-            sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
-        fi
-    fi
 }
 
 function copyCommonScript {
-    echo -e "${green}Copying the script(s) common to any $pipeline_type files into your directory..."
+    echo -e "${green}Copying the script(s) common to any pipeline files into your directory..."
     echo -ne ${white}
 
     ! (ls "${hangarPath}/${commonTemplatesPath}"/*.sh) &> /dev/null || cp "${hangarPath}/${commonTemplatesPath}"/*.sh "${localDirectory}/${scriptFilePath}"
@@ -204,7 +153,7 @@ function commitCommonFiles {
     echo -ne ${white}
 
     # Move into the project's directory and pushing the template into the Azure DevOps repository.
-    cd "${localDirectory}"
+    cd ${localDirectory}
 
     # Add the YAML files.
     git add "$pipelinePath" -f
@@ -215,12 +164,4 @@ function commitCommonFiles {
 
     git commit -m "Adding the source YAML"
     git push -u origin ${sourceBranch}
-}
-
-function setTargetDirectory {
-  case $language in
-      node | angular) targetDirectory="./" ;;
-      quarkus*) targetDirectory="./target/" ;;
-      *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
-  esac
 }
