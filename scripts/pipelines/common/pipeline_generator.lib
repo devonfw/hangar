@@ -59,7 +59,7 @@ function help {
     echo "      --s3-bucket             [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --s3-key-path           [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored."
     echo "      --aws-access-key        [Required, on first run] AWS account access key ID."
-    echo "      --aws-secret-access-key [Required, on first run] AWS account secret access key."      
+    echo "      --aws-secret-access-key [Required, on first run] AWS account secret access key."
     echo "      --aws-region            [Required, on first run] AWS region for provisioning resources."
 
     echo "      --rancher                          Install Rancher to manage the cluster."
