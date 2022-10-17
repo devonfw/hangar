@@ -1,5 +1,6 @@
 :provider: GitHub
 :pipeline_type: workflow
+:trigger_sentence_github:
 :trigger_sentence: This workflow will be configured to be executed as a job inside a CI workflow after the test (or build, if no test) job
 :pipeline_type2: GitHub action
 :path_provider: github
@@ -62,6 +63,7 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
+
 ```
 
 ==== Node.js project
@@ -69,6 +71,7 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project {extra_args_quarkus} -b develop -w
+
 ```
 
 ==== Angular project
@@ -76,4 +79,5 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n angular-project-quality -l angular --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/angular-project {extra_args_angular} -b develop -w
+
 ```
