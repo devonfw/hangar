@@ -33,7 +33,6 @@ pipeline_generator.sh \
   [-t <target-directory>] \
   [-b <branch>] \
   [-w]
-
 ```
 
 NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/build/build-pipeline.cfg`.
