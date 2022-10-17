@@ -1,3 +1,2 @@
 roles/viewer
-roles/editor
 roles/source.admin

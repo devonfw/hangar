@@ -3,6 +3,10 @@
 # exit when any command fails
 set -e
 provider="Google Cloud"
+
+white='\e[1;37m'
+red='\e[0;31m'
+
 function create_repo_content {
     gcloud source repos create "$1" --project "$3"
     MSG_ERROR "Creating repo $1" "$?"
@@ -43,7 +47,7 @@ function arguments_check_content {
     if [ "$project" = "" ]
     then
         echo -e "${red}You chose a Google Cloud repository as target but -p flag is missing."
-        echo "${white}Use -h or --help flag to display help."
+        echo -e "${white}Use -h or --help flag to display help."
     exit 1
     fi
 }

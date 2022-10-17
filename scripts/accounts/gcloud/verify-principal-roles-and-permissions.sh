@@ -2,21 +2,9 @@
 
 # exit when any command fails
 set -e
-while getopts g:s:p:r:f:e:i: flag
-do
-    case "${flag}" in
-        g) google_account=${OPTARG};;
-	s) service_account=${OPTARG};;
-        p) project_id=${OPTARG};;
-        r) roles=${OPTARG};;
-        f) roles_file=${OPTARG};;
-        e) permissions=${OPTARG};;
-	i) permissions_file=${OPTARG};;
-    esac
-done
 
-if [ "$1" == "-h" ];
-then
+helpFunction()
+{
     echo "Checks if a Principal (end user or service account) has the specified roles and permissions in a given project."
     echo ""
     echo "Arguments:"
@@ -28,7 +16,22 @@ then
     echo "  -e                Permissions to be checked, splitted by comma."
     echo "  -i                Path to a file containing the permissions to be checked."
     exit
-fi
+}
+
+while getopts g:s:p:r:f:e:i: flag
+do
+    case "${flag}" in
+        g) google_account=${OPTARG};;
+	s) service_account=${OPTARG};;
+        p) project_id=${OPTARG};;
+        r) roles=${OPTARG};;
+        f) roles_file=${OPTARG};;
+        e) permissions=${OPTARG};;
+	i) permissions_file=${OPTARG};;
+	h ) helpFunction; exit ;;
+        ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
+    esac
+done
 
 green='\e[1;32m'
 red='\e[0;31m'
@@ -40,7 +43,7 @@ if [ -z "$google_account" ] && [ -z "$service_account" ] || [ -z "$project_id" ]
 then
     echo -e "${red}Error: Missing parameters, -g or -s (mutually exclusive) and -p flags are mandatory." >&2
     echo -e "${red}Use -h flag to display help." >&2
-    echo -e "${white}"
+    echo -ne "${white}"
     exit 2
 fi
 
@@ -49,21 +52,21 @@ if [ -n "$google_account" ] && [ -n "$service_account" ];
 then
     echo -e "${red}Error: Parameters -g or -s are mutually exclusive." >&2
     echo -e "${red}Use -h flag to display help." >&2
-    echo -e "${white}"
+    echo -ne "${white}"
     exit 2
 fi
 
 #Check if GCP CLI is installed
 if ! [ -x "$(command -v gcloud)" ]; then
   echo -e "${red}Error: GCP CLI is not installed." >&2
-  echo -e "${white}"
+  echo -ne "${white}"
   exit 127
 fi
 
 #Check if Python is installed
 if ! [ -x "$(command -v python)" ]; then
   echo -e "${red}Error: Python is not installed." >&2
-  echo -e "${white}"
+  echo -ne "${white}"
   exit 127
 fi
 
@@ -72,18 +75,18 @@ echo -e "${white}Checking provided project $project_id..."
 if ! gcloud projects describe "$project_id" &> /dev/null;
 then
     echo -e "${red}Error: The provided project ID does not exist. Please, create it first." >&2
-    echo -e "${white}"
+    echo -ne "${white}"
     exit 2
 else
     echo -e "${white}Setting current project to $project_id..."
     if ! gcloud config set project "$project_id" &> /dev/null;
     then
         echo -e "${red}Error: Could not set current project to $project_id." >&2
-        echo -e "${white}"
+        echo -ne "${white}"
 	exit 2
     else
 	echo -e "${green}Current project set to $project_id." >&2
-	echo -e "${white}"
+	echo -ne "${white}"
     fi
 fi
 
@@ -95,7 +98,7 @@ then
     if ! gcloud iam service-accounts describe "$service_account_email" &> /dev/null;
     then
         echo -e "${red}Error: Service account $service_account_email does not exist. Please, provide a valid one." >&2
-        echo -e "${white}"
+        echo -ne "${white}"
 	exit 2
     else
         echo -e "${white}The service account $service_account_email is valid."
@@ -114,21 +117,27 @@ fi
 echo -e "${white}Retrieving roles and permissions for $memberValue in project $project_id..."
 
 #Get ALL member-specific roles in project
-all_roles=$(gcloud projects get-iam-policy "$project_id" --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep "$memberValue" | cut -d ',' -f2)
-all_roles_array=($all_roles)
+if [ -n "$roles" ] || [ -n "$roles_file" ] || [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
+    all_roles=$(gcloud projects get-iam-policy "$project_id" --flatten="bindings[].members[]" --format="csv[no-heading](bindings.members.split(':').slice(1:),bindings.role)" | grep "$memberValue" | cut -d ',' -f2)
+    all_roles_array=($all_roles)
+fi
 
 #Get ALL member permissions in project
-all_permissions_array=()
-for role_to_check in "${all_roles_array[@]}"; do
-    if [[ "$role_to_check" == *"projects"* ]]; then
-        customRoleName=$(echo "$role_to_check" | cut -d "/" -f 4)
-	role_permissions=$(gcloud iam roles describe "$customRoleName" --project="$project_id" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
-    else
-        role_permissions=$(gcloud iam roles describe "$role_to_check" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
-    fi
-    role_permissions_array=($role_permissions)
-    all_permissions_array+=(${role_permissions_array[@]})
-done
+if [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
+    all_permissions_array=() #TODO: Use a set data structure instead of array
+    for role_to_check in "${all_roles_array[@]}"; do
+        if [[ "$role_to_check" == *"projects"* ]]; then
+            customRoleName=$(echo "$role_to_check" | cut -d "/" -f 4)
+	    role_permissions=$(gcloud iam roles describe "$customRoleName" --project="$project_id" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
+        else
+            role_permissions=$(gcloud iam roles describe "$role_to_check" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
+        fi
+        role_permissions_array=($role_permissions)
+        all_permissions_array+=(${role_permissions_array[@]})
+    done
+fi
+
+exitCode = 0
 
 #Inline roles check
 if [ -n "$roles" ];
@@ -142,10 +151,10 @@ then
 	    echo -e "${green}OK        $role_to_check"
         else
             echo -e "${red}FAILED      $role_to_check"
-            echo -e "${white}"
-            exit 1;
+	    exitCode=3
+            echo -ne "${white}"
         fi
-        echo -e "${white}"
+        echo -ne "${white}"
 
     done
 fi
@@ -153,7 +162,7 @@ fi
 #Check roles (From file)
 if [ -n "$roles_file" ];
 then
-    echo "${white}Checking roles in file..."
+    echo -e "${white}Checking roles in file..."
 
     IFS=$'\r\n' GLOBIGNORE='*' command eval  'roles_file_array=($(cat ${roles_file}))'
     for role_to_check in "${roles_file_array[@]}"
@@ -161,11 +170,11 @@ then
         if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]];
         then
             echo -e "${green}OK        $role_to_check"
-            echo -e "${white}"
+            echo -ne "${white}"
         else
             echo -e "${red}FAILED      $role_to_check"
-            echo -e "${white}"
-            exit 1;
+	    exitCode=3
+            echo -ne "${white}"
         fi
      done
 fi
@@ -179,11 +188,11 @@ then
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
         then
 	    echo -e "${green}OK        $permission_to_check"
-	    echo -e "${white}"
+	    echo -ne "${white}"
 	else
 	    echo -e "${red}FAILED      $permission_to_check"
-	    echo -e "${white}"
-	    exit 1;
+	    exitCode=3
+	    echo -ne "${white}"
 	fi
     done
 fi
@@ -198,11 +207,13 @@ then
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
 	then
 	    echo -e "${green}OK        $permission_to_check"
-	    echo -e "${white}"
+	    echo -ne "${white}"
 	else
             echo -e "${red}FAILED      $permission_to_check"
-            echo -e "${white}"
-	    exit 1;
+	    exitCode=3
+            echo -ne "${white}"
 	fi
     done
 fi
+
+exit $exitCode
