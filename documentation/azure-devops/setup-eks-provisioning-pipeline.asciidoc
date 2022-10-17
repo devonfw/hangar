@@ -21,7 +21,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 * A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
 ```
 aws s3 mb <bucket name>
-# Example: aws s3 mb s3://terraformStateBucket
+# Example: aws s3 mb s3://terraform-state-bucket
 ```
 
 * An AWS IAM user with https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[required permissions] to provision the EKS cluster.
@@ -41,7 +41,6 @@ Example: reusing existing VPC and subnets:
 ```
 ./set-terraform-variables.sh --region <region name> --instance_type <workers instance type> --existing_vpc_id <vpc id> --existing_vpc_private_subnets <array of subnet ids>
 ```
-* Rancher is installed by default on the cluster after provisioning. If you wish to change this, please update `eks-pipeline.cfg` accordingly.
 
 === Usage
 ```
@@ -52,6 +51,10 @@ pipeline_generator.sh \
   --cluster-name <cluster name> \  
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
+  [--aws-access-key <aws access key>] \
+  [--aws-secret-access-key <aws secret access key>] \
+  [--aws-region <aws region>] \
+  [--rancher] \
   [-b <branch>] \
   [-w]
 ```
@@ -60,21 +63,27 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
 
 === Flags
 ```
--c, --config-file        [Required] Configuration file containing pipeline definition.
--n, --pipeline-name      [Required] Name that will be set to the pipeline.
--d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
-    --cluster-name       [Required] Name for the cluster."
-    --s3-bucket          [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
-    --s3-key-path        [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
--b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+-c, --config-file               [Required] Configuration file containing pipeline definition.
+-n, --pipeline-name             [Required] Name that will be set to the pipeline.
+-d, --local-directory           [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --cluster-name              [Required] Name for the cluster."
+    --s3-bucket                 [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
+    --s3-key-path               [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
+    --aws-access-key            [Required, on first run] AWS account access key ID. 
+    --aws-secret-access-key     [Required, on first run] AWS account secret access key.
+    --aws-region                [Required, on first run] AWS region for provisioning resources.
+    --rancher                              Install Rancher to manage the cluster.
+-b, --target-branch                        Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-w                                         Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w
+./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraform-state-bucket --s3-key-path eks/state --rancher -b develop -w
 ```
+
+NOTE: Rancher is installed on the cluster after provisioning when using the above command.
 
 == Appendix: Interacting with the cluster
 
@@ -92,7 +101,11 @@ To get the DNS name of the NGINX Ingress controller on the EKS cluster, run the 
 kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
 ```
 
-Rancher will be available on `https://<ingress controller domain>/dashboard`.
+Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
+
+```
+kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
+```
 
 == Appendix: Destroying the cluster
 

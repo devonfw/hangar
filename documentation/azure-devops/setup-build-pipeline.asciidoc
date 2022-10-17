@@ -1,41 +1,48 @@
-= Setting up a Build Pipeline on Azure DevOps
+:provider: Azure DevOps
+:pipeline_type: pipeline
+:trigger_sentence: This pipeline will be configured to be triggered every time there is a commit to the Azure DevOps repository
+:pipeline_type2: pipeline
+:path_provider: azure-devops
+= Setting up a Build {pipeline_type} on {provider}
 
-In this section we will create a build pipeline for compiling project code. This pipeline will be configured to be triggered every time there is a commit to the Azure DevOps repository, regardless of which branch it is made on.
+In this section we will create a build {pipeline_type} for compiling project code. {trigger_sentence}, regardless of which branch it is made on.
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
+The creation of the {pipeline_type2} will follow the project workflow, so a new branch named `feature/build-pipeline` will be created and the YAML file for the {pipeline_type} will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` will automatically create this new branch, create a build pipeline based on a YAML template appropriate for the project programming language or framework, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
+The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create a build {pipeline_type} based on a YAML template appropriate for the project programming language or framework, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
 
 This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
 
-== Creating the pipeline using provided script
+== Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
+  -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-  [-b <branch>] \
   [-t <target-directory>] \
+  [-b <branch>] \
   [-w]
 ```
 
-NOTE: The config file for the build pipeline is located at `/scripts/pipelines/azure-devops/templates/build/build-pipeline.cfg`.
+NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/build/build-pipeline.cfg`.
 
 === Flags
+[subs=attributes+]
 ```
--c, --config-file        [Required] Configuration file containing pipeline definition.
--n, --pipeline-name      [Required] Name that will be set to the pipeline.
+-c, --config-file        [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
--b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
+-b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
