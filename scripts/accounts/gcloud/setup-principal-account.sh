@@ -18,7 +18,7 @@ helpFunction()
     exit
 }
 
-while getopts g:s:p:r:f:c:i: flag
+while getopts g:s:p:r:f:c:i:h: flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
