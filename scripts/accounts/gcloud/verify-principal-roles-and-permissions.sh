@@ -28,7 +28,7 @@ do
         f) roles_file=${OPTARG};;
         e) permissions=${OPTARG};;
 	i) permissions_file=${OPTARG};;
-	h ) helpFunction; exit ;;
+	h) helpFunction ;;
         ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
     esac
 done
