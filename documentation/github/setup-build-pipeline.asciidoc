@@ -32,7 +32,8 @@ pipeline_generator.sh \
   -d <project local path> \
   [-t <target-directory>] \
   [-b <branch>] \
-  ifndef::no-PR-or-MR[  [-w]]
+  [-w]
+
 ```
 
 NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/build/build-pipeline.cfg`.
