@@ -88,7 +88,7 @@ function createTrigger {
     # We check if the bucket we needed exists, we create it if not
     if (gcloud storage ls --project="${gCloudProject}" | grep "${gCloudProject}_cloudbuild" >> /dev/null)
     then
-      echo -e "${green}Bucket ${gCloudProject}_cloudbuild already existing.${white}"
+      echo -e "${green}Bucket ${gCloudProject}_cloudbuild already exists.${white}"
     else
       echo -e "${green}The bucket ${gCloudProject}_cloudbuild does not exist, creating it...${white}"
       gcloud storage buckets create "gs://${gCloudProject}_cloudbuild" --project="${gCloudProject}"
