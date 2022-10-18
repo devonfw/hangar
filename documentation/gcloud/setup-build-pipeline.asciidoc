@@ -5,6 +5,7 @@
 :path_provider: gcloud
 :no-PR-or-MR:
 :machineType:
+:openBrowserFlag:
 = Setting up a Build {pipeline_type} on {provider}
 
 In this section we will create a build {pipeline_type} for compiling project code. {trigger_sentence}, regardless of which branch it is made on.
