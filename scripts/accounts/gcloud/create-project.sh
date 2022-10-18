@@ -46,30 +46,28 @@ if ! [ -x "$(command -v gcloud)" ]; then
 fi
 # Check if exists a Google Cloud project with that project ID. 
 if gcloud projects describe "$projectName" &>/dev/null ; then
-   echo -e "${red}Error: Project ID already exists. Try another Project ID for the project." >&2
+   echo "Project ID already exists."
+else
+   # Create the Google Cloud project.
+   echo -e "${green}Creating project..."
    echo -ne "${white}"
-   exit 2
-fi
-# Create the Google Cloud project.
-echo -e "${green}Creating project..."
-echo -ne "${white}"
+   command="gcloud projects create $projectName"
 
-command="gcloud projects create $projectName"
+   if [ -n "$description" ]; then
+      command=$command" --name=\"$description\""
+   fi
+   if [ -n "$folder" ]; then
+      command=$command" --folder=$folder"
+   fi
+   if [ -n "$organization" ]; then
+      command=$command" --organization=$organization"
+   fi
 
-if [ -n "$description" ]; then
-   command=$command" --name=\"$description\""
-fi
-if [ -n "$folder" ]; then
-   command=$command" --folder=$folder"
-fi
-if [ -n "$organization" ]; then
-   command=$command" --organization=$organization"
-fi
-
-if ! eval "$command"; then
-   echo -e "${red}Error while creating the project." >&2
-   echo -ne "${white}"
-   exit 200
+   if ! eval "$command"; then
+      echo -e "${red}Error while creating the project." >&2
+      echo -ne "${white}"
+      exit 200
+   fi
 fi
 
 echo "Linking project to billing account..."
