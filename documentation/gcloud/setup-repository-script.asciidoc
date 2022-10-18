@@ -1,12 +1,12 @@
-:provider_name: Azure DevOps
-:provider_path: azure-devops
-:example_required_flags: -o <organization> -p <project name>
+:provider_name: Google Cloud
+:provider_path: gcloud
+:example_required_flags: -p <project>
 = Setting up a repository on {provider_name}
 
 By the end of this guide, a repository on {provider_name} will be created in an automated way using a script.
 
 == Prerequisites
-* Have an Azure DevOps project already setup and Azure CLI installed and configured. If it is not the case, please go back to corresponding guide.
+* Have a Google Cloud project already setup with billing and Cloud Source Repositories API enabled and GCloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
 * Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
 
 == Creating repository using provided script
@@ -22,8 +22,7 @@ The script located at `/scripts/repositories/{provider_path}/create-repo.sh` all
 create-repo.sh \
     -a <action> \
     -d <local directory> \
-    -o <organization> \
-    -p <project name> \
+    -p <project id> \
     [-n <repository name>] \
     [-g <giturl>] \
     [-b <branch>] \
@@ -34,12 +33,10 @@ create-repo.sh \
 ```
 === Flags
 [subs="attributes"]
-
 ```
 -a, --action                [Required] Use case to fulfil: create, import.
 -d, --directory             [Required] Path to the directory where your repository will be cloned or initialized.
--o, --org                   [Required] Name of the Azure DevOps organization.
--p, --project               [Required] Name of the Azure DevOps project.
+-p, --project               [Required] Short name (ID) of the Google Cloud project.
 -n, --name                             Name for the {provider_name} repository. By default, the source repository or directory name (either new or existing, depending on use case) is used.
 -g, --source-git-url                   Source URL of the Git repository to import.
 -b, --source-branch                    Source branch to be used as a basis to initialize the repository on import, as master branch.
@@ -105,25 +102,3 @@ This is not an explanation of Gitflow (there are plenty of them on the web), but
 * `develop` branch is created from `master` branch.
 
 Any other branch part the strategy (feature, release, and hotfix branches) will be created by developers during the lifecycle of the project.
-
-=== Policies
-
-In Azure DevOps it is possible to protect important branches against bad practices using branch policies.
-
-The following branch policies are applied to `master` and `develop` branches:
-
-* Require a minimum number of reviewers: ON
-** Minimum number of reviewers: 1
-** Allow requestors to approve their own changes: ON
-** Prohibit the most recent pusher from approving their own changes: OFF
-** Allow completion even if some reviewers vote to wait or reject: OFF
-** When new changes are pushed: Reset all approval votes (does not reset votes to reject or wait)
-* Check for linked work items: OFF
-* Check for comment resolution: REQUIRED
-* Limit merge types: OFF
-
-The above policies are defined in a configuration file located at `/scripts/repositories/common/config/strategy.cfg`. Feel free to adapt it to your needs.
-
-NOTE: This is the bare minimum standard for any project. We do not prohibit the most recent pusher from approving their own changes, although being more than recommendable, because if we do, it will block the auto-approval of Pull Requests generated during pipelines creation on the following guides.
-
-You can find more information about branch policies in the https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops[official documentation].
