@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machineType:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -31,7 +31,7 @@ while true; do
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
-        -m | --machineType)       machineType="$2"; shift 2;;
+        -m | --machine-type)      machineType="$2"; shift 2;;
         --) shift; break;;
     esac
 done
@@ -52,6 +52,17 @@ function obtainHangarPath {
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
+}
+
+function checkMachineType {
+
+    # The type of machine can only be two possible values:
+    if [[ "$machineType" != "E2_HIGHCPU_8" ]] && [[ "$machineType" != "E2_HIGHCPU_32" ]] && [[ "$machineType" != "N1_HIGHCPU_8" ]] && [[ "$machineType" != "N1_HIGHCPU_32" ]]
+    then
+      echo -e "${red}The machineType value is not correct, please between: 'E2_HIGHCPU_8', 'E2_HIGHCPU_32', 'N1_HIGHCPU_8' or 'N1_HIGHCPU_32'."
+      echo -e "For more info about the machineType: https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds?hl=fr#machinetype${white}"
+      exit 1
+    fi
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -119,6 +130,8 @@ ensurePathFormat
 checkInstallations
 
 validateRegistryLoginCredentials
+
+[[ "$machineType" != "" ]] && checkMachineType
 
 importConfigFile
 

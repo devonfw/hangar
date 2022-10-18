@@ -28,7 +28,8 @@ pipeline_generator.sh \
   -d <project local path> \
   [-t <target-directory>] \
   [-b <branch>] \
-ifndef::no-PR-or-MR[  [-w]]
+ifndef::no-PR-or-MR[  [-w] \ ]
+ifdef::machineType[  -m <machine type for the {pipeline_type}>]
 ```
 
 NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/build/build-pipeline.cfg`.
@@ -42,7 +43,8 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -d, --local-directory    [Required] Local directory of your project.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+ifndef::no-PR-or-MR[-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
+ifdef::machineType[-m, --machine-type                  Option for the machine type to have a powerful VM for your {pipeline_type} if the default one is not enough. Accepted values: 'E2_HIGHCPU_8', 'E2_HIGHCPU_32', 'N1_HIGHCPU_8' or 'N1_HIGHCPU_32'.]
 ```
 
 === Examples
@@ -51,20 +53,20 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 
 ===== Quarkus native project
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop {openBrowserFlag}
 ```
 
 ===== Quarkus project using JVM
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop {openBrowserFlag}
 ```
 
 ==== Node.js project
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n node-project-build -l node -d C:/Users/$USERNAME/Desktop/node-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n node-project-build -l node -d C:/Users/$USERNAME/Desktop/node-project -b develop {openBrowserFlag}
 ```
 
 ==== Angular project
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop {openBrowserFlag}
 ```
