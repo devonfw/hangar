@@ -1,6 +1,15 @@
 steps:
 - name: ${_DOCKER_IMAGE}
-  args: ['sh', '.pipelines/scripts/build.sh']
+  entrypoint: bash
+  args:
+  - -c
+  - |
+    set -e
+    if [[ "${_DOCKER_IMAGE}" == "maven:3-eclipse-temurin-11" ]]
+    then
+      apt-get update && apt-get install docker.io -y
+    fi
+    sh .pipelines/scripts/build.sh
 
 - name: ${_DOCKER_IMAGE}
   args: ['tar', '-cf', 'build_${BUILD_ID}.tar', '${_TARGET_DIRECTORY}']
