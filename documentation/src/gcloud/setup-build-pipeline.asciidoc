@@ -5,4 +5,5 @@
 :path_provider: gcloud
 :no-PR-or-MR:
 :machineType:
+:openBrowserFlag:
 include::../common_templates/setup-build-pipeline.asciidoc[]
