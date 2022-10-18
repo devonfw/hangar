@@ -20,7 +20,7 @@ set -eo pipefail
 mkdir -m 777 -p $SQ_DATA_DIR
 
 echo "Mounting GCS Fuse."
-gcsfuse --debug_gcs --debug_fuse -o allow_other $BUCKET $SQ_DATA_DIR
+gcsfuse --debug_gcs --debug_fuse -o allow_other --uid=$(id -u sonarqube) $BUCKET $SQ_DATA_DIR
 echo "Mounting completed."
 
 # Start the application

@@ -51,7 +51,7 @@ docker run --rm -it -v C:\Users\$env:UserName\AppData\Roaming\gcloud\:/root/.con
 ```
 mkdir -p /Users/$env:UserName/AppData/Roaming/gcloud
 mkdir -p /Users/$env:UserName/.aws
-mkdir -p /Users/$env:UserName/.azure:/root/.azure
+mkdir -p /Users/$env:UserName/.azure
 mkdir -p /Users/$env:UserName/.kube
 mkdir -p "/Users/$env:UserName/AppData/Roaming/GitHub CLI"
 mkdir -p /Users/$env:UserName/.ssh

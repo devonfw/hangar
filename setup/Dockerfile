@@ -51,5 +51,6 @@ FROM cli_install_github as run_env
 WORKDIR /scripts
 
 ADD scripts .
+ADD sonar-cloudrun ./sonar-pruebas
 
 CMD ["/bin/bash", "-c"]

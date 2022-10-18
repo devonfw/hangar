@@ -34,6 +34,9 @@ gcloud compute networks vpc-access connectors create my-vpc-conector-filestore \
 ```
 
 
+gcloud config set project qatestsfuse
+
+
 ```
 qatestsfuse
 
@@ -51,6 +54,38 @@ gcloud beta run deploy filesystem-app --source . \
     --service-account fs-identity \
     --port=9000 \
     --update-env-vars BUCKET=hangar-my-fuse-bucket
+```
+
+   --port=9000 \
+
+// Pruebas Jorge
+
+gcloud config set run/region europe-southwest1
+
+gcloud config set filestore/zone europe-southwest1-a
+
+gcloud config set project sonarqubecustombucketvolumes
+
+```
+sonarqubecustombucketvolumes
+
+// CAUTION, el nombre tiene que ser unico
+gsutil mb -l europe-southwest1 gs://hangar-my-fuse-bucket-jorge
+
+gcloud iam service-accounts create fs-identity
+
+gcloud projects add-iam-policy-binding sonarqubecustombucketvolumes \
+     --member "serviceAccount:fs-identity@sonarqubecustombucketvolumes.iam.gserviceaccount.com" \
+     --role "roles/storage.objectAdmin"
+
+gcloud beta run deploy filesystem-app --source . \
+    --execution-environment gen2 \
+    --allow-unauthenticated \
+    --service-account fs-identity \
+    --port=9000 \
+    --memory 4G \
+    --cpu 4 \
+    --update-env-vars BUCKET=hangar-my-fuse-bucket-jorge
 ```
 
    --port=9000 \
