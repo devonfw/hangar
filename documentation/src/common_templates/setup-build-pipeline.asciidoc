@@ -28,8 +28,8 @@ pipeline_generator.sh \
   -d <project local path> \
   [-t <target-directory>] \
   [-b <branch>] \
-ifndef::no-PR-or-MR[  [-w] \ ]
-ifdef::machineType[  -m <machine type for the {pipeline_type}>]
+ifndef::no-PR-or-MR[  [-w]]
+ifdef::machineType[  [-m <machine type for the {pipeline_type}>]]
 ```
 
 NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/build/build-pipeline.cfg`.
@@ -52,21 +52,25 @@ ifdef::machineType[-m, --machine-type                  Option for the machine ty
 ==== Quarkus project
 
 ===== Quarkus native project
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop {openBrowserFlag}
 ```
 
 ===== Quarkus project using JVM
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop {openBrowserFlag}
 ```
 
 ==== Node.js project
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n node-project-build -l node -d C:/Users/$USERNAME/Desktop/node-project -b develop {openBrowserFlag}
 ```
 
 ==== Angular project
+[subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop {openBrowserFlag}
 ```
