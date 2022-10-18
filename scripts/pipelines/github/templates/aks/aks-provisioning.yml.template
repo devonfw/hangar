@@ -1,0 +1,105 @@
+name: $pipelineName
+
+on:
+  workflow_dispatch:
+    inputs:
+      cluster_name:
+        description: 'Name for the cluster.'
+        required: true
+        type: string
+        default: $clusterName
+      install_rancher:
+        description: 'Installs Rancher on AKS when set to true.'
+        required: false
+        type: string
+        default: $installRancher
+      cluster_operation:
+        description: 'Operation to be performed on AKS Cluster. create or destroy'
+        required: false
+        type: string
+        default: $operation
+    
+env:
+  terraformWorkingDirectory: "${{ github.workspace }}/.terraform/aks"
+      
+jobs:
+  terraform-actions:
+    name: Provisioning AKS
+    runs-on: ubuntu-latest
+    steps:     
+      - name: login cli
+        run: |
+          az login -u "${{ secrets.AZURE_USERNAME }}" -p "${{ secrets.AZURE_PASSWORD }}"
+                   
+      - name: Checkout Repository
+        uses: actions/checkout@master
+    
+      - name: Terraform - Init
+        id: init
+        run: terraform init -backend-config=resource_group_name=$resourceGroupName  -backend-config=storage_account_name=$storageAccountName -backend-config=container_name=$storageContainerName -backend-config=key=terraform.tfstate
+        working-directory: ${{ env.terraformWorkingDirectory }}
+        continue-on-error: false
+      
+      - name: Terraform - apply
+        if: ${{ github.event.inputs.cluster_operation == 'create' }}
+        id: apply
+        working-directory: ${{ env.terraformWorkingDirectory }}
+        run: terraform apply -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
+        continue-on-error: false
+        
+      - name: Terraform Destroy
+        if: ${{ github.event.inputs.cluster_operation == 'destroy' }}        
+        id: destroy
+        working-directory: ${{ env.terraformWorkingDirectory }}
+        run: terraform apply -destroy -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
+        continue-on-error: false	
+    
+      - name: Install nginx-ingress controller
+        if: ${{ github.event.inputs.cluster_operation == 'create' }}
+        id: installnginx
+        env:
+          KUBECONFIG: "${{ env.terraformWorkingDirectory }}/kubeconfig"
+        run: .github/workflows/scripts/install-nginx-ingress.sh
+            
+      - name: Obtain DNS name
+        if: ${{ github.event.inputs.cluster_operation == 'create' }}
+        id: obtaindns
+        env:
+          KUBECONFIG: "${{ env.terraformWorkingDirectory }}/kubeconfig"
+        run: |
+          .github/workflows/scripts/obtain-dns.sh '${{ github.event.inputs.cluster_name }}'
+          dnsname="${{ github.event.inputs.cluster_name }}.westeurope.cloudapp.azure.com"
+          echo "::set-output name=dnsname::$dnsname"
+          
+      - name: Publish DNS name
+        if: ${{ github.event.inputs.cluster_operation == 'create' }}
+        id: publishdns
+        run: |   
+          cd .github
+          mkdir -p vars
+          cd vars
+          touch "deployment-env-variables.env"
+          echo "aks_dns_name=${{ steps.obtaindns.outputs.dnsname }}" >> deployment-env-variables.env
+          
+      - name: Publish kubeconfig
+        uses: actions/upload-artifact@v3.1.0
+        if: ${{ github.event.inputs.cluster_operation == 'create' }}
+        with:
+          name: kubeconfig
+          path: ${{ env.terraformWorkingDirectory }}/kubeconfig
+          if-no-files-found: error
+
+      - name: Push AKS variables
+        uses: EndBug/add-and-commit@v7
+        if: ${{ github.event.inputs.cluster_operation == 'create' }}
+        with:
+          default_author: github_actions
+          cwd: '.github/vars/'
+
+      - name: Install Rancher
+        if: ${{ github.event.inputs.install_rancher == 'true' && github.event.inputs.cluster_operation == 'create'}}
+        id: installrancher
+        env:
+          KUBECONFIG: "${{ env.terraformWorkingDirectory }}/kubeconfig"
+        run: .github/workflows/scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}       
+     

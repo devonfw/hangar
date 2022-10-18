@@ -7,7 +7,7 @@ do
     ip="$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
 done
 
-# Obtain the AKS cluster name
+# Obtain the AKS cluster name 
 dnsname=$1
 
 ipname=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$ip')].[name]" --output tsv)
@@ -18,4 +18,4 @@ az network public-ip update --resource-group "$iprg" --name "$ipname" --dns-name
 
 dns="$(az network public-ip show --resource-group "$iprg" --name "$ipname" --query "[dnsSettings.fqdn]" --output tsv)"
 
-echo "##vso[task.setvariable variable=dns;]$dns"
+echo "$dns"
