@@ -34,7 +34,6 @@ create-repo.sh \
 ```
 === Flags
 [subs="attributes"]
-
 ```
 -a, --action                [Required] Use case to fulfil: create, import.
 -d, --directory             [Required] Path to the directory where your repository will be cloned or initialized.
