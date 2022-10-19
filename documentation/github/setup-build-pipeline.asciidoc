@@ -17,6 +17,7 @@ endifndef::[]
 Then, the new branch will be merged into the appropriate branch (provided in `-b` flag).
 
 endifdef::[]
+
 The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create a build {pipeline_type} based on a YAML template appropriate for the project programming language or framework, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 ifdef::extra_sentence_ci[]
