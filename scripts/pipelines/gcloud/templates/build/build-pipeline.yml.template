@@ -5,10 +5,7 @@ steps:
   - -c
   - |
     set -e
-    if [[ "${_DOCKER_IMAGE}" == "maven:3-eclipse-temurin-11" ]]
-    then
-      apt-get update && apt-get install docker.io -y
-    fi
+    [[ -f .pipelines/scripts/setup-environment.sh ]] && source .pipelines/scripts/setup-environment.sh
     sh .pipelines/scripts/build.sh
 
 - name: ${_DOCKER_IMAGE}
