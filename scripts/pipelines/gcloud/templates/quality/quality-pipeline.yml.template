@@ -1,0 +1,14 @@
+steps:
+- name: ${_DOCKER_IMAGE}
+  entrypoint: bash
+  args:
+  - -c
+  - |
+    set -e
+    SONAR_URL=${_SONAR_URL}
+    SONAR_TOKEN=${_SONAR_TOKEN}
+    sh .pipelines/scripts/quality.sh
+
+# mark to insert step for additonal artifact #
+
+# mark to insert entry in artifact for additonal artifact #
