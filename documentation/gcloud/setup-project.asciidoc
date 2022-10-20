@@ -1,0 +1,51 @@
+== Setup Google Cloud project
+
+By the end of this guide a new project in Google Cloud will be created, with Billing and relevant APIs enabled.
+
+
+== Prerequisites
+
+. Install the https://cloud.google.com/sdk/docs/install?hl=en[Google Cloud CLI].
+. Have a billing account. If not, https://cloud.google.com/billing/docs/how-to/manage-billing-account#create_a_new_billing_account[create a new billing account].
+
+== Creating the Google Cloud project
+
+There are two ways of creating a Google Cloud project:
+[loweralpha]
+. Manually using the web interface:
+.. Create a project following https://cloud.google.com/resource-manager/docs/creating-managing-projects#console[official guide].
+.. Enable billing for the project following https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project[official guide]
+.. Enable `Cloud Source Repositories`, `Cloud Run Admin`, and `Artifact Registry` APIs following https://cloud.google.com/endpoints/docs/openapi/enable-api#console[official guide]
+. In an automated way using the provided script, as shown below.
+ 
+== Creating Google Cloud project using provided script
+
+The script located at `scripts/accounts/gcloud/create-project.sh` enables you to create and configure a new Google Cloud project.
+
+== Usage
+
+```
+create-project.sh \
+  -n <name> \
+  -b <billing account> \
+  [-d <description>] \
+  [-f <folder>] \
+  [-o <organization>]
+  
+```
+
+== Flags
+
+```
+-n    [Required] Name of the new project. (6-30 chars, lowercase letters, numbers, and hyphens)
+-b    [Required] Billing account. If not specified, won't be able to enable some services.
+-d               Description for the new project.
+-f               Numeric ID of the folder for which the project will be configured.
+-o               Numeric ID of the organization for which the project will be configured.
+
+
+```
+
+== Example
+
+`./create-project.sh -n "project-test-123" -b XXXXXX-XXXXXX-XXXXXX -d "This is a sample application"` 

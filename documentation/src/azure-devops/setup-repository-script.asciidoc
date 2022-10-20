@@ -1,0 +1,43 @@
+:provider_name: Azure DevOps
+:provider_path: azure-devops
+:example_required_flags: -o <organization> -p <project name>
+include::../common_templates/setup-repository-script.asciidoc[tag=part1]
+* Have an Azure DevOps project already setup and Azure CLI installed and configured. If it is not the case, please go back to corresponding guide.
+include::../common_templates/setup-repository-script.asciidoc[tag=part2]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part3]
+    -o <organization> \
+    -p <project name> \
+include::../common_templates/setup-repository-script.asciidoc[tag=part4]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part5]
+[subs="attributes"]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part6]
+-o, --org                   [Required] Name of the Azure DevOps organization. 
+-p, --project               [Required] Name of the Azure DevOps project.
+include::../common_templates/setup-repository-script.asciidoc[tag=part7]
+```
+include::../common_templates/setup-repository-script.asciidoc[tag=part8]
+
+=== Policies
+
+In Azure DevOps it is possible to protect important branches against bad practices using branch policies.
+
+The following branch policies are applied to `master` and `develop` branches:
+
+* Require a minimum number of reviewers: ON
+** Minimum number of reviewers: 1
+** Allow requestors to approve their own changes: ON
+** Prohibit the most recent pusher from approving their own changes: OFF
+** Allow completion even if some reviewers vote to wait or reject: OFF
+** When new changes are pushed: Reset all approval votes (does not reset votes to reject or wait)
+* Check for linked work items: OFF
+* Check for comment resolution: REQUIRED
+* Limit merge types: OFF
+
+The above policies are defined in a configuration file located at `/scripts/repositories/common/config/strategy.cfg`. Feel free to adapt it to your needs.
+
+NOTE: This is the bare minimum standard for any project. We do not prohibit the most recent pusher from approving their own changes, although being more than recommendable, because if we do, it will block the auto-approval of Pull Requests generated during pipelines creation on the following guides.
+
+You can find more information about branch policies in the https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops[official documentation].
