@@ -6,7 +6,8 @@ steps:
   - -c
   - |
     set -e
-    SONAR_URL=${_SONAR_URL}
+    cp gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/build_${BUILD_ID}.tar .
+    tar -xf build_${BUILD_ID}.tar
     sh .pipelines/scripts/quality.sh
 availableSecrets:
   secretManager:
