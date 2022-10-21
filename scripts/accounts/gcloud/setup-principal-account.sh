@@ -18,7 +18,7 @@ helpFunction()
     exit
 }
 
-while getopts g:s:p:r:f:c:i:h: flag
+while getopts g:s:p:r:f:c:i:h flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
@@ -104,7 +104,7 @@ if [ -n "$service_account" ];
 then
     service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
     echo -e "${white}Checking if service account $service_account_email already exists..."
-    if ! gcloud iam service-accounts describe $service_account_email &> /dev/null;
+    if ! gcloud iam service-accounts describe "$service_account_email" &> /dev/null;
     then
 	echo -e "${white}Creating new service account: $service_account_email..."
 	if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
