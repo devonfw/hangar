@@ -146,7 +146,7 @@ then
     IFS=',' read -ra roles_array <<< "$roles"
     for role_to_check in "${roles_array[@]}"; do
         
-        if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]]; #Treats right side as a regular expression to avoid looping over the array elements (actually it is not more efficient, only more readable). For an extended explanation check: https://stackoverflow.com/questions/3685970/check-if-a-bash-array-contains-a-value#comment109318839_15394738  
+        if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738  
 	then
 	    echo -e "${green}OK        $role_to_check"
         else
