@@ -18,9 +18,9 @@ function import_repo_content {
     cd "$source_repo_namegit" || exit
 
     #Check if is a windows or linux installation (GCloud CLI)
-    if [ -a "$(command -v gcloud.cmd)" ]; then
+    if [ -e "$(command -v gcloud.cmd)" ]; then
         git config credential.helper gcloud.cmd
-    elif [ -a "$(command -v gcloud.sh)" ]; then
+    elif [ -e "$(command -v gcloud)" ]; then
         git config credential.helper gcloud.sh
     fi
 
@@ -34,9 +34,9 @@ function import_repo_content {
 function prepare_push_existing_repo_content {
 
     #Check if is a windows or linux installation (GCloud CLI)
-    if [ -a "$(command -v gcloud.cmd)" ]; then
+    if [ -e "$(command -v gcloud.cmd)" ]; then
         git config credential.helper gcloud.cmd
-    elif [ -a "$(command -v gcloud.sh)" ]; then
+    elif [ -e "$(command -v gcloud)" ]; then
         git config credential.helper gcloud.sh
     fi
 
