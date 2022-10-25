@@ -15,6 +15,7 @@ function help {
     echo "Build $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
+    echo "  -v, --version                          Additional arguments for language version."
     echo ""
     echo "Test $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
@@ -244,6 +245,15 @@ function setTargetDirectory {
   case $language in
       node | angular) targetDirectory="./" ;;
       quarkus*) targetDirectory="./target/" ;;
+      python) targetDirectory="./venv" ;;
       *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; echo -ne ${white}; exit 1
   esac
+}
+
+function versionVerification {
+    if [ "$language" == "python" ] && [ "" == "$languageVersion" ]
+    then
+        echo -e "${red}Language given is Python. It is required to use --version flag.${white}"
+        exit 1
+    fi
 }
