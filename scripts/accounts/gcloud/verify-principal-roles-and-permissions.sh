@@ -125,7 +125,7 @@ fi
 #Get ALL member permissions in project
 if [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
     all_permissions_array=() #TODO: Use a set data structure instead of array
-    for role_to_check in "${all_roles_array[@]}"; do
+    for role_to_check in "${all_roles_array[@]}"; do 
         if [[ "$role_to_check" == *"projects"* ]]; then
             customRoleName=$(echo "$role_to_check" | cut -d "/" -f 4)
 	    role_permissions=$(gcloud iam roles describe "$customRoleName" --project="$project_id" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
@@ -146,7 +146,7 @@ then
     IFS=',' read -ra roles_array <<< "$roles"
     for role_to_check in "${roles_array[@]}"; do
         
-        if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]]; 
+        if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]]; #Treats right side as a regular expression to avoid looping over the array elements (actually it is not more efficient, only more readable). For an extended explanation check: https://stackoverflow.com/questions/3685970/check-if-a-bash-array-contains-a-value#comment109318839_15394738  
 	then
 	    echo -e "${green}OK        $role_to_check"
         else
@@ -165,9 +165,9 @@ then
     echo -e "${white}Checking roles in file..."
 
     IFS=$'\r\n' GLOBIGNORE='*' command eval  'roles_file_array=($(cat ${roles_file}))'
-    for role_to_check in "${roles_file_array[@]}"
+    for role_to_check in "${roles_file_array[@]}" 
     do
-        if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]];
+        if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]]; #Treats right side as a regular expression to avoid looping over the array elements (actually it is not more efficient, only more readable). For an extended explanation check: https://stackoverflow.com/questions/3685970/check-if-a-bash-array-contains-a-value#comment109318839_15394738  
         then
             echo -e "${green}OK        $role_to_check"
             echo -ne "${white}"
@@ -185,7 +185,7 @@ then
     echo -e "${white}Checking inline permissions provided ..."
     IFS=',' read -ra permissions_array <<< "$permissions"
     for permission_to_check in "${permissions_array[@]}"; do
-        if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
+        if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]]; #Treats right side as a regular expression to avoid looping over the array elements (actually it is not more efficient, only more readable). For an extended explanation check: https://stackoverflow.com/questions/3685970/check-if-a-bash-array-contains-a-value#comment109318839_15394738  
         then
 	    echo -e "${green}OK        $permission_to_check"
 	    echo -ne "${white}"
@@ -204,7 +204,7 @@ then
     IFS=$'\r\n' GLOBIGNORE='*' command eval  'permissions_file_array=($(cat ${permissions_file}))'
     for permission_to_check in "${permissions_file_array[@]}"
     do
-        if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]];
+        if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]]; #Treats right side as a regular expression to avoid looping over the array elements (actually it is not more efficient, only more readable). For an extended explanation check: https://stackoverflow.com/questions/3685970/check-if-a-bash-array-contains-a-value#comment109318839_15394738  
 	then
 	    echo -e "${green}OK        $permission_to_check"
 	    echo -ne "${white}"
