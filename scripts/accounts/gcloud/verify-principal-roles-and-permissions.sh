@@ -185,7 +185,7 @@ then
     echo -e "${white}Checking inline permissions provided ..."
     IFS=',' read -ra permissions_array <<< "$permissions"
     for permission_to_check in "${permissions_array[@]}"; do
-        if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]]; #Treats right side as a regular expression to avoid looping over the array elements (actually it is not more efficient, only more readable). For an extended explanation check: https://stackoverflow.com/questions/3685970/check-if-a-bash-array-contains-a-value#comment109318839_15394738  
+        if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
         then
 	    echo -e "${green}OK        $permission_to_check"
 	    echo -ne "${white}"
