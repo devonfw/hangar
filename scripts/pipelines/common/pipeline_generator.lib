@@ -224,7 +224,7 @@ function commitCommonFiles {
     echo -e "${green}Commiting and pushing into Git remote..."
     echo -ne ${white}
 
-    # Move into the project's directory and pushing the template into the Cloud Source Repository.
+    # Move into the project's directory and pushing the template into the remote repository.
     cd "${localDirectory}"
 
     # Add the YAML files.
