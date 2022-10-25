@@ -1,18 +1,31 @@
 steps:
+- name: gcr.io/cloud-builders/gsutil
+  args:
+    - cp
+    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build_*.tar'
+    - .
 - name: ${_DOCKER_IMAGE}
   entrypoint: bash
   secretEnv: ['SONAR_TOKEN']
+  env: 
+    - PROJECT_PATH=./
+    - SONAR_URL=${_SONAR_URL}
   args:
   - -c
   - |
-    set -e
-    cp gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/build_${BUILD_ID}.tar .
-    tar -xf build_${BUILD_ID}.tar
+    set -ex
+    # In case of more than 1 tar, we extract the most recent one)
+    for i in $(ls -t build_*.tar)
+    do
+        tar -xf $i
+        break
+    done
     sh .pipelines/scripts/quality.sh
 availableSecrets:
   secretManager:
   - versionName: projects/${PROJECT_ID}/secrets/sonar-token/versions/latest
     env: 'SONAR_TOKEN'
+
 # mark to insert step for additonal artifact #
 
-# mark to insert entry in artifact for additonal artifact #
+# mark to insert entry in artifact for additonal artifact #```
