@@ -13,7 +13,7 @@
 #########################################################################################
 set -e
 
-while getopts f:c:u:p:r:i:b:a:s:l: flag
+while getopts f:c:u:p:r:i:b:a:s:l:o flag
 do
     case "${flag}" in
         f) dockerFile=${OPTARG};;
@@ -26,6 +26,7 @@ do
         a) aws_access_key=${OPTARG};;
         s) aws_secret_access_key=${OPTARG};;
         l) region=${OPTARG};;
+        o) project${OPTARG};;
         *) echo "Error: Unexpected flag." >&2
             exit 1;;
     esac
@@ -43,8 +44,15 @@ echo "$branch" | grep release && tag_completed="${tag}"
 echo "$branch" | grep release || tag_completed="${tag}_${branch_short}"
 
 # We build the image
-echo docker build -f "$dockerFile" -t "$imageName:$tag_completed" "$context"
-docker build -f "$dockerFile" -t "$imageName":"$tag_completed" "$context"
+if test -z "$project"
+then
+    echo docker build -f "$dockerFile" -t "$imageName:$tag_completed" "$context"
+    docker build -f "$dockerFile" -t "$imageName":"$tag_completed" "$context"
+else
+    # We need to tag the Docker image with the repository name in the case of Google Artifact Registry
+    echo "docker tag $imageName:$tag_completed $region-docker.pkg.dev/$project/$registry/$imageName:$tag_completed"
+    docker tag "$imageName":"$tag_completed" "$region"-docker.pkg.dev/"$project"/"$registry"/"$imageName":"$tag_completed"
+fi
 
 
 # We connect to the registry
@@ -57,17 +65,35 @@ else
     aws configure set aws_secret_access_key "$aws_secret_access_key"
     echo "aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry"
     aws ecr get-login-password --region "$region" | docker login --username AWS --password-stdin "$registry"
+else
+    echo "gcloud auth configure-docker $region"
+    gcloud auth configure-docker $region
 fi
 
 # We push the image previously built
-echo "docker push $imageName:$tag_completed"
-docker push "$imageName:$tag_completed"
+if test -z "$project"
+then
+    echo "docker push $imageName:$tag_completed" 
+    docker push "$imageName:$tag_completed"
+else
+    # Google Artificat Registry case
+    echo "docker push $region-docker.pkg.dev/$project/$registry/$imageName:$tag_completed"
+    docker push "$region"-docker.pkg.dev/"$project"/"$registry"/"$imageName":"$tag_completed"
+    
 
 # If this is a release we push it a second time with "latest" tag
 if echo "$branch" | grep release
 then
     echo "Also pushing the image as 'latest' if this is a release"
-    docker tag "$imageName:$tag_completed" "$imageName:latest"
-    echo "docker push $imageName:latest"
-    docker push "$imageName":latest
+    if -z "$project"
+    then     
+        docker tag "$imageName:$tag_completed" "$imageName:latest"
+        echo "docker push $imageName:latest"
+        docker push "$imageName":latest
+    else
+        # Google Artifact Registry case
+        docker tag "$imageName:$tag_completed" "$region"-docker.pkg.dev/"$project"/"$registry"/"$imageName":latest
+        echo "docker push $region-docker.pkg.dev/$project/$registry/$imageName:latest"
+        docker push "$region"-docker.pkg.dev/"$project"/"$registry"/"$imageName":latest
+    fi
 fi
