@@ -63,13 +63,6 @@ if ! [ -x "$(command -v gcloud)" ]; then
   exit 127
 fi
 
-#Check if Python is installed
-if ! [ -x "$(command -v python)" ]; then
-  echo -e "${red}Error: Python is not installed." >&2
-  echo -ne "${white}"
-  exit 127
-fi
-
 #Check if the provided project_id exists and in that case set it as working project
 echo -e "${white}Checking provided project $project_id..."
 if ! gcloud projects describe "$project_id" &> /dev/null;
