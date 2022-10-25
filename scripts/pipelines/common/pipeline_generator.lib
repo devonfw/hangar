@@ -7,6 +7,7 @@ function help {
     echo "  -c, --config-file           [Required] Configuration file containing $pipeline_type definition."
     echo "  -n, --pipeline-name         [Required] Name that will be set to the $pipeline_type."
     echo "  -d, --local-directory       [Required] Local directory of your project."
+    [ "$provider" != "gcloud" ] && echo "  -p, --project           [Required for Flutter] Short name (ID) of the project."
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after $pipeline_type execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     [ "$provider" != "gcloud" ] && echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
@@ -14,6 +15,9 @@ function help {
     echo ""
     echo "Build $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    [ "$provider" != "gcloud" ] && echo "      --registry-location     [Required for Flutter] Artifact registry location."
+    echo "      --flutter-version       [Required for Flutter] Flutter image version."
+    echo "      --flutter-web-renderer             Flutter web renderer, default is auto, accepted values: 'canvaskit', 'html' or 'auto'."
     echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
     echo ""
     echo "Test $pipeline_type flags:"
@@ -238,6 +242,8 @@ function setTargetDirectory {
   case $language in
       node | angular) targetDirectory="./" ;;
       quarkus*) targetDirectory="./target/" ;;
+      flutter-web) targetDirectory="./build/web" ;;
+      flutter-android) targetDirectory="./build/app/outputs/flutter-apk" ;;
       *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
   esac
 }
