@@ -134,7 +134,7 @@ resource "aws_instance" "sq_server" {
   }
 
   #cloud config script for setting up SonarQube
-  user_data = file("./setup_sonarqube.sh")
+  user_data = file("../common/setup_sonarqube.sh")
  
   tags = {
     Name = "sonarqube_server"
