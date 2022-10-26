@@ -42,7 +42,8 @@ RUN yes "y" | "${ANDROID_CMD_TOOLS}/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}"
 
 # Install Flutter.
 ENV FLUTTER_ROOT="/opt/flutter"
-RUN git clone -b "${FLUTTER_VERSION}" https://github.com/flutter/flutter "${FLUTTER_ROOT}"
+RUN bash -c  '[ "${FLUTTER_VERSION}" != "latest" ] && git clone -b "${FLUTTER_VERSION}" https://github.com/flutter/flutter "${FLUTTER_ROOT}"'
+RUN bash -c  '[ "${FLUTTER_VERSION}" == "latest" ] && git clone https://github.com/flutter/flutter "${FLUTTER_ROOT}"'
 ENV PATH="${FLUTTER_ROOT}/bin:${PATH}"
 
 # Disable analytics and crash reporting on the builder.
@@ -59,7 +60,7 @@ RUN flutter doctor -v
 
 # Switch to the correct channel
 #ARG channel=stable
-#RUN flutter channel $channel
+RUN bash -c '[ "${FLUTTER_VERSION}" == "latest" ] && flutter channel stable'
 
 RUN flutter --version
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:p:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-version:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm:v: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,version:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -11,10 +11,8 @@ while true; do
         -a | --artifact-path)     artifactPath=$2; shift 2;;
         -b | --target-branch)     targetBranch=$2; shift 2;;
         -l | --language)          language=$2; shift 2;;
-        -p | --project)           export projectId=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --registry-location)      export registryLocation=$2; shift 2;;
-        --flutter-version)        export flutterVersion=$2; shift 2;;
         --flutter-web-renderer)   export flutterWebRenderer=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
@@ -36,6 +34,7 @@ while true; do
         --aws-region)             awsRegion="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
         -m | --machine-type)      machineType="$2"; shift 2;;
+        -v | --version)           languageVersion="$2"; shift 2;;
         --) shift; break;;
     esac
 done
@@ -124,14 +123,18 @@ function createTrigger {
 
 # Function that checks whether Flutter image exists, if not a new image is created with the specified version
 function checkOrUploadFlutterImage {
+    gitOriginUrl=$(git config --get remote.origin.url)
+    gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+    # Switch gcloud project
+    gcloud config set project $gCloudProject
     # The user must specify an artifact registry region
-    if [[ "$registryLocation" != "" ]]
+    if [[ "$registryLocation" == "" ]]
     then
         echo -e "${red}Error: Registry location not provided." >&2
         exit 127
     fi
     # The user must specify a flutter version image
-    if [[ "$flutterVersion" != "" ]]
+    if [[ "$languageVersion" == "" ]]
     then
         echo -e "${red}Error: Flutter version not provided." >&2
         exit 127
@@ -143,13 +146,14 @@ function checkOrUploadFlutterImage {
         gcloud beta artifacts repositories create flutter --repository-format=docker --location=$registryLocation
     fi
 
-    imageTag="${registryLocation}-docker.pkg.dev/${projectId}/flutter/flutter"
+    imageTag="${registryLocation}-docker.pkg.dev/${gCloudProject}/flutter/flutter"
     # If no flutter image exists with specified version, it will built and uploaded 
-    if [[ `gcloud artifacts docker images list $imageTag --include-tags | awk '$3=="${flutterVersion}" {print $3}'` == "" ]]
+    if [[ `gcloud artifacts docker images list $imageTag --include-tags | awk '$3=="${languageVersion}" {print $3}'` == "" ]]
     then
-        gcloud auth configure-docker "${registryLocation}-docker.pkg.dev"
-        docker build --build-arg FLUTTER_VERSION=${flutterVersion} ./scripts/pipelines/common/templates/images/flutter -t "${imageTag}:${flutterVersion}"
-        docker push $imageTag
+        currentPath=`pwd`
+        cd ./scripts/pipelines/common/templates/images/flutter
+        gcloud builds submit . --substitutions _FLUTTER_VERSION="${languageVersion}",_REGISTRY_LOCATION="${registryLocation}",_PROJECT_ID="${gCloudProject}"
+        cd $currentPath
     fi
 }
 
@@ -170,9 +174,9 @@ validateRegistryLoginCredentials
 
 importConfigFile
 
-createNewBranch
-
 type checkOrUploadFlutterImage &> /dev/null && checkOrUploadFlutterImage
+
+createNewBranch
 
 type addPipelineVariables &> /dev/null && addPipelineVariables
 
