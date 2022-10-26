@@ -3,8 +3,8 @@ FROM ubuntu:22.04
 ARG FLUTTER_VERSION
 
 # Install Dependencies.
-RUN apt update -y
-RUN apt install -y \
+RUN apt-get update -y
+RUN apt-get install -y \
   git \
   wget \
   curl \
@@ -42,8 +42,7 @@ RUN yes "y" | "${ANDROID_CMD_TOOLS}/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}"
 
 # Install Flutter.
 ENV FLUTTER_ROOT="/opt/flutter"
-RUN bash -c  '[ "${FLUTTER_VERSION}" != "latest" ] && git clone -b "${FLUTTER_VERSION}" https://github.com/flutter/flutter "${FLUTTER_ROOT}"'
-RUN bash -c  '[ "${FLUTTER_VERSION}" == "latest" ] && git clone https://github.com/flutter/flutter "${FLUTTER_ROOT}"'
+RUN if [ "${FLUTTER_VERSION}" = "latest" ] ; then git clone https://github.com/flutter/flutter "${FLUTTER_ROOT}" ; else git clone -b "${FLUTTER_VERSION}" https://github.com/flutter/flutter "${FLUTTER_ROOT}" ; fi
 ENV PATH="${FLUTTER_ROOT}/bin:${PATH}"
 
 # Disable analytics and crash reporting on the builder.
@@ -60,7 +59,7 @@ RUN flutter doctor -v
 
 # Switch to the correct channel
 #ARG channel=stable
-RUN bash -c '[ "${FLUTTER_VERSION}" == "latest" ] && flutter channel stable'
+RUN [ "${FLUTTER_VERSION}" = "latest" ] && flutter channel stable'
 
 RUN flutter --version
 
