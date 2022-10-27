@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm:v: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,version:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm:v: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-platform:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,version:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -12,6 +12,9 @@ while true; do
         -b | --target-branch)     targetBranch=$2; shift 2;;
         -l | --language)          language=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
+        --registry-location)      export registryLocation=$2; shift 2;;
+        --flutter-platform)      export registryLocation=$2; shift 2;;
+        --flutter-web-renderer)   export flutterWebRenderer=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
         -i | --image-name)        imageName=$2; shift 2;;
@@ -44,10 +47,17 @@ red='\e[0;31m'
 
 # Common var
 commonTemplatesPath="scripts/pipelines/gcloud/templates/common" # Path for common files of the pipelines
+commonPipelineTemplatesPath="scripts/pipelines/common/templates/" # Path for common files of the pipelines
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="gcloud"
 pipeline_type="pipeline"
+currentPath=`pwd`
+cd $localDirectory
+gitOriginUrl=$(git config --get remote.origin.url)
+export gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
+cd $currentPath
 
 function obtainHangarPath {
 
@@ -104,9 +114,6 @@ function merge_branch {
 }
 
 function createTrigger {
-    gitOriginUrl=$(git config --get remote.origin.url)
-    gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
-    gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
     # We check if the bucket we needed exists, we create it if not
     if (gcloud storage ls --project="${gCloudProject}" | grep "${gCloudProject}_cloudbuild" >> /dev/null)
     then
@@ -117,6 +124,39 @@ function createTrigger {
     fi
     # We create the trigger
     gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+}
+
+# Function that checks whether Flutter image exists, if not a new image is created with the specified version
+function checkOrUploadFlutterImage {
+    # Switch gcloud project
+    gcloud config set project $gCloudProject
+    # The user must specify an artifact registry region
+    if [[ "$registryLocation" == "" ]]
+    then
+        echo -e "${red}Error: Registry location not provided." >&2
+        exit 127
+    fi
+    # The user must specify a flutter version image
+    if [[ "$languageVersion" == "" ]]
+    then
+        echo -e "${red}Error: Flutter version not provided." >&2
+        exit 127
+    fi
+
+    # If flutter repository does not exists it will be created
+    if [[ `gcloud artifacts repositories list | awk '$1=="flutter" {print $1}'` == "" ]]
+    then
+        gcloud beta artifacts repositories create flutter --repository-format=docker --location=$registryLocation
+    fi
+
+    imageTag="${registryLocation}-docker.pkg.dev/${gCloudProject}/flutter/flutter"
+    # If no flutter image exists with specified version, it will built and uploaded 
+    if [[ `gcloud artifacts docker images list $imageTag --include-tags | awk '$3=="${languageVersion}" {print $3}'` == "" ]]
+    then
+        cd "${hangarPath}/${commonPipelineTemplatesPath}"/images/flutter
+        gcloud builds submit . --substitutions _FLUTTER_VERSION="${languageVersion}",_REGISTRY_LOCATION="${registryLocation}"
+        cd $currentPath
+    fi
 }
 
 obtainHangarPath
@@ -137,6 +177,8 @@ validateRegistryLoginCredentials
 [[ "$machineType" != "" ]] && checkMachineType
 
 importConfigFile
+
+[[ "$language" == "flutter" ]] && type checkOrUploadFlutterImage &> /dev/null && checkOrUploadFlutterImage
 
 createNewBranch
 

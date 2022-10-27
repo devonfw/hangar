@@ -15,14 +15,19 @@ function help {
     echo "Build $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
-    echo "  -v, --version                          Additional arguments for language version."
+    echo "  -v, --version               [Required] Additional arguments for language version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     echo ""
     echo "Test $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -v, --version               [Required] Additional arguments for language version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
     echo ""
     echo "Quality $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "  -v, --version               [Required] Additional arguments for language version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
@@ -36,6 +41,10 @@ function help {
     [ "$provider" == "github" ] && echo ""
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
+    echo "  -v, --version               [Required, if Python or Flutter] Additional arguments for language version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
+    echo "      --flutter-platform      [Required, if Flutter] Flutter platform to compile, accepted values: 'android' or 'web'."
+    echo "      --flutter-web-renderer             Flutter web renderer, default is auto, accepted values: 'canvaskit', 'html' or 'auto'."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
     [ "$provider" == "azure-devops" ] && echo "      --quality-pipeline-name [Required] Quality $pipeline_type name."
@@ -243,7 +252,7 @@ function commitCommonFiles {
 
 function setTargetDirectory {
   case $language in
-      node | angular) targetDirectory="./" ;;
+      node | angular | flutter) targetDirectory="./" ;;
       quarkus*) targetDirectory="./target/" ;;
       python) targetDirectory="./venv" ;;
       *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; echo -ne ${white}; exit 1
@@ -254,6 +263,11 @@ function versionVerification {
     if [ "$language" == "python" ] && [ "" == "$languageVersion" ]
     then
         echo -e "${red}Language given is Python. It is required to use --version flag.${white}"
+        exit 1
+    fi
+    if [ "$language" == "flutter" ] && [ "" == "$languageVersion" ]
+    then
+        echo -e "${red}Language given is Flutter. It is required to use --version flag.${white}"
         exit 1
     fi
 }
