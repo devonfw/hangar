@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm:v: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-platform:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,version:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-platform:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,language-version:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -35,7 +35,7 @@ while true; do
         --aws-region)             awsRegion="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
         -m | --machine-type)      machineType="$2"; shift 2;;
-        -v | --version)           languageVersion="$2"; shift 2;;
+        --language-version)       languageVersion="$2"; shift 2;;
         --) shift; break;;
     esac
 done
@@ -150,7 +150,7 @@ function checkOrUploadFlutterImage {
     fi
 
     imageTag="${registryLocation}-docker.pkg.dev/${gCloudProject}/flutter/flutter"
-    # If no flutter image exists with specified version, it will built and uploaded 
+    # If no flutter image exists with specified version, it will built and uploaded
     if [[ `gcloud artifacts docker images list $imageTag --include-tags | awk '$3=="${languageVersion}" {print $3}'` == "" ]]
     then
         cd "${hangarPath}/${commonPipelineTemplatesPath}"/images/flutter
