@@ -4,6 +4,7 @@
 :pipeline_type2: GitHub action
 :path_provider: github
 :extra_sentence_ci: Please note that this workflow, although manually triggerable, is designed to be executed as part of a CI workflow, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
+:openBrowserFlag: -w
 = Setting up a Build {pipeline_type} on {provider}
 
 In this section we will create a build {pipeline_type} for compiling project code. {trigger_sentence}, regardless of which branch it is made on.
@@ -54,21 +55,25 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 ==== Quarkus project
 
 ===== Quarkus native project
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop {openBrowserFlag}
 ```
 
 ===== Quarkus project using JVM
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project -b develop {openBrowserFlag}
 ```
 
 ==== Node.js project
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n node-project-build -l node -d C:/Users/$USERNAME/Desktop/node-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n node-project-build -l node -d C:/Users/$USERNAME/Desktop/node-project -b develop {openBrowserFlag}
 ```
 
 ==== Angular project
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop -w
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop {openBrowserFlag}
 ```
