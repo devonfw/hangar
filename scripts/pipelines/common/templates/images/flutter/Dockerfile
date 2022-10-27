@@ -1,5 +1,8 @@
 FROM ubuntu:22.04
 
+# Change /bin/sh to /bin/bash
+SHELL ["/bin/bash", "-c"]
+
 ARG FLUTTER_VERSION
 
 # Install Dependencies.
@@ -59,7 +62,7 @@ RUN flutter doctor -v
 
 # Switch to the correct channel
 #ARG channel=stable
-RUN [ "${FLUTTER_VERSION}" = "latest" ] && flutter channel stable'
+RUN if [ "${FLUTTER_VERSION}" = "latest" ] ; then flutter channel stable ; fi
 
 RUN flutter --version
 
