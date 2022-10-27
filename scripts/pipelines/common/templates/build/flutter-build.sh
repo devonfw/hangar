@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 flutter pub clean
 flutter pub get
