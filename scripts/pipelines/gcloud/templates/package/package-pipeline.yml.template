@@ -1,0 +1,16 @@
+steps:
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://package-test-bucket/build_1.tar', '.']
+
+- name: ${_DOCKER_IMAGE}
+  args: ['tar', '-xf', 'build_1.tar', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['.pipelines/scripts/package.sh', '-f', '${_DOCKERFILE}', '-c', '.', '-r', '${_REGISTRY}', '-i', '${_IMAGE_NAME}', '-b', '${_SOURCE_BRANCH}', '-l', '${_REGION}']
+  env:
+  - 'PROJECT_ID=$PROJECT_ID'
+
+
+
+
