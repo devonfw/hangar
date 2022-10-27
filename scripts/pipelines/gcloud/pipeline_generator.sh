@@ -168,6 +168,8 @@ obtainHangarPath
 
 if [[ "$help" == "true" ]]; then help; fi
 
+versionVerification
+
 ensurePathFormat
 
 checkInstallations

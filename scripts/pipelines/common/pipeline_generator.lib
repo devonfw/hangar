@@ -108,7 +108,7 @@ function ensurePathFormat {
     # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a
     # Unix-style path using forward slashes (e.g. "/c/Users").
     localDirectory=${localDirectory//'\'/"/"}
-    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
+    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; echo -ne ${white}; exit 1; }
     localDirectory=$(pwd)
 
     # Return to initial directory
@@ -124,6 +124,7 @@ function importConfigFile {
     if test -z "$configFile"
     then
         echo -e "${red}Error: $pipeline_type definition configuration file not specified." >&2
+        echo -ne ${white}
         exit 2
     fi
 
@@ -134,6 +135,7 @@ function importConfigFile {
         then
             echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
             echo -e "${red}Use -h or --help flag to display help." >&2
+            echo -ne ${white}
             exit 2
         fi
     done
@@ -143,21 +145,25 @@ function checkInstallations {
     # Check if Git is installed
     if ! [ -x "$(command -v git)" ]; then
         echo -e "${red}Error: Git is not installed." >&2
+        echo -ne ${white}
         exit 127
     fi
 
     # Check if the CLI tool for the provider is installed
     if ([ "$provider" == "github" ] && ! [ -x "$(command -v gh)" ]); then
         echo -e "${red}Error: Github CLI is not installed." >&2
+        echo -ne ${white}
         exit 127
     elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
         echo -e "${red}Error: Azure CLI is not installed." >&2
+        echo -ne ${white}
         exit 127
     fi
 
     # Check if Python is installed
     if ! [ -x "$(command -v python)" ]; then
         echo -e "${red}Error: Python is not installed." >&2
+        echo -ne ${white}
         exit 127
     fi
 }
@@ -248,6 +254,20 @@ function setTargetDirectory {
   case $language in
       node | angular | flutter) targetDirectory="./" ;;
       quarkus*) targetDirectory="./target/" ;;
-      *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
+      python) targetDirectory="./venv" ;;
+      *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; echo -ne ${white}; exit 1
   esac
+}
+
+function versionVerification {
+    if [ "$language" == "python" ] && [ "" == "$languageVersion" ]
+    then
+        echo -e "${red}Language given is Python. It is required to use --version flag.${white}"
+        exit 1
+    fi
+    if [ "$language" == "flutter" ] && [ "" == "$languageVersion" ]
+    then
+        echo -e "${red}Language given is Flutter. It is required to use --version flag.${white}"
+        exit 1
+    fi
 }
