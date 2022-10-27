@@ -21,6 +21,7 @@ steps:
         break
     done
     sh .pipelines/scripts/quality.sh
+ # mark to insert trigger
 availableSecrets:
   secretManager:
   - versionName: projects/${PROJECT_ID}/secrets/sonar-token/versions/latest
