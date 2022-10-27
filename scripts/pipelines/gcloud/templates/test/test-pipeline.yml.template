@@ -1,3 +1,21 @@
 steps:
+- id: "Download artifact"
+  name: gcr.io/cloud-builders/gsutil
+  args:
+    - cp
+    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${_BUILD_PIPELINE_NAME}/commit_${SHORT_SHA}/build_${_CALLER_BUILD_ID}.tar'
+    - .
+  dir: testdir
 
+- id: "Unpack artifact"
+  name: ${_DOCKER_IMAGE}
+  args:
+    - tar
+    - -xf
+    - build_${_CALLER_BUILD_ID}.tar
+  dir: testdir
 
+- id: "Execute test script"
+  name: ${_DOCKER_IMAGE}
+  args: ['sh', '../.pipelines/scripts/test.sh']
+  dir: testdir
