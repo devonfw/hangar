@@ -41,7 +41,7 @@ function help {
     [ "$provider" == "github" ] && echo ""
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
-    echo "  -v, --version               [Required] Additional arguments for language version."
+    echo "  -v, --version               [Required, if Python or Flutter] Additional arguments for language version."
     [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     echo "      --flutter-platform      [Required, if Flutter] Flutter platform to compile, accepted values: 'android' or 'web'."
     echo "      --flutter-web-renderer             Flutter web renderer, default is auto, accepted values: 'canvaskit', 'html' or 'auto'."
