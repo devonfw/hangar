@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help" -- "$@")
+
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm:v: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,version:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -31,6 +32,8 @@ while true; do
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
+        -m | --machine-type)      machineType="$2"; shift 2;;
+        -v | --version)           languageVersion="$2"; shift 2;;
         --) shift; break;;
     esac
 done
@@ -103,6 +106,8 @@ obtainHangarPath
 . "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
 
 if [[ "$help" == "true" ]]; then help; fi
+
+versionVerification
 
 ensurePathFormat
 
