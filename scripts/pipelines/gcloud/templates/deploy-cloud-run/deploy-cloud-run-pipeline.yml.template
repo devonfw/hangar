@@ -1,11 +1,11 @@
+steps:
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   args:
-    - ./pipelines/script/deploy-cloud-run.sh
-  # - run
-  # - deploy
-  # - $_SERVICE_NAME
-  # - --image=$_IMAGE_NAME
-  # - --region=$_GCLOUD_REGION
-  # - --port=$_PORT
-  # - --allow-unauthenticated
+    - ./.pipelines/scripts/deploy-cloud-run.sh
+    - $PROJECT_ID
+    - $BRANCH_NAME
+    - $_SERVICE_NAME
+    - $_IMAGE_NAME
+    - $_GCLOUD_REGION
+    - $_PORT
