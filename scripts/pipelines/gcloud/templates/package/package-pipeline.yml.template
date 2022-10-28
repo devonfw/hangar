@@ -1,9 +1,18 @@
 steps:
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://package-test-bucket/build_1.tar', '.']
+  args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
 
 - name: ${_DOCKER_IMAGE}
-  args: ['tar', '-xf', 'build_1.tar', '.']
+  entrypoint: bash
+  args: 
+  - -c
+  - |
+    # In case of more than 1 tar, we extract the most recent one)
+    for i in $(ls -t build_*.tar)
+    do
+        tar -xf $i
+        break
+    done
 
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
