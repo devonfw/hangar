@@ -100,6 +100,14 @@ function addMachineType {
 
 }
 
+function addTriggers {
+    if [ "$previousPipelineyaml" != "" ]; then
+        echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
+        sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gcloud\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0\n    gcloud beta builds triggers run $pipelineName --project=\${PROJECT_ID} --sha=\${COMMIT_SHA}/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+    else
+        echo -e "Previous pipeline is not defined. Skipping adding trigger function."
+    fi
+}
 
 function merge_branch {
     # Check if a target branch is supplied.
@@ -193,6 +201,8 @@ copyYAMLFile
 copyCommonScript
 
 type copyScript &> /dev/null && copyScript
+
+addTriggers
 
 commitCommonFiles
 
