@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-platform:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,language-version:" -- "$@")
 
 FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm:v: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,version:" -- "$@")
 
@@ -71,9 +72,11 @@ function checkMachineType {
     # The type of machine can only be two possible values:
     if [[ "$machineType" != "E2_HIGHCPU_8" ]] && [[ "$machineType" != "E2_HIGHCPU_32" ]] && [[ "$machineType" != "N1_HIGHCPU_8" ]] && [[ "$machineType" != "N1_HIGHCPU_32" ]]
     then
-      echo -e "${red}The machineType value is not correct, please between: 'E2_HIGHCPU_8', 'E2_HIGHCPU_32', 'N1_HIGHCPU_8' or 'N1_HIGHCPU_32'."
-      echo -e "For more info about the machineType: https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds?hl=fr#machinetype${white}"
-      exit 1
+      echo -e "${red}Error: Chosen machine type is not a valid one." >&2
+      echo -e "${red}Use -h or --help flag to display help." >&2
+      echo -e "${red} Also check official documentation: https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds?hl=en#machinetype" >&2
+      echo -ne ${white} >&2
+      exit 2
     fi
 }
 
@@ -89,7 +92,7 @@ function addCommonPipelineVariables {
 }
 
 function addMachineType {
-  echo -e "${green}Adding the machineType value to use a bigger VM for the execution of the pipeline.${white}"
+  echo -e "${green}Setting machine type value on pipeline.${white}"
   echo "" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
   echo "options:" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
   echo "  machineType: $machineType" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
@@ -135,13 +138,8 @@ function checkOrUploadFlutterImage {
     if [[ "$registryLocation" == "" ]]
     then
         echo -e "${red}Error: Registry location not provided." >&2
-        exit 127
-    fi
-    # The user must specify a flutter version image
-    if [[ "$languageVersion" == "" ]]
-    then
-        echo -e "${red}Error: Flutter version not provided." >&2
-        exit 127
+        echo -ne ${white} >&2
+        exit 2
     fi
 
     # If flutter repository does not exists it will be created
@@ -167,7 +165,7 @@ obtainHangarPath
 
 if [[ "$help" == "true" ]]; then help; fi
 
-versionVerification
+languageVersionVerification
 
 ensurePathFormat
 
