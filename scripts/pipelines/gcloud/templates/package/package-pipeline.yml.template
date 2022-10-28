@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://package-test-bucket/build_1.tar', '.']
+  args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
 
 - name: ${_DOCKER_IMAGE}
   args: ['tar', '-xf', 'build_1.tar', '.']
