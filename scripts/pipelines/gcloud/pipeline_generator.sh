@@ -82,6 +82,7 @@ function merge_branch {
 }
 
 function createTrigger {
+    cd -- "$localDirectory"
     gitOriginUrl=$(git config --get remote.origin.url)
     gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
     gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
