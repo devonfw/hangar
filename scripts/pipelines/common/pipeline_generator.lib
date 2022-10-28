@@ -84,6 +84,12 @@ function help {
     echo "      --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory."
     echo "      --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images."
     echo ""
+    echo "Deploy to cloud run $pipeline_type flags: (only available on cloud build for the moment)"
+    echo ""
+    echo "      --service-name                  [Required] Name of the cloud run service."
+    echo "  -i, --image-name                    [Required] Name (excluding tag) for the generated container image."
+    echo "      --gcloud-region                 [Required] Region where the service will be deployed."
+    echo "      --port                                     Listening port of the service."
 
     exit
 }
