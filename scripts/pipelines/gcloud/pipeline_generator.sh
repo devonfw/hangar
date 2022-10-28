@@ -52,12 +52,6 @@ pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="gcloud"
 pipeline_type="pipeline"
-currentPath=`pwd`
-cd $localDirectory
-gitOriginUrl=$(git config --get remote.origin.url)
-export gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
-gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
-cd $currentPath
 
 function obtainHangarPath {
 
@@ -76,6 +70,14 @@ function checkMachineType {
       echo -ne ${white} >&2
       exit 2
     fi
+}
+
+function getProjectRepo {
+  # Function used to get the repo name and project ID
+  cd "$localDirectory"
+  gitOriginUrl=$(git config --get remote.origin.url)
+  export gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+  gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -172,6 +174,8 @@ checkInstallations
 validateRegistryLoginCredentials
 
 [[ "$machineType" != "" ]] && checkMachineType
+
+getProjectRepo
 
 importConfigFile
 
