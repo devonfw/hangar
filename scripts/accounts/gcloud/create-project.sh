@@ -91,16 +91,16 @@ if ! gcloud services enable run.googleapis.com --project "$projectName"; then
    exit 221
 fi
 
-echo "Enabling CloudBuild..."
-if ! gcloud services enable run.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable CloudRun API"
-   echo -ne "${white}"
-   exit 221
-fi
-
 echo "Enabling Artifact Registry..."
 if ! gcloud services enable artifactregistry.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Artifact Registry API"
    echo -ne "${white}"
    exit 222
+fi
+
+echo "Enabling CloudBuild..."
+if ! gcloud services enable run.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable CloudRun API"
+   echo -ne "${white}"
+   exit 221
 fi
