@@ -1,11 +1,18 @@
 steps:
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
+  secretEnv: ['DOCKER_VARIABLE']
   args:
-    - ./.pipelines/scripts/deploy-cloud-run.sh
-    - $PROJECT_ID
-    - $BRANCH_NAME
-    - $_SERVICE_NAME
-    - $_IMAGE_NAME
-    - $_GCLOUD_REGION
-    - $_PORT
+    - -c
+    - |
+      set -e
+      ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_REGISTRY"
+      echo $$DOCKER_VARIABLE > credentials.env
+      . credentials.env
+      rm credentials.env
+      ./.pipelines/scripts/deploy-cloud-run.sh "$PROJECT_ID" "$BRANCH_NAME" "$_SERVICE_NAME" "$_IMAGE_NAME" "$_GCLOUD_REGION" "$_PORT" "$_REGISTRY" "$$DOCKER_USER" "$$DOCKER_PASSWORD" "$$AWS_ACCESS_KEY" "$$AWS_SECRET_ACCESS_KEY" "$$AWS_REGION"
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/${PROJECT_ID}/secrets/DOCKER_VARIABLE/versions/latest
+    env: 'DOCKER_VARIABLE'
