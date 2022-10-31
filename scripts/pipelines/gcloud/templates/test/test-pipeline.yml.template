@@ -9,16 +9,13 @@ steps:
     - 'PROJECT_ID=$PROJECT_ID'
     - '_BUILD_PIPELINE_NAME=${_BUILD_PIPELINE_NAME}'
     - 'SHORT_SHA=$SHORT_SHA'
-  dir: testdir
 
 - id: "Unpack artifact"
   name: ${_DOCKER_IMAGE}
   script: |
     #!/bin/bash
     tar -xf build_*.tar
-  dir: testdir
 
 - id: "Execute test script"
   name: ${_DOCKER_IMAGE}
-  args: ['sh', '../.pipelines/scripts/test.sh']
-  dir: testdir
+  args: ['sh', '.pipelines/scripts/test.sh']
