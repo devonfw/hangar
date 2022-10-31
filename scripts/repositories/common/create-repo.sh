@@ -15,15 +15,15 @@ function help {
   case $provider in
 
     "Azure")
-      echo "  -p, --project           [Required] Name of the project."
-      echo "  -o, --org               [Required] Name of the organization."
+      echo "  -p, --project                 [Required] Name of the project."
+      echo "  -o, --org                     [Required] Name of the organization."
       ;;
 
     "Github")
       ;;
 
     "Google Cloud")
-      echo "  -p, --project           [Required] Short name (ID) of the project."
+      echo "  -p, --project                 [Required] Short name (ID) of the project."
       ;;
 
     *)
