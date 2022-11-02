@@ -67,7 +67,7 @@ function checkMachineType {
       echo -e "${red}Error: Chosen machine type is not a valid one." >&2
       echo -e "${red}Use -h or --help flag to display help." >&2
       echo -e "${red} Also check official documentation: https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds?hl=en#machinetype" >&2
-      echo -ne ${white} >&2
+      echo -ne "${white}" >&2
       exit 2
     fi
 }
