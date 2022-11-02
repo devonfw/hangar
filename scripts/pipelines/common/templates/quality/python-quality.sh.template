@@ -13,5 +13,5 @@ unzip sonar-scanner-cli-4.2.0.1873-linux.zip
 mv sonar-scanner-4.2.0.1873-linux /opt/sonar-scanner
 cd ..
 export PATH="$PATH:/opt/sonar-scanner/bin"
-
+projectKey=$(grep -m 1 name pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
 sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey=$projectKey -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml
