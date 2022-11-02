@@ -1,0 +1,27 @@
+steps:
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
+
+- name: ${_DOCKER_IMAGE}
+  entrypoint: bash
+  args: 
+  - -c
+  - |
+    # In case of more than 1 tar, we extract the most recent one)
+    for i in $(ls -t build_*.tar)
+    do
+        tar -xf $i
+        break
+    done
+
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['.pipelines/scripts/package.sh', '-f', '${_DOCKERFILE}', '-c', '.', '-r', '${_REGISTRY}', '-i', '${_IMAGE_NAME}', '-b', '${_SOURCE_BRANCH}', '-l', '${_REGION}']
+  env:
+  - 'PROJECT_ID=$PROJECT_ID'
+  
+# mark to insert trigger
+
+
+
+
