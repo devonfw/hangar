@@ -33,7 +33,6 @@ while true; do
         --service-name)           serviceName="$2"; shift 2;;
         --gcloud-region)          gCloudRegion="$2"; shift 2;;
         --port)                   port="$2"; shift 2;;
-        --package-pipeline-name)  export packagePipelineName=$2; shift 2;;
         -h | --help)              help="true"; shift 1;;
         --) shift; break;;
     esac

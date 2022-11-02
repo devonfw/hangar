@@ -24,7 +24,7 @@ echo "$branch" | grep release && tag_completed="${tag}"
 echo "$branch" | grep release || tag_completed="${tag}_${branch_short}"
 
 # If the registry is not the google cloud artifact registry, we need to push it to a tenmporary one
-if ! ([[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]])
+if ! {[[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]]}
 then
   # If in AWS
   if [ "$awsAccessKey" == "" ]
@@ -37,7 +37,7 @@ then
     echo "aws ecr get-login-password --region $awsRegion | docker login --username AWS --password-stdin $registry"
     aws ecr get-login-password --region "$awsRegion" | docker login --username AWS --password-stdin "$registry"
   fi
-  [[ $(gcloud artifacts repositories list | awk  '$1=="temporaryrepo" {print $1}') != "" ]] || gcloud artifacts repositories create temporaryrepo --repository-format=docker --location=$gCloudRegion
+  [[ $(gcloud artifacts repositories list | awk  '$1=="temporaryrepo" {print $1}') != "" ]] || gcloud artifacts repositories create temporaryrepo --repository-format=docker --location="$gCloudRegion"
   docker pull "$imageName:${tag_completed}"
   docker tag "$imageName:${tag_completed}" "${gCloudRegion}-docker.pkg.dev/${projectId}/temporaryrepo/temporaryimage:latest"
   docker push "${gCloudRegion}-docker.pkg.dev/${projectId}/temporaryrepo/temporaryimage:latest"
