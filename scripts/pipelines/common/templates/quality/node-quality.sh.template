@@ -1,4 +1,5 @@
 #!/bin/bash
 projectKey=$(python -c "from json import load; print(load(open('./package.json', 'r'))['name']);")
-
+apt-get update
+apt-get install -y openjdk-17-jre
 npx sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey=$projectKey -Dsonar.sources="."
