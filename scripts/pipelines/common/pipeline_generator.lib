@@ -143,6 +143,9 @@ function checkInstallations {
     elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
         echo -e "${red}Error: Azure CLI is not installed." >&2
         exit 127
+    elif ([ "$provider" == "gitlab" ] && ! [ -x "$(command -v glab)" ]); then
+        echo -e "${red}Error: Azure CLI is not installed." >&2
+        exit 127
     fi
     elif ([ "$provider" == "gcloud" ] && ! [ -x "$(command -v gcloud)" ]); then
         echo -e "${red}Error: gcloud CLI is not installed." >&2
