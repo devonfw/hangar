@@ -138,7 +138,7 @@ function checkOrUploadFlutterImage {
     if [[ "$registryLocation" == "" ]]
     then
         echo -e "${red}Error: Registry location not provided." >&2
-        echo -ne ${white} >&2
+        echo -ne "${white}" >&2
         exit 2
     fi
 
