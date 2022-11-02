@@ -1,0 +1,17 @@
+#!/bin/bash
+coverage run -m unittest
+coverage report
+coverage xml
+
+# Installation of sonar scanner (maybe not necessary)
+apt-get update
+apt-get install unzip wget nodejs
+mkdir sonarqube -p
+cd sonarqube
+wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
+unzip sonar-scanner-cli-4.2.0.1873-linux.zip
+mv sonar-scanner-4.2.0.1873-linux /opt/sonar-scanner
+cd ..
+export PATH="$PATH:/opt/sonar-scanner/bin"
+
+sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey=$projectKey -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml
