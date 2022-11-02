@@ -57,7 +57,7 @@ fi
 # We connect to the registry
 if ! [[ "$registry" == "docker.pkg.dev" ]];
 then 
-    if test -z "$aws_access_key"
+    if [[ "$aws_access_key" == "" ]];
     then
         echo "docker login -u=**** -p=**** $registry"
         docker login -u="$username" -p="$password" "$registry"
