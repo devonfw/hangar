@@ -175,9 +175,9 @@ validateRegistryLoginCredentials
 
 [[ "$machineType" != "" ]] && checkMachineType
 
-getProjectRepo
-
 importConfigFile
+
+getProjectRepo
 
 [[ "$language" == "flutter" ]] && type checkOrUploadFlutterImage &> /dev/null && checkOrUploadFlutterImage
 
