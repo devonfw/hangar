@@ -76,3 +76,9 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop {openBrowserFlag}
 ```
+
+==== Python project
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n python-project-build -l python -d C:/Users/$USERNAME/Desktop/python-project -b develop --language-version 3.10 {openBrowserFlag}
+```

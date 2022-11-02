@@ -76,9 +76,17 @@ function checkMachineType {
       echo -e "${red}Error: Chosen machine type is not a valid one." >&2
       echo -e "${red}Use -h or --help flag to display help." >&2
       echo -e "${red} Also check official documentation: https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds?hl=en#machinetype" >&2
-      echo -ne ${white} >&2
+      echo -ne "${white}" >&2
       exit 2
     fi
+}
+
+function getProjectRepo {
+  # Function used to get the repo name and project ID
+  cd "$localDirectory"
+  gitOriginUrl=$(git config --get remote.origin.url)
+  export gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+  gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -151,7 +159,7 @@ function checkOrUploadFlutterImage {
     if [[ "$registryLocation" == "" ]]
     then
         echo -e "${red}Error: Registry location not provided." >&2
-        echo -ne ${white} >&2
+        echo -ne "${white}" >&2
         exit 2
     fi
 
@@ -187,6 +195,8 @@ checkInstallations
 validateRegistryLoginCredentials
 
 [[ "$machineType" != "" ]] && checkMachineType
+
+getProjectRepo
 
 importConfigFile
 
