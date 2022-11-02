@@ -19,3 +19,4 @@ steps:
   name: ${_DOCKER_IMAGE}
   args: ['sh', '../.pipelines/scripts/test.sh']
   dir: testdir
+# mark to insert trigger
