@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,service-name:,gcloud-region:,port:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,service-name:,gcloud-region:,port:,package-pipeline-name:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -33,6 +33,7 @@ while true; do
         --service-name)           serviceName="$2"; shift 2;;
         --gcloud-region)          gCloudRegion="$2"; shift 2;;
         --port)                   port="$2"; shift 2;;
+        --package-pipeline-name)  export packagePipelineName=$2; shift 2;;
         -h | --help)              help="true"; shift 1;;
         --) shift; break;;
     esac
