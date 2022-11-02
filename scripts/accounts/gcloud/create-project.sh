@@ -102,5 +102,5 @@ echo "Enabling Secret Manager..."
 if ! gcloud services enable secretmanager.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Secret Manager API"
    echo -ne "${white}"
-   exit 223
+   exit 224
 fi
