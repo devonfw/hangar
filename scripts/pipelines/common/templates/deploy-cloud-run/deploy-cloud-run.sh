@@ -24,7 +24,7 @@ echo "$branch" | grep release && tag_completed="${tag}"
 echo "$branch" | grep release || tag_completed="${tag}_${branch_short}"
 
 # If the registry is not the google cloud artifact registry, we need to push it to a tenmporary one
-if ! { [[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]] }
+if ! ([[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]])
 then
   # If in AWS
   if [ "$awsAccessKey" == "" ]

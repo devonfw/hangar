@@ -3,7 +3,7 @@ set -e
 registry="$1"
 
 #
-if ! { [[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]]) }
+if ! ([[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]])
 then
   apt-get update && apt-get install docker.io -y
   if [[ "$registry" =~ .*amazonaws.com.* ]]
