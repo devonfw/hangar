@@ -127,6 +127,10 @@ function merge_branch {
 }
 
 function createTrigger {
+    cd -- "$localDirectory"
+    gitOriginUrl=$(git config --get remote.origin.url)
+    gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+    gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
     # We check if the bucket we needed exists, we create it if not
     if (gcloud storage ls --project="${gCloudProject}" | grep "${gCloudProject}_cloudbuild" >> /dev/null)
     then
