@@ -22,8 +22,8 @@ steps:
       echo $$REGISTRY_CREDENTIALS > credentials.env
       . credentials.env
       rm credentials.env
-      .pipelines/scripts/package.sh  -f ${_DOCKERFILE} -c . -r ${_REGISTRY} -i ${_IMAGE_NAME} -b ${_SOURCE_BRANCH} -l ${_REGION}
-  
+      .pipelines/scripts/package.sh  -f "${_DOCKERFILE}" -c . -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" -r "${_REGISTRY}" -i "${_IMAGE_NAME}" -b "${_SOURCE_BRANCH}" -l "${_REGION}" -a "${AWS_ACCESS_KEY}" -s "${AWS_SECRET_ACCESS_KEY}" -l "${AWS_REGION}"
+      
   env:
   - 'PROJECT_ID=$PROJECT_ID'
   secretEnv:
