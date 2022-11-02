@@ -14,6 +14,8 @@ steps:
   - -c
   - |
     set -ex
+    apt-get update
+    apt-get install openjdk-17-jre -y
     # In case of more than 1 tar, we extract the most recent one)
     for i in $(ls -t build_*.tar)
     do
@@ -29,4 +31,4 @@ availableSecrets:
 
 # mark to insert step for additonal artifact #
 
-# mark to insert entry in artifact for additonal artifact #```
+# mark to insert entry in artifact for additonal artifact #
