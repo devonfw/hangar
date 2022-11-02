@@ -1,0 +1,4 @@
+roles/artifactregistry.admin
+roles/iam.serviceAccountUser
+roles/run.admin
+roles/secretmanager.secretAccessor
