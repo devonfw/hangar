@@ -101,12 +101,19 @@ function addMachineType {
 }
 
 function addTriggers {
-    if [ "$previousPipelineyaml" != "" ]; then
-        echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
-        sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_CALLER_BUILD_ID\":\"'\${BUILD_ID}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
-    else
-        echo -e "Previous pipeline is not defined. Skipping adding trigger function."
-    fi
+    case "$previousPipelineyaml" in 
+        "") 
+            echo -e "Previous pipeline is not defined. Skipping adding trigger function."
+            ;;
+        "build-pipeline.yml") 
+            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
+            sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            ;;
+        *)  
+            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
+            sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            ;;
+    esac    
 }
 
 function merge_branch {
@@ -136,7 +143,13 @@ function createTrigger {
       gcloud storage buckets create "gs://${gCloudProject}_cloudbuild" --project="${gCloudProject}"
     fi
     # We create the trigger
-    gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+    if [ "$previousPipelineyaml" == "" ]; then #Build trigger, executes when occurs a push to the repo
+        gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+    else #Not build trigger, executed manually
+        #gcloud beta builds triggers create manual --repo="$gCloudRepo" --repo-type="CLOUD_SOURCE_REPOSITORIES" --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+        gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="manualtrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+
+    fi
 }
 
 # Function that checks whether Flutter image exists, if not a new image is created with the specified version
