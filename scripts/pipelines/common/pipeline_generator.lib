@@ -168,7 +168,6 @@ function checkInstallations {
     elif ([ "$provider" == "gcloud" ] && ! [ -x "$(command -v gcloud)" ]); then
         echo -e "${red}Error: gcloud CLI is not installed." >&2
         exit 127
-    fi
     elif ([ "$provider" == "gcloud" ] && ! [ -x "$(command -v gcloud)" ]); then
         echo -e "${red}Error: gcloud CLI is not installed." >&2
         exit 127
