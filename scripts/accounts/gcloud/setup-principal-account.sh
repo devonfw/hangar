@@ -93,30 +93,39 @@ fi
 
 
 #Check if the service account exists and if not, create it
+
+
+
+###################################################
+#He tenido que comentar esta parte para que funciona para el cloudbuild service agent
+###################################################
+
 if [ -n "$service_account" ];
-then
+then	
     echo -e "${white}Checking if service account $service_account already exists..."
-    if ! gcloud iam service-accounts describe "$service_account" &> /dev/null;
+    service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
+    service_accounts_array=($service_accounts)
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
     then
-	echo -e "${white}Creating new service account: $service_account..."
-	if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
-	then
-	     echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
-	     echo -ne "${white}"
-	     exit 2
-	else
-	     echo -e "${green}Service account $service_account created successfully."
-	     echo -ne "${white}"
-	fi
+	      echo -e "${white}Creating new service account: $service_account..."
+	      if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
+	      then
+	          echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
+	          echo -ne "${white}"
+	          exit 2
+	      else
+	          echo -e "${green}Service account $service_account created successfully."
+	          echo -ne "${white}"
+	      fi
     else
         echo -e "${white}The service account $service_account exists already. Proceeding to use it."
     fi
     echo -e "${white}Creating service-account keys for service account $service_account..."
     if ! gcloud iam service-accounts keys create ./key.json --iam-account="$service_account" &> /dev/null;
-    then      
+    then
         echo -e "${red}Error: Service account key could not be created." >&2
         echo -ne "${white}"
-	exit 2
+	#exit 2
     else
         echo -e "${green}Service account key creation ended successfully."
 	echo -ne "${white}"
@@ -172,7 +181,7 @@ fi
 
 #Create and attach custom role to principal in project (From YAML file)
 if [ -n "$custom_role_file" ];
-then	
+then
     echo -e "${white}Creating role $custom_role_id defined in $custom_role_file for project $project_id..."
     if ! gcloud iam roles create "$custom_role_id" --project="$project_id" --file="$custom_role_file" &> /dev/null;
     then
