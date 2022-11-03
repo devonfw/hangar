@@ -84,6 +84,13 @@ if ! gcloud services enable sourcerepo.googleapis.com --project "$projectName"; 
    exit 220
 fi
 
+echo "Enabling Compute Engine..."
+if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Compute Engine API"
+   echo -ne "${white}"
+   exit 221
+fi
+
 echo "Enabling CloudRun..."
 if ! gcloud services enable run.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable CloudRun API"
