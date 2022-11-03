@@ -103,7 +103,7 @@ function addMachineType {
 function addTriggers {
     if [ "$previousPipelineyaml" != "" ]; then
         echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
-        sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gcloud\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0\n    gcloud beta builds triggers run $pipelineName --project=\${PROJECT_ID} --sha=\${COMMIT_SHA}/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+        sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_CALLER_BUILD_ID\":\"'\${BUILD_ID}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
     else
         echo -e "Previous pipeline is not defined. Skipping adding trigger function."
     fi
