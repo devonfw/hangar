@@ -97,3 +97,10 @@ if ! gcloud services enable artifactregistry.googleapis.com --project "$projectN
    echo -ne "${white}"
    exit 222
 fi
+
+echo "Enabling Secret Manager..."
+if ! gcloud services enable secretmanager.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Secret Manager API"
+   echo -ne "${white}"
+   exit 224
+fi
