@@ -83,11 +83,13 @@ else
     fi
 fi
 
-#Check if the service account exists and if not, create it
+#Check if the service account exists
 if [ -n "$service_account" ];
 then
-    echo -e "${white}Checking if service account $service_account already exists..."
-    if ! gcloud iam service-accounts describe "$service_account" &> /dev/null;
+    echo -e "${white}Checking if service account $service_account already exists..."	
+    service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
+    service_accounts_array=($service_accounts)
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
     then
         echo -e "${red}Error: Service account $service_account does not exist. Please, provide a valid one." >&2
         echo -ne "${white}"

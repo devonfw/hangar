@@ -99,10 +99,13 @@ fi
 ###################################################
 #He tenido que comentar esta parte para que funciona para el cloudbuild service agent
 ###################################################
+
 if [ -n "$service_account" ];
-then
+then	
     echo -e "${white}Checking if service account $service_account already exists..."
-    if ! gcloud iam service-accounts describe "$service_account" &> /dev/null;
+    service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
+    service_accounts_array=($service_accounts)
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
     then
 	      echo -e "${white}Creating new service account: $service_account..."
 	      if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
@@ -111,8 +114,8 @@ then
 	          echo -ne "${white}"
 	          exit 2
 	      else
-	        echo -e "${green}Service account $service_account created successfully."
-	        echo -ne "${white}"
+	          echo -e "${green}Service account $service_account created successfully."
+	          echo -ne "${white}"
 	      fi
     else
         echo -e "${white}The service account $service_account exists already. Proceeding to use it."
@@ -122,10 +125,10 @@ then
     then
         echo -e "${red}Error: Service account key could not be created." >&2
         echo -ne "${white}"
-	      exit 2
+	#exit 2
     else
         echo -e "${green}Service account key creation ended successfully."
-	      echo -ne "${white}"
+	echo -ne "${white}"
     fi
 fi
 
