@@ -1,11 +1,33 @@
 steps:
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
+  secretEnv: ['registry_credentials']
   args:
-    - ./.pipelines/scripts/deploy-cloud-run.sh
-    - $PROJECT_ID
-    - $BRANCH_NAME
-    - $_SERVICE_NAME
-    - $_IMAGE_NAME
-    - $_GCLOUD_REGION
-    - $_PORT
+    - -c
+    - |
+      set -e
+      echo -e "\n\n"
+      echo "SETTING UP ENVIRONMENT"
+      echo ""
+      ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_REGISTRY"
+      echo -e "\n\n"
+      echo "LOADING CREDENTIALS AND GETTING REGISTRY"
+      echo $$registry_credentials > credentials.env
+      . credentials.env
+      rm credentials.env
+      # We get the name of the registry from the full image name
+      firstPartImage=$(echo $imageName | cut -d'/' -f1)
+      echo $firstPartImage | grep "\." > /dev/null && REGISTRY=$firstPartImage || REGISTRY="docker.io"
+      echo -e "\n\n"
+      echo "EXECUTING deploy-cloud-run.sh"
+      echo "./.pipelines/scripts/deploy-cloud-run.sh \"$PROJECT_ID\" \"$BRANCH_NAME\" \"$_SERVICE_NAME\" \"$_IMAGE_NAME\" \"$_GCLOUD_REGION\" \"$_PORT\" \"$$REGISTRY\" \"****\" \"****\" \"****\" \"****\" \"****\""
+      ./.pipelines/scripts/deploy-cloud-run.sh "$PROJECT_ID" "$BRANCH_NAME" "$_SERVICE_NAME" "$_IMAGE_NAME" "$_GCLOUD_REGION" "$_PORT" "$$REGISTRY" "$$DOCKER_USER" "$$DOCKER_PASSWORD" "$$AWS_ACCESS_KEY" "$$AWS_SECRET_ACCESS_KEY" "$$AWS_REGION"
+
+# mark to insert step for additonal artifact #
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/${PROJECT_ID}/secrets/registry-credentials/versions/latest
+    env: 'registry_credentials'
+
+# mark to insert entry in artifact for additonal artifact #

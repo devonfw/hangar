@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-platform:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,language-version:,service-name:,gcloud-region:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,project:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-platform:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,language-version:,service-name:,gcloud-region:,port:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -55,12 +55,6 @@ pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="gcloud"
 pipeline_type="pipeline"
-currentPath=`pwd`
-cd $localDirectory
-gitOriginUrl=$(git config --get remote.origin.url)
-export gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
-gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
-cd $currentPath
 
 function obtainHangarPath {
 
@@ -76,9 +70,17 @@ function checkMachineType {
       echo -e "${red}Error: Chosen machine type is not a valid one." >&2
       echo -e "${red}Use -h or --help flag to display help." >&2
       echo -e "${red} Also check official documentation: https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds?hl=en#machinetype" >&2
-      echo -ne ${white} >&2
+      echo -ne "${white}" >&2
       exit 2
     fi
+}
+
+function getProjectRepo {
+  # Function used to get the repo name and project ID
+  cd "$localDirectory"
+  gitOriginUrl=$(git config --get remote.origin.url)
+  export gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+  gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
 }
 
 # Function that adds the variables to be used in the pipeline.
@@ -134,6 +136,10 @@ function merge_branch {
 }
 
 function createTrigger {
+    cd -- "$localDirectory"
+    gitOriginUrl=$(git config --get remote.origin.url)
+    gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+    gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
     # We check if the bucket we needed exists, we create it if not
     if (gcloud storage ls --project="${gCloudProject}" | grep "${gCloudProject}_cloudbuild" >> /dev/null)
     then
@@ -160,7 +166,7 @@ function checkOrUploadFlutterImage {
     if [[ "$registryLocation" == "" ]]
     then
         echo -e "${red}Error: Registry location not provided." >&2
-        echo -ne ${white} >&2
+        echo -ne "${white}" >&2
         exit 2
     fi
 
@@ -198,6 +204,8 @@ validateRegistryLoginCredentials
 [[ "$machineType" != "" ]] && checkMachineType
 
 importConfigFile
+
+getProjectRepo
 
 [[ "$language" == "flutter" ]] && type checkOrUploadFlutterImage &> /dev/null && checkOrUploadFlutterImage
 

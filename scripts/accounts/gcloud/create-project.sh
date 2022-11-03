@@ -44,7 +44,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
   echo -ne "${white}"
   exit 127
 fi
-# Check if exists a Google Cloud project with that project ID. 
+# Check if exists a Google Cloud project with that project ID.
 if gcloud projects describe "$projectName" &>/dev/null ; then
    echo "Project ID already exists."
 else
@@ -71,7 +71,7 @@ else
 fi
 
 echo "Linking project to billing account..."
-if ! gcloud beta billing projects link "$projectName" --billing-account "$billing"; then 
+if ! gcloud beta billing projects link "$projectName" --billing-account "$billing"; then
    echo -e "${red}ERROR: Unable to link project to billing account"
    echo -ne "${white}"
    exit 210
@@ -84,14 +84,14 @@ if ! gcloud services enable sourcerepo.googleapis.com --project "$projectName"; 
    exit 220
 fi
 
-echo "Enabling CloudRun..."
-if ! gcloud services enable run.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable CloudRun API"
+echo "Enabling Compute Engine..."
+if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Compute Engine API"
    echo -ne "${white}"
    exit 221
 fi
 
-echo "Enabling CloudBuild..."
+echo "Enabling CloudRun..."
 if ! gcloud services enable run.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable CloudRun API"
    echo -ne "${white}"
@@ -106,8 +106,14 @@ if ! gcloud services enable artifactregistry.googleapis.com --project "$projectN
 fi
 
 echo "Enabling CloudBuild..."
-if ! gcloud services enable run.googleapis.com --project "$projectName"; then
+if ! gcloud services enable cloudbuild.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable CloudRun API"
    echo -ne "${white}"
    exit 223
+fi
+echo "Enabling Secret Manager..."
+if ! gcloud services enable secretmanager.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Secret Manager API"
+   echo -ne "${white}"
+   exit 224
 fi
