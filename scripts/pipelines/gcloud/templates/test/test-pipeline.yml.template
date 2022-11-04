@@ -19,3 +19,5 @@ steps:
 - id: "Execute test script"
   name: ${_DOCKER_IMAGE}
   args: ['sh', '.pipelines/scripts/test.sh']
+  
+# mark to insert trigger
