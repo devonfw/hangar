@@ -21,7 +21,3 @@ steps:
   - 'PROJECT_ID=$PROJECT_ID'
   
 # mark to insert trigger
-
-
-
-
