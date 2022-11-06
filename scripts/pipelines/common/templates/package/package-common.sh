@@ -61,7 +61,17 @@ then
     fi
 fi
 
-#TODO: When using GCP Artifact Registry, make sure that the Docker repository exists and, if not, create it
+# When using GCP Artifact Registry, make sure that the Docker repository exists before pushing and, if not, create it
+if [[ "$registry" == "docker.pkg.dev" ]];
+then
+    repositoryName=$(echo $imageName | cut -d '/' 3)
+    region=$(echo $imageName | cut -d '-' -f 1-2)
+    if ! gcloud artifacts repositories describe $repositoryName --location=$region &> /dev/null
+    then
+        # We create the Docker repository in Artifact Registry
+        gcloud artifacts repositories create $repositoryName --repository-format=docker --location=$region
+    fi
+fi
 
 # We push the image previously built
 echo "docker push $imageName:$tag_completed"
