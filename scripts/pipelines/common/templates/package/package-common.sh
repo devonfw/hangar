@@ -61,6 +61,8 @@ then
     fi
 fi
 
+#TODO: When using GCP Artifact Registry, make sure that the Docker repository exists and, if not, create it
+
 # We push the image previously built
 echo "docker push $imageName:$tag_completed"
 docker push "$imageName:$tag_completed"
