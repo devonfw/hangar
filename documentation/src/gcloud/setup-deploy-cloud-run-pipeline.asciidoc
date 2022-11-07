@@ -1,6 +1,6 @@
 :provider: Google Cloud
 :pipeline_type: pipeline
-:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline on branches develop or release/*.
+:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline on branches develop or release/*
 :pipeline_type2: pipeline
 :path_provider: gcloud
 :no-PR-or-MR:

@@ -63,5 +63,5 @@ ifdef::machineType[-m, --machine-type                  Machine type for {pipelin
 === Examples
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --service-name quarkus-application --gcloud-region europe-southwest1 --port 80 -b develop {openBrowserFlag}
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n application -l quarkus -d C:/Users/$USERNAME/Desktop/project --service-name application --gcloud-region europe-southwest1 --port 80 -b develop {openBrowserFlag}
 ```
