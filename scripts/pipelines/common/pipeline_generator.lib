@@ -97,6 +97,7 @@ function ensurePathFormat {
     # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a
     # Unix-style path using forward slashes (e.g. "/c/Users").
     localDirectory=${localDirectory//'\'/"/"}
+    localDirectory=${localDirectory//'C:'/"/c"}
     cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
     localDirectory=$(pwd)
 
@@ -141,6 +142,9 @@ function checkInstallations {
         exit 127
     elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
         echo -e "${red}Error: Azure CLI is not installed." >&2
+        exit 127
+    elif ([ "$provider" == "gcloud" ] && ! [ -x "$(command -v gcloud)" ]); then
+        echo -e "${red}Error: gcloud CLI is not installed." >&2
         exit 127
     fi
 
@@ -219,7 +223,7 @@ function commitCommonFiles {
     echo -e "${green}Commiting and pushing into Git remote..."
     echo -ne ${white}
 
-    # Move into the project's directory and pushing the template into the Azure DevOps repository.
+    # Move into the project's directory and pushing the template into the remote repository.
     cd "${localDirectory}"
 
     # Add the YAML files.
