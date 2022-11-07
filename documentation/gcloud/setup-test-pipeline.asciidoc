@@ -7,6 +7,9 @@
 :extra_args_quarkus: --build-pipeline-name quarkus-project-build
 :extra_args_node: --build-pipeline-name node-project-build
 :extra_args_angular: --build-pipeline-name angular-project-build
+:extra_args_python: --language-version 3.10
+:machineType:
+:openBrowserFlag:
 = Setting up a Test {pipeline_type} on {provider}
 
 In this section we will create a test {pipeline_type} on {provider} for running project test cases. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -14,6 +17,7 @@ In this section we will create a test {pipeline_type} on {provider} for running 
 The creation of this {pipeline_type2} will follow the project workflow, so a new branch named `feature/test-pipeline` will be created and the YAML file for the {pipeline_type} will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
+
 
 The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create new branch, create a test {pipeline_type} based on a YAML template appropriate for the project programming language or framework, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
 
@@ -37,7 +41,8 @@ pipeline_generator.sh \
   [--language-version <version>]
   [-a <artifact source path>] \
   [-b <branch>] \
-  [-w]
+  ifndef::no-PR-or-MR[  [-w]]
+  ifdef::machineType[  [-m <machine type for {pipeline_type} runner>]]
 ```
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
@@ -54,7 +59,8 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 -a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 --language-version                     Version number of the language. Only required for python.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+-m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
 ```
 
 === Examples
@@ -65,26 +71,33 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop {openBrowserFlag}
 ```
 
 ===== Quarkus project using JVM
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop {openBrowserFlag}
 ```
 
 ==== Node.js project
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop {openBrowserFlag}
 ```
 
 ==== Angular project
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop {openBrowserFlag}
+```
+
+==== Python project
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n python-project-test -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
 ```
