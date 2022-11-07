@@ -5,4 +5,4 @@
 :path_provider: gcloud
 :no-PR-or-MR:
 :machineType:
-include::../common_templates/setup-deploy-in-cloud-run.asciidoc[]
+include::../common_templates/setup-deploy-cloud-run-pipeline.asciidoc[]
