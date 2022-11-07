@@ -51,7 +51,7 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
 ifeval::["{provider}" == "Google Cloud"]
-    --registry-location [Required, if Flutter] Artifact registry location.
+    --registry-location  [Required, if Flutter] Artifact registry location.
 endif::[]
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
