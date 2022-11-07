@@ -39,8 +39,7 @@ pipeline_generator.sh \
   [--language-version <version>]
   [-a <artifact source path>] \
   [-b <branch>] \
-  ifndef::no-PR-or-MR[  [-w]]
-  ifdef::machineType[  [-m <machine type for {pipeline_type} runner>]]
+  [-w]
 ```
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
