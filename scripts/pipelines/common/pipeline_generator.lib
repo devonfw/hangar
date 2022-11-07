@@ -79,7 +79,7 @@ function help {
       echo ""
       echo "      --service-name                  [Required] Name for the cloud run service."
       echo "      --gcloud-region                 [Required] Region where the service will be deployed."
-      echo "      --port                                     Listening port of the service."
+      echo "      --port                                     Listening port of the service. (default: 8080)"
     fi
 
 
