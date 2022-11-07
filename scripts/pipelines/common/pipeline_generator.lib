@@ -35,8 +35,8 @@ function help {
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
-    [ "$provider" == "azure-devops" ] && [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
-    [ "$provider" == "azure-devops" ] && [ "$provider" == "azure-devops" ] && echo "      --quality-pipeline-name [Required] Quality $pipeline_type name."
+    [ "$provider" == "azure-devops" ] && [ "$provider" == "gcloud" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
+    [ "$provider" == "azure-devops" ] && echo "      --quality-pipeline-name [Required] Quality $pipeline_type name."
     [ "$provider" == "github" ] && echo "      --ci-pipeline-name      [Required] CI $pipeline_type name."
     echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
     echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
@@ -79,7 +79,7 @@ function help {
       echo ""
       echo "      --service-name                  [Required] Name for the cloud run service."
       echo "      --gcloud-region                 [Required] Region where the service will be deployed."
-      echo "      --port                                     Listening port of the service."
+      echo "      --port                                     Listening port of the service. (default=8080)"
     fi
 
 
