@@ -6,7 +6,7 @@
 :extra_args_quarkus:
 :extra_args_node:
 :extra_args_angular:
-:extra_args_python:
+:extra_args_python: --language-version 3.10
 :extra_sentence_ci: Please note that this workflow, although manually triggerable, is designed to be executed as part of a CI workflow, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
 :openBrowserFlag: -w
 = Setting up a Test {pipeline_type} on {provider}
