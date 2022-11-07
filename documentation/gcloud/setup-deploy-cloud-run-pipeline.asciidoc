@@ -1,6 +1,6 @@
 :provider: Google Cloud
 :pipeline_type: pipeline
-:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline on branches develop or release/*.
+:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline on branches develop or release/*
 :pipeline_type2: pipeline
 :path_provider: gcloud
 :no-PR-or-MR:
@@ -58,5 +58,5 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 === Examples
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n quarkus-project-build -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project --service-name quarkus-application --gcloud-region europe-southwest1 --port 80 -b develop {openBrowserFlag}
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n application -l quarkus -d C:/Users/$USERNAME/Desktop/project --service-name application --gcloud-region europe-southwest1 --port 80 -b develop {openBrowserFlag}
 ```
