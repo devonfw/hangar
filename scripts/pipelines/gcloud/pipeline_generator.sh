@@ -67,6 +67,34 @@ function addCommonPipelineVariables {
 
 }
 
+function addMachineType {
+  echo -e "${green}Setting machine type value on pipeline.${white}"
+  echo "" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+  echo "options:" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+  echo "  machineType: $machineType" >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+
+}
+
+function addTriggers {
+    case "$previousPipelineyaml" in
+        "")
+            echo -e "Previous pipeline is not defined. Skipping adding trigger function."
+            ;;
+        "build-pipeline.yml")
+            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
+            sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            ;;
+        "package-pipeline.yml")
+            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
+            sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$_BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\",\"_IMAGE_NAME\":\"'\${_IMAGE_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            ;;
+        *)
+            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
+            sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$_BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            ;;
+    esac
+}
+
 function merge_branch {
     # Check if a target branch is supplied.
     if test -z "$targetBranch"
@@ -98,7 +126,13 @@ function createTrigger {
       gcloud storage buckets create "gs://${gCloudProject}_cloudbuild" --project="${gCloudProject}"
     fi
     # We create the trigger
-    gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+    if [ "$previousPipelineyaml" == "" ]; then #Build trigger, executes when occurs a push to the repo
+        gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+    else #Not build trigger, executed manually
+        #gcloud beta builds triggers create manual --repo="$gCloudRepo" --repo-type="CLOUD_SOURCE_REPOSITORIES" --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+        gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="manualtrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+
+    fi
 }
 
 obtainHangarPath
@@ -124,9 +158,13 @@ type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
 
 copyYAMLFile
 
+[[ "$machineType" != "" ]] && addMachineType
+
 copyCommonScript
 
 type copyScript &> /dev/null && copyScript
+
+addTriggers
 
 commitCommonFiles
 
