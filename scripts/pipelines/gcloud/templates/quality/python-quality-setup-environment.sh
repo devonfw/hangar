@@ -1,3 +1,4 @@
+#!/bin/bash
 # Installation of sonar scanner 
 apt-get update
 apt-get install unzip wget nodejs
