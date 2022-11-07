@@ -96,5 +96,5 @@ ifdef::machineType[-m, --machine-type                  Machine type for {pipelin
 ==== Flutter project
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n flutter-project-build -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project -b develop --language-version web --registry-location europe-southwest1 {openBrowserFlag}
+./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n flutter-project-build -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project -b develop --language-version 3.3.4 --registry-location europe {openBrowserFlag}
 ```

@@ -109,7 +109,7 @@ function ensurePathFormat {
     # Unix-style path using forward slashes (e.g. "/c/Users").
     localDirectory=${localDirectory//'\'/"/"}
     localDirectory=${localDirectory//'C:'/"/c"}
-    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)." >&2; echo -ne "${white}" >&2; exit 2; }    
+    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)." >&2; echo -ne "${white}" >&2; exit 2; }
     localDirectory=$(pwd)
 
     # Return to initial directory
@@ -266,7 +266,7 @@ function setTargetDirectory {
 function languageVersionVerification {
     if [ "$language" == "python" ] && [ "" == "$languageVersion" ]
     then
-        echo -e "${red}Language given is Python. It is required to use --version flag.${white}"
+        echo -e "${red}Error: Language given requires --version flag.${white}" >&2
         exit 1
     fi
     if [ "$language" == "flutter" ] && [ "" == "$languageVersion" ]
