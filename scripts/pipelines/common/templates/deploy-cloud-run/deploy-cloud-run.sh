@@ -1,19 +1,25 @@
 #!/bin/bash
 set -e
 
-projectId="$1"
-branch="$2"
-serviceName="$3"
-imageName="$4"
-gCloudRegion="$5"
-port="$6"
-registry="$7"
-dockerUser="$8"
-dockerPassword="$9"
-awsAccessKey="${10}"
-awsSecretAccessKey="${11}"
-awsRegion="${12}"
-
+while getopts d:u:p:r:i:b:a:s:l:n:g:t: flag
+do
+    case "${flag}" in
+        d) projectId=${OPTARG};;
+        u) dockerUser=${OPTARG};;
+        p) dockerPassword=${OPTARG};;
+        r) registry=${OPTARG};;
+        i) imageName=${OPTARG};;
+        b) branch=${OPTARG};;
+        a) awsAccessKey=${OPTARG};;
+        s) awsSecretAccessKey=${OPTARG};;
+        l) awsRegion=${OPTARG};;
+        n) serviceName=${OPTARG};;
+        g) gCloudRegion=${OPTARG};;
+        t) port=${OPTARG};;
+        *) echo "Error: Unexpected flag." >&2
+            exit 1;;
+    esac
+done
 
 . "$(dirname "$0")/package-extra.sh"
 # we get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
