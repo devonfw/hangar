@@ -1,0 +1,180 @@
+default:
+  image:
+    name: ubuntu:latest
+    entrypoint:
+      - /usr/bin/env
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never  
+
+variables:
+ CLUSTER_NAME: 
+   value: "$clusterName"
+   description: "Name for the cluster" 
+ OPERATION: 
+   value: "$operation"
+   description: "Operation to perform on cluster. Create or Destroy."   
+ INSTALL_RANCHER:
+   value: "$installRancher"   
+   description: "Installs rancher when set to true."    
+ TF_STATE_NAME: 
+   value: "$terraformEKSState"
+   description: "Terraform EKS State Name"
+ TF_CACHE_KEY: default
+ TF_ROOT: "${CI_PROJECT_DIR}/.terraform/eks"
+ TF_USERNAME: ${GITLAB_USER_NAME}
+ TF_PASSWORD: ${GITLAB_TOKEN}
+ TF_ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${TF_STATE_NAME}"
+ TF_HTTP_ADDRESS: ${TF_ADDRESS}  
+ TF_HTTP_LOCK_ADDRESS: ${TF_ADDRESS}/lock
+ TF_HTTP_LOCK_METHOD: POST
+ TF_HTTP_UNLOCK_ADDRESS: ${TF_ADDRESS}/lock
+ TF_HTTP_UNLOCK_METHOD: DELETE
+ TF_HTTP_USERNAME: ${TF_USERNAME}
+ TF_HTTP_PASSWORD: ${TF_PASSWORD}
+ TF_HTTP_RETRY_WAIT_MIN: 5
+
+
+.install_prerequisites: &install_prerequisites
+  before_script:
+    - apt-get update
+    - apt-get install sudo -y
+    - apt-get install curl -y
+    - apt-get install zip -y
+    - apt-get install wget -y
+    - apt-get install git -y
+
+.download_terraform: &download_terraform
+  - wget -nv https://releases.hashicorp.com/terraform/1.2.6/terraform_1.2.6_linux_amd64.zip
+  
+.install_terraform: &install_terraform
+  - unzip -qq terraform_1.2.6_linux_amd64.zip
+  - sudo mv terraform /usr/local/bin
+
+.download_awscli: &download_awscli
+  # INSTALL AWS CLI
+  - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+.install_awscli: &install_awscli
+  - unzip -qq awscliv2.zip
+  - sudo ./aws/install
+
+.update_kubeconfig: &update_kubeconfig 
+  - aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${region}	
+
+
+.download_kubectl: &download_kubectl
+  - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  - chmod +x ./kubectl
+
+.install_kubectl: &install_kubectl
+  - mv ./kubectl /usr/local/bin/kubectl
+
+.download_helm: &download_helm
+  - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+  - chmod +x get_helm.sh
+
+.install_helm: &install_helm
+  - DESIRED_VERSION=v3.9.0 ./get_helm.sh	
+
+.packages: &configure_packages   
+  # INSTALL KUBECTL
+  - *download_kubectl
+  - *install_kubectl
+  # INSTALL HELM
+  - *download_helm
+  - *install_helm
+
+check_input:
+  script: |
+      if [ "$CLUSTER_NAME" == "" ]; then
+        echo "Cluster Name is required."
+        exit 1;
+      fi
+      if [ "$OPERATION" == "" ]; then
+        echo "Operation is required. Create or Destroy"
+        exit 1;
+      fi
+
+provision_eks:
+  needs: [check_input]
+  <<: *install_prerequisites
+  script:
+    - mkdir -p eks-pipeline-cache
+    - cd eks-pipeline-cache
+    - *download_terraform
+    - *install_terraform
+    - cd ..
+    - cd ${TF_ROOT}
+    - terraform init -var cluster_name=${CLUSTER_NAME}
+    - terraform apply -var cluster_name=${CLUSTER_NAME} --auto-approve
+  cache:    
+    key: "eks-pipeline-cache"
+    paths:
+      - ./eks-pipeline-cache
+  rules:
+    - if: '$OPERATION == "create"'
+      when: always
+
+install_nginx:
+  <<: *install_prerequisites
+  needs: [provision_eks]
+  script:
+    - cd eks-pipeline-cache
+    - ls -lrt
+    - *download_awscli
+    - *install_awscli
+    - *update_kubeconfig
+    - *configure_packages   
+    # INSTALL NGINX INGRESS CONTROLLER
+    - ./.pipelines/scripts/install-ingress-controller.sh
+    - ./.pipelines/scripts/obtain-dns.sh   
+  cache:    
+    key: "eks-pipeline-cache"
+    paths:
+      - ./eks-pipeline-cache
+  rules:
+    - if: '$OPERATION == "create"'
+      when: always
+
+install_rancher:
+  <<: *install_prerequisites
+  needs: [install_nginx]
+  cache:    
+    key: "eks-pipeline-cache"
+    paths:
+      - ./eks-pipeline-cache
+  script:
+    - cd eks-pipeline-cache
+    - ls -lrta
+    - *install_awscli
+    - *update_kubeconfig
+    - *install_kubectl
+    - *install_helm
+    # INSTALL RANCHER
+    - ./install-rancher.sh
+  rules:
+    - if: '$OPERATION == "create"'
+      when: always
+
+destroy_terraform:
+  needs: [check_input]
+  <<: *install_prerequisites
+  script:
+    - *download_terraform
+    - *install_terraform
+    - cd ${TF_ROOT}
+    - *update_kubeconfig
+    - helm list --all-namespaces
+    - helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 helm delete
+    - echo 'LIST OF RELEASES AFTER HELM UNINSTALL..'
+    - helm list --all-namespaces
+    - terraform init
+    - terraform apply -destroy --auto-approve
+  rules:
+    - if: '$OPERATION == "destroy"'
+      when: always   

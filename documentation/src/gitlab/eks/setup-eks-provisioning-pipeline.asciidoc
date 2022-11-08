@@ -1,0 +1,5 @@
+:provider: Gitlab
+:pipeline_type: pipeline
+:path_provider: gitlab
+:trigger_sentence_gitlab: This pipeline will be configured to be executed inside a CI pipeline
+include::../../common_templates/setup-eks-provisioning-pipeline.asciidoc[]  
