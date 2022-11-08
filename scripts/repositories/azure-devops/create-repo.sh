@@ -1,4 +1,5 @@
 #!/bin/bash
+provider="Azure"
 function create_repo_content {
     #We redirect the output to a tmp file to be able to parse the content and get the repository Id we will need later
     json_repo=$(az repos create --name "$1" --organization "${2}" --project "$3")
@@ -34,15 +35,17 @@ function prepare_push_existing_repo_content {
 }
 
 function arguments_check_content {
-if [ "${organization}" = "" ] || [ "$project" = "" ]
-then
-  echo -e "${red}You chose an Azure repository as target but one of these mandatory flags is missing: -o, -p."
-  echo "Use -h or --help flag to display help."
-  exit 1
-fi
+    if [ "${organization}" = "" ] || [ "$project" = "" ]
+    then
+    echo -e "${red}You chose an Azure repository as target but one of these mandatory flags is missing: -o, -p."
+    echo "Use -h or --help flag to display help."
+    echo -e "${white}"
+    exit 1
+    fi
 }
 
 function custom_vars_assignment {
+    #Initialising variables used in common script by other providers to prevent errors
     ghuser=""
 }
 
