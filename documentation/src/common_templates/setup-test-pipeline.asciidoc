@@ -102,3 +102,10 @@ ifdef::machineType[-m, --machine-type                  Machine type for {pipelin
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n python-project-test -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
 ```
+
+==== Flutter project
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n flutter-project-test -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
+```
