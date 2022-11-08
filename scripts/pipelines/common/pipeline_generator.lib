@@ -143,7 +143,6 @@ function checkInstallations {
     elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
         echo -e "${red}Error: Azure CLI is not installed." >&2
         exit 127
-    fi
     elif ([ "$provider" == "gcloud" ] && ! [ -x "$(command -v gcloud)" ]); then
         echo -e "${red}Error: gcloud CLI is not installed." >&2
         exit 127
@@ -242,6 +241,7 @@ function setTargetDirectory {
   case $language in
       node | angular) targetDirectory="./" ;;
       quarkus*) targetDirectory="./target/" ;;
+      python) targetDirectory="./venv" ;;
       *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
   esac
 }

@@ -4,5 +4,5 @@ coverage report
 coverage xml
 
 projectKey=$(grep -m 1 name pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
-sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey=$projectKey -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.exclusions=venv/lib/python3.10/site-packages/**
+sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey=$projectKey -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.exclusions=venv/**
 

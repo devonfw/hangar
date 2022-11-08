@@ -7,15 +7,13 @@ steps:
 - name: ${_DOCKER_IMAGE}
   entrypoint: bash
   secretEnv: ['SONAR_TOKEN']
-  env: 
+  env:
     - PROJECT_PATH=./
     - SONAR_URL=${_SONAR_URL}
   args:
   - -c
   - |
     set -ex
-    apt-get update
-    apt-get install openjdk-17-jre -y
     # In case of more than 1 tar, we extract the most recent one)
     for i in $(ls -t build_*.tar)
     do
