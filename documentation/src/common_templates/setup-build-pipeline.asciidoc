@@ -35,6 +35,7 @@ pipeline_generator.sh \
 ifeval::["{provider}" == "Google Cloud"]
   --registry-location <artifact registry> \
 endif::[]
+  --language-version <language version> \
   [-t <target-directory>] \
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
@@ -53,6 +54,7 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 ifeval::["{provider}" == "Google Cloud"]
     --registry-location  [Required, if Flutter] Artifact registry location.
 endif::[]
+    --language-version   [Required, if Flutter or Python] Language or framework version.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
