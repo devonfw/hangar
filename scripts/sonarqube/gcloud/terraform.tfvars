@@ -1,5 +1,5 @@
 #service account credentials file
-service_account_file = ".key-secrets/test-jorge-367510.json"
+service_account_file = ".secrets/test-jorge-367510-2.json"
 #The ID of the project in which the resource belongs
 project = "test-jorge-367510"
 #GCloud region code of the location where the resources will be created
