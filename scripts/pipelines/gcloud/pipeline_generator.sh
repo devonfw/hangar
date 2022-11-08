@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,--secret-files:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -30,6 +30,7 @@ while true; do
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
+        --secret-files)           secreFiles="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
         --) shift; break;;
     esac
@@ -44,6 +45,7 @@ red='\e[0;31m'
 commonTemplatesPath="scripts/pipelines/gcloud/templates/common" # Path for common files of the pipelines
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
+configFilePath=".pipelines/config" # Path to the scripts.
 export provider="gcloud"
 pipeline_type="pipeline"
 
@@ -116,6 +118,18 @@ function createTrigger {
     fi
     # We create the trigger
     gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
+}
+
+function add_secret_files {
+  # This function is used to store files as secret
+  for file_downloadPath in "$secreFiles"
+  do
+    filePath=$(echo $file_downloadPath | cut -d: -f1)
+    fileName=$(basename "$filePath")
+    downloadPath=$(echo $file_downloadPath | cut -d: -f2)
+    gcloud secrets versions add $fileName --data-file="$filePath"
+    echo "$fileName=$downloadPath" >> "${localDirectory}/${configFilePath}/pathsSecreFiles.conf"
+  done
 }
 
 obtainHangarPath
