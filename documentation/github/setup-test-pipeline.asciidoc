@@ -7,6 +7,7 @@
 :extra_args_node:
 :extra_args_angular:
 :extra_args_python: --language-version 3.10
+:extra_args_flutter: --language-version 3.0.4
 :extra_sentence_ci: Please note that this workflow, although manually triggerable, is designed to be executed as part of a CI workflow, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
 :openBrowserFlag: -w
 = Setting up a Test {pipeline_type} on {provider}
@@ -97,4 +98,11 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n python-project-test -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
+```
+
+==== Flutter project
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n flutter-project-test -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
 ```
