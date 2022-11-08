@@ -10,5 +10,6 @@
 :no-PR-or-MR:
 :build-pipeline:
 :machineType:
+:openBrowserFlag:
 include::../common_templates/setup-quality-pipeline.asciidoc[]
 
