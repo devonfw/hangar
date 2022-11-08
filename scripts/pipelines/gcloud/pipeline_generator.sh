@@ -76,7 +76,8 @@ function getProjectRepo {
   # Function used to get the repo name and project ID
   cd "$localDirectory"
   gitOriginUrl=$(git config --get remote.origin.url)
-  export gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+  gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+  export gCloudProject
   gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
 }
 
