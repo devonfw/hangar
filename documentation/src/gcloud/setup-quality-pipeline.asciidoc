@@ -1,0 +1,14 @@
+:provider: Google Cloud
+:pipeline_type: pipeline
+:trigger_sentence: This workflow will be configured to be executed after the test pipeline on any branch
+:pipeline_type2: pipeline
+:path_provider: gcloud
+:extra_args_quarkus: --build-pipeline-name quarkus-project-build
+:extra_args_node: --build-pipeline-name node-project-build
+:extra_args_angular: --build-pipeline-name angular-project-build
+:extra_args_python: --build-pipeline-name python-project-build
+:no-PR-or-MR:
+:build-pipeline:
+:machineType:
+include::../common_templates/setup-quality-pipeline.asciidoc[]
+
