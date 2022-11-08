@@ -55,7 +55,7 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 -d, --local-directory       [Required] Local directory of your project.
     --build-pipeline-name   [Required] Build {pipeline_type} name.
 -a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
---language-version                     Version number of the language. Only required for python.
+    --language-version                     Version number of the language. Only required for python.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
