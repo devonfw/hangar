@@ -1,4 +1,11 @@
 steps:
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      [[ -f .pipelines/scripts/get-secret.sh ]] || exit 0 && .pipelines/scripts/get-secret.sh
+
 - name: ${_DOCKER_IMAGE}
   args: ['sh', '.pipelines/scripts/build.sh']
 

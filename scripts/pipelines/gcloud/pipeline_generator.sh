@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,--secret-files:,help" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,secret-files:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -120,16 +120,27 @@ function createTrigger {
     gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
 }
 
-function add_secret_files {
+function addSecretFiles {
   # This function is used to store files as secret
-  for file_downloadPath in "$secreFiles"
+  echo -e "${green}Uploading secret files...${white}"
+  for file_downloadPath in $secreFiles
   do
     filePath=$(echo $file_downloadPath | cut -d: -f1)
     fileName=$(basename "$filePath")
-    downloadPath=$(echo $file_downloadPath | cut -d: -f2)
-    gcloud secrets versions add $fileName --data-file="$filePath"
-    echo "$fileName=$downloadPath" >> "${localDirectory}/${configFilePath}/pathsSecreFiles.conf"
+    secretName=$(echo "${fileName}" | sed 's/\W/_/g')
+    downloadPath="$(echo $file_downloadPath | cut -d: -f2)/${fileName}"
+    if ! gcloud secrets versions access latest --secret="$secretName" &>/dev/null; then
+        echo "gcloud secrets create $secretName"
+        gcloud secrets create "$secretName" --replication-policy="automatic"
+    fi
+    echo "gcloud secrets versions add \"$secretName\" --data-file=\"${currentDirectory}/${filePath}\""
+    gcloud secrets versions add "$secretName" --data-file="${currentDirectory}/${filePath}"
+    mkdir -p "${localDirectory}/${configFilePath}"
+    echo "$secretName=$downloadPath" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
+    echo -e "${green}${fileName}: Done.${white}"
   done
+  cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret.sh" "${localDirectory}/${scriptFilePath}/get-secret.sh"
+  echo ""
 }
 
 obtainHangarPath
@@ -154,6 +165,8 @@ type addPipelineVariables &> /dev/null && addPipelineVariables
 type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
 
 copyYAMLFile
+
+addSecretFiles
 
 copyCommonScript
 
