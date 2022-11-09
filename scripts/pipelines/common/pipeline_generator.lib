@@ -30,7 +30,7 @@ function help {
     [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
-    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
+    [ "$provider" == "azure-devops" ] || [ "$provider" == "gcloud" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
     [ "$provider" == "azure-devops" ] && echo "      --test-pipeline-name    [Required] Test $pipeline_type name."
     echo ""
     [ "$provider" == "github" ] && echo ""
