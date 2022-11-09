@@ -94,11 +94,11 @@ function addCommonPipelineVariables {
 
 function addMachineType {
   echo -e "${green}Setting machine type value on pipeline.${white}"
-{
-  echo ""
-  echo "options:"
-  echo "  machineType: $machineType"
-} >> "${localDirectory}/${pipelinePath}/${yamlFile}"
+  {
+    echo ""
+    echo "options:"
+    echo "  machineType: $machineType"
+  } >> "${localDirectory}/${pipelinePath}/${yamlFile}"
 
 }
 
