@@ -8,7 +8,6 @@ environment:
 
 dependencies:
   args: ^2.3.1 
-  logging: ^1.1.0
   logger: ^1.1.0
   takeoff_lib:
     path: '../lib'
