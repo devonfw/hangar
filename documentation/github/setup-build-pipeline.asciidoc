@@ -31,7 +31,7 @@ pipeline_generator.sh \
   -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-  --language-version <language version> \
+  --language-version <version> \
   [-t <target-directory>] \
   [-b <branch>] \
   [-w]
