@@ -1,4 +1,5 @@
 #!/bin/bash
+pip install coverage
 coverage run -m unittest
 coverage report
 coverage xml
