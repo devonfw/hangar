@@ -234,8 +234,7 @@ function prepare_push_existing_repo {
   echo "--"
   echo -e "${blue}Start of the function to import a directory/repository.${white}"
   echo ""
-  git rev-parse --git-dir &> /dev/null
-  isGitRepo="$?"
+  git rev-parse --git-dir &> /dev/null && isGitRepo="$?"  || isGitRepo="$?"
   if [ $isGitRepo -eq 0 ]
   then
     echo "$(pwd) is already a git repository, skipping git init and first commit."
