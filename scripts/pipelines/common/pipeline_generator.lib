@@ -233,7 +233,7 @@ function commitCommonFiles {
     # changing all files to be executable
     find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
 
-    git commit -m "Adding the source YAML"
+    git commit -m "[skip ci] Adding the source YAML"
     git push -u origin ${sourceBranch}
 }
 
