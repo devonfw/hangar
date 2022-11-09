@@ -1,24 +1,36 @@
-:provider_name: AWS
-:container_instance_type: an AWS EC2 instance
-:provider_path: aws
-:terraform_vars: --region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
+:provider_name: Google Cloud
+:container_instance_type: a Compute Engine VM instance
+:provider_path: gcloud
+:terraform_vars: --service_account_file key.json --project hangar --region europe-southwest1 --zone europe-southwest1-a --subnet_cidr_block 10.0.1.0/24 -- instance_type e2-medium
 = Setting up a SonarQube instance in {provider_name}
 
 The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
 
 == Getting Started
 === Prerequisites
-* https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started[Install Terraform].
+* https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli[Install Terraform].
 
-* https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
+* https://cloud.google.com/sdk/docs/install-sdk[Install Google Cloud CLI].
 
-* Have a SSH keypair for the SonarQube instance. You can use an existing one or create a new one with the following command:
+* Enable Compute Engine in your gcloud project. You can do it via webconsole or via glcoud cli using the following command:
 
 ```
-aws ec2 create-key-pair --key-name sonarqube --query 'KeyMaterial' --output text > sonarqube.pem
+gcloud services enable compute.googleapis.com --project "$projectName"
 ```
 
-IMPORTANT: This will create a public key, directly stored in AWS (current region only), and a private key stored in the `sonarqube.pem` file, that will be necessary if you ever need to access the instance, so be sure you store it securely.
+* Have a service account that is going to be used by terraform with the next roles:
+
+```
+roles/compute.instanceAdmin.v1
+roles/compute.networkAdmin
+roles/compute.securityAdmin
+```
+
+IMPORTANT: You need the key.json file of that service account to run terraform as it.
+
+More information about terraform for gcloud in:
+- https://cloud.google.com/docs/terraform[Official Gcloud documentation]
+- https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/[Official Terraform tutorials]
 
 === Relevant files
 
