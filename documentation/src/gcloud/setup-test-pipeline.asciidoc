@@ -8,6 +8,7 @@
 :extra_args_node: --build-pipeline-name node-project-build
 :extra_args_angular: --build-pipeline-name angular-project-build
 :extra_args_python: --language-version 3.10
+:extra_args_flutter: --language-version 3.3.4
 :no-PR-or-MR:
 :machineType:
 :openBrowserFlag:
