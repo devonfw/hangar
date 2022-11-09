@@ -85,4 +85,9 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n python-project-quality -l python --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
-```
+
+==== Flutter project
+
+[subs=attributes+]
+
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n flutter-project-quality -l flutter --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
