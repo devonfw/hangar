@@ -3,9 +3,9 @@
 :trigger_sentence: This workflow will be configured to be executed after the test pipeline on any branch
 :pipeline_type2: pipeline
 :path_provider: gcloud
-:extra_args_quarkus: --build-pipeline-name quarkus-project-build
-:extra_args_node: --build-pipeline-name node-project-build
-:extra_args_angular: --build-pipeline-name angular-project-build
+:extra_args_quarkus: --build-pipeline-name quarkus-project-build --test-pipeline-name quarkus-project-test
+:extra_args_node: --build-pipeline-name node-project-build --test-pipeline-name node-project-test
+:extra_args_angular: --build-pipeline-name angular-project-build --test-pipeline-name angular-project-test
 :extra_args_python: --build-pipeline-name python-project-build --test-pipeline-name python-project-test
 :extra_args_flutter: --build-pipeline-name flutter-project-build --test-pipeline-name flutter-project-test
 :no-PR-or-MR:
