@@ -10,6 +10,7 @@ function help {
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after $pipeline_type execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     [[ "$provider" != "gcloud" ]] && echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    [[ "$provider" == "gcloud" ]] && echo "      --secret-files                     Files that needs to be uploaded as secret. Refer to documentation for the syntax."
     echo ""
     echo "Build $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
