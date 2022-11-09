@@ -153,7 +153,7 @@ function createTrigger {
 # Function that checks whether Flutter image exists, if not a new image is created with the specified version
 function checkOrUploadFlutterImage {
     # Switch gcloud project
-    gcloud config set project $gCloudProject
+    gcloud config set project "$gCloudProject"
     # The user must specify an artifact registry region
     if [[ "$registryLocation" == "" ]]
     then
@@ -163,18 +163,18 @@ function checkOrUploadFlutterImage {
     fi
 
     # If flutter repository does not exists it will be created
-    if [[ `gcloud artifacts repositories list | awk '$1=="flutter" {print $1}'` == "" ]]
+    if [[ $(gcloud artifacts repositories list | awk '$1=="flutter" {print $1}') == "" ]]
     then
         gcloud beta artifacts repositories create flutter --repository-format=docker --location=$registryLocation
     fi
 
     imageTag="${registryLocation}-docker.pkg.dev/${gCloudProject}/flutter/flutter"
     # If no flutter image exists with specified version, it will built and uploaded
-    if [[ `gcloud artifacts docker images list $imageTag --include-tags | awk '$3=="${languageVersion}" {print $3}'` == "" ]]
+    if [[ $(gcloud artifacts docker images list "$imageTag" --include-tags | awk '$3=="${languageVersion}" {print $3}') == "" ]]
     then
         cd "${hangarPath}/${commonPipelineTemplatesPath}"/images/flutter
         gcloud builds submit . --substitutions _FLUTTER_VERSION="${languageVersion}",_REGISTRY_LOCATION="${registryLocation}"
-        cd $currentPath
+        cd "$currentDirectory"
     fi
 }
 
