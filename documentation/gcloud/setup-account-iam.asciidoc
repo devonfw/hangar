@@ -1,0 +1,98 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+= Setup Google Cloud account IAM
+The scope of this section is to prepare a Google Cloud account to be ready for setting up a Cloud Dev & Run environment later on. By the end of this guide, a Principal (existing end user account or new/existing service account) will be enrolled to an existing project with the required roles attached.
+
+== Prerequisites
+
+* Have a Google Cloud project already setup and Google Cloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
+* A Google Cloud account with owner privileges on the project.
+
+=== Alternative
+
+In case you do not have an account or it does not have owner privileges on the project, request a service account to your Google Cloud administrator asking for the following roles being attached. Then go to <<check-roles-and-permissions-of-a-principal>>.
+
+==== Required predefined roles
+
+Find them on `/scripts/accounts/gcloud/predefined-roles.txt`.
+
+== Setting up a principal using provided script
+
+The script located at `/scripts/accounts/gcloud/setup-principal-account.sh` will automatically attach the required roles to the principal, in the context of the provided project.
+
+=== Usage
+```
+setup-principal-account.sh \
+  -g <google account> \
+  -s <service account name> \
+  -p <project id> \
+  [-r <roles...>] \
+  [-f <roles file path>] \
+  [-c <custom role file path>] \
+  [-i <custom role id>]
+```
+
+=== Flags
+```
+-g      [Required] Google Account of an end user. Mutually exclusive with -s.
+-s      [Required] Service Account name. Mutually exclusive with -g.
+-p      [Required] Short project name (ID) to which the principal will be enrolled.
+-r                 Roles (basic or predefined) to be attached to the principal in the project, splitted by comma.
+-f                 Path to a file containing the roles (basic or predefined) to be attached to the principal in the project.
+-c                 Path to a YAML file containing the custom role to be attached to the principal in the project. Requires -i.
+-i                 ID to be set to the custom role provided in -c.
+```
+
+=== Example
+```
+./setup-principal-account.sh -s ExampleServiceAccount -p ExampleProject -f ./predefined-roles.txt
+```
+
+NOTE: Required roles are located at `/scripts/accounts/gcloud/predefined-roles.txt`.
+
+TIP: You can find an example of a custom role at `/scripts/accounts/gcloud/custom-role-example.yaml`.
+
+=== After execution
+On success and in case of creating a new service account (as in the example), a `key.json` file containing credentials will be generated. It will be used on further steps for authenticating with Google Cloud without human intervention.
+
+IMPORTANT: It is mandatory to store the `key.json` file securely at this point, as *it will not be retrievable again*.
+
+== Check roles and permissions of a principal
+
+The script located at `/scripts/accounts/gcloud/verify-principal-roles-and-permissions.sh` will automatically check that the necessary roles and permissions are bound to the principal, in the context of the provided project.
+
+=== Usage
+```
+verify-principal-roles-and-permissions.sh \
+  -g <google account> \
+  -s <service account name> \
+  -p <project id> \
+  [-r <roles...>] \
+  [-f <roles file path>] \
+  [-e <permissions...>] \
+  [-i <permissions file path>]
+```
+
+=== Flags
+```
+-g      [Required] Google Account of an end user. Mutually exclusive with -s.
+-s      [Required] Service Account name. Mutually exclusive with -g.
+-p      [Required] Short project name (ID) where the roles and permissions will be checked.
+-r                 Roles to be checked, splitted by comma.
+-f                 Path to a file containing the roles to be checked.
+-e                 Permissions to be checked, splitted by comma.
+-i                 Path to a file containing the permissions to be checked.
+```
+
+=== Example
+```
+./verify-principal-roles-and-permissions.sh -s ExampleServiceAccount -p ExampleProject -f ./predefined-roles.txt
+```
+
+After execution, provided policies will be shown preceded by an `OK` or `FAILED` depending on the attachment status.
+
+NOTE: Required roles are located at `/scripts/accounts/gcloud/predefined-roles.txt`
+
+TIP: You can find a non-comprehensive example of required permisions at `/scripts/accounts/gcloud/required-permissions-example.txt`.
