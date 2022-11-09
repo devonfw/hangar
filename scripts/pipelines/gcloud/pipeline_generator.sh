@@ -125,10 +125,11 @@ function addSecretFiles {
   echo -e "${green}Uploading secret files...${white}"
   for file_downloadPath in $secreFiles
   do
-    filePath=$(echo $file_downloadPath | cut -d: -f1)
+    filePath=$(echo "$file_downloadPath" | cut -d: -f1)
     fileName=$(basename "$filePath")
+    # Here we changed all the non alphanumeric+_ charachter to _ (Because Google does not accept those character as name of secret)
     secretName=$(echo "${fileName}" | sed 's/\W/_/g')
-    downloadPath="$(echo $file_downloadPath | cut -d: -f2)/${fileName}"
+    downloadPath="$(echo "$file_downloadPath" | cut -d: -f2)/${fileName}"
     if ! gcloud secrets versions access latest --secret="$secretName" &>/dev/null; then
         echo "gcloud secrets create $secretName"
         gcloud secrets create "$secretName" --replication-policy="automatic"
