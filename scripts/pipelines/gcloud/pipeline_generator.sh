@@ -165,7 +165,7 @@ function checkOrUploadFlutterImage {
     # If flutter repository does not exists it will be created
     if [[ $(gcloud artifacts repositories list | awk '$1=="flutter" {print $1}') == "" ]]
     then
-        gcloud beta artifacts repositories create flutter --repository-format=docker --location=$registryLocation
+        gcloud beta artifacts repositories create flutter --repository-format=docker --location="$registryLocation"
     fi
 
     imageTag="${registryLocation}-docker.pkg.dev/${gCloudProject}/flutter/flutter"
