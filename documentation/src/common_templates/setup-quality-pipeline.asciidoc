@@ -82,6 +82,7 @@ ifdef::machineType[-m, --machine-type                      Machine type for {pip
 ```
 ./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n angular-project-quality -l angular --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/angular-project {extra_args_angular} -b develop {openBrowserFlag}
 ```
+
 ==== Python project
 
 [subs=attributes+]
