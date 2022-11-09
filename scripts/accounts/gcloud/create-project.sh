@@ -98,9 +98,9 @@ if ! gcloud services enable artifactregistry.googleapis.com --project "$projectN
    exit 222
 fi
 
-echo "Enabling Compute Engine..."
-if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable Compute Engine API"
+echo "Enabling CloudBuild..."
+if ! gcloud services enable cloudbuild.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable CloudRun API"
    echo -ne "${white}"
    exit 223
 fi
@@ -110,4 +110,11 @@ if ! gcloud services enable secretmanager.googleapis.com --project "$projectName
    echo -e "${red}Error: Cannot enable Secret Manager API"
    echo -ne "${white}"
    exit 224
+fi
+
+echo "Enabling Compute Engine..."
+if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Compute Engine API"
+   echo -ne "${white}"
+   exit 225
 fi
