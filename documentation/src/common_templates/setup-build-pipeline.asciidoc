@@ -35,7 +35,7 @@ pipeline_generator.sh \
 ifeval::["{provider}" == "Google Cloud"]
   --registry-location <artifact registry> \
 endif::[]
-  --language-version <language version> \
+  --language-version <version> \
   [-t <target-directory>] \
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
