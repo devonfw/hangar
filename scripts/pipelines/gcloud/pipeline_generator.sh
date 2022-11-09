@@ -149,9 +149,9 @@ function createTrigger {
       gcloud storage buckets create "gs://${gCloudProject}_cloudbuild" --project="${gCloudProject}"
     fi
     # We create the trigger
-    if [ "$previousPipelineyaml" == "" ]; then #Build trigger, executes when occurs a push to the repo
+    if [ "$previousPipelineyaml" == "" ]; then # Initial trigger, executes when occurs a push to the repo
         gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="$branchTrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
-    else #Not build trigger, executed manually
+    else # Chained trigger, executed manually
         gcloud beta builds triggers create cloud-source-repositories --repo="$gCloudRepo" --branch-pattern="manualtrigger"  --build-config="${pipelinePath}/${yamlFile}" --project="$gCloudProject" --name="$pipelineName" --description="$triggerDescription" --substitutions "${subsitutionVariable}${artifactPathSubStr}"
     fi
 }
