@@ -86,5 +86,5 @@ ifdef::machineType[-m, --machine-type                      Machine type for {pip
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n python-project-quality -l angular --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/python-project {extra_args_angular} -b develop {openBrowserFlag}
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n python-project-quality -l python --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
 ```
