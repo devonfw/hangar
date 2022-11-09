@@ -1,0 +1,62 @@
+# tag::partBeforePrerequisites[]
+= Setting up a SonarQube instance in {provider_name}
+
+The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
+
+== Getting Started
+# end::partBeforePrerequisites[]
+# tag::partAfterPrerequisites[]
+=== Relevant files
+
+* `main.tf` contains declarative definition written in HCL of AWS infrastructure.
+* `../common/setup_sonarqube.sh` script to be run on {container_instance_type} that installs and deploys a container running SonarQube.
+* `variables.tf` contains variable definition for `main.tf`.
+* `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
+* `terraform.tfstate` contains current state of the created infrastructure. It is generated after use it and should be stored securely.
+* `set-terraform-variables.sh` assists user in setting the values of `terraform.tfvars`.
+
+== Usage
+
+First, you need to initialize the working directory containing Terraform configuration files (located at `/scripts/sonarqube/{provider_path}`) and install any required plugins:
+
+```
+terraform init 
+```
+
+Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script, which allows you to create or update values for the required variables, passing them as flags. As a full example:
+
+```
+./set-terraform-variables.sh {terraform_vars}
+```
+
+WARNING: Unless changed, some of the variables used to deploy by default probably do not exist in your environment of {provider_name}.
+
+NOTE: To learn more about what is each variable read the description in the file `variables.tf` or `terraform.tfvars`.
+
+Finally, deploy SonarQube instance:
+
+```
+terraform apply --auto-approve 
+```
+
+NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on. *Remember to securely store `terraform.tfstate` file*, otherwise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
+
+In particular, this will create an Ubuntu-based in {container_instance_type} and deploy a Docker container running SonarQube. 
+
+You will get the public IP address of {container_instance_type} as output. Take note of it, you will need it later on.
+
+After a few minutes, you will be able to access SonarQube web interface on `+http://sonarqube_public_ip:9000+` (replace with actual IP) with the following credentials:
+
+* Username:   `admin`
+* Password:   `admin`
+
+IMPORTANT: Change the default password promptly.
+
+== Appendix: Destroy SonarQube instance
+
+As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can easily destroy it and all associated resources by executing:
+
+```
+terraform destroy
+```
+# end::partAfterPrerequisites[]

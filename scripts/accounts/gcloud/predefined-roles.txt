@@ -2,3 +2,6 @@ roles/viewer
 roles/source.admin
 roles/secretmanager.admin
 roles/cloudbuild.builds.editor
+roles/compute.instanceAdmin.v1
+roles/compute.networkAdmin
+roles/compute.securityAdmin
