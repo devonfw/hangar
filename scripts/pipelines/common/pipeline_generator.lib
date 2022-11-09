@@ -264,7 +264,7 @@ function setTargetDirectory {
 }
 
 function languageVersionVerification {
-    if [ "$language" == "flutter" ] && [ "" == "$languageVersion" ]
+    if { [ "$language" == "flutter" ] || [ "$language" == "python" ] ; } && [ "" == "$languageVersion" ]
     then
         echo -e "${red}Error: Language given requires --language-version flag.${white}" >&2
         exit 2
