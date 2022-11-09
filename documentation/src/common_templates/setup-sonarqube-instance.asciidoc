@@ -59,4 +59,11 @@ As long as you keep the `terraform.tfstate` file generated when creating the Son
 ```
 terraform destroy
 ```
+
+== More information about terraform for {provider_name}
+* {terraform_tutorials}[Official Terraform tutorials]
+ifdef::extra_information[]
+{extra_information}
+endif::[]
+
 # end::partAfterPrerequisites[]
