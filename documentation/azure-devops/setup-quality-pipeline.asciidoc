@@ -9,9 +9,8 @@
 :extra_args_node: --build-pipeline-name node-project-build --test-pipeline-name node-project-test
 :extra_args_angular: --build-pipeline-name angular-project-build --test-pipeline-name angular-project-test
 :openBrowserFlag: -w
-:extra_args_python: --build-pipeline-name python-project-build
-:extra_args_flutter: --build-pipeline-name flutter-project-build
-:extra_args_python: --build-pipeline-name python-project-build
+:extra_args_python: --build-pipeline-name python-project-build --test-pipeline-name python-project-test
+:extra_args_flutter: --build-pipeline-name flutter-project-build --test-pipeline-name flutter-project-test
 = Setting up a Quality {pipeline_type} on {provider}
 
 In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
