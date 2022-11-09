@@ -1,9 +1,7 @@
 steps:
 - name: ${_DOCKER_IMAGE}
-  entrypoint: bash
-  args:
-  - -c
-  - |
+  script: |
+    #!/bin/bash
     set -e
     [[ -f .pipelines/scripts/build-setup-environment.sh ]] && source .pipelines/scripts/build-setup-environment.sh
     sh .pipelines/scripts/build.sh
