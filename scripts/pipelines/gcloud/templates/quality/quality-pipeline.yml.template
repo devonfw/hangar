@@ -5,14 +5,12 @@ steps:
     - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build_*.tar'
     - .
 - name: ${_DOCKER_IMAGE}
-  entrypoint: bash
   secretEnv: ['SONAR_TOKEN']
   env:
     - PROJECT_PATH=./
     - SONAR_URL=${_SONAR_URL}
-  args:
-  - -c
-  - |
+  script: |
+    #!/bin/bash
     set -ex
     # In case of more than 1 tar, we extract the most recent one)
     for i in $(ls -t build_*.tar)
@@ -20,7 +18,7 @@ steps:
         tar -xf $i
         break
     done
-    sh .pipelines/scripts/quality.sh
+    .pipelines/scripts/quality.sh
 # mark to insert trigger
 availableSecrets:
   secretManager:

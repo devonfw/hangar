@@ -10,4 +10,6 @@
 :extra_args_angular: --build-pipeline-name angular-project-build --test-pipeline-name angular-project-test
 :openBrowserFlag: -w
 :extra_args_python: --build-pipeline-name python-project-build
+:extra_args_flutter: --build-pipeline-name flutter-project-build
+:extra_args_python: --build-pipeline-name python-project-build
 include::../common_templates/setup-quality-pipeline.asciidoc[]
