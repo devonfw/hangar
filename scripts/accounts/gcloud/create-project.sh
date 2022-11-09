@@ -98,6 +98,13 @@ if ! gcloud services enable artifactregistry.googleapis.com --project "$projectN
    exit 222
 fi
 
+echo "Enabling CloudBuild..."
+if ! gcloud services enable cloudbuild.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable CloudRun API"
+   echo -ne "${white}"
+   exit 223
+fi
+
 echo "Enabling Secret Manager..."
 if ! gcloud services enable secretmanager.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Secret Manager API"
