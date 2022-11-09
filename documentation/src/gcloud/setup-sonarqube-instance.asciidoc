@@ -2,7 +2,7 @@
 :container_instance_type: a Compute Engine VM instance
 :provider_path: gcloud
 :terraform_vars: --service_account_file key.json --project hangar --region europe-southwest1 --zone europe-southwest1-a --subnet_cidr_block 10.0.1.0/24 -- instance_type e2-medium
-:terraform_tutorials: https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/
+:terraform_tutorials: https://developer.hashicorp.com/terraform/tutorials/gcp-get-started
 :extra_information: https://cloud.google.com/docs/terraform[Official Gcloud documentation]
 include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partBeforePrerequisites]
 === Prerequisites
