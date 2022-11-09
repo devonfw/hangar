@@ -31,7 +31,7 @@ pipeline_generator.sh \
   -l <language or framework> \
   -d <project local path> \
   --registry-location <artifact registry> \
-  --language-version <language version> \
+  --language-version <version> \
   [-t <target-directory>] \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
