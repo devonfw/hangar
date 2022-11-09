@@ -9,7 +9,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   takeoff_lib:
-    path: '../lib'
+    path: '../takeoff_lib'
 dev_dependencies:
   flutter_test:
     sdk: flutter

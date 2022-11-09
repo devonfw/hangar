@@ -138,7 +138,7 @@ packages:
   takeoff_lib:
     dependency: "direct main"
     description:
-      path: "../lib"
+      path: "../takeoff_lib"
       relative: true
     source: path
     version: "1.0.0"

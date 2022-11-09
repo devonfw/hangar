@@ -10,7 +10,7 @@ dependencies:
   args: ^2.3.1 
   logger: ^1.1.0
   takeoff_lib:
-    path: '../lib'
+    path: '../takeoff_lib'
 
 dev_dependencies:
   lints: ^2.0.0
