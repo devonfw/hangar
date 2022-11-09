@@ -1,4 +1,4 @@
-import 'package:takeoff_cli/output/log.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffCli {
   void run(List<String> args) {

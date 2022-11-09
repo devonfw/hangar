@@ -121,7 +121,7 @@ packages:
     source: hosted
     version: "2.0.1"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       url: "https://pub.dartlang.org"
