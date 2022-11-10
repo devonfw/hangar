@@ -1,0 +1,88 @@
+@startuml Container_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+AddContainerTag("db", $sprite="database_server", $legendText="database container")
+
+
+' LAYOUT_WITH_LEGEND()
+
+Person(user, "Customer", "Create / Deploy on a Cloud Environment", $sprite="users")
+System_Boundary(s_takeoff, "TakeOff") {
+    Container(flutter, "Flutter App", "Graphic User Interface", "Visual interaction with TakeOff")
+    Rel(user, flutter, "Uses")
+
+    Container_Boundary(c_takeoff, "TakeOff"){
+        Container(takeoff, "TakeOff Executable", "Abstraction Layer", "Automation of Hangar scripts")
+        Component(project_manager, "Project Manager")
+        Component(repository_manager, "Repository Manager")
+        Component(account_manager, "Account Manager")
+        Component(pipeline_manager, "Pipeline Manager")
+        ContainerDb(db, "Cache Store", "User Configuration", $tags="db")
+        Rel(takeoff, db, "Stores / Reads")
+    }
+}
+
+System_Boundary(s_hangar, "Hangar") {
+    Container_Boundary(hangar, "Hangar") {
+        Component(create_project, "create-project.sh")
+        Component(setup_sonar, "setup-sonar.sh")
+        Component(verify_roles, "verify-roles.sh")
+        Component(setup_service_account, "setup-principal-account.sh")
+        Component(create_repo, "create-repo.sh")
+        Component(pipeline_generator, "pipeline-generator.sh")
+    }
+
+    Rel(project_manager, create_project, "Interacts")
+    Rel(project_manager, setup_sonar, "Interacts")
+    Rel(account_manager, setup_service_account, "Interacts")
+    Rel(account_manager, verify_roles, "Interacts")
+    Rel(pipeline_manager, pipeline_generator, "Interacts")
+    Rel(repository_manager, create_repo, "Interacts")
+
+    Rel(takeoff, project_manager, "Uses")
+    Rel(takeoff, repository_manager, "Uses")
+    Rel(takeoff, account_manager, "Uses")
+    Rel(takeoff, pipeline_manager, "Uses")
+
+
+    Container_Boundary(hangar_clis, "Cloud CLIs") {
+        Component(gcloud, "GCloud CLI")
+
+    }
+
+    Rel(create_project, gcloud, "Interacts")
+    Rel(setup_sonar, gcloud, "Interacts")
+    Rel(setup_service_account, gcloud, "Interacts")
+    Rel(verify_roles, gcloud, "Interacts")
+    Rel(pipeline_generator, gcloud, "Interacts")
+    Rel(create_repo, gcloud, "Interacts")
+}
+
+System_Boundary(host, "Host OS"){
+    ContainerDb(dbcli, "CLI Configs", "Self CLI Configuration", $tags="db")
+}
+
+Rel(gcloud, dbcli, "Stores / Reads")
+
+
+System_Boundary(cloud, "Cloud"){
+    System(google_cloud, "Google Cloud")
+}
+
+Rel(gcloud, google_cloud, "Communicates with", "HTTPS")
+
+@enduml
