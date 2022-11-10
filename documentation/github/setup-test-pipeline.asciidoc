@@ -6,7 +6,10 @@
 :extra_args_quarkus:
 :extra_args_node:
 :extra_args_angular:
+:extra_args_python: --language-version 3.10
+:extra_args_flutter: --language-version 3.3.4
 :extra_sentence_ci: Please note that this workflow, although manually triggerable, is designed to be executed as part of a CI workflow, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
+:openBrowserFlag: -w
 = Setting up a Test {pipeline_type} on {provider}
 
 In this section we will create a test {pipeline_type} on {provider} for running project test cases. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -35,6 +38,7 @@ pipeline_generator.sh \
   -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
+  --language-version <version> \
   [-a <artifact source path>] \
   [-b <branch>] \
   [-w]
@@ -51,6 +55,7 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
 -a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
+    --language-version      [Required, if Flutter or Python] Language or framework version.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -63,26 +68,40 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop {openBrowserFlag}
 ```
 
 ===== Quarkus project using JVM
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n quarkus-project-test -l quarkus-jvm -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop {openBrowserFlag}
 ```
 
 ==== Node.js project
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n node-project-test -l node -d C:/Users/$USERNAME/Desktop/node-project {extra_args_node} -b develop {openBrowserFlag}
 ```
 
 ==== Angular project
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop -w
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop {openBrowserFlag}
+```
+
+==== Python project
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n python-project-test -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
+```
+
+==== Flutter project
+
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n flutter-project-test -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
 ```
