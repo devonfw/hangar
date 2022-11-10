@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:takeoff_gui/domain/project.dart';
+import 'package:takeoff_gui/features/home/widgets/cloud_provider_header.dart';
+import 'package:takeoff_gui/features/home/widgets/cloud_provider_item.dart';
 
 class CloudProjectsList extends StatelessWidget {
   final String name;
@@ -17,30 +19,14 @@ class CloudProjectsList extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Row(children: [
-            Text(name),
-            IconButton(
-              icon: const Icon(Icons.login_outlined),
-              splashRadius: 16,
-              onPressed: () => authenticateCallback(),
-            )
-          ]),
+          CloudProviderHeader(
+              name: name, authenticateCallback: authenticateCallback),
           SizedBox(
             height: 200,
             child: ListView.builder(
               itemCount: projects.length,
               itemBuilder: (context, index) {
-                return SizedBox(
-                  height: 200,
-                  width: 200,
-                  child: GestureDetector(
-                    child: Card(
-                      child: Text(projects[index].name),
-                    ),
-                    onTap: () =>
-                        print("pressed project ${projects[index].name}"),
-                  ),
-                );
+                return CloudProjectItem(project: projects[index]);
               },
               scrollDirection: Axis.horizontal,
             ),

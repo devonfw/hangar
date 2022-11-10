@@ -10,11 +10,10 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    AppRouter appRouter = AppRouter();
     return MaterialApp.router(
       scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
-      routerConfig: appRouter.router,
+      routerConfig: AppRouter().router,
     );
   }
 }
