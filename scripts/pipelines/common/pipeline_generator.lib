@@ -9,19 +9,25 @@ function help {
     echo "  -d, --local-directory       [Required] Local directory of your project."
     echo "  -a, --artifact-path                    Path to be persisted as an artifact after $pipeline_type execution, e.g. where the application stores logs or any other blob on runtime."
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
-    [[ "$provider" != "gcloud" ]] && echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
-    echo "  -v, --version                          Additional arguments for language version."
+    [ "$provider" != "gcloud" ] && echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
+    [ "$provider" == "gcloud" ] && echo "  -m, --machine-type                     Machine type for pipeline runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32."
     echo ""
     echo "Build $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
     echo "  -t, --target-directory                 Target directory of build process. Takes precedence over the language/framework default one."
+    echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     echo ""
     echo "Test $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
-    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
+    echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
+    [ "$provider" == "azure-devops" ] || [ "$provider" == "gcloud" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
     echo ""
     echo "Quality $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
+    echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     echo "      --sonar-url             [Required] Sonarqube URL."
     echo "      --sonar-token           [Required] Sonarqube token."
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
@@ -35,6 +41,10 @@ function help {
     [ "$provider" == "github" ] && echo ""
     echo "Package pipeline flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
+    echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
+    [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
+    echo "      --flutter-platform      [Required, if Flutter] Target platform to compile. Accepted values: android, web."
+    echo "      --flutter-web-renderer             Flutter web renderer. Accepted values: auto (default), canvaskit, html."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
     [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
     [ "$provider" == "azure-devops" ] && echo "      --quality-pipeline-name [Required] Quality $pipeline_type name."
@@ -98,7 +108,8 @@ function ensurePathFormat {
     # When necessary, converts a relative path into an absolute path, and a Windows-style path (e.g. "C:\Users" or C:/Users) into a
     # Unix-style path using forward slashes (e.g. "/c/Users").
     localDirectory=${localDirectory//'\'/"/"}
-    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)."; exit 1; }
+    localDirectory=${localDirectory//'C:'/"/c"}
+    cd "${localDirectory}" || { echo -e "${red}Error: Local directory '${localDirectory}' does not exist. Check provided path (missing quotes?)." >&2; echo -ne "${white}" >&2; exit 2; }
     localDirectory=$(pwd)
 
     # Return to initial directory
@@ -114,6 +125,7 @@ function importConfigFile {
     if test -z "$configFile"
     then
         echo -e "${red}Error: $pipeline_type definition configuration file not specified." >&2
+        echo -ne "${white}" >&2
         exit 2
     fi
 
@@ -124,6 +136,7 @@ function importConfigFile {
         then
             echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
             echo -e "${red}Use -h or --help flag to display help." >&2
+            echo -ne "${white}" >&2
             exit 2
         fi
     done
@@ -133,21 +146,28 @@ function checkInstallations {
     # Check if Git is installed
     if ! [ -x "$(command -v git)" ]; then
         echo -e "${red}Error: Git is not installed." >&2
+        echo -ne "${white}" >&2
         exit 127
     fi
 
     # Check if the CLI tool for the provider is installed
     if ([ "$provider" == "github" ] && ! [ -x "$(command -v gh)" ]); then
         echo -e "${red}Error: Github CLI is not installed." >&2
+        echo -ne "${white}" >&2
         exit 127
     elif ([ "$provider" == "azure-devops" ] && ! [ -x "$(command -v az)" ]); then
         echo -e "${red}Error: Azure CLI is not installed." >&2
+        echo -ne "${white}" >&2
+        exit 127
+    elif ([ "$provider" == "gcloud" ] && ! [ -x "$(command -v gcloud)" ]); then
+        echo -e "${red}Error: gcloud CLI is not installed." >&2
         exit 127
     fi
 
     # Check if Python is installed
     if ! [ -x "$(command -v python)" ]; then
         echo -e "${red}Error: Python is not installed." >&2
+        echo -ne "${white}" >&2
         exit 127
     fi
 }
@@ -220,7 +240,7 @@ function commitCommonFiles {
     echo -e "${green}Commiting and pushing into Git remote..."
     echo -ne ${white}
 
-    # Move into the project's directory and pushing the template into the Azure DevOps repository.
+    # Move into the project's directory and pushing the template into the remote repository.
     cd "${localDirectory}"
 
     # Add the YAML files.
@@ -230,23 +250,23 @@ function commitCommonFiles {
     # changing all files to be executable
     find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
 
-    git commit -m "Adding the source YAML"
+    git commit -m "[skip ci] Adding the source YAML"
     git push -u origin ${sourceBranch}
 }
 
 function setTargetDirectory {
   case $language in
-      node | angular) targetDirectory="./" ;;
+      node | angular | flutter) targetDirectory="./" ;;
       quarkus*) targetDirectory="./target/" ;;
       python) targetDirectory="./venv" ;;
-      *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; exit 1
+      *) echo -e "${red}Error: Specified language '${language}' is not supported." >&2; echo -ne "${white}" >&2; exit 2
   esac
 }
 
-function versionVerification {
-    if [ "$language" == "python" ] && [ "" == "$languageVersion" ]
+function languageVersionVerification {
+    if { [ "$language" == "flutter" ] || [ "$language" == "python" ] ; } && [ "" == "$languageVersion" ]
     then
-        echo -e "${red}Language given is Python. It is required to use --version flag.${white}"
-        exit 1
+        echo -e "${red}Error: Language given requires --language-version flag.${white}" >&2
+        exit 2
     fi
 }
