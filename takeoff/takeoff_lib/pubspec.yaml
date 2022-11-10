@@ -9,6 +9,9 @@ environment:
 dependencies:
   path: ^1.8.0
   logger: ^1.1.0
+  get_it: ^7.2.0
+  sembast: ^3.3.1
+
 
 dev_dependencies:
   lints: ^2.0.0
