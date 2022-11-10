@@ -11,14 +11,17 @@ class CloudProjectItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      width: 200,
-      child: GestureDetector(
-        child: Card(
-          child: Center(child: Text(project.name)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: SizedBox(
+        height: 200,
+        width: 200,
+        child: GestureDetector(
+          child: Card(
+            child: Center(child: Text(project.name)),
+          ),
+          onTap: () => print("pressed project ${project.name}"),
         ),
-        onTap: () => print("pressed project ${project.name}"),
       ),
     );
   }
