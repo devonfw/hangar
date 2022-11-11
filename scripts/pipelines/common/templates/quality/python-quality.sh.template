@@ -1,0 +1,9 @@
+#!/bin/bash
+pip install coverage
+coverage run -m unittest
+coverage report
+coverage xml
+
+projectKey=$(grep -m 1 name pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
+sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey="$projectKey" -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.exclusions=venv/**
+
