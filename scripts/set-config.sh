@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Description
-tfvars="./terraform.tfvars"
+# This script is to set or change the vars in a file.
+# To use it you must invoke it with the file where you want to store or replace it as the first arg (key and value) and the key to set it is: --file_set_vars
 
 white='\e[1;37m'
 red='\e[0;31m'
