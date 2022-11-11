@@ -1,7 +1,7 @@
 steps:
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
-
+  
 - name: 'ubuntu'
   script: |
     #!/bin/bash
@@ -17,6 +17,7 @@ steps:
   args:
   - -c
   - |
+    flutter pub get
     if [[ ${_FLUTTER_PLATFORM} == "android" ]]; then
       flutter build web --release --web-renderer auto --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false
     elif [[ ${_FLUTTER_PLATFORM} == "web" ]]; then
@@ -31,11 +32,12 @@ steps:
       fi
     fi
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: 'bash'
   args:
     - -c
     - |
+      apt-get update && apt-get install docker.io -y
       echo $$REGISTRY_CREDENTIALS > credentials.env
       . credentials.env
       rm credentials.env

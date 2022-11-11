@@ -1,3 +1,2 @@
 #!/bin/bash
-
-echo "Hello World"
+tag="0.0.1"

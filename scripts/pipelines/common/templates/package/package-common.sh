@@ -47,7 +47,7 @@ echo docker build -f "$dockerFile" -t "$imageName:$tag_completed" "$context"
 docker build -f "$dockerFile" -t "$imageName":"$tag_completed" "$context"
 
 # We connect to the registry
-if ! [[ "$registry" == "docker.pkg.dev" ]];
+if ! [[ "$registry" == *"docker.pkg.dev"* ]];
 then
     if [[ "$aws_access_key" == "" ]];
     then
@@ -62,9 +62,9 @@ then
 fi
 
 # When using GCP Artifact Registry, make sure that the Docker repository exists before pushing and, if not, create it
-if [[ "$registry" == "docker.pkg.dev" ]];
+if [[ "$registry" == *"docker.pkg.dev"* ]];
 then
-    repositoryName=$(echo "$imageName" | cut -d '/' 3)
+    repositoryName=$(echo "$imageName" | cut -d '/' -f 3)
     region=$(echo $imageName | cut -d '-' -f 1-2)
     if ! gcloud artifacts repositories describe $repositoryName --location=$region &> /dev/null
     then
