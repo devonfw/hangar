@@ -1,13 +1,15 @@
-:provider: Azure DevOps
+:provider: Google Cloud
 :pipeline_type: pipeline
 :trigger_sentence: This pipeline will be configured in order to be triggered every time the build pipeline is executed successfully on a commit
 :pipeline_type2: pipeline
-:path_provider: azure-devops
+:path_provider: gcloud
 :build-pipeline:
 :extra_args_quarkus: --build-pipeline-name quarkus-project-build
 :extra_args_node: --build-pipeline-name node-project-build
 :extra_args_angular: --build-pipeline-name angular-project-build
 :extra_args_python: --build-pipeline-name python-project-build --language-version 3.10
-:extra_args_flutter: --build-pipeline-name flutter-project-build --language-version 3.3.4
-:openBrowserFlag: -w
+:extra_args_flutter:  --build-pipeline-name flutter-project-build --language-version 3.3.4
+:no-PR-or-MR:
+:machineType:
+:openBrowserFlag:
 include::../common_templates/setup-test-pipeline.asciidoc[]
