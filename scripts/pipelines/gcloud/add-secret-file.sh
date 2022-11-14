@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options n:f:p:d:p:h --long "secret-name:,local-file-path:,remote-file-path,:local-directory:,pipelines:,help" -- "$@")
+FLAGS=$(getopt -a --options n:f:p:d:p:b:h --long "secret-name:,local-file-path:,remote-file-path,:local-directory:,pipelines:,branch:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -10,6 +10,7 @@ while true; do
         -p | --pipelines)         pipelinesList=$2; shift 2;;
         -f | --local-file-path)   localFilePath=$2; shift 2;;
         -p | --remote-file-path)  remoteFilePath=$2; shift 2;;
+        -b | --branch)            targetBranch=$2; shift 2;;
         -h | --help)              help="true"; shift 1;;
         --) shift; break;;
     esac
@@ -28,11 +29,63 @@ pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 configFilePath=".pipelines/config" # Path to the scripts.
 provider="gcloud"
+mandatoryFlags="$localDirectory,$localFilePath,$remoteFilePath,$targetBranch,"
+sourceBranch="feature/add-secret-file"
+
+function help_secret {
+  echo ""
+  echo "Upload a file as a secret in the secret manager of Google Cloud to be used inside the choosen pipelines."
+  echo ""
+  echo "  -d, --local-directory       [Required] Local directory of your project."
+  echo "  -f, --local-file-path       [Required] Local path of the file you want to upload."
+  echo "  -p, --remote-file-path      [Required] Path where the secret will be dowloaded inside the pipeline (with the file name)."
+  echo "  -b, --target-branch         [Required] Name of the branch to which the merge will target."
+  echo "  -n, --secret-name                      Name of the secret as it will appear in the secret manager. if not set, we use the name of the file given with '-f'. NOTE: the name has to be compliant with the regex [a-zA-Z0-9_]."
+
+
+  exit
+}
 
 function obtainHangarPath {
 
     # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
     hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
+}
+
+function checkArgs {
+  # We check if all the args required has been given
+  IFS=, read -ra flags <<< "$mandatoryFlags"
+  for flag in "${flags[@]}"
+  do
+      if test -z $flag
+      then
+          echo $flag
+          echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
+          echo -e "${red}Use -h or --help flag to display help." >&2
+          echo -ne "${white}" >&2
+          exit 2
+      fi
+  done
+
+  # If secret name given we check that is compliant with the regex \w
+  [ "$secretName" =~ ^[a-zA-Z0-9_]$* ] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
+
+  # Checking if the file given with the -f exists
+  cd "$currentDirectory"
+  # Ensuring the UNIX format path
+  localFilePath=${localDirectory//'\'/"/"}
+  localFilePath=${localDirectory//'C:'/"/c"}
+  cd $(dirname "${localFilePath}") && [-f $(basename "${localFilePath}") ] || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
+
+}
+
+function getProjectRepo {
+  # Function used to get the repo name and project ID
+  cd "$localDirectory"
+  gitOriginUrl=$(git config --get remote.origin.url)
+  gCloudProject=$(echo "$gitOriginUrl" | cut -d'/' -f5)
+  export gCloudProject
+  gCloudRepo=$(echo "$gitOriginUrl" | cut -d'/' -f7)
 }
 
 function addSecretFiles {
@@ -58,10 +111,29 @@ function addSecretFiles {
   gcloud secrets versions add "$secretName" --data-file="${currentDirectory}/${localFilePath}"
   mkdir -p "${localDirectory}/${configFilePath}"
   [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "secretName=PathToDowload #pipelinesList" >> [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]]
+  ! [[ "$pipelinesList" = "" ]] || pipelinesList="AllPipelines"
   echo "$secretName=$remoteFilePath #$pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   echo -e "${green}${fileName}: Done.${white}"
   cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret.sh" "${localDirectory}/${scriptFilePath}/get-secret.sh"
   echo ""
+}
+
+
+function merge_branch {
+    # Check if a target branch is supplied.
+    if test -z "$targetBranch"
+    then
+        # No branch specified in the parameters, no Pull Request is created, the code will be stored in the current branch.
+        echo -e "${green}No branch specified to do the merge, changes left in the ${sourceBranch} branch.${white}"
+    else
+        echo -e "${green}Checking out to the target branch."
+        echo -ne "${white}"
+        git checkout "$targetBranch"
+        echo "Trying to merge"
+        git merge "$sourceBranch"
+        git push
+        git branch -D "$sourceBranch" ; git push origin --delete "$sourceBranch"
+    fi
 }
 
 obtainHangarPath
@@ -71,7 +143,12 @@ obtainHangarPath
 
 if [[ "$help" == "true" ]]; then help_secret; fi
 
+
 ensurePathFormat
+
+checkArgs
+
+exit
 
 checkInstallations
 

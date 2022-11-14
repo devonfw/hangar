@@ -5,6 +5,7 @@ triggerName=$1
 confFile=".pipelines/config/pathsSecretFiles.conf"
 [[ -f "$confFile" ]] || exit 0
 grep "$triggerName" "$confFile" >> tmpConfFile
+grep "AllPipelines" "$confFile" >> tmpConfFile
 echo ""
 while read -r line
 do
