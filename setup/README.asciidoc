@@ -18,6 +18,7 @@ The following toolkits are included in the solution:
 - Kubectl
 - Terraform
 - GitHub
+- Firebase CLI
 
 **Plus (+)** other tools like `unzip`, `git`, `wget` & `python`
 
@@ -39,38 +40,42 @@ IMPORTANT: Before mounting the volumes make sure all the folders exist, Rancher 
 
 #### Using Rancher Desktop
 ```
-docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v "/Users/$env:UserName/AppData/Roaming/GitHub CLI:/root/.config/gh" -v /Users/$env:UserName/.ssh:/root/.ssh -v /Users/$env:UserName/.gitconfig:/root/.gitconfig hangar bash
+docker run --rm -it -v /Users/$env:UserName/AppData/Roaming/gcloud:/root/.config/gcloud -v /Users/$env:UserName/AppData/Roaming/configstore:/root/.config/configstore -v /Users/$env:UserName/.aws:/root/.aws -v /Users/$env:UserName/.azure:/root/.azure -v /Users/$env:UserName/.kube:/root/.kube -v "/Users/$env:UserName/AppData/Roaming/GitHub CLI:/root/.config/gh" -v /Users/$env:UserName/.ssh:/root/.ssh -v /Users/$env:UserName/hangar_workspace:/scripts/workspace -v /Users/$env:UserName/.gitconfig:/root/.gitconfig hangar bash
 ```
 
 #### Using Docker Desktop
 ```
-docker run --rm -it -v C:\Users\$env:UserName\AppData\Roaming\gcloud\:/root/.config/gcloud -v C:\Users\$env:UserName\.aws:/root/.aws -v C:\Users\$env:UserName\.azure:/root/.azure -v C:\Users\$env:UserName\.kube:/root/.kube -v "C:\Users\$env:UserName\AppData\Roaming\GitHub CLI:/root/.config/gh" -v C:\Users\$env:UserName\.ssh:/root/.ssh -v C:\Users\$env:UserName\.gitconfig:/root/.gitconfig hangar bash
+docker run --rm -it -v C:\Users\$env:UserName\AppData\Roaming\gcloud\:/root/.config/gcloud -v C:\Users\$env:UserName\AppData\Roaming\configstore\:/root/.config/configstore -v C:\Users\$env:UserName\.aws:/root/.aws -v C:\Users\$env:UserName\.azure:/root/.azure -v C:\Users\$env:UserName\.kube:/root/.kube -v "C:\Users\$env:UserName\AppData\Roaming\GitHub CLI:/root/.config/gh" -v C:\Users\$env:UserName\.ssh:/root/.ssh hangar -v C:\Users\$env:UserName\hangar_workspace:/scripts/workspace -v C:\Users\$env:UserName\.gitconfig:/root/.gitconfig bash
 ```
 
 #### Create host paths on Windows
 ```
 mkdir -p /Users/$env:UserName/AppData/Roaming/gcloud
+mkdir -p /Users/$env:UserName/AppData/Roaming/configstore
 mkdir -p /Users/$env:UserName/.aws
 mkdir -p /Users/$env:UserName/.azure:/root/.azure
 mkdir -p /Users/$env:UserName/.kube
 mkdir -p "/Users/$env:UserName/AppData/Roaming/GitHub CLI"
 mkdir -p /Users/$env:UserName/.ssh
+mkdir -p /Users/$env:UserName/hangar_workspace
 ```
 
 ### Linux
 
 ```
-docker run --rm -it -v ~/.config/gcloud:/root/.config/gcloud -v ~/.aws:/root/.aws -v ~/.azure:/root/.azure -v ~/.kube:/root/.kube -v ~/.config/gh:/root/.config/gh -v ~/.ssh:/root/.ssh -v ~/.gitconfig:/root/.gitconfig hangar bash
+docker run --rm -it -v ~/.config/gcloud:/root/.config/gcloud -v ~/.aws:/root/.aws -v ~/.azure:/root/.azure -v ~/.kube:/root/.kube -v ~/.config/gh:/root/.config/gh -v ~/.ssh:/root/.ssh -v ~/hangar_workspace:/scripts/workspace -v ~/.config/configstore:/root/.config/configstore -v ~/.gitconfig:/root/.gitconfig hangar bash
 ```
 
 #### Create host paths on Linux
 ```
 mkdir -p ~/.config/gcloud
+mkdir -p ~/.config/configstore
 mkdir -p ~/.aws
 mkdir -p ~/.azure
 mkdir -p ~/.kube
 mkdir -p ~/.config/gh
 mkdir -p ~/.ssh
+mkdir -p ~/hangar_workspace
 ```
 
 ### Volumes Mapping
@@ -103,6 +108,11 @@ mkdir -p ~/.ssh
 |/Users/$env:UserName/AppData/Roaming/GitHub CLI
 |~/.config/gh
 |/root/.config/gh
+
+|Firebase CLI
+|/Users/$env:UserName/AppData/Roaming/configstore
+|~/.config/configstore
+|/root/.config/configstore
 
 |SSH Keys
 |/Users/$env:UserName/.ssh
