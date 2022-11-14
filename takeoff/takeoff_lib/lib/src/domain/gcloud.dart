@@ -1,6 +1,6 @@
 import 'package:takeoff_lib/src/domain/cloud_provider.dart';
-import 'package:takeoff_lib/src/domain/cloud_provider_enum.dart';
 
+/// Specific implementation of Google Cloud as a Cloud Provider
 class GCloud extends CloudProvider {
   @override
   String get hostFolderName => "gcloud";

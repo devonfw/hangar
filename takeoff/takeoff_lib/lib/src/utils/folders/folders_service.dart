@@ -4,7 +4,9 @@ import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/platform/unsupported_platform_exception.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
+/// Service that provides all the necessary folders for the application
 class FoldersService {
+  /// Names of the folders that will be created in .takeoff/
   static List<String> hostFolderNames = [
     "gcloud",
     "aws",
@@ -14,6 +16,7 @@ class FoldersService {
     "ssh"
   ];
 
+  /// Folders that will be created in the Hangar container to map the volumes.
   static Map<String, String> containerFolders = {
     "gcloud": "/root/.config/gcloud",
     "aws": "/root/.aws",

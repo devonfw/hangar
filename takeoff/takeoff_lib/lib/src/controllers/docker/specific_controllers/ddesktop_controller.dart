@@ -1,6 +1,7 @@
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 
+/// [DockerController] implementation for Windows systems with Docker Desktop.
 class DockerDesktopController extends DockerController {
   @override
   List<String> getVolumeMappings() {

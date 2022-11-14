@@ -1,6 +1,8 @@
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 
+/// [DockerController] implementation for Unix systems, that do not need
+/// Rancher Desktop nor Docker Desktop.
 class UnixController extends DockerController {
   @override
   List<String> getVolumeMappings() {

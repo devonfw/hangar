@@ -37,4 +37,9 @@ class Log {
         (showTimestamp) ? "[SUCCESS ${DateTime.now()}]" : "[SUCCESS]";
     _logger.v("\x1B[32m$badge $message");
   }
+
+  static String dockerProcessToString(List<String> args) {
+    return args.fold(
+        "docker ", (previousValue, element) => "$previousValue $element");
+  }
 }

@@ -7,7 +7,14 @@ import 'package:takeoff_lib/src/controllers/docker/specific_controllers/rancher_
 import 'package:takeoff_lib/src/controllers/docker/specific_controllers/unix_controller.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 
+/// Factory for the Docker controller.
+///
+/// Returns the appropiate instance of the Docker Controller depending on platform
+/// and the current docker installation.
+///
+/// The options are [RancherController], [DockerDesktopController] and [UnixController].
 class DockerControllerFactory {
+  /// Returns the appropiate [DockerController] instance.
   static Future<DockerController> create() async {
     switch (await _checkDockerInstallationType()) {
       case DockerInstallation.rancherDesktop:
@@ -19,6 +26,7 @@ class DockerControllerFactory {
     }
   }
 
+  /// Checks which installation type is in the system.
   static Future<DockerInstallation> _checkDockerInstallationType() async {
     if (PlatformService.isUnix) {
       return DockerInstallation.unix;
