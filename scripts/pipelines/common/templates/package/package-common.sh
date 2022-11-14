@@ -69,7 +69,7 @@ then
     if ! gcloud artifacts repositories describe "$repositoryName" --location="$region" &> /dev/null
     then
         # We create the Docker repository in Artifact Registry
-        gcloud artifacts repositories create "$repositoryName" --repository-format=docker --location=$region
+        gcloud artifacts repositories create "$repositoryName" --repository-format=docker --location="$region"
     fi
 fi
 
