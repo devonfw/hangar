@@ -3,7 +3,6 @@
 # Colours for the messages.
 white='\e[1;37m'
 green='\e[1;32m'
-red='\e[0;31m'
 
 if [[ ${FLUTTER_PLATFORM} == "web" ]]; then
     tag="0.0.1"
