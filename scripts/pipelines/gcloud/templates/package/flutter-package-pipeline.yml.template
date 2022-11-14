@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/flutter-project-build/commit_${SHORT_SHA}/build*.tar', '.']
+  args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
 
 - name: 'ubuntu'
   script: |
