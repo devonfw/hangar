@@ -1,21 +1,20 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options n:f:p:d:p:b:h --long "secret-name:,local-file-path:,remote-file-path,:local-directory:,pipelines:,branch:,help" -- "$@")
+FLAGS=$(getopt -a --options n:f:r:p:d:b:h --long "secret-name:,local-file-path:,remote-file-path,:local-directory:,pipelines:,branch:,help" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
-        -n | --secret-name)       secretNname=$2; shift 2;;
+        -n | --secret-name)       secretName=$2; shift 2;;
         -d | --local-directory)   localDirectory=$2; shift 2;;
         -p | --pipelines)         pipelinesList=$2; shift 2;;
         -f | --local-file-path)   localFilePath=$2; shift 2;;
-        -p | --remote-file-path)  remoteFilePath=$2; shift 2;;
+        -r | --remote-file-path)  remoteFilePath=$2; shift 2;;
         -b | --branch)            targetBranch=$2; shift 2;;
         -h | --help)              help="true"; shift 1;;
         --) shift; break;;
     esac
 done
-
 
 # Colours for the messages.
 white='\e[1;37m'
@@ -59,7 +58,6 @@ function checkArgs {
   do
       if test -z $flag
       then
-          echo $flag
           echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
           echo -e "${red}Use -h or --help flag to display help." >&2
           echo -ne "${white}" >&2
@@ -68,14 +66,16 @@ function checkArgs {
   done
 
   # If secret name given we check that is compliant with the regex \w
-  [ "$secretName" =~ ^[a-zA-Z0-9_]$* ] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
+  echo $secretName
+  [[ "$secretName" =~ ^[a-zA-Z0-9_]$* ]] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
 
   # Checking if the file given with the -f exists
   cd "$currentDirectory"
   # Ensuring the UNIX format path
-  localFilePath=${localDirectory//'\'/"/"}
-  localFilePath=${localDirectory//'C:'/"/c"}
-  cd $(dirname "${localFilePath}") && [-f $(basename "${localFilePath}") ] || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
+  localFilePath=${localFilePath//'\'/"/"}
+  localFilePath=${localFilePath//'C:'/"/c"}
+  cd $(dirname "${localFilePath}") && [ -f $(basename "${localFilePath}") ] || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
+  echo ok
 
 }
 
