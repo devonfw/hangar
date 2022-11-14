@@ -8,7 +8,9 @@
 :extra_args_quarkus: --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality
 :extra_args_node: --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality
 :extra_args_angular: --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality
-:extra_args_flutter: --build-pipeline-name flutter-project-build --quality-pipeline-name flutter-project-quality --language version 3.3.4 --registry-location europe
+:extra_args_flutter: --build-pipeline-name flutter-project-build --quality-pipeline-name flutter-project-quality --language version 3.3.4 --flutter-platform--registry-location europe
+:extra_args_flutter_web: --flutter-platform web --flutter-web-renderer auto
+:extra_args_flutter_android: --flutter-platform android
 :extra_args_python: --build-pipeline-name python-project-build --quality-pipeline-name python-project-quality --language-version 3.10
 = Setting up a Package {pipeline_type} on {provider}
 
@@ -135,22 +137,40 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 
 ==== Flutter project
 
-===== Generic container registry
+===== Generic container registry (Web Platform)
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -i username/flutter-project -u username -p password -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project -u username -p password -b develop -w
 ```
 
-===== AWS ECR
+===== AWS ECR (Web Platform)
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -i username/flutter-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
 
-===== Artifact Registry
+===== Artifact Registry (Web Platform)
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -i eu-southwest1-docker.pkg.dev/username/flutter-project -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i eu-southwest1-docker.pkg.dev/username/flutter-project -b develop -w
+```
+
+===== Generic container registry (Android Platform)
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -u username -p password -b develop -w
+```
+
+===== AWS ECR (Android Platform)
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
+```
+
+===== Artifact Registry (Android Platform)
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -b develop -w
 ```
 
 ==== Python project
