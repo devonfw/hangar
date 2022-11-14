@@ -8,4 +8,7 @@
 :extra_args_quarkus: --build-pipeline-name quarkus-project-build --test-pipeline-name quarkus-project-test
 :extra_args_node: --build-pipeline-name node-project-build --test-pipeline-name node-project-test
 :extra_args_angular: --build-pipeline-name angular-project-build --test-pipeline-name angular-project-test
+:openBrowserFlag: -w
+:extra_args_python: --build-pipeline-name python-project-build --test-pipeline-name python-project-test
+:extra_args_flutter: --build-pipeline-name flutter-project-build --test-pipeline-name flutter-project-test
 include::../common_templates/setup-quality-pipeline.asciidoc[]
