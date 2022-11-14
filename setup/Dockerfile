@@ -46,7 +46,13 @@ RUN curl -L https://github.com/cli/cli/releases/download/v2.16.0/gh_2.16.0_linux
     dpkg -i gh.deb && \
     rm gh.deb
 
-FROM cli_install_github as run_env
+FROM cli_install_github as cli_install_firebase
+
+RUN curl -Lo ./firebase_tools https://firebase.tools/bin/linux/v11.16.0 && \
+    chmod +x ./firebase_tools && \
+    mv firebase_tools /usr/bin/firebase
+
+FROM cli_install_firebase as run_env
 
 WORKDIR /scripts
 
