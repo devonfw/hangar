@@ -1,11 +1,12 @@
-import 'dart:io';
-
+import 'package:get_it/get_it.dart';
+import 'package:meta/meta.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/controllers/docker/specific_controllers/ddesktop_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/specific_controllers/rancher_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/specific_controllers/unix_controller.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
+import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
 /// Factory for the Docker controller.
 ///
@@ -14,9 +15,15 @@ import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 ///
 /// The options are [RancherController], [DockerDesktopController] and [UnixController].
 class DockerControllerFactory {
+  final PlatformService platformService = GetIt.I.get<PlatformService>();
+  final SystemService systemService;
+
+  DockerControllerFactory({SystemService? systemService})
+      : systemService = systemService ?? SystemService();
+
   /// Returns the appropiate [DockerController] instance.
-  static Future<DockerController> create() async {
-    switch (await _checkDockerInstallationType()) {
+  Future<DockerController> create() async {
+    switch (await checkDockerInstallationType()) {
       case DockerInstallation.rancherDesktop:
         return RancherController();
       case DockerInstallation.dockerDesktop:
@@ -27,16 +34,15 @@ class DockerControllerFactory {
   }
 
   /// Checks which installation type is in the system.
-  static Future<DockerInstallation> _checkDockerInstallationType() async {
-    if (PlatformService.isUnix) {
+  ///
+  /// The argument [systemService] is only for testing purposes
+  @visibleForTesting
+  Future<DockerInstallation> checkDockerInstallationType() async {
+    if (platformService.isUnix) {
       return DockerInstallation.unix;
     }
 
-    ProcessResult taskChecker = await Process.run(
-        "tasklist", ["|", "find", "/i", "Docker Desktop.exe"],
-        stdoutEncoding: SystemEncoding(), runInShell: true);
-
-    if ((taskChecker.stdout as String).isNotEmpty) {
+    if (await systemService.isDockerDesktopInstalled()) {
       return DockerInstallation.dockerDesktop;
     }
 

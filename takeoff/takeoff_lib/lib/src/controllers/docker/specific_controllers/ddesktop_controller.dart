@@ -1,11 +1,15 @@
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
+import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
 /// [DockerController] implementation for Windows systems with Docker Desktop.
 class DockerDesktopController extends DockerController {
+  DockerDesktopController({SystemService? systemService})
+      : super(systemService: systemService);
+
   @override
   List<String> getVolumeMappings() {
-    Map<String, String> hostFolders = FoldersService.getHostFolders();
+    Map<String, String> hostFolders = foldersService.getHostFolders();
     Map<String, String> containerFolders = FoldersService.containerFolders;
 
     List<String> volumeMappings = hostFolders.entries

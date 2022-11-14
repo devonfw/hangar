@@ -13,7 +13,8 @@ import 'package:takeoff_lib/src/utils/url_launcher/url_launcher.dart';
 class GCloudAuthController extends AuthController<GCloud> {
   @override
   Future<bool> authenticate(String email) async {
-    DockerController dockerController = await DockerControllerFactory.create();
+    DockerController dockerController =
+        await DockerControllerFactory().create();
 
     List<String> volumeMappings = dockerController.getVolumeMappings();
 
