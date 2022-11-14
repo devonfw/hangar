@@ -1,13 +1,10 @@
-import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:args/command_runner.dart';
+import 'package:takeoff_cli/input/commands/init_command.dart';
 
 class TakeOffCli {
   void run(List<String> args) {
-    print("here");
-
-    Log.info("message");
-    Log.debug("message");
-    Log.error("message");
-    Log.warning("message");
-    Log.success("message");
+    CommandRunner("takeoff", "A CLI to easily create cloud environment.")
+      ..addCommand(InitCommand())
+      ..run(args);
   }
 }
