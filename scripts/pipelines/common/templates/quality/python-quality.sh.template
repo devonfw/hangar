@@ -17,4 +17,5 @@ cd ..
 export PATH="$PATH:/opt/sonar-scanner/bin"
 
 projectKey=$(grep -m 1 name pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
-sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey="$projectKey" -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.exclusions=venv/**,**/common/**,**/repositories/**,**/controllers/**,**/models/**,tests/**,**utils**,**main**,**router**,**/api.py,**/exceptions/**
+exclusions="venv/**,**/common/**,**/repositories/**,**/controllers/**,**/models/**,tests/**,**utils**,**main**,**router**,**/api.py,**/exceptions/**"
+sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey="$projectKey" -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.exclusions="$exclusions"
