@@ -6,11 +6,14 @@ helpFunction()
    echo ""
    echo "Arguments:"
    echo -e "\t-n [Required] Name of the new project."
+   echo -e "\t-r            Region to create Firestore Database"
 }
 
+while getopts "n:r:h" opt
 do
    case "$opt" in
       n ) projectName="$OPTARG" ;;
+      r ) firestoreRegion="$OPTARG" ;;
       h ) helpFunction; exit ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
    esac
@@ -103,3 +106,15 @@ enableAPIs()
 echo "Enabling APIs"
 enableAPIs
 
+echo "Creating Firestore Database..."
+command="gcloud firestore databases create --project $projectName"
+if [ -n "$firestoreRegion" ]; then
+    command=$command" --region=\"$firestoreRegion\""
+else
+    command=$command" --region=europe-west6"
+fi
+if ! eval "$command"; then
+    echo -e "${red}Error: Cannot Create Firestore Database"
+    echo -ne "${white}"
+    exit 230
+fi
