@@ -1,0 +1,15 @@
+# $ gcloud builds submit . --config=cloudbuild.yaml
+
+steps:
+- name: gcr.io/cloud-builders/docker
+  args: [
+    'build', '.',
+    '-t', '${_REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/flutter/flutter:${_FLUTTER_VERSION}',
+    '--build-arg', 'FLUTTER_VERSION=${_FLUTTER_VERSION}' 
+  ]
+images: [
+  '${_REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/flutter/flutter:${_FLUTTER_VERSION}'
+]
+timeout: '1200s'
+options: 
+  machineType: 'E2_HIGHCPU_8'
