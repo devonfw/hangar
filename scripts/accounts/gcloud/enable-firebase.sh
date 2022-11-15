@@ -118,3 +118,11 @@ if ! eval "$command"; then
     echo -ne "${white}"
     exit 230
 fi
+
+echo "Creating Firebase SDK Service Account..."
+service_email=$(gcloud iam service-accounts list | grep firebase-adminsdk | tr -s ' ' | cut -d ' ' -f2)
+if ! gcloud iam service-accounts keys create service_key.json --iam-account "$service_email" --project "$projectName"; then
+    echo -e "${red}Error: Cannot create Firebase Service Account"
+    echo -ne "${white}"
+    exit 240
+fi
