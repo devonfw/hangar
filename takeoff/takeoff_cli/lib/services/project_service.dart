@@ -7,7 +7,7 @@ class ProjectsService {
     this._takeOffFacade,
   );
 
-  initAccount(String cloud, String email) async {
+  Future<void> initAccount(String cloud, String email) async {
     switch (cloud) {
       case "gc":
         _takeOffFacade.initGoogleCloud(email);
