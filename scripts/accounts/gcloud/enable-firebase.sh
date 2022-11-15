@@ -8,7 +8,6 @@ helpFunction()
    echo -e "\t-n [Required] Name of the new project."
 }
 
-while getopts "n:d:f:o:b:h" opt
 do
    case "$opt" in
       n ) projectName="$OPTARG" ;;
@@ -41,5 +40,66 @@ fi
 if ! [ -x "$(command -v firebase)" ]; then
   echo -e "${red}Error: Firebase CLI is not installed." >&2
   echo -ne "${white}"
-  exit 127
+  exit 128
 fi
+
+# Check if exists a Google Cloud project with that project ID. 
+if ! gcloud projects describe "$projectName" &>/dev/null ; then
+    echo -e "${red}Error: Project $projectName does not exist."
+    echo -ne "${white}"
+    exit 200
+fi
+
+echo "Adding Firebase to Project..."
+# TODO: Check this
+if ! firebase projects:list | grep "$projectName" &>/dev/null; then
+    if ! firebase projects:addfirebase "$projectName"; then
+        echo -e "${red}Error: Cannot add Firebase to project."
+        echo -ne "${white}"
+        exit 201
+    fi
+else
+    echo -e "Firebase already added to $projectName"
+fi
+
+enableAPIs()
+{
+    echo "Enabling Firestore..."
+    if ! gcloud services enable firestore.googleapis.com --project "$projectName"; then
+        echo -e "${red}Error: Cannot enable Firestore API"
+        echo -ne "${white}"
+        exit 221
+    fi
+
+    echo "Enabling Maps Android Backend..."
+    if ! gcloud services enable maps-android-backend.googleapis.com --project "$projectName"; then
+        echo -e "${red}Error: Cannot enable Maps Android Backend API"
+        echo -ne "${white}"
+        exit 222
+    fi
+
+    echo "Enabling Maps IOS Backend..."
+    if ! gcloud services enable maps-ios-backend.googleapis.com --project "$projectName"; then
+        echo -e "${red}Error: Cannot enable Maps IOS Backend API"
+        echo -ne "${white}"
+        exit 223
+    fi
+
+    echo "Enabling Geocoding Backend..."
+    if ! gcloud services enable geocoding-backend.googleapis.com --project "$projectName"; then
+        echo -e "${red}Error: Cannot enable Geocoding Backend API"
+        echo -ne "${white}"
+        exit 224
+    fi
+
+    echo "Enabling Static Maps Backend..."
+    if ! gcloud services enable static-maps-backend.googleapis.com --project "$projectName"; then
+        echo -e "${red}Error: Cannot enable Static Maps Backend API"
+        echo -ne "${white}"
+        exit 225
+    fi
+}
+
+echo "Enabling APIs"
+enableAPIs
+
