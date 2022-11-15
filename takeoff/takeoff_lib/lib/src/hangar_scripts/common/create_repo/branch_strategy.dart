@@ -1,0 +1,1 @@
+enum BranchStrategy { gitflow }
