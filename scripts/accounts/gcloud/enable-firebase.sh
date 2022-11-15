@@ -52,20 +52,15 @@ if ! gcloud projects describe "$projectName" &>/dev/null ; then
     exit 200
 fi
 
-echo "Adding Firebase to Project..."
-# TODO: Check this
-if ! firebase projects:list | grep "$projectName" &>/dev/null; then
-    if ! firebase projects:addfirebase "$projectName"; then
-        echo -e "${red}Error: Cannot add Firebase to project."
-        echo -ne "${white}"
-        exit 201
-    fi
-else
-    echo -e "Firebase already added to $projectName"
-fi
-
 enableAPIs()
 {
+    echo "Enabling Firebase..."
+    if ! gcloud services enable firebase.googleapis.com --project "$projectName"; then
+        echo -e "${red}Error: Cannot enable Firebase API"
+        echo -ne "${white}"
+        exit 220
+    fi
+
     echo "Enabling Firestore..."
     if ! gcloud services enable firestore.googleapis.com --project "$projectName"; then
         echo -e "${red}Error: Cannot enable Firestore API"
@@ -102,8 +97,21 @@ enableAPIs()
     fi
 }
 
+
 echo "Enabling APIs"
 enableAPIs
+
+echo "Adding Firebase to Project..."
+# TODO: Check this
+if ! firebase projects:list | grep "$projectName" &>/dev/null; then
+    if ! firebase projects:addfirebase "$projectName"; then
+        echo -e "${red}Error: Cannot add Firebase to project."
+        echo -ne "${white}"
+        exit 201
+    fi
+else
+    echo -e "Firebase already added to $projectName"
+fi
 
 echo "Creating Firestore Database..."
 command="gcloud firestore databases create --project $projectName"
