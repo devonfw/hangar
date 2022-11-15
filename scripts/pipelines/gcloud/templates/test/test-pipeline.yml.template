@@ -27,6 +27,10 @@ steps:
 
 - id: "Execute test script"
   name: ${_DOCKER_IMAGE}
-  args: ['.pipelines/scripts/test.sh']
+  script: |
+    #!/bin/bash
+    set -e
+    [[ -f .pipelines/scripts/test-setup-environment.sh ]] && source .pipelines/scripts/test-setup-environment.sh
+    .pipelines/scripts/test.sh
 
 # mark to insert trigger
