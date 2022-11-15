@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "takeoff_cli",
+            "cwd": "takeoff_cli",
+            "console": "terminal",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/takeoff_cli.dart"
+        },
+        {
+            "name": "takeoff_gui",
+            "cwd": "takeoff_gui",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "takeoff_gui (profile mode)",
+            "cwd": "takeoff_gui",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "takeoff_gui (release mode)",
+            "cwd": "takeoff_gui",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "takeoff_lib",
+            "cwd": "takeoff_lib",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+}
