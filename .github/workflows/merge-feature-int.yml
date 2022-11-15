@@ -19,5 +19,6 @@ jobs:
         uses: devmasx/merge-branch@master
         with:
           type: now
+          message: 'Merge ${{ github.ref_name }} into int'
           target_branch: int
           github_token: ${{ github.token }}
