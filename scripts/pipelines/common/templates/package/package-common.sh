@@ -65,7 +65,7 @@ fi
 if [[ "$registry" == *"docker.pkg.dev"* ]];
 then
     repositoryName=$(echo "$imageName" | cut -d '/' -f 3)
-    region=$(echo "$imageName" | cut -d '-' -f 1-2)
+    region=$(echo "$imageName" | cut -d '/' -f 1 | sed 's/-docker.pkg.dev//' )
     if ! gcloud artifacts repositories describe "$repositoryName" --location="$region" &> /dev/null
     then
         # We create the Docker repository in Artifact Registry
