@@ -1,4 +1,4 @@
-name: Merge feature branch in int branch
+name: Merge branch into int branch
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Merge branch in int
+      - name: Merge branch into int
         uses: devmasx/merge-branch@master
         with:
           type: now
