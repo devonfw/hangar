@@ -121,8 +121,59 @@ fi
 
 echo "Creating Firebase SDK Service Account..."
 service_email=$(gcloud iam service-accounts list | grep firebase-adminsdk | tr -s ' ' | cut -d ' ' -f2)
-if ! gcloud iam service-accounts keys create service_key.json --iam-account "$service_email" --project "$projectName"; then
+if ! gcloud iam service-accounts keys create /scripts/workspace/firebase.json --iam-account "$service_email" --project "$projectName"; then
     echo -e "${red}Error: Cannot create Firebase Service Account"
     echo -ne "${white}"
     exit 240
 fi
+
+createApps()
+{
+    base_create_app_command="firebase apps:create --project $projectName"
+    base_sdkconfig_command="firebase apps:sdkconfig --project $projectName"
+    
+    echo "Creating ANDROID App..."
+    command=$base_create_app_command" --package-name com.takeoff.\"$projectName\" ANDROID \"$projectName\"_android"
+    if ! eval "$command"; then
+        echo -e "${red}Error while creating Android APP." >&2
+        echo -ne "${white}"
+        exit 250
+    fi
+    command=$base_sdkconfig_command" --out /scripts/workspace/google-services.json ANDROID"
+    if ! eval "$command"; then
+        echo -e "${red}Error while exporting SDK Android Config." >&2
+        echo -ne "${white}"
+        exit 251
+    fi
+    
+    echo "Creating IOS App..."
+    command=$base_create_app_command" --bundle-id com.takeoff.\"$projectName\" --app-store-id \"\" IOS \"$projectName\"_ios"
+    if ! eval "$command"; then
+        echo -e "${red}Error while creating IOS APP." >&2
+        echo -ne "${white}"
+        exit 252
+    fi
+    command=$base_sdkconfig_command" --out /scripts/workspace/GoogleService-Info.plist IOS"
+    if ! eval "$command"; then
+        echo -e "${red}Error while exporting SDK IOS Config." >&2
+        echo -ne "${white}"
+        exit 253
+    fi
+
+    echo "Creating WEB App..."
+    command=$base_create_app_command" WEB \"$projectName\"_web"
+    if ! eval "$command"; then
+        echo -e "${red}Error while creating WEB APP." >&2
+        echo -ne "${white}"
+        exit 254
+    fi
+    command=$base_sdkconfig_command" --out /scripts/workspace/webconfig.json WEB"
+    if ! eval "$command"; then
+        echo -e "${red}Error while exporting SDK WEB Config." >&2
+        echo -ne "${white}"
+        exit 255
+    fi
+}
+
+echo "Creating APPs"
+createApps
