@@ -4,7 +4,7 @@
 :terraform_vars: --service_account_file key.json --project hangar --region europe-southwest1 --zone europe-southwest1-a --subnet_cidr_block 10.0.1.0/24 -- instance_type e2-medium
 :terraform_tutorials: https://developer.hashicorp.com/terraform/tutorials/gcp-get-started
 :extra_information: https://cloud.google.com/docs/terraform[Official Gcloud documentation]
-= Setting up a SonarQube instance in {provider_name} 
+= Setting up a SonarQube instance in {provider_name}
 
 The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
 
