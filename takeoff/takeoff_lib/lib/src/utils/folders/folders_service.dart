@@ -1,6 +1,7 @@
 import 'dart:io' show Directory, FileSystemException;
 import 'package:meta/meta.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/platform/unsupported_platform_exception.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
@@ -79,9 +80,24 @@ class FoldersService {
   bool createHostFolders() {
     Log.info("Checking host volume folders");
 
-    Directory cacheDirectory = getCacheFolder();
-    for (String folderName in windowsHostFolders.values) {
-      Directory newFolder = Directory(cacheDirectory.path + folderName);
+    Map<String, String> env = platformService.env;
+
+    late Map<String, String> hostFolders;
+    late String baseFolder;
+
+    if (platformService.isWindows) {
+      hostFolders = windowsHostFolders;
+      baseFolder = "${env["UserProfile"]}";
+    } else if (platformService.isUnix) {
+      hostFolders = linuxHostFolders;
+      baseFolder = "${env["HOME"]}";
+    } else {
+      throw UnsupportedPlatformException(
+          "Only Linux, Windows and MacOS are supported");
+    }
+
+    for (String folderName in hostFolders.values) {
+      Directory newFolder = Directory(join(baseFolder, folderName));
       if (!newFolder.existsSync()) {
         try {
           newFolder.createSync();
