@@ -5,7 +5,7 @@ helpFunction()
    echo "Enables Firebase on a project and required APIs"
    echo ""
    echo "Arguments:"
-   echo -e "\t-n [Required] Name of the new project."
+   echo -e "\t-n [Required] Name of the project."
    echo -e "\t-r            Region to create Firestore Database"
 }
 
@@ -176,3 +176,4 @@ createApps()
 
 echo "Creating APPs"
 createApps
+
