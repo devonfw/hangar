@@ -4,7 +4,6 @@
 :pipeline_type2: pipeline
 :path_provider: gcloud
 :no-PR-or-MR:
-:secret-files:
 :machineType:
 :openBrowserFlag:
 include::../common_templates/setup-build-pipeline.asciidoc[]
