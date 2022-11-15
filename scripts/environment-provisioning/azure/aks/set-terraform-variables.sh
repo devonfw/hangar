@@ -1,2 +1,3 @@
 #!/bin/bash
-../../../set-config.sh "$*"
+file="./terraform.tfvars"
+../../../set-config.sh --file_set_vars $file $*

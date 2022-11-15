@@ -1,0 +1,29 @@
+:provider_name: Google Cloud
+:container_instance_type: a Compute Engine VM instance
+:provider_path: gcloud
+:terraform_vars: --service_account_file key.json --project hangar --region europe-southwest1 --zone europe-southwest1-a --subnet_cidr_block 10.0.1.0/24 -- instance_type e2-medium
+:terraform_tutorials: https://developer.hashicorp.com/terraform/tutorials/gcp-get-started
+:extra_information: https://cloud.google.com/docs/terraform[Official Gcloud documentation]
+include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partBeforePrerequisites]
+=== Prerequisites
+* https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli[Install Terraform].
+
+* https://cloud.google.com/sdk/docs/install-sdk[Install Google Cloud CLI].
+
+* Enable Compute Engine in your gcloud project. You can do it via webconsole or via glcoud cli using the following command:
+
+```
+gcloud services enable compute.googleapis.com --project "$projectName"
+```
+
+* Have a service account that is going to be used by terraform with the next roles:
+
+```
+roles/compute.instanceAdmin.v1
+roles/compute.networkAdmin
+roles/compute.securityAdmin
+```
+
+IMPORTANT: You need the key.json file of that service account to run terraform as it.
+
+include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partAfterPrerequisites]

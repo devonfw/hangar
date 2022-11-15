@@ -111,3 +111,10 @@ if ! gcloud services enable secretmanager.googleapis.com --project "$projectName
    echo -ne "${white}"
    exit 224
 fi
+
+echo "Enabling Compute Engine..."
+if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Compute Engine API"
+   echo -ne "${white}"
+   exit 225
+fi
