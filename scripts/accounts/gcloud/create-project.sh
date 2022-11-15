@@ -32,7 +32,7 @@ red='\e[0;31m'
 # Mandatory argument check
 if [ -z "$projectName" ] || [ -z "$billing" ];
 then
-   echo -e "${red}Error: Missing paramenters, -n and -b are mandatory." >&2
+   echo -e "${red}Error: Missing parameters, -n and -b are mandatory." >&2
    echo -e "${red}Use -h flag to display help." >&2
    echo -ne "${white}"
    exit 2
