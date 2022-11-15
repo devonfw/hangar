@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - master
       - feature/**
 
 jobs:
   build:
-    if: contains(github.event.head_commit.message, '!int')
+    if: contains(github.event.head_commit.message, '!int') || github.ref_name == master
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
