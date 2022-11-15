@@ -1,6 +1,7 @@
 import 'dart:io' show Directory, FileSystemException;
 import 'package:meta/meta.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/platform/unsupported_platform_exception.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
@@ -96,7 +97,7 @@ class FoldersService {
     }
 
     for (String folderName in hostFolders.values) {
-      Directory newFolder = Directory(baseFolder + folderName);
+      Directory newFolder = Directory(join(baseFolder, folderName));
       if (!newFolder.existsSync()) {
         try {
           newFolder.createSync();
