@@ -4,7 +4,6 @@
 :pipeline_type2: pipeline
 :path_provider: gcloud
 :no-PR-or-MR:
-:secret-files:
 :machineType:
 :openBrowserFlag:
 = Setting up a Build {pipeline_type} on {provider}
@@ -35,7 +34,6 @@ pipeline_generator.sh \
   --language-version <version> \
   [-t <target-directory>] \
   [-b <branch>] \
-  [--secret-files <list files:download paths]
   [-m <machine type for {pipeline_type} runner>]
 ```
 
@@ -52,11 +50,8 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
     --language-version   [Required, if Flutter or Python] Language or framework version.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 -m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
 ```
-NOTE: For the `secret-files` flag, You have to give a path of a file you have in your local machine, and a path where the file will be downloaded in your pipelines. you have to separate those paths with ':'.
-The file will be sent your pipelines inside the second path you gave with the same name you uploaded it.
 
 === Examples
 
