@@ -7,17 +7,17 @@ steps:
     - |
       set -e
       echo -e "\n\n"
+      # We get the name of the registry from the full image name
+      firstPartImage=$(echo $_IMAGE_NAME | cut -d'/' -f1)
+      echo $firstPartImage | grep "\." > /dev/null && REGISTRY=$firstPartImage || REGISTRY="docker.io"
       echo "SETTING UP ENVIRONMENT"
       echo ""
-      ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_REGISTRY"
+      ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$$REGISTRY"
       echo -e "\n\n"
       echo "LOADING CREDENTIALS AND GETTING REGISTRY"
       echo $$registry_credentials > credentials.env
       . credentials.env
       rm credentials.env
-      # We get the name of the registry from the full image name
-      firstPartImage=$(echo $imageName | cut -d'/' -f1)
-      echo $firstPartImage | grep "\." > /dev/null && REGISTRY=$firstPartImage || REGISTRY="docker.io"
       echo -e "\n\n"
       echo "EXECUTING deploy-cloud-run.sh"
       echo "./.pipelines/scripts/deploy-cloud-run.sh -d \"$PROJECT_ID\" -b \"$_BRANCH_NAME\" -n \"$_SERVICE_NAME\" -i \"$_IMAGE_NAME\" -g \"$_GCLOUD_REGION\" -t \"$_PORT\" -r \"$$REGISTRY\" -u \"***\" -p \"****\" -a \"****\" -s \"****\" -l \"$$AWS_REGION\""
