@@ -20,7 +20,6 @@ do
 done
 
 white='\e[1;37m'
-green='\e[1;32m'
 red='\e[0;31m'
 
 # Mandatory argument check
