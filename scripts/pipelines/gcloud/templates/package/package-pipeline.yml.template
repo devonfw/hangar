@@ -38,7 +38,7 @@ availableSecrets:
     env: REGISTRY_CREDENTIALS
 
 options:
- machineType: _MACHINE_TYPE
+ machineType: ${_MACHINE_TYPE}
 
 
 
