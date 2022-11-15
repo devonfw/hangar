@@ -50,7 +50,6 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
--w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
 === Examples
