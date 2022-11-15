@@ -10,7 +10,7 @@ class ProjectsService {
   initAccount(String cloud, String email) async {
     switch (cloud) {
       case "gc":
-        _takeOffFacade.initGoogleCloud("eduard.conesa-guerrero@capgemini.com");
+        _takeOffFacade.initGoogleCloud(email);
         break;
       case "aws":
         Log.warning("Not implemented yet");
