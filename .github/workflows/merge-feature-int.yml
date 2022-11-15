@@ -1,0 +1,24 @@
+name: Merge feature branch in int branch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/**
+
+jobs:
+  build:
+    if: contains(github.event.head_commit.message, '!int')
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Merge branch in int
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          message: 'Merge ${{ github.ref_name }} into int'
+          target_branch: int
+          github_token: ${{ github.token }}
