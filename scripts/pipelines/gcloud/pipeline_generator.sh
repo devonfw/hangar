@@ -183,30 +183,6 @@ function checkOrUploadFlutterImage {
     fi
 }
 
-function addSecretFiles {
-  # This function is used to store files as secret
-  echo -e "${green}Uploading secret files...${white}"
-  for file_downloadPath in $secreFiles
-  do
-    filePath=$(echo "$file_downloadPath" | cut -d: -f1)
-    fileName=$(basename "$filePath")
-    # Here we changed all the non alphanumeric+_ charachter to _ (Because Google does not accept those character as name of secret)
-    secretName=$(echo "${fileName}" | sed 's/\W/_/g')
-    downloadPath="$(echo "$file_downloadPath" | cut -d: -f2)/${fileName}"
-    if ! gcloud secrets versions access latest --secret="$secretName" &>/dev/null; then
-        echo "gcloud secrets create $secretName"
-        gcloud secrets create "$secretName" --replication-policy="automatic"
-    fi
-    echo "gcloud secrets versions add \"$secretName\" --data-file=\"${currentDirectory}/${filePath}\""
-    gcloud secrets versions add "$secretName" --data-file="${currentDirectory}/${filePath}"
-    mkdir -p "${localDirectory}/${configFilePath}"
-    echo "$secretName=$downloadPath" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
-    echo -e "${green}${fileName}: Done.${white}"
-  done
-  cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret.sh" "${localDirectory}/${scriptFilePath}/get-secret.sh"
-  echo ""
-}
-
 obtainHangarPath
 
 # Load common functions
@@ -237,8 +213,6 @@ type addPipelineVariables &> /dev/null && addPipelineVariables
 type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
 
 copyYAMLFile
-
-addSecretFiles
 
 [[ "$machineType" != "" ]] && addMachineType
 

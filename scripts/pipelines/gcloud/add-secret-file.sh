@@ -66,7 +66,6 @@ function checkArgs {
   done
 
   # If secret name given we check that is compliant with the regex \w
-  echo $secretName
   [[ "$secretName" =~ ^[a-zA-Z0-9_]$* ]] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
 
   # Checking if the file given with the -f exists
@@ -74,9 +73,7 @@ function checkArgs {
   # Ensuring the UNIX format path
   localFilePath=${localFilePath//'\'/"/"}
   localFilePath=${localFilePath//'C:'/"/c"}
-  cd $(dirname "${localFilePath}") && [ -f $(basename "${localFilePath}") ] || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
-  echo ok
-
+  cd $(dirname "${localFilePath}") && [ -f $(basename "${localFilePath}") ] && localFilePath="$(pwd)/$(basename "${localFilePath}")"  || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
 }
 
 function getProjectRepo {
@@ -101,20 +98,25 @@ function addSecretFiles {
   fi
 
   # Creating the secret if it does not exist yet
-  if ! gcloud secrets versions access latest --secret="$secretName" &>/dev/null; then
+  if [[ $(gcloud secrets list 2> /dev/null | awk -v secretName="$secretName" '$1==secretName {print $1}') == "" ]]
+  then
       echo "gcloud secrets create $secretName"
       gcloud secrets create "$secretName" --replication-policy="automatic"
   fi
 
   # Adding a version to the secret previously created
   echo "gcloud secrets versions add \"$secretName\" --data-file=\"${currentDirectory}/${localFilePath}\""
-  gcloud secrets versions add "$secretName" --data-file="${currentDirectory}/${localFilePath}"
+  gcloud secrets versions add "$secretName" --data-file="${localFilePath}"
   mkdir -p "${localDirectory}/${configFilePath}"
-  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "secretName=PathToDowload #pipelinesList" >> [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]]
+  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "secretName=PathToDowload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   ! [[ "$pipelinesList" = "" ]] || pipelinesList="AllPipelines"
   echo "$secretName=$remoteFilePath #$pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
-  echo -e "${green}${fileName}: Done.${white}"
-  cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret.sh" "${localDirectory}/${scriptFilePath}/get-secret.sh"
+  cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secrets.sh" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
+  # Commiting the conf file
+  echo -e "${green}Commiting and pushing into Git remote...${white}"
+  git add -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
+  git commit -m "[skip ci] Adding secret conf file"
+  git push -u origin "$sourceBranch"
   echo ""
 }
 
@@ -143,12 +145,9 @@ obtainHangarPath
 
 if [[ "$help" == "true" ]]; then help_secret; fi
 
-
 ensurePathFormat
 
 checkArgs
-
-exit
 
 checkInstallations
 
@@ -157,8 +156,6 @@ getProjectRepo
 createNewBranch
 
 addSecretFiles
-
-commitCommonFiles
 
 merge_branch
 
