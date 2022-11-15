@@ -10,8 +10,6 @@ class InitCommand extends Command {
       "Initialize the account which will use the selecter cloud provider.";
 
   InitCommand(this.service) {
-    // we can add command specific arguments here.
-    // [argParser] is automatically created by the parent class.
     argParser.addOption('cloud',
         allowed: ["gc", "aws", "azure"], mandatory: true);
     argParser.addOption('account', mandatory: true);

@@ -5,7 +5,6 @@ import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffCli {
   void run(List<String> args) async {
-    // args = ["init", "--cloud", "gc"];
     TakeOffFacade facade = TakeOffFacade();
     await facade.initialize();
 
