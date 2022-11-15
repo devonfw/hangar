@@ -4,9 +4,9 @@ import 'package:takeoff_cli/services/project_service.dart';
 class InitCommand extends Command {
   final ProjectsService service;
   @override
-  final name = "init";
+  final String name = "init";
   @override
-  final description =
+  final String description =
       "Initialize the account which will use the selecter cloud provider.";
 
   InitCommand(this.service) {
