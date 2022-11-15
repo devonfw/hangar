@@ -79,9 +79,24 @@ class FoldersService {
   bool createHostFolders() {
     Log.info("Checking host volume folders");
 
-    Directory cacheDirectory = getCacheFolder();
-    for (String folderName in windowsHostFolders.values) {
-      Directory newFolder = Directory(cacheDirectory.path + folderName);
+    Map<String, String> env = platformService.env;
+
+    late Map<String, String> hostFolders;
+    late String baseFolder;
+
+    if (platformService.isWindows) {
+      hostFolders = windowsHostFolders;
+      baseFolder = "${env["UserProfile"]}";
+    } else if (platformService.isUnix) {
+      hostFolders = linuxHostFolders;
+      baseFolder = "${env["HOME"]}";
+    } else {
+      throw UnsupportedPlatformException(
+          "Only Linux, Windows and MacOS are supported");
+    }
+
+    for (String folderName in hostFolders.values) {
+      Directory newFolder = Directory(baseFolder + folderName);
       if (!newFolder.existsSync()) {
         try {
           newFolder.createSync();

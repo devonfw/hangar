@@ -19,10 +19,10 @@ class TakeOffFacade {
   Future<bool> initialize() async {
     DockerController dockerController =
         await DockerControllerFactory().create();
+    GetIt.I.registerSingleton<PlatformService>(PlatformService());
     GetIt.I.registerSingleton<FoldersService>(FoldersService());
     GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
     GetIt.I.registerSingleton<Database>(await DatabaseSingleton().initialize());
-    GetIt.I.registerLazySingleton<PlatformService>(() => PlatformService());
 
     return await SystemService().checkSystemPrerequisites();
   }
