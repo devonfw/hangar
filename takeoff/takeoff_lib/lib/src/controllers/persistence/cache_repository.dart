@@ -10,7 +10,4 @@ abstract class CacheRepository {
 
   /// Returns all the Google Cloud Project IDs from the logged account
   Future<List<String>> getGoogleProjectIds();
-
-  /// Stores a new Google Account key
-  Future<bool> saveGoogleStoreAccountKey(String accountKey, String projectId);
 }
