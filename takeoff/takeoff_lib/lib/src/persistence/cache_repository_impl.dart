@@ -8,8 +8,6 @@ class CacheRepositoryImpl extends CacheRepository {
 
   final String _googleProjectIdsKey = 'gcloud_project_ids';
 
-  final String _googleServiceAccountKey = 'gcloud_service_account';
-
   @override
   Future<bool> saveGoogleEmail(String email) async {
     Database db = GetIt.I.get<Database>();

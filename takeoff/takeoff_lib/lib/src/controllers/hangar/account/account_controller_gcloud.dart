@@ -22,16 +22,18 @@ class AccountControllerGCloud implements AccountController {
       return false;
     }
 
-    // TODO: Wait for the key.json path to be parametrized to be able to pass it
     if (!await controller.executeCommand([], [
       "gcloud",
       "auth",
       "activate-service-account",
       "${setUpAccountScript.serviceAccount}@${setUpAccountScript.projectId}.iam.gserviceaccount.com",
-      "--key-file" "/scripts/workspace/${setUpAccountScript.projectId}/key.json"
+      "--key-file",
+      setUpAccountScript.serviceKeyPath!
     ])) {
       return false;
     }
+
+    // TODO: Check if we need to set the GOOGLE_APPLICATION_CREDENTIALS env variable
 
     return true;
   }

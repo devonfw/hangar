@@ -18,6 +18,9 @@ class FoldersService {
     "kube": ".kube",
     "github": "AppData\\Roaming\\GitHub CLI",
     "ssh": ".ssh",
+    "workspace": "hangar_workspace",
+    "firebase": "AppData\\Roaming\\configstore",
+    "git": ".gitconfig"
   };
 
   static Map<String, String> linuxHostFolders = {
@@ -26,7 +29,10 @@ class FoldersService {
     "azure": ".azure",
     "kube": ".kube",
     "github": ".config/gh",
-    "ssh": ".ssh"
+    "ssh": ".ssh",
+    "workspace": "hangar_workspace",
+    "firebase": ".config/configstore",
+    "git": ".gitconfig"
   };
 
   /// Names of the folders that will be created in .takeoff/
@@ -36,7 +42,10 @@ class FoldersService {
     "azure": "/root/.azure",
     "kube": "/root/.kube",
     "github": "/root/.config/gh",
-    "ssh": "/root/.ssh"
+    "ssh": "/root/.ssh",
+    "workspace": "/scripts/workspace",
+    "firebase": "/root/.config/configstore",
+    "git": "/root/.gitconfig"
   };
 
   /// Returns the Cache folder as a file. It it does not exists, it's created.

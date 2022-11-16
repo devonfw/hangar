@@ -27,15 +27,18 @@ class SetUpPrincipalAccountGCloud implements Script {
   /// ID to be set to the custom role provided in [customRoleYamlPath].
   String? customRoleId;
 
-  SetUpPrincipalAccountGCloud({
-    required this.googleAccount,
-    required this.serviceAccount,
-    required this.projectId,
-    this.roles,
-    this.rolesFilePath = "/scripts/accounts/gcloud/predefined-roles.txt",
-    this.customRoleYamlPath,
-    this.customRoleId,
-  });
+  /// Path to store the generated service account key.
+  String? serviceKeyPath;
+
+  SetUpPrincipalAccountGCloud(
+      {required this.googleAccount,
+      required this.serviceAccount,
+      required this.projectId,
+      this.roles,
+      this.rolesFilePath = "/scripts/accounts/gcloud/predefined-roles.txt",
+      this.customRoleYamlPath,
+      this.customRoleId,
+      this.serviceKeyPath});
 
   @override
   Map<int, String> get errors => {
