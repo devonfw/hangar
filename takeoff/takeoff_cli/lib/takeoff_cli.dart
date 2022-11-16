@@ -1,13 +1,16 @@
+import 'package:args/command_runner.dart';
+import 'package:takeoff_cli/input/commands/init_command.dart';
+import 'package:takeoff_cli/services/project_service.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffCli {
-  void run(List<String> args) {
-    print("here");
+  void run(List<String> args) async {
+    TakeOffFacade facade = TakeOffFacade();
+    await facade.initialize();
 
-    Log.info("message");
-    Log.debug("message");
-    Log.error("message");
-    Log.warning("message");
-    Log.success("message");
+    ProjectsService projectsService = ProjectsService(facade);
+    CommandRunner("takeoff", "A CLI to easily create cloud environment.")
+      ..addCommand(InitCommand(projectsService))
+      ..run(args);
   }
 }
