@@ -6,11 +6,14 @@ import 'package:takeoff_lib/src/controllers/auth/auth_controller.dart';
 import 'package:takeoff_lib/src/controllers/auth/gcloud_auth_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
+import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
+import 'package:takeoff_lib/src/domain/cloud_provider_enum.dart';
 import 'package:takeoff_lib/src/controllers/hangar/account/account_controller.dart';
 import 'package:takeoff_lib/src/controllers/hangar/account/account_controller_gcloud.dart';
 import 'package:takeoff_lib/src/controllers/hangar/project/project_controller.dart';
 import 'package:takeoff_lib/src/controllers/hangar/project/project_controller_gcloud.dart';
 import 'package:takeoff_lib/src/domain/gcloud.dart';
+import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/create_project.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/setup_principal_account.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/verify_roles_and_permissions.dart';
@@ -36,10 +39,41 @@ class TakeOffFacade {
     return await SystemService().checkSystemPrerequisites();
   }
 
+  /// Returns the currently stored email for each Cloud Provider.
+  ///
+  /// Currently only Google Cloud is supported. If you introduce an unsupported
+  /// provider or there is no currently logged account it will return an empty String.
+  Future<String> getCurrentAccount(CloudProviderId cloudProvider) async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return await cacheRepository.getGoogleEmail();
+      case CloudProviderId.aws:
+        return "";
+      case CloudProviderId.azure:
+        return "";
+    }
+  }
+
+  /// Logs into the [cloudProvider] with [email].
+  ///
+  /// Returns whether the process is succesful.
+  Future<bool> init(String email, CloudProviderId cloudProvider) async {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return await _initGoogleCloud(email);
+      case CloudProviderId.aws:
+        return false;
+      case CloudProviderId.azure:
+        return false;
+    }
+  }
+
   /// Logs in with Google Cloud.
   ///
   /// Receives the [email] to log in and an optional [GCloudAuthController] for testing purposes.
-  Future<bool> initGoogleCloud(String email,
+  Future<bool> _initGoogleCloud(String email,
       {AuthController<GCloud>? controller}) async {
     AuthController<GCloud> authController =
         controller ?? GCloudAuthController();
