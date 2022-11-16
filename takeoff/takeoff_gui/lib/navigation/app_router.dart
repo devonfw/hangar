@@ -5,6 +5,6 @@ class AppRouter {
   late final GoRouter router = GoRouter(
     initialLocation: "/",
     debugLogDiagnostics: true,
-    routes: [GoRoute(path: "/", builder: (context, state) => HomePage())],
+    routes: [GoRoute(path: "/", builder: (context, state) => const HomePage())],
   );
 }
