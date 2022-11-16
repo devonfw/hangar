@@ -32,7 +32,7 @@ setup-principal-account.sh \
   [-f <roles file path>] \
   [-c <custom role file path>] \
   [-i <custom role id>]
-  [-k <custom path to store the service account key>]
+  [-k <service account key file path>]
 ```
 
 === Flags
