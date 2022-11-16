@@ -15,7 +15,7 @@ helpFunction()
     echo "  -f                Path to a file containing the roles (basic or predefined) to be attached to the principal in the project."
     echo "  -c                Path to a YAML file containing the custom role to be attached to the principal in the project. Requires -i."
     echo "  -i                ID to be set to the custom role provided in -c."
-    echo "  -k                Path to store the generated service account key."
+    echo "  -k                Path to the file where the service account key will be stored. Default: ./key.json."
     exit
 }
 
