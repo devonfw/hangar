@@ -111,3 +111,17 @@ if ! gcloud services enable secretmanager.googleapis.com --project "$projectName
    echo -ne "${white}"
    exit 224
 fi
+
+echo "Enabling Cloud Resource Manager..."
+if ! gcloud services enable cloudresourcemanager.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cloud Resource Manager"
+   echo -ne "${white}"
+   exit 225
+fi
+
+echo "Enabling IAM Control..."
+if ! gcloud services enable iam.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable IAM Control API"
+   echo -ne "${white}"
+   exit 226
+fi
