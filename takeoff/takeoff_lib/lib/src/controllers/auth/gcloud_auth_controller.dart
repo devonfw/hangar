@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:takeoff_lib/src/controllers/auth/auth_controller.dart';
@@ -10,9 +11,15 @@ import 'package:takeoff_lib/src/utils/logger/log.dart';
 import 'package:takeoff_lib/src/utils/url_launcher/url_launcher.dart';
 
 /// Specific implementation of the authentication process for Google Cloud
-class GCloudAuthController extends AuthController<GCloud> {
+class GCloudAuthController implements AuthController<GCloud> {
+  Stream<List<int>>? stdinStream;
+
+  GCloudAuthController({this.stdinStream});
+
   @override
-  Future<bool> authenticate(String email) async {
+  Future<bool> authenticate(
+    String email,
+  ) async {
     DockerController dockerController =
         await DockerControllerFactory().create();
 
@@ -23,12 +30,13 @@ class GCloudAuthController extends AuthController<GCloud> {
         [DockerController.imageName] +
         ["gcloud", "auth", "login", email];
 
-    var gcloudProcess = await Process.start("docker", args, runInShell: true);
+    Process gCloudProcess =
+        await Process.start("docker", args, runInShell: true);
 
     Log.info("Opening Google Authentication in the browser");
     bool openedUrl = false;
 
-    var stderrHandler = gcloudProcess.stderr.listen((event) async {
+    var stderrHandler = gCloudProcess.stderr.listen((event) async {
       String message = String.fromCharCodes(event).trim();
       if (!openedUrl && !message.startsWith("WARNING")) {
         String url = message.split("\n").last.trim();
@@ -41,18 +49,26 @@ class GCloudAuthController extends AuthController<GCloud> {
       }
     });
 
-    var stdoutHandler = gcloudProcess.stdout.listen((event) {
+    var stdoutHandler = gCloudProcess.stdout.listen((event) {
       stdout.writeln(String.fromCharCodes(event));
     });
 
-    var stdinHandler = stdin.listen((event) {
-      gcloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
-    });
+    StreamSubscription<List<int>>? stdinHandler;
 
-    int exitCode = await gcloudProcess.exitCode;
+    if (stdinStream != null) {
+      gCloudProcess.stdin.addStream(stdinStream!);
+    } else {
+      stdinHandler = stdin.listen((event) {
+        gCloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
+      });
+    }
+
+    int exitCode = await gCloudProcess.exitCode;
 
     stderrHandler.cancel();
-    stdinHandler.cancel();
+    if (stdinHandler != null) {
+      stdinHandler.cancel();
+    }
     stdoutHandler.cancel();
 
     if (exitCode != 0) {
@@ -65,5 +81,11 @@ class GCloudAuthController extends AuthController<GCloud> {
     await cacheRepository.saveGoogleEmail(email);
 
     return true;
+  }
+
+  @override
+  Future<String> getCurrentAccount() async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    return await cacheRepository.getGoogleEmail();
   }
 }
