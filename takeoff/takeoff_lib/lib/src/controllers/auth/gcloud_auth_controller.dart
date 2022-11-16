@@ -66,4 +66,10 @@ class GCloudAuthController extends AuthController<GCloud> {
 
     return true;
   }
+
+  @override
+  Future<String> getCurrentAccount() async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    return await cacheRepository.getGoogleEmail();
+  }
 }

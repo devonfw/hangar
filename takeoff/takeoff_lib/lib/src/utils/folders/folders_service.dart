@@ -17,7 +17,7 @@ class FoldersService {
     "azure": ".azure",
     "kube": ".kube",
     "github": "AppData\\Roaming\\GitHub CLI",
-    "ssh": ".ssh"
+    "ssh": ".ssh",
   };
 
   static Map<String, String> linuxHostFolders = {
