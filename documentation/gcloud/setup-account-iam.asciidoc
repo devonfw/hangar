@@ -32,6 +32,7 @@ setup-principal-account.sh \
   [-f <roles file path>] \
   [-c <custom role file path>] \
   [-i <custom role id>]
+  [-k <custom path to store the service account key>]
 ```
 
 === Flags
@@ -43,6 +44,7 @@ setup-principal-account.sh \
 -f                 Path to a file containing the roles (basic or predefined) to be attached to the principal in the project.
 -c                 Path to a YAML file containing the custom role to be attached to the principal in the project. Requires -i.
 -i                 ID to be set to the custom role provided in -c.
+-k                 Custom path to store the generated service account key .json
 ```
 
 === Example
