@@ -1,7 +1,7 @@
 #service account credentials file
-service_account_file = ".secrets/key.json"
+service_account_file = "key.json"
 #The ID of the project in which the resource belongs
-project = "test-jorge-367510"
+project = "hangar"
 #GCloud region code of the location where the resources will be created
 region = "europe-southwest1"
 #The zone inside the region that the machine should be created in
