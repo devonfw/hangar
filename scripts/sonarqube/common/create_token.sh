@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e
-FLAGS=$(getopt -a --options u:p:s:t:h --long "user:,password:,sonar-url:,token-name:,help" -- "$@")
+FLAGS=$(getopt -a --options u:p:s:t:h --long "user:,password:,sonar-url:,token-name:,help,tf-output-sq-token:" -- "$@")
 
 function helpFunction() {
     echo ""
@@ -13,17 +13,36 @@ function helpFunction() {
     echo "  -p, --password                The password of the user that is going to generate the token. By default admin."
     echo "  -t, --token-name              The name under which the secret is stored. By default hangarToken."
     echo "  -h, --help                    Get help for commands."
-    exit
+}
+
+# If terraform output has the token created, read the token from the output instead of creating it.
+# This is needed in terraform because if you try to change or destroy something in the environment, the token cannot be created again.
+# To use it add the flag --tf-output-sq-token $outputName when invoking the script.
+function terraformGetSQToken() {
+    FILE_OUT="terraform.tfoutput"
+    FILE="terraform.tfstate"
+    if [[ -f "$FILE_OUT" ]]; then
+        sq_token_output=$(cat "$FILE_OUT" | grep "$terraformSQToken" | cut -d' ' -f 3)
+    elif [[ -f "$FILE" ]]; then
+        cp -f $FILE temp.tfstate
+        sq_token_output=$(terraform output -state=temp.tfstate | grep "$terraformSQToken" | cut -d' ' -f 3)
+        rm -f temp.tfstate
+    fi
+    if [[ ! -z "$sq_token_output" ]]; then
+        echo "{\"token\":$sq_token_output}"
+        exit
+    fi
 }
 
 eval set -- "$FLAGS"
 while true; do
     case "$1" in
-        -s | --sonar-url)   sonarUrl=$2; shift 2;;
-        -u | --user)        user=$2; shift 2;;
-        -p | --password)    password=$2; shift 2;;
-        -t | --token-name)  tokenName=$2; shift 2;;
-        -h | --help)        helpFunction; exit ;;
+        -s | --sonar-url)      sonarUrl=$2; shift 2;;
+        -u | --user)           user=$2; shift 2;;
+        -p | --password)       password=$2; shift 2;;
+        -t | --token-name)     tokenName=$2; shift 2;;
+        -h | --help)           helpFunction; exit ;;
+        --tf-output-sq-token)  terraformSQToken=$2; terraformGetSQToken; shift 2;;
         --) shift; break;;
     esac
 done
