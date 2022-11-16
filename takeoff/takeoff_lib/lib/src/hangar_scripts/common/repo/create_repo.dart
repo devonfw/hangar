@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:takeoff_lib/src/hangar_scripts/common/create_repo/branch_strategy.dart';
-import 'package:takeoff_lib/src/hangar_scripts/common/create_repo/repo_action.dart';
+import 'package:takeoff_lib/src/domain/cloud_provider.dart';
+import 'package:takeoff_lib/src/hangar_scripts/common/repo/branch_strategy.dart';
+import 'package:takeoff_lib/src/hangar_scripts/common/repo/repo_action.dart';
 import 'package:takeoff_lib/src/hangar_scripts/script.dart';
 
 /// Creates or imports a repository on a provider
@@ -12,7 +13,7 @@ import 'package:takeoff_lib/src/hangar_scripts/script.dart';
 ///
 /// Import an already existing directory or Git repository into your project giving
 /// a path or an URL. Useful for taking to a provider the development of an existing project
-abstract class CreateRepo extends Script {
+abstract class CreateRepo implements Script {
   /// Use case to fulfil: create, import.
   CreateAction action;
 

@@ -19,7 +19,7 @@ class SetUpPrincipalAccountGCloud implements Script {
   String? roles;
 
   /// Path to a file containing the roles (basic or predefined) to be attached to the principal in the project.
-  String? rolesFilePath;
+  String rolesFilePath;
 
   /// Path to a YAML file containing the custom role to be attached to the principal in the project. Requires [customRoleId].
   String? customRoleYamlPath;
@@ -32,7 +32,7 @@ class SetUpPrincipalAccountGCloud implements Script {
     required this.serviceAccount,
     required this.projectId,
     this.roles,
-    this.rolesFilePath,
+    this.rolesFilePath = "/scripts/accounts/gcloud/predefined-roles.txt",
     this.customRoleYamlPath,
     this.customRoleId,
   });
@@ -51,13 +51,10 @@ class SetUpPrincipalAccountGCloud implements Script {
     } else {
       args.addAll(["-g", googleAccount]);
     }
-    args.addAll(["-p", projectId]);
+    args.addAll(["-p", projectId, "-f", rolesFilePath]);
 
     if (roles != null) {
       args.addAll(["-r", roles!]);
-    }
-    if (rolesFilePath != null) {
-      args.addAll(["-f", rolesFilePath!]);
     }
     if (customRoleYamlPath != null && customRoleId != null) {
       args.addAll(["-c", customRoleYamlPath!, "-i", customRoleId!]);

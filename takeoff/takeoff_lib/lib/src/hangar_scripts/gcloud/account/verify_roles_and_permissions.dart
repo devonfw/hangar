@@ -16,7 +16,7 @@ class VerifyRolesAndPermissionsGCloud implements Script {
   String? roles;
 
   /// Path to a file containing the roles to be checked.
-  String? rolesFilePath;
+  String rolesFilePath;
 
   /// Permissions to be checked, splitted by comma.
   String? permissions;
@@ -29,7 +29,7 @@ class VerifyRolesAndPermissionsGCloud implements Script {
     required this.serviceAccount,
     required this.projectId,
     this.roles,
-    this.rolesFilePath,
+    this.rolesFilePath = "/scripts/accounts/gcloud/predefined-roles.txt",
     this.permissions,
     this.permissionsFilePath,
   });
@@ -51,12 +51,9 @@ class VerifyRolesAndPermissionsGCloud implements Script {
     } else {
       args.addAll(["-g", googleAccount]);
     }
-    args.addAll(["-p", projectId]);
+    args.addAll(["-p", projectId, "-f", rolesFilePath]);
     if (roles != null) {
       args.addAll(["-r", roles!]);
-    }
-    if (rolesFilePath != null) {
-      args.addAll(["-f", rolesFilePath!]);
     }
     if (permissions != null) {
       args.addAll(["-e", permissions!]);

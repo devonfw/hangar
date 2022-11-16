@@ -2,7 +2,7 @@ import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/languag
 import 'package:takeoff_lib/src/hangar_scripts/script.dart';
 
 /// Base class with common arguments for the generate pipeline scripts.
-abstract class PipelineGenerator extends Script {
+abstract class PipelineGenerator implements Script {
   /// Configuration file containing pipeline definition.
   String configFile;
 

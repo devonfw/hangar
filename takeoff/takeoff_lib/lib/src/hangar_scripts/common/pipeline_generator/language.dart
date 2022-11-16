@@ -1,3 +1,4 @@
+/// Possible values for the parameter [language] of [PipelineGenerator]
 enum Language {
   quarkus("quarkus"),
   quarkusJVM("quarkus-jvm"),

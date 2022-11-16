@@ -1,6 +1,7 @@
-import 'package:takeoff_lib/src/hangar_scripts/common/create_repo/create_repo.dart';
+import 'package:takeoff_lib/src/hangar_scripts/common/repo/create_repo.dart';
 
 class CreateRepoGCloud extends CreateRepo {
+  /// Short name (ID) of the Google Cloud project.
   String project;
 
   CreateRepoGCloud({
