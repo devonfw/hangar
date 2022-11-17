@@ -34,7 +34,8 @@ class GCloudAuthController implements AuthController<GCloud> {
     Log.info("Opening Google Authentication in the browser");
     bool openedUrl = false;
 
-    var stderrHandler = gCloudProcess.stderr.listen((event) async {
+    StreamSubscription<List<int>> stderrHandler =
+        gCloudProcess.stderr.listen((event) async {
       String message = String.fromCharCodes(event).trim();
       if (!openedUrl && !message.startsWith("WARNING")) {
         String url = message.split("\n").last.trim();
@@ -47,7 +48,8 @@ class GCloudAuthController implements AuthController<GCloud> {
       }
     });
 
-    var stdoutHandler = gCloudProcess.stdout.listen((event) {
+    StreamSubscription<List<int>> stdoutHandler =
+        gCloudProcess.stdout.listen((event) {
       stdout.writeln(String.fromCharCodes(event));
     });
 
