@@ -15,10 +15,11 @@ helpFunction()
     echo "  -f                Path to a file containing the roles (basic or predefined) to be attached to the principal in the project."
     echo "  -c                Path to a YAML file containing the custom role to be attached to the principal in the project. Requires -i."
     echo "  -i                ID to be set to the custom role provided in -c."
+    echo "  -k                Path to the file where the service account key will be stored. Default: ./key.json."
     exit
 }
 
-while getopts g:s:p:r:f:c:i:h flag
+while getopts g:s:p:r:f:c:i:k:h flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
@@ -27,6 +28,7 @@ do
         r) roles=${OPTARG};;
         f) roles_file=${OPTARG};;
         c) custom_role_file=${OPTARG};;
+        k) path_store_key=${OPTARG};;
 	i) custom_role_id=${OPTARG};;
 	h) helpFunction ;;
         ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
@@ -113,7 +115,11 @@ then
         echo -e "${white}The service account $service_account_email exists already. Proceeding to use it."
     fi
     echo -e "${white}Creating service-account keys for service account $service_account_email..."
-    if ! gcloud iam service-accounts keys create ./key.json --iam-account="$service_account_email" &> /dev/null;
+    if [ -z "$path_store_key" ];
+    then
+        path_store_key="./key.json"
+    fi
+    if ! gcloud iam service-accounts keys create $path_store_key --iam-account="$service_account_email" &> /dev/null;
     then      
         echo -e "${red}Error: Service account key could not be created." >&2
         echo -ne "${white}"
