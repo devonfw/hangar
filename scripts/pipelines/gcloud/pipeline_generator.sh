@@ -205,8 +205,6 @@ getProjectRepo
 
 [[ "$language" == "flutter" ]] && type checkOrUploadFlutterImage &> /dev/null && checkOrUploadFlutterImage
 
-[[ "$language" == "flutter" && "$flutterPlatform" == "android" ]]  && type createBucketforApk &> /dev/null && createBucketforApk
-
 createNewBranch
 
 type addPipelineVariables &> /dev/null && addPipelineVariables

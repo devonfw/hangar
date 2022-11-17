@@ -14,12 +14,11 @@ steps:
         break
     done
 
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+- name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args:
     - -c
     - |
-      apt-get update && apt-get install docker.io -y
       echo $$REGISTRY_CREDENTIALS > credentials.env
       . credentials.env
       rm credentials.env
