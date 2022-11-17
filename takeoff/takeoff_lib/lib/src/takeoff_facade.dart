@@ -5,8 +5,10 @@ import 'package:sembast/sembast.dart';
 import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
+import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
+import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/persistence/database/database_singleton.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
@@ -72,5 +74,17 @@ class TakeOffFacade {
       String googleCloudRegion) async {
     return await _googleController.createProject(projectName, billingAccount,
         backendLanguage, frontendLanguage, googleCloudRegion);
+  }
+
+  Future<List<String>> getProjects(CloudProviderId cloudProvider) async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return await cacheRepository.getGoogleProjectIds();
+      case CloudProviderId.aws:
+        return [];
+      case CloudProviderId.azure:
+        return [];
+    }
   }
 }
