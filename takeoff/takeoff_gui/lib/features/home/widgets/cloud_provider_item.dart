@@ -20,6 +20,7 @@ class CloudProjectItem extends StatelessWidget {
           child: Card(
             child: Center(child: Text(project.name)),
           ),
+          //TODO Redirect to project view
           onTap: () => print("pressed project ${project.name}"),
         ),
       ),

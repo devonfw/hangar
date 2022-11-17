@@ -10,7 +10,7 @@ class ProjectsService {
   Future<void> initAccount(String cloud, String email) async {
     switch (cloud) {
       case "gc":
-        _takeOffFacade.initGoogleCloud(email);
+        _takeOffFacade.init(email, CloudProviderId.gcloud);
         break;
       case "aws":
         Log.warning("Not implemented yet");

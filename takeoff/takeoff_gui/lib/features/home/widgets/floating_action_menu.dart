@@ -13,12 +13,14 @@ class FloatingActionMenu extends StatelessWidget {
       children: [
         CustomFloatingButton(
           icon: Icons.add_box_outlined,
+          //TODO Redirect to create project
           onPressed: () => print("Create!"),
           text: "Create",
         ),
         const SizedBox(width: 10),
         CustomFloatingButton(
           icon: Icons.rocket_launch,
+          //TODO Show quickstart dialog
           onPressed: () => print("QuickStart!"),
           text: "QuickStart",
         ),
