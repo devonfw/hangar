@@ -39,6 +39,7 @@ steps:
     - |
       if [[ ${_FLUTTER_PLATFORM} == "android" ]]; then
         .pipelines/scripts/package-extra.sh
+        gcloud storage cp build/app/outputs/flutter-apk/app-release.apk gs://"${PROJECT_ID}"-apk/app-release-"${SHORT_SHA}".apk
       elif [[ ${_FLUTTER_PLATFORM} == "web" ]]; then
         apt-get update && apt-get install docker.io -y
         echo $$REGISTRY_CREDENTIALS > credentials.env
@@ -48,8 +49,8 @@ steps:
       fi
 
   env:
-  - 'PROJECT_ID=$PROJECT_ID'
-  - 'SHORT_SHA=$SHORT_SHA'
+  - 'PROJECT_ID=${PROJECT_ID}'
+  - 'SHORT_SHA=${SHORT_SHA}'
   - 'ANDROID_API_KEY=${_ANDROID_API_KEY}'
   - 'FLUTTER_PLATFORM=${_FLUTTER_PLATFORM}'
   secretEnv:
