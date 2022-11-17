@@ -5,6 +5,7 @@ import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/create_project.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 
+/// Project controller for Google Cloud.
 class ProjectControllerGCloud implements ProjectController {
   final CreateProjectGCloud createScript;
 

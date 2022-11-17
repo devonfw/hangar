@@ -1,48 +1,40 @@
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/pipeline_generator.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/common/machine_type.dart';
 
-/// Script to create a Quality Pipeline in Google Cloud
-class QualityPipelineGCloud extends PipelineGenerator {
-  /// Build pipeline name.
-  String buildPipelineName;
+/// Script to create a deployment pipeline to Cloud Run in Google Cloud
+class DeployPipelineGCloud extends PipelineGenerator {
+  /// Name for the cloud run service.
+  String serviceName;
 
-  /// Build pipeline name.
-  String testPipelineName;
+  /// Region where the service will be deployed.
+  String gCloudRegion;
 
-  /// SonarQube URL.
-  String sonarUrl;
-
-  /// SonarQube token.
-  String sonarToken;
+  /// Listening port of the service. If no value is passed is 8080.
+  int? port;
 
   /// Machine type for pipeline runner.
   MachineType? machineType;
 
-  QualityPipelineGCloud(
+  DeployPipelineGCloud(
       {required super.configFile,
       required super.pipelineName,
       required super.language,
       required super.localDirectory,
-      required this.buildPipelineName,
-      required this.testPipelineName,
-      required this.sonarUrl,
-      required this.sonarToken,
+      required this.serviceName,
+      required this.gCloudRegion,
       super.targetBranch,
-      super.languageVersion,
+      this.port,
       this.machineType});
 
   @override
   List<String> toCommand() {
     List<String> args = super.toCommand();
     args.insert(0, "/scripts/pipelines/gcloud/pipeline_generator.sh");
-    args.addAll([
-      "--sonar-url",
-      sonarUrl,
-      "--sonar-token",
-      sonarToken,
-      "--build-pipeline-name",
-      buildPipelineName
-    ]);
+    args.addAll(
+        ["--service-name", serviceName, "--gcloud-region", gCloudRegion]);
+    if (port != null) {
+      args.addAll(["--port", port.toString()]);
+    }
     if (machineType != null) {
       args.addAll(["-m", machineType!.name]);
     }

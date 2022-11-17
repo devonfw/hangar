@@ -5,7 +5,8 @@ enum Language {
   node("node"),
   angular("angular"),
   python("python"),
-  flutter("flutter");
+  flutter("flutter"),
+  none("");
 
   final String name;
   const Language(this.name);

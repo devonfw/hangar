@@ -53,10 +53,12 @@ class GCloudAuthController implements AuthController<GCloud> {
       stdout.writeln(String.fromCharCodes(event));
     });
 
-    StreamSubscription<List<int>>? stdinHandler;
+    late StreamSubscription<List<int>> stdinHandler;
 
     if (stdinStream != null) {
-      gCloudProcess.stdin.addStream(stdinStream!);
+      stdinHandler = stdinStream!.listen((event) {
+        gCloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
+      });
     } else {
       stdinHandler = stdin.listen((event) {
         gCloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
@@ -66,9 +68,7 @@ class GCloudAuthController implements AuthController<GCloud> {
     int exitCode = await gCloudProcess.exitCode;
 
     stderrHandler.cancel();
-    if (stdinHandler != null) {
-      stdinHandler.cancel();
-    }
+    stdinHandler.cancel();
     stdoutHandler.cancel();
 
     if (exitCode != 0) {
