@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
 import 'package:takeoff_lib/src/controllers/auth/gcloud_auth_controller.dart';
 import 'package:takeoff_lib/src/controllers/cloud_providers/create_project_exception.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
@@ -130,8 +131,27 @@ class GoogleCloudController {
     return await authController.authenticate(email);
   }
 
+  /// Returns the current logged Google Account or an empty String if there is none
   Future<String> getAccount() async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     return await cacheRepository.getGoogleEmail();
+  }
+
+  /// Removes the project ID from the cache DB and the correspondent workspace folder
+  Future<bool> cleanProject(String projectId) async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    await cacheRepository.removeGoogleProject(projectId);
+    Directory projectWorkspace = Directory(join(
+        GetIt.I.get<FoldersService>().getHostFolders()["workspace"]!,
+        projectId));
+    if (await projectWorkspace.exists()) {
+      try {
+        await projectWorkspace.delete(recursive: true);
+      } on FileSystemException catch (e) {
+        Log.error("Could not remove $projectId workspace folder: ${e.osError}");
+        return false;
+      }
+    }
+    return true;
   }
 }
