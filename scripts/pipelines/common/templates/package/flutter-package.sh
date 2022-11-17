@@ -6,7 +6,6 @@ green='\e[1;32m'
 
 if [[ ${FLUTTER_PLATFORM} == "web" ]]; then
     tag="0.0.1"
-    echo "$tag"
 elif [[ ${FLUTTER_PLATFORM} == "android" ]]; then
     # We check if the bucket we needed exists, we create it if not
     if (gcloud storage ls --project="${PROJECT_ID}" | grep "${PROJECT_ID}-apk" >> /dev/null)
