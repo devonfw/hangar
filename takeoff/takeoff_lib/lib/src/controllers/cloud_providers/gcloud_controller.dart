@@ -75,14 +75,14 @@ class GoogleCloudController {
 
     if (!await repoController.createRepository(CreateRepoGCloud(
         project: projectName,
-        action: CreateAction.create,
+        action: RepoAction.create,
         directory: backendLocalDir))) {
       throw CreateProjectException("Could not create BackEnd repository");
     }
 
     if (!await repoController.createRepository(CreateRepoGCloud(
         project: projectName,
-        action: CreateAction.create,
+        action: RepoAction.create,
         directory: frontendLocalDir))) {
       throw CreateProjectException("Could not create FrontEnd repository");
     }

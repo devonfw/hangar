@@ -17,9 +17,7 @@ class GCloudAuthController implements AuthController<GCloud> {
   GCloudAuthController({this.stdinStream});
 
   @override
-  Future<bool> authenticate(
-    String email,
-  ) async {
+  Future<bool> authenticate(String email) async {
     DockerController dockerController =
         await DockerControllerFactory().create();
 

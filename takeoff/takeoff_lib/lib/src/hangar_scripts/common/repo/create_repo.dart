@@ -13,7 +13,7 @@ import 'package:takeoff_lib/src/hangar_scripts/script.dart';
 /// a path or an URL. Useful for taking to a provider the development of an existing project
 abstract class CreateRepo implements Script {
   /// Use case to fulfil: create, import.
-  CreateAction action;
+  RepoAction action;
 
   /// Path to the directory where your repository will be cloned or initialized.
   String directory;
