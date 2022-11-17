@@ -41,6 +41,9 @@ void main() {
         "kube": "/home/user/.kube",
         "github": "/home/user/.config/gh",
         "ssh": "/home/user/.ssh",
+        "workspace": "/home/user/hangar_workspace",
+        "firebase": "/home/user/.config/configstore",
+        "git": "/home/user/.gitconfig"
       };
 
       FoldersService foldersService = FoldersService();
@@ -69,6 +72,9 @@ void main() {
         "kube": "C:\\Users\\user\\.kube",
         "github": "C:\\Users\\user\\AppData\\Roaming\\GitHub CLI",
         "ssh": "C:\\Users\\user\\.ssh",
+        "workspace": "C:\\Users\\user\\hangar_workspace",
+        "firebase": "C:\\Users\\user\\AppData\\Roaming\\configstore",
+        "git": "C:\\Users\\user\\.gitconfig"
       };
 
       FoldersService foldersService = FoldersService();

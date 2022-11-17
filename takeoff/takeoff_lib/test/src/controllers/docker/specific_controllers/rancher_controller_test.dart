@@ -36,6 +36,12 @@ void main() {
       "C:/Users/user/AppData/Roaming/GitHub CLI:/root/.config/gh",
       "-v",
       "C:/Users/user/.ssh:/root/.ssh",
+      "-v",
+      "C:/Users/user/hangar_workspace:/scripts/workspace",
+      "-v",
+      "C:/Users/user/AppData/Roaming/configstore:/root/.config/configstore",
+      "-v",
+      "C:/Users/user/.gitconfig:/root/.gitconfig",
     ];
 
     expect(controller.getVolumeMappings(), expectedMappings);
