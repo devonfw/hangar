@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e
-FLAGS=$(getopt -a --options u:p:s:t:h --long "user:,password:,sonar-url:,token-name:,help,tf-output-sq-toke:" -- "$@")
+FLAGS=$(getopt -a --options u:p:s:t:h --long "user:,password:,sonar-url:,token-name:,help,tf-output-sq-token:" -- "$@")
 
 function helpFunction() {
     echo ""
@@ -18,15 +18,15 @@ function helpFunction() {
 # If terraform output has the token created, read the token from the output instead of creating it.
 # This is needed in terraform because if you try to change or destroy something in the environment, the token cannot be created again and then is going to be lost.
 # To use it add the flag --tf-output-sq-token $outputName when invoking the script.
-function terraformGetSQToken() {
-    FILE="terraform.tfstate"
+function terraformGetSQToken {
+    FILE="terraforma.tfstate"
     if [[ -f "$FILE" ]]; then
         if cp -f $FILE temp.tfstate; then
            sq_token_output=$(terraform output -state=temp.tfstate | grep "$terraformSQToken" | cut -d' ' -f 3)
            rm -f temp.tfstate
         fi
     fi
-    if [[ ! -z "$sq_token_output" ]]; then
+    if [[ -n "$sq_token_output" ]]; then
         echo "{\"token\":$sq_token_output}"
         exit
     fi
@@ -71,7 +71,7 @@ fi
 sonar_ready=false
 attempt=0
 while ! $sonar_ready && [[ $attempt -lt 30 ]]; do
-    health=$(curl -sS --retry 30 --max-time 10 --retry-connrefused -u $user:$password $sonarUrl/api/system/health)
+    health=$(curl -sS --retry 30 --max-time 10 --retry-connrefused -u "$user":"$password" "$sonarUrl"/api/system/health)
     health_green="\"health\":\"GREEN\""
     if [[ "$health" == *"$health_green"* ]]; then
         sonar_ready=true
@@ -83,7 +83,7 @@ done
 
 # Generate token if sonarqube is ready
 if $sonar_ready; then
-    setToken=$(curl -sS -H "Content-Type: application/x-www-form-urlencoded" -d "name=$tokenName" -u $user:$password $sonarUrl/api/user_tokens/generate)
+    setToken=$(curl -sS -H "Content-Type: application/x-www-form-urlencoded" -d "name=$tokenName" -u "$user":"$password" "$sonarUrl"/api/user_tokens/generate)
     tokenJson=$(echo "$setToken" | cut -d ',' -f3)
     if [[ "$tokenJson" == "\"token\":\""* ]]; then
         echo "{$tokenJson}"
