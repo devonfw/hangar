@@ -49,6 +49,7 @@ abstract class _ProjectsController with Store {
   }
 
   void resetChannel() {
+    waitForToken = false;
     channel.close();
     channel = StreamController();
   }

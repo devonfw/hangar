@@ -143,6 +143,7 @@ class GoogleLoginDialog extends StatelessWidget {
               backgroundColor: Colors.red,
             ),
             onPressed: () {
+              projectsController.resetChannel();
               Navigator.of(context).pop();
             },
             child: const Text('Close'),
