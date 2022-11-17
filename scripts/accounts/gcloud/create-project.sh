@@ -32,7 +32,7 @@ red='\e[0;31m'
 # Mandatory argument check
 if [ -z "$projectName" ] || [ -z "$billing" ];
 then
-   echo -e "${red}Error: Missing paramenters, -n and -b are mandatory." >&2
+   echo -e "${red}Error: Missing parameters, -n and -b are mandatory." >&2
    echo -e "${red}Use -h flag to display help." >&2
    echo -ne "${white}"
    exit 2
@@ -86,7 +86,7 @@ fi
 
 echo "Enabling CloudRun..."
 if ! gcloud services enable run.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable CloudRun API"
+   echo -e "${red}Error: Cannot enable Cloud Run API"
    echo -ne "${white}"
    exit 221
 fi
@@ -100,7 +100,7 @@ fi
 
 echo "Enabling CloudBuild..."
 if ! gcloud services enable cloudbuild.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable CloudRun API"
+   echo -e "${red}Error: Cannot enable Cloud Build API"
    echo -ne "${white}"
    exit 223
 fi
