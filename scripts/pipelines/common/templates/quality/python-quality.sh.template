@@ -1,9 +1,21 @@
 #!/bin/bash
-pip install coverage
+# shellcheck source=/dev/null
+. venv/bin/activate
 coverage run -m unittest
 coverage report
 coverage xml
 
-projectKey=$(grep -m 1 name pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
-sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey="$projectKey" -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.exclusions=venv/**
+# Installation of sonar scanner
+apt-get update
+apt-get install -y unzip wget nodejs
+mkdir sonarqube -p
+cd sonarqube
+wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
+unzip sonar-scanner-cli-4.2.0.1873-linux.zip
+mv sonar-scanner-4.2.0.1873-linux /opt/sonar-scanner
+cd ..
+export PATH="$PATH:/opt/sonar-scanner/bin"
 
+projectKey=$(grep -m 1 name pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
+exclusions="venv/**,**/common/**,**/repositories/**,**/controllers/**,**/models/**,tests/**,**utils**,**main**,**router**,**/api.py,**/exceptions/**"
+sonar-scanner -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectKey="$projectKey" -Dsonar.sources="." -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.exclusions="$exclusions"
