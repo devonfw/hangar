@@ -4,9 +4,9 @@
 white='\e[1;37m'
 green='\e[1;32m'
 
-if [[ ${FLUTTER_PLATFORM} == "web" ]]; then
-    tag="0.0.1"
-elif [[ ${FLUTTER_PLATFORM} == "android" ]]; then
+export tag=$(grep -m 1 version pubspec.yaml | tr -s ' ' | tr -d ':' | cut -d' ' -f2 | cut -d'+' -f1)
+
+if [[ ${FLUTTER_PLATFORM} == "android" ]]; then
     # We check if the bucket we needed exists, we create it if not
     if (gcloud storage ls --project="${PROJECT_ID}" | grep "${PROJECT_ID}-apk" >> /dev/null)
     then
