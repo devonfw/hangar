@@ -52,8 +52,8 @@ ifdef::build-pipeline[    --build-pipeline-name      [Required] Build {pipeline_
 ifdef::quality-pipeline[    --quality-pipeline-name    [Required] Quality {pipeline_type} name.]
 ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} name.]
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
--u, --registry-user            [Required, unless AWS] Container registry login user.
--p, --registry-password        [Required, unless AWS] Container registry login password.
+-u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
+-p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
