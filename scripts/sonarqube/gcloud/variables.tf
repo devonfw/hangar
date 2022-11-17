@@ -27,3 +27,9 @@ variable "instance_type" {
   type = string
   description = "Machine Instance type"
 }
+
+variable "sonarqube_password" {
+  type = string
+  description = "Password to connect with sonarqube, this password is to read from sonarqube, not to replace the password value"
+  default = "admin"
+}
