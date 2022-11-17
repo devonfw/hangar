@@ -12,7 +12,7 @@ import 'package:test/scaffolding.dart';
 void main() {
   setUp(() async {
     GetIt.I.registerSingleton<Database>(
-        await DatabaseSingleton(dbPath: "test.db").initialize());
+        await DatabaseSingleton(dbPath: "cache_repo_test.db").initialize());
   });
 
   test("saveGoogleEmail & getGoogleEmail are correct", () async {
@@ -29,19 +29,17 @@ void main() {
     String email = "mail@mail.com";
     await cacheRepository.saveGoogleEmail(email);
 
-    String projectId1 = "${Random()}_project";
-    String projectId2 = "${Random()}_project";
-    String projectId3 = "${Random()}_project";
-    await cacheRepository.saveGoogleProjectId(projectId1);
-    await cacheRepository.saveGoogleProjectId(projectId2);
-    await cacheRepository.saveGoogleProjectId(projectId3);
+    List<String> projects = List.generate(
+        Random().nextInt(15) + 5, (_) => Random().nextInt(1000000).toString());
+    for (String elem in projects) {
+      await cacheRepository.saveGoogleProjectId(elem);
+    }
 
-    expect(await cacheRepository.getGoogleProjectIds(),
-        [projectId1, projectId2, projectId3]);
+    expect(await cacheRepository.getGoogleProjectIds(), projects);
   });
 
-  tearDown(() {
-    databaseFactoryIo.deleteDatabase("test.db");
+  tearDown(() async {
+    await databaseFactoryIo.deleteDatabase("cache_repo_test.db");
     GetIt.I.unregister<Database>();
   });
 }

@@ -35,6 +35,12 @@ void main() {
       "/home/user/.config/gh:/root/.config/gh",
       "-v",
       "/home/user/.ssh:/root/.ssh",
+      "-v",
+      "/home/user/hangar_workspace:/scripts/workspace",
+      "-v",
+      "/home/user/.config/configstore:/root/.config/configstore",
+      "-v",
+      "/home/user/.gitconfig:/root/.gitconfig",
     ];
 
     expect(controller.getVolumeMappings(), expectedMappings);

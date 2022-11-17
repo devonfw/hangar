@@ -36,7 +36,8 @@ class GCloudAuthController implements AuthController<GCloud> {
     Log.info("Opening Google Authentication in the browser");
     bool openedUrl = false;
 
-    var stderrHandler = gCloudProcess.stderr.listen((event) async {
+    StreamSubscription<List<int>> stderrHandler =
+        gCloudProcess.stderr.listen((event) async {
       String message = String.fromCharCodes(event).trim();
       if (!openedUrl && !message.startsWith("WARNING")) {
         String url = message.split("\n").last.trim();
@@ -49,14 +50,17 @@ class GCloudAuthController implements AuthController<GCloud> {
       }
     });
 
-    var stdoutHandler = gCloudProcess.stdout.listen((event) {
+    StreamSubscription<List<int>> stdoutHandler =
+        gCloudProcess.stdout.listen((event) {
       stdout.writeln(String.fromCharCodes(event));
     });
 
-    StreamSubscription<List<int>>? stdinHandler;
+    late StreamSubscription<List<int>> stdinHandler;
 
     if (stdinStream != null) {
-      gCloudProcess.stdin.addStream(stdinStream!);
+      stdinHandler = stdinStream!.listen((event) {
+        gCloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
+      });
     } else {
       stdinHandler = stdin.listen((event) {
         gCloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
@@ -66,9 +70,7 @@ class GCloudAuthController implements AuthController<GCloud> {
     int exitCode = await gCloudProcess.exitCode;
 
     stderrHandler.cancel();
-    if (stdinHandler != null) {
-      stdinHandler.cancel();
-    }
+    stdinHandler.cancel();
     stdoutHandler.cancel();
 
     if (exitCode != 0) {

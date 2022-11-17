@@ -1,4 +1,4 @@
-import 'dart:io' show Directory, FileSystemException;
+import 'dart:io' show Directory, File, FileSystemException;
 import 'package:meta/meta.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
@@ -105,13 +105,26 @@ class FoldersService {
           "Only Linux, Windows and MacOS are supported");
     }
 
-    for (String folderName in hostFolders.values) {
+    List<String> values = hostFolders.values.toList();
+    // .gitconfig is a file, not a directory, so it does not need to be created
+    values.remove(".gitconfig");
+    File gitconfig = File(join(baseFolder, ".gitconfig"));
+    if (!gitconfig.existsSync()) {
+      try {
+        gitconfig.createSync();
+      } on FileSystemException {
+        Log.error("Could not create .gitconfig file");
+        return false;
+      }
+    }
+
+    for (String folderName in values) {
       Directory newFolder = Directory(join(baseFolder, folderName));
       if (!newFolder.existsSync()) {
         try {
-          newFolder.createSync();
-        } on FileSystemException {
-          Log.error("Could not create $folderName folder");
+          newFolder.createSync(recursive: true);
+        } on FileSystemException catch (e) {
+          Log.error("Could not create $folderName folder: ${e.osError}");
           return false;
         }
       }

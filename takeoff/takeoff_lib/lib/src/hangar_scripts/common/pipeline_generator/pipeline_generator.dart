@@ -44,11 +44,12 @@ abstract class PipelineGenerator implements Script {
       configFile,
       "-n",
       pipelineName,
-      "-l",
-      language.name,
       "-d",
       localDirectory
     ];
+    if (language != Language.none) {
+      args.addAll(["-l", language.name]);
+    }
     if (targetBranch != null) {
       args.addAll(["-b", targetBranch!]);
     }
