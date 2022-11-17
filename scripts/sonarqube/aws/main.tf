@@ -163,7 +163,22 @@ data "aws_ami" "ubuntu_20_04" {
     owners = ["099720109477"] # Canonical official
 }
 
+# Generate sonarqube token
+data "external" "sonarqube_create_token" {
+  program = ["sh", "-c", "${path.module}/../common/create_token.sh -p ${var.sonarqube_password} -s http://${aws_eip.sq_eip.public_ip}:9000 tf-output-sq-token sonarqube_token"]
+  
+  # Ensure security group rule and the server ec2 for sonarqube is provisioned before run the script, so that create sonarqube token doesn't fail.
+  depends_on = [
+    aws_instance.sq_server,
+    aws_security_group.sq_securitygroup
+  ]
+}
+
 #outputs
-output "sonarqube_public_ip" {
-  value = aws_eip.sq_eip.public_ip
+output "sonarqube_url" {
+  value = "http://${aws_eip.sq_eip.public_ip}:9000"
+}
+
+output "sonarqube_token" {
+  value = "${data.external.sonarqube_create_token.result.token}"
 }

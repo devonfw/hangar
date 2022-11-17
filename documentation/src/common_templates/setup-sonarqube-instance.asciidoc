@@ -25,6 +25,7 @@ terraform init
 
 Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script, which allows you to create or update values for the required variables, passing them as flags. As a full example:
 
+[subs=attributes+]
 ```
 ./set-terraform-variables.sh {terraform_vars}
 ```
@@ -36,21 +37,45 @@ NOTE: To learn more about what is each variable read the description in the file
 Finally, deploy SonarQube instance:
 
 ```
-terraform apply --auto-approve 
+terraform apply --auto-approve
 ```
 
-NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on. *Remember to securely store `terraform.tfstate` file*, otherwise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
+WARNING:  *Remember to securely store `terraform.tfstate` file*, otherwise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
+
+NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on.
 
 In particular, this will create an Ubuntu-based in {container_instance_type} and deploy a Docker container running SonarQube. 
 
-You will get the public IP address of {container_instance_type} as output. Take note of it, you will need it later on.
+You will get the public url of {container_instance_type} and an admin token to connect with sonar as output. Take note of it, you will need it later on.
 
-After a few minutes, you will be able to access SonarQube web interface on `+http://sonarqube_public_ip:9000+` (replace with actual IP) with the following credentials:
+=== Manage terraform output
+
+You can recover all the outputs from terraform after having used apply command using the next command:
+
+```
+terraform output
+```
+
+Or you can get an specific output value using his key in the command:
+
+```
+terraform output $outputKeyName
+```
+
+NOTE:  Remember that command needs `terraform.tfstate` file to work.
+
+=== Change Sonarqube default admin password
+
+After a few minutes, you will be able to access SonarQube web interface on the url provided by terraform output and the following credentials:
 
 * Username:   `admin`
 * Password:   `admin`
 
-IMPORTANT: Change the default password promptly.
+IMPORTANT: Change the default password promptly. After that, update the password in terraform vars with the next command:
+
+```
+./set-terraform-variables.sh --sonarqube_password ${YOUR_NEW_PASSWORD}
+```
 
 == Appendix: Destroy SonarQube instance
 
@@ -60,7 +85,15 @@ As long as you keep the `terraform.tfstate` file generated when creating the Son
 terraform destroy
 ```
 
-== More information about terraform for {provider_name}
+== Appendix: Modify SonarQube instance infrastructure
+
+As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can apply changes to the infrastructure deployed.
+
+If you are going to apply a change in the infrastructure, you will have to modify the terraform files and reapply the changes with the command `terraform apply`.
+
+IMPORTANT: In windows, keep in mind that after applying any changes, you will lose the value of the token, so be sure to copy or write it down before applying any changes.
+
+== Appendix: More information about terraform for {provider_name}
 * {terraform_tutorials}[Official Terraform tutorials]
 ifdef::extra_information[]
 {extra_information}

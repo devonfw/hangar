@@ -10,3 +10,5 @@ zone = "europe-southwest1-a"
 subnet_cidr_block = "10.0.1.0/24"
 #Machine Instance type
 instance_type = "e2-medium"
+#Password to connect with sonarqube, this password is to read from sonarqube, not to replace the password value.
+sonarqube_password = "admin"
