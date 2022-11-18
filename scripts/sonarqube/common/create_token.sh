@@ -19,11 +19,15 @@ function helpFunction() {
 # This is needed in terraform because if you try to change or destroy something in the environment, the token cannot be created again and then is going to be lost.
 # To use it add the flag --tf-output-sq-token $outputName when invoking the script.
 function terraformGetSQToken {
-    FILE="terraforma.tfstate"
+    FILE="terraform.tfstate"
+    FILE_OUTPUT="terraform.tfoutput"
     if [[ -f "$FILE" ]]; then
         if cp -f $FILE temp.tfstate; then
-           sq_token_output=$(terraform output -state=temp.tfstate | grep "$terraformSQToken" | cut -d' ' -f 3)
-           rm -f temp.tfstate
+            echo "state copied"
+            sq_token_output=$(terraform output -state=temp.tfstate | grep "$terraformSQToken" | cut -d' ' -f 3)
+            rm -f temp.tfstate
+        elif [[ -f "$FILE_OUTPUT" ]]; then
+            sq_token_output=$(cat "$FILE_OUTPUT" | grep "$terraformSQToken" | cut -d' ' -f 3)
         fi
     fi
     if [[ -n "$sq_token_output" ]]; then
@@ -46,7 +50,7 @@ while true; do
 done
 
 white='\e[1;37m'
-green='\e[1;32m'
+red='\e[0;31m'
 
 # Check url provided
 if [[ -z "$sonarUrl" ]]; then

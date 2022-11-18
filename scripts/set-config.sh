@@ -43,7 +43,7 @@ do
         if [[ "$key" == "file_set_vars" ]]
         then
             file_set_vars=$value
-            echo "File is: $file_set_vars"
+            # echo "File where replace vars is: $file_set_vars"
         # Write key and value in the file
         else
             # check if file where the vars are stored was set
