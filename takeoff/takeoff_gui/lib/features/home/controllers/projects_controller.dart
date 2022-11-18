@@ -42,10 +42,8 @@ abstract class _ProjectsController with Store {
   }
 
   @action
-  void updateInitAccounts(CloudProviderId cloud) {
-    facade.getCurrentAccount(cloud);
-
-    // accounts = ObservableMap.of({});
+  Future<void> updateInitAccounts(CloudProviderId cloud) async {
+    accounts[cloud] = await facade.getCurrentAccount(cloud);
   }
 
   void resetChannel() {
@@ -53,15 +51,4 @@ abstract class _ProjectsController with Store {
     channel.close();
     channel = StreamController();
   }
-  /* rest of the class*/
-}
-
-// ignore: library_private_types_in_public_api
-class FormLogin = _FormLogin with _$FormLogin;
-
-abstract class _FormLogin with Store {
-  String emailgc = "";
-
-  @observable
-  bool waitForToken = false;
 }

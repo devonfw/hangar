@@ -29,38 +29,36 @@ mixin _$ProjectsController on _ProjectsController, Store {
       Atom(name: '_ProjectsController.accounts', context: context);
 
   @override
-  ObservableMap<String, String> get accounts {
+  ObservableMap<CloudProviderId, String> get accounts {
     _$accountsAtom.reportRead();
     return super.accounts;
   }
 
   @override
-  set accounts(ObservableMap<String, String> value) {
+  set accounts(ObservableMap<CloudProviderId, String> value) {
     _$accountsAtom.reportWrite(value, super.accounts, () {
       super.accounts = value;
     });
+  }
+
+  late final _$updateInitAccountsAsyncAction =
+      AsyncAction('_ProjectsController.updateInitAccounts', context: context);
+
+  @override
+  Future<void> updateInitAccounts(CloudProviderId cloud) {
+    return _$updateInitAccountsAsyncAction
+        .run(() => super.updateInitAccounts(cloud));
   }
 
   late final _$_ProjectsControllerActionController =
       ActionController(name: '_ProjectsController', context: context);
 
   @override
-  void initAccount(String cloud) {
+  Future<bool> initAccount(String email, CloudProviderId cloud) {
     final _$actionInfo = _$_ProjectsControllerActionController.startAction(
         name: '_ProjectsController.initAccount');
     try {
-      return super.initAccount(cloud);
-    } finally {
-      _$_ProjectsControllerActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void updateInitAccounts() {
-    final _$actionInfo = _$_ProjectsControllerActionController.startAction(
-        name: '_ProjectsController.updateInitAccounts');
-    try {
-      return super.updateInitAccounts();
+      return super.initAccount(email, cloud);
     } finally {
       _$_ProjectsControllerActionController.endAction(_$actionInfo);
     }
@@ -71,31 +69,6 @@ mixin _$ProjectsController on _ProjectsController, Store {
     return '''
 waitForToken: ${waitForToken},
 accounts: ${accounts}
-    ''';
-  }
-}
-
-mixin _$FormLogin on _FormLogin, Store {
-  late final _$waitForTokenAtom =
-      Atom(name: '_FormLogin.waitForToken', context: context);
-
-  @override
-  bool get waitForToken {
-    _$waitForTokenAtom.reportRead();
-    return super.waitForToken;
-  }
-
-  @override
-  set waitForToken(bool value) {
-    _$waitForTokenAtom.reportWrite(value, super.waitForToken, () {
-      super.waitForToken = value;
-    });
-  }
-
-  @override
-  String toString() {
-    return '''
-waitForToken: ${waitForToken}
     ''';
   }
 }
