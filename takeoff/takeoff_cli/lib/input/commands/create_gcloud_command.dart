@@ -37,8 +37,8 @@ class CreateGCloudCommand extends Command {
     service.createGoogleProject(
         argResults?["name"],
         argResults?["billing_account"],
-        argResults?["backend_language"],
-        argResults?["frontend_language"],
+        Language.fromString(argResults?["backend_language"]),
+        Language.fromString(argResults?["frontend_language"]),
         argResults?["region"]);
   }
 }
