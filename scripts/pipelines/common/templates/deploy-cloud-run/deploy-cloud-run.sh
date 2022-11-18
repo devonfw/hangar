@@ -29,14 +29,14 @@ branch_short=$(echo "$branch" | awk -F '/' '{ print $NF }')
 echo "$branch" | grep release && tag_completed="${tag}"
 echo "$branch" | grep release || tag_completed="${tag}_${branch_short}"
 
-# If the registry is not the google cloud artifact registry, we need to push it to a tenmporary one
+# If the registry is not the Google Cloud Artifact Registry, we need to push it to a temporary one
 if ! { [[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]] ; }
 then
   # If in AWS
   if [ "$awsAccessKey" == "" ]
   then
     docker login -u "$dockerUser " -p "$dockerPassword" "$registry"
-  # other regitries
+  # other registries
   else
     aws configure set aws_access_key_id "$awsAccessKey"
     aws configure set aws_secret_access_key "$awsSecretAccessKey"
