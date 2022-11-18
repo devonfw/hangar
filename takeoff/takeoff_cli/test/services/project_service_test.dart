@@ -80,7 +80,7 @@ void main() {
   }));
 
   test(
-      "cleanProjects prints the correct message if the project does not exist with Google Cloud",
+      "cleanProject prints the correct message if the project does not exist with Google Cloud",
       overridePrint(() async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     String email = "test${Random().nextInt(10000)}@mail.com}";
@@ -97,7 +97,7 @@ void main() {
   }));
 
   test(
-      "cleanProjects prints the correct message if the project does not exist with Google Cloud",
+      "cleanProject prints the correct message if the project does not exist with Google Cloud",
       overridePrint(() async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     String email = "test${Random().nextInt(10000)}@mail.com}";
@@ -120,7 +120,7 @@ void main() {
   }));
 
   test(
-      "cleanProjects prints the correct message if the project exist with Google Cloud",
+      "cleanProject prints the correct message if the project exist with Google Cloud",
       overridePrint(() async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     String email = "test${Random().nextInt(10000)}@mail.com}";
@@ -140,7 +140,7 @@ void main() {
     expect(log.first.contains("Cleaned all data from project projectId"), true);
   }));
 
-  test("cleanProjects cleans the data", overridePrint(() async {
+  test("cleanProject cleans the data", overridePrint(() async {
     String project = "project_${Random().nextInt(100000)}";
 
     Directory directory =
