@@ -1,5 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:takeoff_cli/input/commands/gcloud_command.dart';
+import 'package:takeoff_cli/input/commands/clean_command.dart';
 import 'package:takeoff_cli/input/commands/init_command.dart';
 import 'package:takeoff_cli/input/commands/list_command.dart';
 import 'package:takeoff_cli/services/project_service.dart';
@@ -15,6 +16,7 @@ class TakeOffCli {
       ..addCommand(InitCommand(projectsService))
       ..addCommand(ListCommand(projectsService))
       ..addCommand(GCloudCommand(projectsService))
+      ..addCommand(CleanCommand(projectsService))
       ..run(args);
   }
 }
