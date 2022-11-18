@@ -71,4 +71,25 @@ class CacheRepositoryImpl extends CacheRepository {
 
     return res;
   }
+
+  @override
+  Future<bool> removeGoogleProject(String projectId) async {
+    Database db = GetIt.I.get<Database>();
+
+    StoreRef store = StoreRef.main();
+
+    String email = await getGoogleEmail();
+    List<dynamic>? ids =
+        await store.record("${email}_$_googleProjectIdsKey").get(db);
+
+    ids ??= [];
+    if (ids.isEmpty) return true;
+
+    List<String> newList = ids.map((e) => e.toString()).toList();
+    newList.remove(projectId);
+
+    await store.record("${email}_$_googleProjectIdsKey").put(db, newList);
+
+    return true;
+  }
 }

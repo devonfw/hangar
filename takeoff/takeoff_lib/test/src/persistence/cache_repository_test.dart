@@ -38,6 +38,20 @@ void main() {
     expect(await cacheRepository.getGoogleProjectIds(), projects);
   });
 
+  test("removeGoogleProject is correct", () async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    String projectId = Random().nextInt(1000000000).toString();
+    await cacheRepository.saveGoogleProjectId(projectId);
+
+    expect((await cacheRepository.getGoogleProjectIds()).contains(projectId),
+        true);
+
+    await cacheRepository.removeGoogleProject(projectId);
+
+    expect((await cacheRepository.getGoogleProjectIds()).contains(projectId),
+        false);
+  });
+
   tearDown(() async {
     await databaseFactoryIo.deleteDatabase("cache_repo_test.db");
     GetIt.I.unregister<Database>();

@@ -10,4 +10,7 @@ abstract class CacheRepository {
 
   /// Returns all the Google Cloud Project IDs from the logged account
   Future<List<String>> getGoogleProjectIds();
+
+  /// Returns all the Google Cloud Project IDs from the logged account
+  Future<bool> removeGoogleProject(String projectId);
 }
