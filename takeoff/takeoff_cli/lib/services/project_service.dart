@@ -32,4 +32,18 @@ class ProjectsService {
       print(element);
     }
   }
+
+  Future<void> createGoogleProject(
+      String projectName,
+      String billingAccount,
+      Language backendLanguage,
+      Language frontendLanguage,
+      String googleCloudRegion) async {
+    try {
+      await _takeOffFacade.createProjectGCloud(projectName, billingAccount,
+          backendLanguage, frontendLanguage, googleCloudRegion);
+    } on CreateProjectException catch (e) {
+      Log.error(e.message);
+    }
+  }
 }
