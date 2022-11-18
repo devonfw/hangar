@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:takeoff_cli/input/commands/gcloud_command.dart';
 import 'package:takeoff_cli/input/commands/clean_command.dart';
 import 'package:takeoff_cli/input/commands/init_command.dart';
 import 'package:takeoff_cli/input/commands/list_command.dart';
@@ -14,6 +15,7 @@ class TakeOffCli {
     CommandRunner("takeoff", "A CLI to easily create cloud environment.")
       ..addCommand(InitCommand(projectsService))
       ..addCommand(ListCommand(projectsService))
+      ..addCommand(GCloudCommand(projectsService))
       ..addCommand(CleanCommand(projectsService))
       ..run(args);
   }

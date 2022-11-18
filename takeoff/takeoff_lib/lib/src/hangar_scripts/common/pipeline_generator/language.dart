@@ -10,4 +10,9 @@ enum Language {
 
   final String name;
   const Language(this.name);
+
+  factory Language.fromString(String string) {
+    return Language.values.firstWhere((element) => element.name == string,
+        orElse: () => Language.none);
+  }
 }
