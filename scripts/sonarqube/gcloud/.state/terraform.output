@@ -1,0 +1,2 @@
+sonarqube_token = "Generated before and the value cannot be readed. Use create_token.sh script or go to sonarqube and generate a new one manually if you need it."
+sonarqube_url = "http://34.175.9.15:9000"
