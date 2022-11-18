@@ -58,6 +58,7 @@ Hangar -> Gcloud : gcloud repo create
 Gcloud --> Hangar : Repository Creation Success
 Hangar -> Gcloud : Import Code
 Gcloud --> Hangar : Import Code Success
+Hangar --> Cache : Project Code
 Hangar --> TakeOff : Repo URL Success
 
 TakeOff -> Hangar : create-repo.sh Backend
@@ -65,6 +66,7 @@ Hangar -> Gcloud : gcloud repo create
 Gcloud --> Hangar : Repository Creation Success
 Hangar -> Gcloud : Import Code
 Gcloud --> Hangar : Import Code Success
+Hangar --> Cache : Project Code
 Hangar --> TakeOff : Repo URL Success
 
 TakeOff -> Hangar : setup-sonar.sh
@@ -72,62 +74,86 @@ Hangar -> Gcloud : terraform apply
 Gcloud -> Hangar : Sonar Token
 Hangar -> TakeOff : Sonar Token Creation Success
 
+TakeOff -> Hangar : init-cloud-run.sh BE
+Hangar -> Gcloud :  gcloud run deploy hello
+Gcloud --> Hangar : Deployment Success
+Hangar -> Gcloud : gcloud run services describe status.url
+Gcloud --> Hangar : Cloud Run URL
+Hangar --> TakeOff : Service BE Init Success + URL
+
+TakeOff -> Hangar : init-cloud-run.sh FE
+Hangar -> Gcloud :  gcloud run deploy hello
+Gcloud --> Hangar : Deployment Success
+Hangar -> Gcloud : gcloud run services describe status.url
+Gcloud --> Hangar : Cloud Run URL
+Hangar --> TakeOff : Service FE Init Success + URL
+
 TakeOff -> Hangar : pipeline-generator.sh Build BE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 TakeOff -> Hangar : pipeline-generator.sh Test BE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Build
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 TakeOff -> Hangar : pipeline-generator.sh QA BE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Test
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 TakeOff -> Hangar : pipeline-generator.sh Package BE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Test
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
-TakeOff -> Hangar : pipeline-generator.sh Deploy BE
+TakeOff -> Hangar : pipeline-generator.sh Deploy Cloud Run BE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Package 
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 
 TakeOff -> Hangar : pipeline-generator.sh Build FE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 TakeOff -> Hangar : pipeline-generator.sh Test FE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Build
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 TakeOff -> Hangar : pipeline-generator.sh QA FE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Test
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 TakeOff -> Hangar : pipeline-generator.sh Package FE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Test
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
-TakeOff -> Hangar : pipeline-generator.sh Deploy FE
+TakeOff -> Hangar : pipeline-generator.sh Deploy Cloud Run FE
 Hangar -> Gcloud : cloud build create pipeline
 Gcloud --> Hangar : Pipeline Creation Success
 Hangar -> Gcloud : cloud build modify pipeline Package
 Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
 Hangar --> TakeOff : Pipeline Creation Success
 
 TakeOff --> User : Project Creation Success
