@@ -5,12 +5,12 @@ class CloudProviderHeader extends StatelessWidget {
   const CloudProviderHeader({
     Key? key,
     required this.name,
-    this.authAccount,
+    required this.authAccount,
     required this.authenticateCallback,
   }) : super(key: key);
 
   final String name;
-  final String? authAccount;
+  final String authAccount;
   final Function authenticateCallback;
 
   @override
@@ -29,7 +29,7 @@ class CloudProviderHeader extends StatelessWidget {
         ),
         Row(
           children: [
-            Text(authAccount ?? "Not authenticated"),
+            Text(authAccount.isNotEmpty ? authAccount : "Not authenticated"),
           ],
         ),
       ],

@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 authAccount:
-                    projectsController.accounts[CloudProviderId.gcloud],
+                    projectsController.accounts[CloudProviderId.gcloud]!,
               );
             }),
             CloudProjectsList(
@@ -45,14 +45,14 @@ class HomePage extends StatelessWidget {
               projects: MockProjects.projectsAzure,
               // TODO Add loggin method
               authenticateCallback: () => print("Authenticating on Azure"),
-              authAccount: projectsController.accounts[CloudProviderId.azure],
+              authAccount: projectsController.accounts[CloudProviderId.azure]!,
             ),
             CloudProjectsList(
               name: 'AWS',
               projects: MockProjects.projectsAWS,
               // TODO Add loggin method
               authenticateCallback: () => print("Authenticating on AWS"),
-              authAccount: projectsController.accounts[CloudProviderId.aws],
+              authAccount: projectsController.accounts[CloudProviderId.aws]!,
             ),
           ],
         ),

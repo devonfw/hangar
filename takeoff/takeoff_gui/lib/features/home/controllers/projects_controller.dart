@@ -18,7 +18,11 @@ abstract class _ProjectsController with Store {
   bool waitForToken = false;
 
   @observable
-  ObservableMap<CloudProviderId, String> accounts = ObservableMap.of({});
+  ObservableMap<CloudProviderId, String> accounts = ObservableMap.of({
+    CloudProviderId.aws: "",
+    CloudProviderId.azure: "",
+    CloudProviderId.gcloud: ""
+  });
 
   @action
   Future<bool> initAccount(String email, CloudProviderId cloud) {

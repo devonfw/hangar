@@ -6,14 +6,14 @@ import 'package:takeoff_gui/features/home/widgets/cloud_provider_item.dart';
 class CloudProjectsList extends StatelessWidget {
   final String name;
   final List<Project> projects;
-  final String? authAccount;
+  final String authAccount;
   final Function authenticateCallback;
   const CloudProjectsList(
       {super.key,
       required this.name,
       required this.projects,
       required this.authenticateCallback,
-      this.authAccount});
+      required this.authAccount});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class CloudProjectsList extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           // List of projects
-          if (authAccount != null)
+          if (authAccount.isNotEmpty)
             SizedBox(
               height: 200,
               child: ListView.builder(
