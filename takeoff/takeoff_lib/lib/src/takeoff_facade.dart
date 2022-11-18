@@ -76,6 +76,18 @@ class TakeOffFacade {
         backendLanguage, frontendLanguage, googleCloudRegion);
   }
 
+  Future<bool> cleanProject(
+      CloudProviderId cloudProvider, String projectId) async {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return await GoogleCloudController().cleanProject(projectId);
+      case CloudProviderId.aws:
+        return false;
+      case CloudProviderId.azure:
+        return false;
+    }
+  }
+
   Future<List<String>> getProjects(CloudProviderId cloudProvider) async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     switch (cloudProvider) {

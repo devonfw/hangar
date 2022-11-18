@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
@@ -8,9 +10,18 @@ import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/persistence/database/database_singleton.dart';
 import 'package:takeoff_lib/src/takeoff_facade.dart';
+import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
+import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:test/test.dart';
 
 void main() {
+  late FoldersService foldersService;
+  setUpAll(() {
+    GetIt.I.registerSingleton(PlatformService());
+    foldersService = FoldersService();
+    GetIt.I.registerSingleton(foldersService);
+  });
+
   setUp(() async {
     GetIt.I.registerSingleton<Database>(
         await DatabaseSingleton(dbPath: "facade_test.db").initialize());
@@ -56,6 +67,35 @@ void main() {
     }
 
     expect(projects, await takeOffFacade.getProjects(CloudProviderId.gcloud));
+  });
+
+  test("Clean project in Google Cloud is correct", () async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    String projectId = Random().nextInt(1000000000).toString();
+
+    await cacheRepository.saveGoogleProjectId(projectId);
+
+    TakeOffFacade takeOffFacade = TakeOffFacade();
+
+    expect(
+        (await takeOffFacade.getProjects(CloudProviderId.gcloud))
+            .contains(projectId),
+        true);
+
+    Directory directory = Directory(
+        join(foldersService.getHostFolders()["workspace"]!, projectId));
+    if (directory.existsSync()) {
+      fail("Project directory already existed");
+    }
+    directory.createSync(recursive: true);
+
+    await takeOffFacade.cleanProject(CloudProviderId.gcloud, projectId);
+
+    expect(directory.existsSync(), false);
+    expect(
+        (await takeOffFacade.getProjects(CloudProviderId.gcloud))
+            .contains(projectId),
+        false);
   });
 
   tearDown(() async {
