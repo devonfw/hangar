@@ -6,7 +6,6 @@ import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller.da
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
-import 'package:takeoff_lib/src/domain/cloud_provider.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';

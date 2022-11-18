@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
-import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
