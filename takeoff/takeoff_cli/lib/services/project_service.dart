@@ -45,8 +45,7 @@ class ProjectsService {
     } on CreateProjectException catch (e) {
       Log.error(e.message);
     }
-      }
-
+  }
 
   Future<void> cleanProject(String cloud, String projectId) async {
     CloudProviderId providerId = CloudProviderId.fromString(cloud);
