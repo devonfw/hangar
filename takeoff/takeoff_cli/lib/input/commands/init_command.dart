@@ -7,7 +7,7 @@ class InitCommand extends Command {
   final String name = "init";
   @override
   final String description =
-      "Initialize the account which will use the selecter cloud provider.";
+      "Initialize the account which will use the selected cloud provider.";
 
   InitCommand(this.service) {
     argParser.addOption('cloud',
