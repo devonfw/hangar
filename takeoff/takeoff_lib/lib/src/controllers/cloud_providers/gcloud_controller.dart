@@ -14,8 +14,10 @@ import 'package:takeoff_lib/src/controllers/hangar/project/project_controller.da
 import 'package:takeoff_lib/src/controllers/hangar/project/project_controller_gcloud.dart';
 import 'package:takeoff_lib/src/controllers/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
+import 'package:takeoff_lib/src/controllers/sonar/sonarqube_controller.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/repo/repo_action.dart';
+import 'package:takeoff_lib/src/hangar_scripts/common/terraform/setup_sonar.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/create_project.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/setup_principal_account.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/verify_roles_and_permissions.dart';
@@ -88,6 +90,14 @@ class GoogleCloudController {
       throw CreateProjectException("Could not create FrontEnd repository");
     }
 
+    SonarqubeController sonarqubeController = SonarqubeController();
+    if (!await sonarqubeController.execute(SetUpSonar(
+        serviceAccountFile: serviceKeyPath,
+        project: projectName,
+        terraformFilesPath: "$projectDir/terraform"))) {
+      throw CreateProjectException("Could not set up SonarQube");
+    }
+
     PipelineControllerGCloud pipelineController = PipelineControllerGCloud();
 
     try {
@@ -96,7 +106,9 @@ class GoogleCloudController {
           ApplicationEnd.backend,
           backendLanguage,
           backendLocalDir,
-          googleCloudRegion);
+          googleCloudRegion,
+          "url",
+          "token");
     } on CreatePipelineException catch (e) {
       throw CreateProjectException(
           "Could not build the BackEnd pipelines: ${e.message}");
@@ -107,7 +119,9 @@ class GoogleCloudController {
           ApplicationEnd.frontend,
           frontendLanguage,
           frontendLocalDir,
-          googleCloudRegion);
+          googleCloudRegion,
+          "url",
+          "token");
     } on CreatePipelineException catch (e) {
       throw CreateProjectException(
           "Could not build the FrontEnd pipelines: ${e.message}");

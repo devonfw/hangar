@@ -14,8 +14,14 @@ class PipelineControllerGCloud extends PipelineController {
   ///
   /// It requires the [ApplicationEnd], the [Language], the repository [localDir]
   /// and the [googleCloudRegion] to deploy.
-  Future<void> buildPipelines(String projectName, ApplicationEnd appEnd,
-      Language language, String localDir, String googleCloudRegion) async {
+  Future<void> buildPipelines(
+      String projectName,
+      ApplicationEnd appEnd,
+      Language language,
+      String localDir,
+      String googleCloudRegion,
+      String sonarUrl,
+      String sonarToken) async {
     String buildPipelineName = "build_${projectName}_${appEnd.name}";
     String qaPipelineName = "qa_${projectName}_${appEnd.name}";
     String testPipelineName = "test_${projectName}_${appEnd.name}";
