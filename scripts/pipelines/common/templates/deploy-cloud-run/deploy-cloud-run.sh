@@ -21,6 +21,7 @@ do
     esac
 done
 
+# shellcheck source=/dev/null
 . "$(dirname "$0")/package-extra.sh"
 # we get what is located after the last '/' in the branch name, so it removes /ref/head or /ref/head/<folder> if your branche is named correctly"
 branch_short=$(echo "$branch" | awk -F '/' '{ print $NF }')
