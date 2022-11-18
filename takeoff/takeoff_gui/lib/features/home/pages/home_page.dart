@@ -9,13 +9,14 @@ import 'package:takeoff_gui/mocks/mock_projects.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+  final ProjectsController projectsController =
+      GetIt.I.get<ProjectsController>();
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    ProjectsController projectsController = GetIt.I.get<ProjectsController>();
-    ScrollController scrollController = ScrollController();
-
+    projectsController.updateInitAccounts();
     return Scaffold(
       floatingActionButton: const FloatingActionMenu(),
       appBar: AppBar(

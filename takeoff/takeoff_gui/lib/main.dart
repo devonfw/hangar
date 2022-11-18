@@ -6,7 +6,7 @@ import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 void main() async {
-  registerSingletons();
+  await registerSingletons();
   runApp(const MyApp());
 }
 
@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-void registerSingletons() {
+Future<void> registerSingletons() async {
   TakeOffFacade facade = TakeOffFacade();
-  facade.initialize();
+  await facade.initialize();
   GetIt.I.registerSingleton<TakeOffFacade>(facade);
   GetIt.I.registerSingleton<ProjectsController>(ProjectsController());
 }

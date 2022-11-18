@@ -168,7 +168,7 @@ class MockProjectsController extends _i1.Mock
         returnValueForMissingStub: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
   @override
-  _i3.Future<void> updateInitAccounts(_i2.CloudProviderId? cloud) =>
+  _i3.Future<void> updateInitAccounts([_i2.CloudProviderId? cloud]) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateInitAccounts,

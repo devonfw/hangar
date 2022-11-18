@@ -46,8 +46,14 @@ abstract class _ProjectsController with Store {
   }
 
   @action
-  Future<void> updateInitAccounts(CloudProviderId cloud) async {
-    accounts[cloud] = await facade.getCurrentAccount(cloud);
+  Future<void> updateInitAccounts([CloudProviderId? cloud]) async {
+    if (cloud == null) {
+      for (CloudProviderId cloud in CloudProviderId.values) {
+        accounts[cloud] = await facade.getCurrentAccount(cloud);
+      }
+    } else {
+      accounts[cloud] = await facade.getCurrentAccount(cloud);
+    }
   }
 
   void resetChannel() {
