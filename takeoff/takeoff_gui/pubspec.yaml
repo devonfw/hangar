@@ -10,9 +10,19 @@ dependencies:
   cupertino_icons: ^1.0.2
   takeoff_lib:
     path: '../takeoff_lib'
+  go_router: ^5.1.5
+  get_it: ^7.2.0
+  mobx: ^2.0.7+7
+  flutter_mobx: ^2.0.6+3
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^2.2.1
+  mobx_codegen: ^2.0.7+2
   flutter_lints: ^2.0.0
+  # Testing mocks
+  mockito: ^5.3.0
 flutter:
   uses-material-design: true
