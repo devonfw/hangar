@@ -9,7 +9,7 @@ helpFunction()
     echo ""
     echo "Arguments:"
     echo "  -g     [Required] Google Account of an end user. Mutually exclusive with -s."
-    echo "  -s     [Required] Service Account name. Mutually exclusive with -g."
+    echo "  -s     [Required] Service Account email. Mutually exclusive with -g."
     echo "  -p     [Required] Short project name (ID) where the roles and permissions will be checked."
     echo "  -r                Roles to be checked, splitted by comma."
     echo "  -f                Path to a file containing the roles to be checked."
@@ -83,18 +83,19 @@ else
     fi
 fi
 
-#Check if the service account exists and if not, create it
+#Check if the service account exists
 if [ -n "$service_account" ];
 then
-    service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
-    echo -e "${white}Checking if service account $service_account_email already exists..."
-    if ! gcloud iam service-accounts describe "$service_account_email" &> /dev/null;
+    echo -e "${white}Checking if service account $service_account already exists..."	
+    service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
+    service_accounts_array=($service_accounts)
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
     then
-        echo -e "${red}Error: Service account $service_account_email does not exist. Please, provide a valid one." >&2
+        echo -e "${red}Error: Service account $service_account does not exist. Please, provide a valid one." >&2
         echo -ne "${white}"
 	exit 2
     else
-        echo -e "${white}The service account $service_account_email is valid."
+        echo -e "${white}The service account $service_account is valid."
     fi
 fi
 
@@ -104,7 +105,7 @@ then
     memberValue="$google_account"
 elif [ -n "$service_account" ]
 then
-    memberValue="$service_account_email"
+    memberValue="$service_account"
 fi
 
 echo -e "${white}Retrieving roles and permissions for $memberValue in project $project_id..."
