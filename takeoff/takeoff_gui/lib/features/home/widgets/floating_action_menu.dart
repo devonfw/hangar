@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:takeoff_gui/features/create/pages/create_dialog.dart';
 import 'package:takeoff_gui/features/home/widgets/custom_floating_button.dart';
 
 class FloatingActionMenu extends StatelessWidget {
@@ -13,8 +14,8 @@ class FloatingActionMenu extends StatelessWidget {
       children: [
         CustomFloatingButton(
           icon: Icons.add_box_outlined,
-          //TODO Redirect to create project
-          onPressed: () => print("Create!"),
+          onPressed: () => showDialog(
+              context: context, builder: ((context) => CreateDialog())),
           text: "Create",
         ),
         const SizedBox(width: 10),
