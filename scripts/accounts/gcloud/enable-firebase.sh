@@ -55,7 +55,7 @@ checkMandatoryArguments() {
         exit 2
     fi
     currentPath=`pwd`
-    cd $outputPath && outputPath=`pwd`
+    cd $outputPath && outputPath=$(pwd)
     cd $currentPath
 }
 
