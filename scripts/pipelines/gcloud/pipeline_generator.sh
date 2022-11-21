@@ -49,7 +49,6 @@ commonTemplatesPath="scripts/pipelines/gcloud/templates/common" # Path for commo
 commonPipelineTemplatesPath="scripts/pipelines/common/templates/" # Path for common files of the pipelines
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
-configFilePath=".pipelines/config" # Path to the scripts.
 export provider="gcloud"
 pipeline_type="pipeline"
 
