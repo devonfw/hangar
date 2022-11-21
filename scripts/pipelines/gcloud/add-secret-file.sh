@@ -56,7 +56,7 @@ function checkArgs {
   IFS=, read -ra flags <<< "$mandatoryFlags"
   for flag in "${flags[@]}"
   do
-      if test -z $flag
+      if test -z "$flag"
       then
           echo -e "${red}Error: Missing parameters, some flags are mandatory." >&2
           echo -e "${red}Use -h or --help flag to display help." >&2
@@ -66,14 +66,14 @@ function checkArgs {
   done
 
   # If secret name given we check that is compliant with the regex \w
-  [[ "$secretName" =~ ^[a-zA-Z0-9_]$* ]] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
+  [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
 
   # Checking if the file given with the -f exists
   cd "$currentDirectory"
   # Ensuring the UNIX format path
   localFilePath=${localFilePath//'\'/"/"}
   localFilePath=${localFilePath//'C:'/"/c"}
-  cd $(dirname "${localFilePath}") && [ -f $(basename "${localFilePath}") ] && localFilePath="$(pwd)/$(basename "${localFilePath}")"  || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
+  cd "$(dirname "${localFilePath}")" && [ -f "$(basename "${localFilePath}")" ] && localFilePath="$(pwd)/$(basename "${localFilePath}")"  || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
 }
 
 function getProjectRepo {
