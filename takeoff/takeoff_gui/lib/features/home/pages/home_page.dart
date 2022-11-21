@@ -5,7 +5,6 @@ import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/home/widgets/cloud_projects_list.dart';
 import 'package:takeoff_gui/features/home/widgets/floating_action_menu.dart';
 import 'package:takeoff_gui/features/home/widgets/google_login_dialog.dart';
-import 'package:takeoff_gui/mocks/mock_projects.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class HomePage extends StatelessWidget {
@@ -30,7 +29,8 @@ class HomePage extends StatelessWidget {
             Observer(builder: (context) {
               return CloudProjectsList(
                 name: "Google Cloud",
-                projects: MockProjects.projectsGCloud,
+                projects:
+                    projectsController.projects[CloudProviderId.gcloud] ?? [],
                 authenticateCallback: () {
                   showDialog(
                     context: context,
@@ -43,14 +43,15 @@ class HomePage extends StatelessWidget {
             }),
             CloudProjectsList(
               name: "Azure",
-              projects: MockProjects.projectsAzure,
+              projects:
+                  projectsController.projects[CloudProviderId.azure] ?? [],
               // TODO Add loggin method
               authenticateCallback: () => print("Authenticating on Azure"),
               authAccount: projectsController.accounts[CloudProviderId.azure]!,
             ),
             CloudProjectsList(
               name: 'AWS',
-              projects: MockProjects.projectsAWS,
+              projects: projectsController.projects[CloudProviderId.aws] ?? [],
               // TODO Add loggin method
               authenticateCallback: () => print("Authenticating on AWS"),
               authAccount: projectsController.accounts[CloudProviderId.aws]!,
