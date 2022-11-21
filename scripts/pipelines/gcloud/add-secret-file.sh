@@ -141,6 +141,7 @@ function merge_branch {
 obtainHangarPath
 
 # Load common functions
+# shellcheck source=/dev/null
 . "$hangarPath/scripts/pipelines/common/pipeline_generator.lib"
 
 if [[ "$help" == "true" ]]; then help_secret; fi
