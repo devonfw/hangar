@@ -40,9 +40,10 @@ Hangar -> Gcloud : gcloud iam service-accounts keys create
 Gcloud --> Hangar : Service Account Key Success
 Hangar -> Gcloud : gcloud add-iam-policy-binding
 Gcloud --> Hangar : Roles Attached Success
+Hangar --> Cache : Service Account Key
 ' Revisar esta parte -- Renombrar a Volumen y escribe Hangar directo
 Hangar --> TakeOff : Service Account Key Success
-TakeOff -> Cache : Store Account Key
+
 
 TakeOff -> Hangar : validate-roles.sh
 ' Opcional
@@ -71,8 +72,9 @@ Hangar --> TakeOff : Repo URL Success
 
 TakeOff -> Hangar : setup-sonar.sh
 Hangar -> Gcloud : terraform apply
-Gcloud -> Hangar : Sonar Token
-Hangar -> TakeOff : Sonar Token Creation Success
+Gcloud --> Hangar : Sonar setup Success
+Hangar --> Cache : Sonar Token
+Hangar --> TakeOff : Sonar Creation Success
 
 TakeOff -> Hangar : init-cloud-run.sh BE
 Hangar -> Gcloud :  gcloud run deploy hello
