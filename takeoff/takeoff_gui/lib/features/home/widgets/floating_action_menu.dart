@@ -15,7 +15,10 @@ class FloatingActionMenu extends StatelessWidget {
         CustomFloatingButton(
           icon: Icons.add_box_outlined,
           onPressed: () => showDialog(
-              context: context, builder: ((context) => CreateDialog())),
+            context: context,
+            builder: ((context) => CreateDialog()),
+            barrierDismissible: false,
+          ),
           text: "Create",
         ),
         const SizedBox(width: 10),
