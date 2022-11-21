@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
@@ -14,10 +15,11 @@ import 'package:takeoff_lib/src/controllers/hangar/project/project_controller.da
 import 'package:takeoff_lib/src/controllers/hangar/project/project_controller_gcloud.dart';
 import 'package:takeoff_lib/src/controllers/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
+import 'package:takeoff_lib/src/controllers/sonar/sonar_output.dart';
 import 'package:takeoff_lib/src/controllers/sonar/sonarqube_controller.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/repo/repo_action.dart';
-import 'package:takeoff_lib/src/hangar_scripts/common/terraform/setup_sonar.dart';
+import 'package:takeoff_lib/src/hangar_scripts/common/sonarqube/setup_sonar.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/create_project.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/setup_principal_account.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/verify_roles_and_permissions.dart';
@@ -29,11 +31,13 @@ import 'package:takeoff_lib/src/utils/logger/log.dart';
 class GoogleCloudController {
   /// Creates a project in Google Cloud
   Future<bool> createProject(
-      String projectName,
-      String billingAccount,
-      Language backendLanguage,
-      Language frontendLanguage,
-      String googleCloudRegion) async {
+      {required String projectName,
+      required String billingAccount,
+      required Language backendLanguage,
+      String? backendVersion,
+      required Language frontendLanguage,
+      String? frontendVersion,
+      required String googleCloudRegion}) async {
     Directory projectDir = Directory(
         "${FoldersService.containerFolders["workspace"]}/$projectName");
 
@@ -94,34 +98,41 @@ class GoogleCloudController {
     if (!await sonarqubeController.execute(SetUpSonar(
         serviceAccountFile: serviceKeyPath,
         project: projectName,
-        terraformFilesPath: "$projectDir/terraform"))) {
+        stateFolder: "$projectDir/sonarqube"))) {
       throw CreateProjectException("Could not set up SonarQube");
     }
+
+    File sonarOutputFile =
+        File("$projectDir/sonarqube/terraform.tfoutput.json");
+    SonarOutput sonarOutput =
+        SonarOutput.fromMap(jsonDecode(sonarOutputFile.readAsStringSync()));
 
     PipelineControllerGCloud pipelineController = PipelineControllerGCloud();
 
     try {
       await pipelineController.buildPipelines(
-          projectName,
-          ApplicationEnd.backend,
-          backendLanguage,
-          backendLocalDir,
-          googleCloudRegion,
-          "url",
-          "token");
+          projectName: projectName,
+          appEnd: ApplicationEnd.backend,
+          language: backendLanguage,
+          languageVersion: backendVersion,
+          localDir: backendLocalDir,
+          googleCloudRegion: googleCloudRegion,
+          sonarUrl: sonarOutput.url,
+          sonarToken: sonarOutput.token);
     } on CreatePipelineException catch (e) {
       throw CreateProjectException(
           "Could not build the BackEnd pipelines: ${e.message}");
     }
     try {
       await pipelineController.buildPipelines(
-          projectName,
-          ApplicationEnd.frontend,
-          frontendLanguage,
-          frontendLocalDir,
-          googleCloudRegion,
-          "url",
-          "token");
+          projectName: projectName,
+          appEnd: ApplicationEnd.frontend,
+          language: frontendLanguage,
+          languageVersion: frontendVersion,
+          localDir: frontendLocalDir,
+          googleCloudRegion: googleCloudRegion,
+          sonarUrl: sonarOutput.url,
+          sonarToken: sonarOutput.token);
     } on CreatePipelineException catch (e) {
       throw CreateProjectException(
           "Could not build the FrontEnd pipelines: ${e.message}");

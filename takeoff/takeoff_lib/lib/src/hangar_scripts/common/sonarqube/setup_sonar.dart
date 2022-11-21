@@ -4,12 +4,12 @@ import 'package:takeoff_lib/src/hangar_scripts/script.dart';
 class SetUpSonar implements Script {
   String serviceAccountFile;
   String project;
-  String terraformFilesPath;
+  String stateFolder;
 
   SetUpSonar({
     required this.serviceAccountFile,
     required this.project,
-    required this.terraformFilesPath,
+    required this.stateFolder,
   });
 
   @override
@@ -18,14 +18,14 @@ class SetUpSonar implements Script {
   @override
   List<String> toCommand() {
     List<String> args = [
-      //TODO: Change this to the correct location
-      "/scripts/sonarqube/gcloud/setup-terraform.sh",
+      "/scripts/sonarqube/gcloud/sonarqube.sh",
+      "apply",
+      "--state-folder",
+      stateFolder,
       "--service_account_file",
       serviceAccountFile,
       "--project",
       project,
-      "--terraform-files",
-      terraformFilesPath
     ];
 
     return args;

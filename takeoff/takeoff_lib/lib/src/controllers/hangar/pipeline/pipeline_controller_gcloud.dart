@@ -15,13 +15,14 @@ class PipelineControllerGCloud extends PipelineController {
   /// It requires the [ApplicationEnd], the [Language], the repository [localDir]
   /// and the [googleCloudRegion] to deploy.
   Future<void> buildPipelines(
-      String projectName,
-      ApplicationEnd appEnd,
-      Language language,
-      String localDir,
-      String googleCloudRegion,
-      String sonarUrl,
-      String sonarToken) async {
+      {required String projectName,
+      required ApplicationEnd appEnd,
+      required Language language,
+      String? languageVersion,
+      required String localDir,
+      required String googleCloudRegion,
+      required String sonarUrl,
+      required String sonarToken}) async {
     String buildPipelineName = "build_${projectName}_${appEnd.name}";
     String qaPipelineName = "qa_${projectName}_${appEnd.name}";
     String testPipelineName = "test_${projectName}_${appEnd.name}";
@@ -30,6 +31,7 @@ class PipelineControllerGCloud extends PipelineController {
         configFile:
             "/scripts/pipelines/gcloud/templates/build/build-pipeline.cfg",
         pipelineName: buildPipelineName,
+        languageVersion: languageVersion,
         language: language,
         localDirectory: localDir))) {
       throw CreatePipelineException(
@@ -41,6 +43,7 @@ class PipelineControllerGCloud extends PipelineController {
             "/scripts/pipelines/gcloud/templates/test/test-pipeline.cfg",
         pipelineName: "test_${projectName}_backend",
         language: language,
+        languageVersion: languageVersion,
         localDirectory: localDir,
         buildPipelineName: buildPipelineName))) {
       throw CreatePipelineException(
@@ -54,10 +57,10 @@ class PipelineControllerGCloud extends PipelineController {
         language: language,
         localDirectory: localDir,
         buildPipelineName: buildPipelineName,
+        languageVersion: languageVersion,
         testPipelineName: testPipelineName,
-        // TODO: Sonar URL and Sonar Token cant be put until the sonar wrapper is made
-        sonarUrl: "sonarURL",
-        sonarToken: "sonarToken"))) {
+        sonarUrl: sonarUrl,
+        sonarToken: sonarToken))) {
       throw CreatePipelineException(
           "Quality pipeline could not be created for ${appEnd.name}");
     }
@@ -70,8 +73,6 @@ class PipelineControllerGCloud extends PipelineController {
       localDirectory: localDir,
       buildPipelineName: buildPipelineName,
       qualityPipelineName: qaPipelineName,
-      //registryUser: "",
-      //registryPassword: "",
       imageName: "${projectName}_${appEnd.name}_image",
     ))) {
       throw CreatePipelineException(

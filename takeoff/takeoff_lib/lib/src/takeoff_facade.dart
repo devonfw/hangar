@@ -67,13 +67,21 @@ class TakeOffFacade {
 
   /// Calls the method that will create a project in Google Cloud.
   Future<bool> createProjectGCloud(
-      String projectName,
-      String billingAccount,
-      Language backendLanguage,
-      Language frontendLanguage,
-      String googleCloudRegion) async {
-    return await _googleController.createProject(projectName, billingAccount,
-        backendLanguage, frontendLanguage, googleCloudRegion);
+      {required String projectName,
+      required String billingAccount,
+      required Language backendLanguage,
+      String? backendVersion,
+      required Language frontendLanguage,
+      String? frontendVersion,
+      required String googleCloudRegion}) async {
+    return await _googleController.createProject(
+        projectName: projectName,
+        billingAccount: billingAccount,
+        backendLanguage: backendLanguage,
+        backendVersion: backendVersion,
+        frontendLanguage: frontendLanguage,
+        frontendVersion: frontendVersion,
+        googleCloudRegion: googleCloudRegion);
   }
 
   Future<bool> cleanProject(
