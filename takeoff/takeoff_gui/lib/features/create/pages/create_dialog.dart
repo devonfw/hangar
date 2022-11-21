@@ -104,7 +104,10 @@ class CreateDialog extends StatelessWidget {
           text: "Close",
           icon: Icons.close,
           color: Colors.red,
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Navigator.of(context).pop();
+            controller.resetForm();
+          },
         )
       ],
     );

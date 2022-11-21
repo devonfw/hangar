@@ -33,4 +33,16 @@ abstract class _CreateController with Store {
 
   @observable
   String backendVersion = "v10";
+
+  @action
+  void resetForm() {
+    cloudProvider = "";
+    repoProvider = "";
+    projectName = "";
+    billingAccount = "";
+    frontendLanguage = "Flutter";
+    frontendVersion = "v10";
+    backendLanguage = "Python";
+    backendVersion = "v10";
+  }
 }
