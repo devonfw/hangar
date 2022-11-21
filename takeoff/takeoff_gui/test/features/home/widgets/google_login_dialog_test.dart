@@ -52,6 +52,6 @@ void main() async {
     await tester.pumpAndSettle();
 
     verify(controller.initAccount(any, any)).called(1);
-    verify(controller.updateInitAccounts(any)).called(1);
+    verify(controller.updateInitAccounts()).called(1);
   });
 }
