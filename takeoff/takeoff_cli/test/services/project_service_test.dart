@@ -37,7 +37,7 @@ void main() {
       "listProjects prints the correct message if not logged with Google Cloud",
       overridePrint(() async {
     ProjectsService projectsService = ProjectsService(TakeOffFacade());
-    await projectsService.listProjects("gc");
+    await projectsService.listProjects(CloudProviderId.gcloud);
 
     expect(log.length, 1);
     expect(
@@ -51,7 +51,7 @@ void main() {
     String email = "test${Random().nextInt(10000)}@mail.com}";
     await cacheRepository.saveGoogleEmail(email);
     ProjectsService projectsService = ProjectsService(TakeOffFacade());
-    await projectsService.listProjects("gc");
+    await projectsService.listProjects(CloudProviderId.gcloud);
 
     expect(log.length, 1);
     expect(log.first.contains("No projects created with Google Cloud"), true);
@@ -72,7 +72,7 @@ void main() {
 
     ProjectsService projectsService = ProjectsService(TakeOffFacade());
 
-    await projectsService.listProjects("gc");
+    await projectsService.listProjects(CloudProviderId.gcloud);
 
     expect(log.length, 16);
     expect(log.first.contains("Projects from Google Cloud:"), true);
@@ -87,7 +87,7 @@ void main() {
     await cacheRepository.saveGoogleEmail(email);
 
     ProjectsService projectsService = ProjectsService(TakeOffFacade());
-    await projectsService.cleanProject("gc", "projectId");
+    await projectsService.cleanProject(CloudProviderId.gcloud, "projectId");
 
     expect(log.length, 1);
     expect(
@@ -110,7 +110,7 @@ void main() {
     }
 
     ProjectsService projectsService = ProjectsService(TakeOffFacade());
-    await projectsService.cleanProject("gc", "projectId");
+    await projectsService.cleanProject(CloudProviderId.gcloud, "projectId");
 
     expect(log.length, 1);
     expect(
@@ -134,7 +134,7 @@ void main() {
     await cacheRepository.saveGoogleProjectId("projectId");
 
     ProjectsService projectsService = ProjectsService(TakeOffFacade());
-    await projectsService.cleanProject("gc", "projectId");
+    await projectsService.cleanProject(CloudProviderId.gcloud, "projectId");
 
     expect(log.length, 1);
     expect(log.first.contains("Cleaned all data from project projectId"), true);
@@ -162,7 +162,7 @@ void main() {
     await cacheRepository.saveGoogleProjectId(project);
 
     ProjectsService projectsService = ProjectsService(TakeOffFacade());
-    await projectsService.cleanProject("gc", project);
+    await projectsService.cleanProject(CloudProviderId.gcloud, project);
 
     expect(log.length, 1);
     expect(log.first.contains("Cleaned all data from project $project"), true);
