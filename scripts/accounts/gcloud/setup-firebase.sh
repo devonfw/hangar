@@ -55,8 +55,8 @@ checkMandatoryArguments() {
         exit 2
     fi
     currentPath="$(pwd)"
-    cd $outputPath && outputPath="$(pwd)"
-    cd $currentPath
+    cd "${outputPath}" && outputPath="$(pwd)"
+    cd "${currentPath}"
 }
 
 # Required CLI check
