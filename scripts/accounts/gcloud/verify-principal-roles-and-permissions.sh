@@ -89,7 +89,7 @@ then
     echo -e "${white}Checking if service account $service_account already exists..."	
     service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
     service_accounts_array=($service_accounts)
-    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
     then
         echo -e "${red}Error: Service account $service_account does not exist. Please, provide a valid one." >&2
         echo -ne "${white}"
