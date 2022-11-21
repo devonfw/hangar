@@ -54,8 +54,8 @@ checkMandatoryArguments() {
         echo -ne "${white}"
         exit 2
     fi
-    currentPath=`pwd`
-    cd $outputPath && outputPath=$(pwd)
+    currentPath="$(pwd)"
+    cd $outputPath && outputPath="$(pwd)"
     cd $currentPath
 }
 
