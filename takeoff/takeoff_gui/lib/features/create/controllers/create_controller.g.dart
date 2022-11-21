@@ -77,13 +77,13 @@ mixin _$CreateController on _CreateController, Store {
       Atom(name: '_CreateController.frontendLanguage', context: context);
 
   @override
-  String get frontendLanguage {
+  Language get frontendLanguage {
     _$frontendLanguageAtom.reportRead();
     return super.frontendLanguage;
   }
 
   @override
-  set frontendLanguage(String value) {
+  set frontendLanguage(Language value) {
     _$frontendLanguageAtom.reportWrite(value, super.frontendLanguage, () {
       super.frontendLanguage = value;
     });
@@ -109,13 +109,13 @@ mixin _$CreateController on _CreateController, Store {
       Atom(name: '_CreateController.backendLanguage', context: context);
 
   @override
-  String get backendLanguage {
+  Language get backendLanguage {
     _$backendLanguageAtom.reportRead();
     return super.backendLanguage;
   }
 
   @override
-  set backendLanguage(String value) {
+  set backendLanguage(Language value) {
     _$backendLanguageAtom.reportWrite(value, super.backendLanguage, () {
       super.backendLanguage = value;
     });
@@ -137,6 +137,58 @@ mixin _$CreateController on _CreateController, Store {
     });
   }
 
+  late final _$googleCloudRegionAtom =
+      Atom(name: '_CreateController.googleCloudRegion', context: context);
+
+  @override
+  String get googleCloudRegion {
+    _$googleCloudRegionAtom.reportRead();
+    return super.googleCloudRegion;
+  }
+
+  @override
+  set googleCloudRegion(String value) {
+    _$googleCloudRegionAtom.reportWrite(value, super.googleCloudRegion, () {
+      super.googleCloudRegion = value;
+    });
+  }
+
+  late final _$_CreateControllerActionController =
+      ActionController(name: '_CreateController', context: context);
+
+  @override
+  void setFrontendLanguage(Language lang) {
+    final _$actionInfo = _$_CreateControllerActionController.startAction(
+        name: '_CreateController.setFrontendLanguage');
+    try {
+      return super.setFrontendLanguage(lang);
+    } finally {
+      _$_CreateControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setBackendLanguage(Language lang) {
+    final _$actionInfo = _$_CreateControllerActionController.startAction(
+        name: '_CreateController.setBackendLanguage');
+    try {
+      return super.setBackendLanguage(lang);
+    } finally {
+      _$_CreateControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void resetForm() {
+    final _$actionInfo = _$_CreateControllerActionController.startAction(
+        name: '_CreateController.resetForm');
+    try {
+      return super.resetForm();
+    } finally {
+      _$_CreateControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
@@ -147,7 +199,8 @@ billingAccount: ${billingAccount},
 frontendLanguage: ${frontendLanguage},
 frontendVersion: ${frontendVersion},
 backendLanguage: ${backendLanguage},
-backendVersion: ${backendVersion}
+backendVersion: ${backendVersion},
+googleCloudRegion: ${googleCloudRegion}
     ''';
   }
 }

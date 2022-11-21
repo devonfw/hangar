@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:takeoff_gui/features/create/utils/langauges_versions.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 part 'create_controller.g.dart';
@@ -23,16 +24,38 @@ abstract class _CreateController with Store {
   String billingAccount = "";
 
   @observable
-  String frontendLanguage = "Flutter";
+  Language frontendLanguage = LanguagesVersions.frontendLanguages[0];
 
   @observable
-  String frontendVersion = "v10";
+  String frontendVersion = LanguagesVersions
+      .versionsLanguages[LanguagesVersions.frontendLanguages[0]]![0];
 
   @observable
-  String backendLanguage = "Python";
+  Language backendLanguage = LanguagesVersions.backendLanguages[0];
 
   @observable
-  String backendVersion = "v10";
+  String backendVersion = LanguagesVersions
+      .versionsLanguages[LanguagesVersions.backendLanguages[0]]![0];
+
+  @observable
+  String googleCloudRegion = "";
+
+  void createProject() {
+    facade.createProjectGCloud(projectName, billingAccount, backendLanguage,
+        frontendLanguage, googleCloudRegion);
+  }
+
+  @action
+  void setFrontendLanguage(Language lang) {
+    frontendLanguage = lang;
+    frontendVersion = LanguagesVersions.versionsLanguages[frontendLanguage]![0];
+  }
+
+  @action
+  void setBackendLanguage(Language lang) {
+    backendLanguage = lang;
+    backendVersion = LanguagesVersions.versionsLanguages[backendLanguage]![0];
+  }
 
   @action
   void resetForm() {
@@ -40,9 +63,11 @@ abstract class _CreateController with Store {
     repoProvider = "";
     projectName = "";
     billingAccount = "";
-    frontendLanguage = "Flutter";
-    frontendVersion = "v10";
-    backendLanguage = "Python";
-    backendVersion = "v10";
+    frontendLanguage = LanguagesVersions.frontendLanguages[0];
+    frontendVersion = LanguagesVersions
+        .versionsLanguages[LanguagesVersions.frontendLanguages[0]]![0];
+    backendLanguage = LanguagesVersions.backendLanguages[0];
+    backendVersion = LanguagesVersions
+        .versionsLanguages[LanguagesVersions.backendLanguages[0]]![0];
   }
 }
