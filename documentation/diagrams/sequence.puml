@@ -70,9 +70,11 @@ Hangar --> Cache : Project Code
 Hangar --> TakeOff : Repo URL Success
 
 TakeOff -> Hangar : setup-sonar.sh
+Hangar -> Hangar : terraform init
+Hangar -> Hangar : set-terraform-variables.sh
 Hangar -> Gcloud : terraform apply
-Gcloud --> Hangar : Sonar setup Success
-Hangar --> Cache : Sonar Token
+Gcloud --> Hangar : Terraform Success
+Hangar --> Cache : Sonar Token + Tfstate
 Hangar --> TakeOff : Sonar Creation Success
 
 TakeOff -> Hangar : init-cloud-run.sh BE
