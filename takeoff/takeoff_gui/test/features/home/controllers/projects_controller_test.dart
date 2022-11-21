@@ -49,7 +49,7 @@ void main() async {
     String account = "test@mail.com";
     when(facade.getCurrentAccount(cloud))
         .thenAnswer((realInvocation) => Future.value("test@mail.com"));
-    await controller.updateInitAccounts(cloud);
+    await controller.updateInitAccounts();
     expect(controller.accounts[cloud], account);
   });
 
