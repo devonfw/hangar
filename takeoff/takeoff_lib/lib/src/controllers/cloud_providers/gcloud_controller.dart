@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -37,9 +38,14 @@ class GoogleCloudController {
       String? backendVersion,
       required Language frontendLanguage,
       String? frontendVersion,
-      required String googleCloudRegion}) async {
+      required String googleCloudRegion,
+      StreamController<String>? infoStream}) async {
     Directory projectDir = Directory(
         "${FoldersService.containerFolders["workspace"]}/$projectName");
+
+    logAndStream(
+        "Creating folder ${FoldersService.containerFolders["workspace"]}/$projectName}",
+        infoStream);
 
     DockerController controller = GetIt.I.get<DockerController>();
     if (!await controller.executeCommand([], ["mkdir", projectDir.path])) {
@@ -49,6 +55,8 @@ class GoogleCloudController {
     ProjectController projectController = ProjectControllerGCloud(
         CreateProjectGCloud(
             projectName: projectName, billingAccount: billingAccount));
+
+    logAndStream("Creating project in Google Cloud", infoStream);
 
     if (!await projectController.createProject()) {
       throw CreateProjectException("Could not create project in Google Cloud");
@@ -68,6 +76,9 @@ class GoogleCloudController {
           projectId: projectName,
         ));
 
+    logAndStream(
+        "Setting up principal account and verifying roles", infoStream);
+
     try {
       await accountController.setUpAccountAndVerifyRoles();
     } on GCloudAccountException catch (e) {
@@ -80,6 +91,8 @@ class GoogleCloudController {
     String backendLocalDir = "${projectDir.path}/Backend";
     String frontendLocalDir = "${projectDir.path}/Frontend";
 
+    logAndStream("Creating BackEnd Repository", infoStream);
+
     if (!await repoController.createRepository(CreateRepoGCloud(
         project: projectName,
         action: RepoAction.create,
@@ -87,12 +100,15 @@ class GoogleCloudController {
       throw CreateProjectException("Could not create BackEnd repository");
     }
 
+    logAndStream("Creating FrontEnd Repository", infoStream);
+
     if (!await repoController.createRepository(CreateRepoGCloud(
         project: projectName,
         action: RepoAction.create,
         directory: frontendLocalDir))) {
       throw CreateProjectException("Could not create FrontEnd repository");
     }
+    logAndStream("Setting up Sonarqube", infoStream);
 
     SonarqubeController sonarqubeController = SonarqubeController();
     if (!await sonarqubeController.execute(SetUpSonar(
@@ -109,6 +125,8 @@ class GoogleCloudController {
 
     PipelineControllerGCloud pipelineController = PipelineControllerGCloud();
 
+    logAndStream("Building BackEnd pipelines", infoStream);
+
     try {
       await pipelineController.buildPipelines(
           projectName: projectName,
@@ -123,6 +141,7 @@ class GoogleCloudController {
       throw CreateProjectException(
           "Could not build the BackEnd pipelines: ${e.message}");
     }
+    logAndStream("Building FrontEnd pipelines", infoStream);
     try {
       await pipelineController.buildPipelines(
           projectName: projectName,
@@ -138,6 +157,7 @@ class GoogleCloudController {
           "Could not build the FrontEnd pipelines: ${e.message}");
     }
 
+    infoStream?.add("Project $projectName succesfully created!");
     Log.success("Project $projectName succesfully created!");
 
     return true;
@@ -178,5 +198,10 @@ class GoogleCloudController {
       }
     }
     return true;
+  }
+
+  void logAndStream(String message, StreamController<String>? stream) {
+    Log.info(message);
+    stream?.add(message);
   }
 }

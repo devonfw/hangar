@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
@@ -73,7 +74,8 @@ class TakeOffFacade {
       String? backendVersion,
       required Language frontendLanguage,
       String? frontendVersion,
-      required String googleCloudRegion}) async {
+      required String googleCloudRegion,
+      StreamController<String>? infoStream}) async {
     return await _googleController.createProject(
         projectName: projectName,
         billingAccount: billingAccount,
@@ -81,7 +83,8 @@ class TakeOffFacade {
         backendVersion: backendVersion,
         frontendLanguage: frontendLanguage,
         frontendVersion: frontendVersion,
-        googleCloudRegion: googleCloudRegion);
+        googleCloudRegion: googleCloudRegion,
+        infoStream: infoStream);
   }
 
   Future<bool> cleanProject(
