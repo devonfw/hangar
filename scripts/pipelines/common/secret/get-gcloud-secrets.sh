@@ -3,7 +3,7 @@
 echo "Executing the get-secrets.sh script."
 triggerName=$1
 confFile=".pipelines/config/pathsSecretFiles.conf"
-[[ -f "$confFile" ]] || {echo "No conf file found. Leaving the script"; exit 0;}
+[[ -f "$confFile" ]] || { echo "No conf file found. Leaving the script"; exit 0; }
 grep "$triggerName" "$confFile" >> tmpConfFile
 grep "AllPipelines" "$confFile" >> tmpConfFile
 echo ""
