@@ -41,7 +41,6 @@ Gcloud --> Hangar : Service Account Key Success
 Hangar -> Gcloud : gcloud add-iam-policy-binding
 Gcloud --> Hangar : Roles Attached Success
 Hangar --> Cache : Service Account Key
-' Revisar esta parte -- Renombrar a Volumen y escribe Hangar directo
 Hangar --> TakeOff : Service Account Key Success
 
 
@@ -89,6 +88,41 @@ Gcloud --> Hangar : Deployment Success
 Hangar -> Gcloud : gcloud run services describe status.url
 Gcloud --> Hangar : Cloud Run URL
 Hangar --> TakeOff : Service FE Init Success + URL
+
+TakeOff -> Hangar : setup-firebase.sh
+Hangar -> Gcloud : gcloud services enable
+Gcloud --> Hangar : Services Enabled Success
+Hangar -> Gcloud : firebase projects:addfirebase
+Gcloud --> Hangar : Firebase Added Success
+Hangar -> Gcloud : gcloud firestore databases create
+Gcloud --> Hangar : Firestore Created Success
+Hangar -> Gcloud : gcloud iam service-account keys create
+Hangar --> Cache : Firebase Service Account
+Gcloud --> Hangar : Service Account Creation Success
+Hangar -> Gcloud : firebase apps:create ANDROID
+Gcloud --> Hangar : App creation Success
+Hangar -> Gcloud : firebase apps:sdkconfig ANDROID
+Gcloud --> Hangar : SDK Config Creation Success
+Hangar --> Cache : Android SDK Config
+Hangar -> Gcloud : firebase apps:create WEB
+Gcloud --> Hangar : App creation Success
+Hangar -> Gcloud : firebase apps:sdkconfig WEB
+Gcloud --> Hangar : SDK Config Creation Success
+Hangar --> Cache : WEB SDK Config
+
+Hangar --> TakeOff : Firebase Success
+
+TakeOff -> Hangar : quickstart-wayat.sh
+Cache -> Hangar : Code repository
+Cache -> Hangar : Firebase Secrets
+Hangar -> Hangar : Update Project Config
+Hangar --> Cache : Updated FE config
+Hangar --> Cache : Updated BE config
+Hangar -> Gcloud : Update FE Code Repository
+Gcloud --> Hangar : Update Code Success
+Hangar -> Gcloud : Update BE Code Repository
+Gcloud --> Hangar : Update Code Success
+Hangar --> TakeOff : Quickstart Success
 
 TakeOff -> Hangar : pipeline-generator.sh Build BE
 Hangar -> Gcloud : cloud build create pipeline
