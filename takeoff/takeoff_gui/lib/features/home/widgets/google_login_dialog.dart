@@ -80,7 +80,7 @@ class GoogleLoginDialog extends StatelessWidget {
         .initAccount(controller.text, CloudProviderId.gcloud)
         .then(
       (value) {
-        projectsController.updateInitAccounts(CloudProviderId.gcloud);
+        projectsController.updateInitAccounts();
         projectsController.waitForToken = false;
         Navigator.of(context).pop();
         projectsController.resetChannel();

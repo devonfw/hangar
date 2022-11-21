@@ -45,9 +45,9 @@ mixin _$ProjectsController on _ProjectsController, Store {
       AsyncAction('_ProjectsController.updateInitAccounts', context: context);
 
   @override
-  Future<void> updateInitAccounts(CloudProviderId cloud) {
+  Future<void> updateInitAccounts() {
     return _$updateInitAccountsAsyncAction
-        .run(() => super.updateInitAccounts(cloud));
+        .run(() => super.updateInitAccounts());
   }
 
   late final _$_ProjectsControllerActionController =

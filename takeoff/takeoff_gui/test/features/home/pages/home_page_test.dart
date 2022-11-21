@@ -34,7 +34,7 @@ void main() async {
       CloudProviderId.azure: "",
       CloudProviderId.gcloud: "",
     }));
-    await tester.pumpWidget(createApp(const HomePage()));
+    await tester.pumpWidget(createApp(HomePage()));
 
     expect(find.byType(CloudProjectsList), findsNWidgets(3));
   });
