@@ -7,21 +7,19 @@ class ProjectsService {
     this._takeOffFacade,
   );
 
-  Future<void> initAccount(String cloud, String email) async {
-    CloudProviderId cloudProvider = CloudProviderId.fromString(cloud);
+  Future<void> initAccount(CloudProviderId cloudProvider, String email) async {
     await _takeOffFacade.init(email, cloudProvider);
   }
 
-  Future<void> listProjects(String cloud) async {
-    CloudProviderId providerId = CloudProviderId.fromString(cloud);
-    CloudProvider provider = CloudProvider.fromId(providerId);
+  Future<void> listProjects(CloudProviderId cloudProvider) async {
+    CloudProvider provider = CloudProvider.fromId(cloudProvider);
 
-    if ((await _takeOffFacade.getCurrentAccount(providerId)).isEmpty) {
+    if ((await _takeOffFacade.getCurrentAccount(cloudProvider)).isEmpty) {
       Log.error("You have not logged in with ${provider.name}");
       return;
     }
 
-    List<String> projects = await _takeOffFacade.getProjects(providerId);
+    List<String> projects = await _takeOffFacade.getProjects(cloudProvider);
 
     if (projects.isEmpty) {
       Log.warning("No projects created with ${provider.name}");
@@ -30,6 +28,44 @@ class ProjectsService {
     print("Projects from ${provider.name}:");
     for (var element in projects) {
       print(element);
+    }
+  }
+
+  Future<void> createGoogleProject(
+      String projectName,
+      String billingAccount,
+      Language backendLanguage,
+      Language frontendLanguage,
+      String googleCloudRegion) async {
+    try {
+      await _takeOffFacade.createProjectGCloud(projectName, billingAccount,
+          backendLanguage, frontendLanguage, googleCloudRegion);
+    } on CreateProjectException catch (e) {
+      Log.error(e.message);
+    }
+  }
+
+  Future<void> cleanProject(
+      CloudProviderId cloudProviderId, String projectId) async {
+    CloudProvider provider = CloudProvider.fromId(cloudProviderId);
+
+    if ((await _takeOffFacade.getCurrentAccount(cloudProviderId)).isEmpty) {
+      Log.error("You have not logged in with ${provider.name}");
+      return;
+    }
+
+    List<String> projects = await _takeOffFacade.getProjects(cloudProviderId);
+
+    if (!projects.contains(projectId)) {
+      Log.error(
+          "Project $projectId does not exist in TakeOff for ${provider.name}");
+      return;
+    }
+
+    if (!await _takeOffFacade.cleanProject(cloudProviderId, projectId)) {
+      Log.error("There was an error removing project $projectId");
+    } else {
+      Log.success("Cleaned all data from project $projectId");
     }
   }
 }

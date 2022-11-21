@@ -87,8 +87,6 @@ class FoldersService {
 
   /// Creates all the folders necessary to mount the volumes for persistency of the Hangar containers
   bool createHostFolders() {
-    Log.info("Checking host volume folders");
-
     Map<String, String> env = platformService.env;
 
     late Map<String, String> hostFolders;
@@ -129,8 +127,6 @@ class FoldersService {
         }
       }
     }
-
-    Log.success("All volume folders are ready");
 
     return true;
   }
