@@ -14,16 +14,26 @@ class PipelineControllerGCloud extends PipelineController {
   ///
   /// It requires the [ApplicationEnd], the [Language], the repository [localDir]
   /// and the [googleCloudRegion] to deploy.
-  Future<void> buildPipelines(String projectName, ApplicationEnd appEnd,
-      Language language, String localDir, String googleCloudRegion) async {
-    String buildPipelineName = "build_${projectName}_${appEnd.name}";
-    String qaPipelineName = "qa_${projectName}_${appEnd.name}";
-    String testPipelineName = "test_${projectName}_${appEnd.name}";
+  Future<void> buildPipelines(
+      {required String projectName,
+      required ApplicationEnd appEnd,
+      required Language language,
+      String? languageVersion,
+      required String localDir,
+      required String googleCloudRegion,
+      required String sonarUrl,
+      required String sonarToken,
+      String? registryLocation}) async {
+    String buildPipelineName = "build-$projectName-${appEnd.name}";
+    String qaPipelineName = "qa-$projectName-${appEnd.name}";
+    String testPipelineName = "test-$projectName-${appEnd.name}";
 
     if (!await execute(BuildPipelineGCloud(
         configFile:
             "/scripts/pipelines/gcloud/templates/build/build-pipeline.cfg",
         pipelineName: buildPipelineName,
+        languageVersion: languageVersion,
+        registryLocation: registryLocation,
         language: language,
         localDirectory: localDir))) {
       throw CreatePipelineException(
@@ -33,8 +43,9 @@ class PipelineControllerGCloud extends PipelineController {
     if (!await execute(TestPipelineGCloud(
         configFile:
             "/scripts/pipelines/gcloud/templates/test/test-pipeline.cfg",
-        pipelineName: "test_${projectName}_backend",
+        pipelineName: "test-$projectName-backend",
         language: language,
+        languageVersion: languageVersion,
         localDirectory: localDir,
         buildPipelineName: buildPipelineName))) {
       throw CreatePipelineException(
@@ -48,10 +59,10 @@ class PipelineControllerGCloud extends PipelineController {
         language: language,
         localDirectory: localDir,
         buildPipelineName: buildPipelineName,
+        languageVersion: languageVersion,
         testPipelineName: testPipelineName,
-        // TODO: Sonar URL and Sonar Token cant be put until the sonar wrapper is made
-        sonarUrl: "sonarURL",
-        sonarToken: "sonarToken"))) {
+        sonarUrl: sonarUrl,
+        sonarToken: sonarToken))) {
       throw CreatePipelineException(
           "Quality pipeline could not be created for ${appEnd.name}");
     }
@@ -59,14 +70,13 @@ class PipelineControllerGCloud extends PipelineController {
     if (!await execute(PackagePipelineGCloud(
       configFile:
           "/scripts/pipelines/gcloud/templates/package/package-pipeline.cfg",
-      pipelineName: "package_${projectName}_backend",
+      pipelineName: "package-$projectName-backend",
       language: language,
+      languageVersion: languageVersion,
       localDirectory: localDir,
       buildPipelineName: buildPipelineName,
       qualityPipelineName: qaPipelineName,
-      //registryUser: "",
-      //registryPassword: "",
-      imageName: "${projectName}_${appEnd.name}_image",
+      imageName: "$projectName-${appEnd.name}-image",
     ))) {
       throw CreatePipelineException(
           "Package pipeline could not be created for ${appEnd.name}");
@@ -74,12 +84,13 @@ class PipelineControllerGCloud extends PipelineController {
 
     if (!await execute(DeployPipelineGCloud(
         configFile:
-            "/scripts/pipelines/gcloud/templates/build/build-pipeline.cfg",
-        pipelineName: "deploy_${projectName}_backend",
+            "/scripts/pipelines/gcloud/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg",
+        pipelineName: "deploy-$projectName-backend",
         language: language,
+        languageVersion: languageVersion,
         localDirectory: localDir,
         gCloudRegion: googleCloudRegion,
-        serviceName: "${projectName}_${appEnd.name}_service"))) {
+        serviceName: "$projectName-${appEnd.name}-service"))) {
       throw CreatePipelineException(
           "Deploy pipeline could not be created for ${appEnd.name}");
     }

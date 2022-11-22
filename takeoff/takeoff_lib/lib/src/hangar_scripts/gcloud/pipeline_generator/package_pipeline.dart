@@ -37,6 +37,7 @@ class PackagePipelineGCloud extends PipelineGenerator {
       required this.imageName,
       //required this.registryUser,
       //required this.registryPassword,
+      super.languageVersion,
       this.openPRinBrowser = false,
       super.targetBranch,
       this.dockerfile});
@@ -57,6 +58,9 @@ class PackagePipelineGCloud extends PipelineGenerator {
       //"-p",
       //registryPassword
     ]);
+    if (languageVersion != null) {
+      args.addAll(["--language-version", languageVersion!]);
+    }
     if (dockerfile != null && language == Language.none) {
       args.addAll(["--dockerfile", dockerfile!]);
     }

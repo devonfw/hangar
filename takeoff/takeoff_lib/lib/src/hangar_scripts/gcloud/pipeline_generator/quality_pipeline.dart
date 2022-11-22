@@ -41,7 +41,9 @@ class QualityPipelineGCloud extends PipelineGenerator {
       "--sonar-token",
       sonarToken,
       "--build-pipeline-name",
-      buildPipelineName
+      buildPipelineName,
+      "--test-pipeline-name",
+      testPipelineName
     ]);
     if (machineType != null) {
       args.addAll(["-m", machineType!.name]);

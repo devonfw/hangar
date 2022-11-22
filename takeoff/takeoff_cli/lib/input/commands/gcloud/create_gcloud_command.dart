@@ -12,8 +12,9 @@ class CreateGCloudCommand extends Command {
 
   CreateGCloudCommand(this.service) {
     argParser.addOption('name', abbr: 'n', mandatory: true);
-    argParser.addOption('billing_account', abbr: 'a', mandatory: true);
-    argParser.addOption('backend_language',
+    argParser.addOption('billing-account', abbr: 'a', mandatory: true);
+    argParser.addOption('backend-language',
+
         abbr: 'b',
         allowed: [
           Language.node.name,
@@ -22,23 +23,28 @@ class CreateGCloudCommand extends Command {
           Language.quarkusJVM.name
         ],
         mandatory: true);
-    argParser.addOption('frontend_language',
+    argParser.addOption("backend-version");
+    argParser.addOption('frontend-language',
+
         abbr: 'f',
         allowed: [
           Language.angular.name,
           Language.flutter.name,
         ],
         mandatory: true);
+    argParser.addOption("frontend-version");
     argParser.addOption('region', abbr: 'r', mandatory: true);
   }
 
   @override
   void run() {
     service.createGoogleProject(
-        argResults?["name"],
-        argResults?["billing_account"],
-        Language.fromString(argResults?["backend_language"]),
-        Language.fromString(argResults?["frontend_language"]),
-        argResults?["region"]);
+        projectName: argResults?["name"],
+        billingAccount: argResults?["billing-account"],
+        backendLanguage: Language.fromString(argResults?["backend-language"]),
+        backendVersion: argResults?["backend-version"],
+        frontendLanguage: Language.fromString(argResults?["frontend-language"]),
+        frontendVersion: argResults?["frontend-version"],
+        googleCloudRegion: argResults?["region"]);
   }
 }
