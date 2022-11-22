@@ -11,7 +11,7 @@ class TakeOffCli {
     await facade.initialize();
 
     ProjectsService projectsService = ProjectsService(facade);
-    CommandRunner("takeoff", "A CLI to easily create cloud environment.")
+    CommandRunner("takeoff", "A CLI to easily create a new cloud environment.")
       ..addCommand(GCloudCommand(projectsService))
       ..addCommand(AwsCommand(projectsService))
       ..addCommand(AzureCommand(projectsService))

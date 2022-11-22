@@ -46,7 +46,7 @@ class VerifyRolesAndPermissionsGCloud implements Script {
     List<String> args = [
       "/scripts/accounts/gcloud/verify-principal-roles-and-permissions.sh"
     ];
-    if (serviceAccount.isEmpty) {
+    if (serviceAccount.isNotEmpty) {
       args.addAll(["-s", serviceAccount]);
     } else {
       args.addAll(["-g", googleAccount]);

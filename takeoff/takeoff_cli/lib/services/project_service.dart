@@ -32,14 +32,22 @@ class ProjectsService {
   }
 
   Future<void> createGoogleProject(
-      String projectName,
-      String billingAccount,
-      Language backendLanguage,
-      Language frontendLanguage,
-      String googleCloudRegion) async {
+      {required String projectName,
+      required String billingAccount,
+      required Language backendLanguage,
+      String? backendVersion,
+      required Language frontendLanguage,
+      String? frontendVersion,
+      required String googleCloudRegion}) async {
     try {
-      await _takeOffFacade.createProjectGCloud(projectName, billingAccount,
-          backendLanguage, frontendLanguage, googleCloudRegion);
+      await _takeOffFacade.createProjectGCloud(
+          projectName: projectName,
+          billingAccount: billingAccount,
+          backendLanguage: backendLanguage,
+          backendVersion: backendVersion,
+          frontendLanguage: frontendLanguage,
+          frontendVersion: frontendVersion,
+          googleCloudRegion: googleCloudRegion);
     } on CreateProjectException catch (e) {
       Log.error(e.message);
     }
