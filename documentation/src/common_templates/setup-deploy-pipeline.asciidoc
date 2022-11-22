@@ -23,6 +23,7 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 == Creating the {pipeline_type} using provided script
 
 === Usage
+[subs=attributes+]
 ```
 pipeline_generator.sh \
   -c <config file path> \
@@ -41,6 +42,7 @@ ifdef::machineType[  [-m <machine type for {pipeline_type} runner>]]
 NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines/{path_provider}/templates/deploy/deploy-pipeline.cfg`.
 
 === Flags
+[subs=attributes+]
 ```
 -c  --config-file                   [Required] Configuration file containing pipeline definition.
 -n  --pipeline-name                 [Required] Name that will be set to the pipeline.
@@ -53,13 +55,13 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
     --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images.
 -b  --target-branch                            Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
-ifdef::machineType[-m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
+ifdef::machineType[-m, --machine-type                             Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
 ```
 
 === Examples
-
+[subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --package-pipeline-name quarkus-project-package --env-provision-pipeline-name eks-provisioning --k8s-provider EKS --k8s-namespace hangar --k8s-deploy-files-path k8s -b develop -w
+./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --package-pipeline-name quarkus-project-package --env-provision-pipeline-name eks-provisioning --k8s-provider EKS --k8s-namespace hangar --k8s-deploy-files-path k8s -b develop {openBrowserFlag}
 ```
 
 

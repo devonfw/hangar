@@ -1,8 +1,8 @@
-:provider: Azure Devops
-:pipeline_type: Pipeline
-:trigger_sentence:
+:provider: Google Cloud
+:pipeline_type: pipeline
+:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline
 :pipeline_type2: pipeline
-:path_provider: azure-devops
+:path_provider: gcloud
 :openBrowserFlag:
 :no-PR-or-MR:
 :machineType:
