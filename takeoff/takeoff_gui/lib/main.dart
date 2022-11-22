@@ -4,10 +4,12 @@ import 'package:takeoff_gui/common/custom_scroll_behaviour.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:desktop_window/desktop_window.dart';
 
 void main() async {
   await registerSingletons();
   runApp(const MyApp());
+  await DesktopWindow.setMinWindowSize(const Size(1200, 800));
 }
 
 class MyApp extends StatelessWidget {
