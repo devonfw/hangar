@@ -65,6 +65,18 @@ class TakeOffFacade {
     }
   }
 
+  Future<bool> logOut(CloudProviderId cloudProvider,
+      {Stream<List<int>>? stdinStream}) async {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return await _googleController.logOut();
+      case CloudProviderId.aws:
+        return false;
+      case CloudProviderId.azure:
+        return false;
+    }
+  }
+
   /// Calls the method that will create a project in Google Cloud.
   Future<bool> createProjectGCloud(
       String projectName,
