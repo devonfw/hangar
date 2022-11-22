@@ -1,3 +1,5 @@
 
 takeoff/takeoff_lib/coverage/lcov.info
 takeoff/takeoff_cli/takeoff_cli.exe
+takeoff/takeoff_gui/coverage/lcov.info
+takeoff/takeoff_gui/pubspec.lock

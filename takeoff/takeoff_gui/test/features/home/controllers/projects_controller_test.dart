@@ -69,7 +69,7 @@ void main() async {
     verify(facade.getCurrentAccount(any)).called(greaterThan(0));
 
     await controller.logOut(CloudProviderId.gcloud);
-    verify(facade.logOut(CloudProviderId.gcloud)).called(1);
+    verify(facade.logOut(CloudProviderId.gcloud)).called(greaterThan(0));
     verify(facade.getCurrentAccount(any)).called(greaterThan(0));
   });
 }
