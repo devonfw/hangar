@@ -107,37 +107,27 @@ ifdef::machineType[-m, --machine-type                        Machine type for {p
 
 ==== Flutter project
 
-===== Generic container registry (Web Platform)
+===== Web platform
+
+====== Generic container registry
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project -u username -p password -b develop -w
 ```
 
-===== AWS ECR (Web Platform)
+====== AWS ECR
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
 
-===== Artifact Registry (Web Platform)
+====== Google Cloud Artifact Registry
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i eu-southwest1-docker.pkg.dev/username/flutter-project -b develop -w
 ```
 
-===== Generic container registry (Android Platform)
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -u username -p password -b develop -w
-```
-
-===== AWS ECR (Android Platform)
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
-```
-
-===== Artifact Registry (Android Platform)
+===== Android platform
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -b develop -w
@@ -148,7 +138,7 @@ ifdef::machineType[-m, --machine-type                        Machine type for {p
 ===== Generic container registry
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_python_angular} -i username/python-project -u username -p password -b develop -w 
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_angular} -i username/python-project -u username -p password -b develop -w 
 ```
 
 ===== AWS ECR
@@ -157,7 +147,7 @@ ifdef::machineType[-m, --machine-type                        Machine type for {p
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
 
-===== Artifact Registry
+===== Google Cloud Artifact Registry
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i eu-southwest1-docker.pkg.dev/username/python-project -b develop -w

@@ -12,6 +12,7 @@
 :extra_args_python: --build-pipeline-name python-project-build --quality-pipeline-name python-project-quality --language-version 3.10
 :no-PR-or-MR:
 :build-pipeline:
+:quality-pipeline:
 :machineType:
 :openBrowserFlag:
 include::../common_templates/setup-package-pipeline.asciidoc[]
