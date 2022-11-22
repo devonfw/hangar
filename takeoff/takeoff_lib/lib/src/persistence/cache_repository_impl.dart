@@ -92,4 +92,15 @@ class CacheRepositoryImpl extends CacheRepository {
 
     return true;
   }
+
+  @override
+  Future<bool> removeGoogleEmail() async {
+    Database db = GetIt.I.get<Database>();
+
+    StoreRef store = StoreRef.main();
+
+    dynamic result = await store.record(_googleCloudKey).delete(db);
+
+    return result != null;
+  }
 }

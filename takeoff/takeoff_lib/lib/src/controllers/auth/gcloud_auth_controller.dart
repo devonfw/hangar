@@ -17,7 +17,9 @@ class GCloudAuthController implements AuthController<GCloud> {
   GCloudAuthController({this.stdinStream});
 
   @override
-  Future<bool> authenticate(String email) async {
+  Future<bool> authenticate(
+    String email,
+  ) async {
     DockerController dockerController =
         await DockerControllerFactory().create();
 
@@ -88,5 +90,11 @@ class GCloudAuthController implements AuthController<GCloud> {
   Future<String> getCurrentAccount() async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     return await cacheRepository.getGoogleEmail();
+  }
+
+  @override
+  Future<bool> logOut() async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    return await cacheRepository.removeGoogleEmail();
   }
 }

@@ -14,6 +14,7 @@ class CreateGCloudCommand extends Command {
     argParser.addOption('name', abbr: 'n', mandatory: true);
     argParser.addOption('billing-account', abbr: 'a', mandatory: true);
     argParser.addOption('backend-language',
+
         abbr: 'b',
         allowed: [
           Language.node.name,
@@ -24,6 +25,7 @@ class CreateGCloudCommand extends Command {
         mandatory: true);
     argParser.addOption("backend-version");
     argParser.addOption('frontend-language',
+
         abbr: 'f',
         allowed: [
           Language.angular.name,
