@@ -54,9 +54,15 @@ checkMandatoryArguments() {
         echo -ne "${white}"
         exit 2
     fi
+    if ! test -d "$outputPath"; then
+        echo -e "${red}Error: Wrong output path." >&2
+        echo -ne "${white}"
+        exit 2
+    fi
     currentPath="$(pwd)"
     cd "${outputPath}" && outputPath="$(pwd)"
     cd "${currentPath}"
+    
 }
 
 # Required CLI check
@@ -209,12 +215,12 @@ registerShaKeys() {
     appId="${projectName}_android"
     sha1Key=$(echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA1 -m 1 | cut -d' ' -f3)
     sha256Key=$(echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA256 -m 1 | cut -d' ' -f3)
-    if ! firebase apps:android:sha:create $appId $sha1Key ; then
+    if ! firebase apps:android:sha:create $appId $sha1Key --project ${projectName} ; then
         echo -e "${red}Error: Cannot add SHA1 key."
         echo -ne "${white}"
         exit 303
     fi
-    if ! firebase apps:android:sha:create $appId $sha256Key ; then
+    if ! firebase apps:android:sha:create $appId $sha256Key --project ${projectName} ; then
         echo -e "${red}Error: Cannot add SHA256 key."
         echo -ne "${white}"
         exit 304
@@ -239,6 +245,11 @@ createPlatformApps() {
             exit 250
         fi
         setupAndroidKeystore
+        if ! gcloud services enable apikeys.googleapis.com --project "${projectName}" ; then
+            echo -e "${red}Error while enabling api keys api." >&2
+            echo -ne "${white}"
+            exit 250
+        fi
         registerShaKeys
         command=$base_sdkconfig_command" --out ${outputPath}/google-services.json ANDROID"
         if ! eval "$command"; then
