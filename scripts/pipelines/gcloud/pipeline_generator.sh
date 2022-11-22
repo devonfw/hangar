@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,language-version:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,registry-location:,flutter-web-renderer:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,machine-type:,language-version:,package-pipeline-name:,env-provision-pipeline-name:,k8s-provider:,k8s-namespace:,k8s-deploy-files-path:,k8s-image-pull-secret-name:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -32,6 +32,12 @@ while true; do
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
+        --package-pipeline-name)    export packagePipelineName=$2; shift 2;;
+        --env-provision-pipeline-name)  envProvisionPipelineName="$2"; shift 2;;
+      	--k8s-provider)             k8sProvider=$2; shift 2;;
+        --k8s-namespace)            k8sNamespace="$2"; shift 2;;
+      	--k8s-deploy-files-path)    k8sDeployFiles=$2; shift 2;;
+        --k8s-image-pull-secret-name)  k8sImagePullSecret=$2; shift 2;;
         -h | --help)              help="true"; shift 1;;
         -m | --machine-type)      machineType="$2"; shift 2;;
         --language-version)       languageVersion="$2"; shift 2;;
@@ -110,7 +116,7 @@ function addTriggers {
             echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
             sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
             ;;
-        "package-pipeline.yml")
+        *"package-pipeline.yml")
             echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
             sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$_BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\",\"_IMAGE_NAME\":\"'\${_IMAGE_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}&alt=json\"\n      fi/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
             ;;
