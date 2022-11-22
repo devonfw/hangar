@@ -12,6 +12,7 @@
 :extra_args_python: --build-pipeline-name python-project-build --quality-pipeline-name python-project-quality --language-version 3.10
 :no-PR-or-MR:
 :build-pipeline:
+:quality-pipeline:
 :machineType:
 :openBrowserFlag:
 = Setting up a Package {pipeline_type} on {provider}
@@ -40,6 +41,7 @@ pipeline_generator.sh \
   --dockerfile <dockerfile path> \
   -d <project local path> \
   --build-pipeline-name <build {pipeline_type} name> \
+  --quality-pipeline-name <quality {pipeline_type} name> \
   -i <image name> \
   [-u <registry user>] \
   [-p <registry password>] \
@@ -62,6 +64,7 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
     --dockerfile               [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one.
 -d, --local-directory          [Required] Local directory of your project.
     --build-pipeline-name      [Required] Build {pipeline_type} name.
+    --quality-pipeline-name    [Required] Quality {pipeline_type} name.
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 -u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
 -p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
@@ -117,37 +120,27 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 
 ==== Flutter project
 
-===== Generic container registry (Web Platform)
+===== Web platform
+
+====== Generic container registry
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project -u username -p password -b develop -w
 ```
 
-===== AWS ECR (Web Platform)
+====== AWS ECR
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
 
-===== Artifact Registry (Web Platform)
+====== Google Cloud Artifact Registry
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i eu-southwest1-docker.pkg.dev/username/flutter-project -b develop -w
 ```
 
-===== Generic container registry (Android Platform)
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -u username -p password -b develop -w
-```
-
-===== AWS ECR (Android Platform)
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
-```
-
-===== Artifact Registry (Android Platform)
+===== Android platform
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -b develop -w
@@ -158,7 +151,7 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ===== Generic container registry
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_python_angular} -i username/python-project -u username -p password -b develop -w
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_angular} -i username/python-project -u username -p password -b develop -w
 ```
 
 ===== AWS ECR
@@ -167,7 +160,7 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
 
-===== Artifact Registry
+===== Google Cloud Artifact Registry
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i eu-southwest1-docker.pkg.dev/username/python-project -b develop -w
