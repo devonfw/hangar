@@ -14,9 +14,11 @@ chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 # We get the name of the registry from the full image name
 firstPartImage=$(echo $_IMAGE_NAME | cut -d'/' -f1)
-echo $firstPartImage | grep "\." > /dev/null && REGISTRY=$firstPartImage || REGISTRY="docker.io"
+echo "$firstPartImage" | grep "\." > /dev/null && REGISTRY="$firstPartImage" || REGISTRY="docker.io"
 echo -e "\n\n"
 echo "LOADING CREDENTIALS AND GETTING REGISTRY"
+# shellcheck source=/dev/null
 . credentials.env
 echo "LOADING CLUSTER INFOS"
+# shellcheck source=/dev/null
 . cluster_info.env
