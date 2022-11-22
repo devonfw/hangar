@@ -27,6 +27,8 @@ class PackagePipelineGCloud extends PipelineGenerator {
   /// If this is preferred over [language], put the [language] value to `None`.
   String? dockerfile;
 
+  String? registryLocation;
+
   PackagePipelineGCloud(
       {required super.configFile,
       required super.pipelineName,
@@ -40,6 +42,7 @@ class PackagePipelineGCloud extends PipelineGenerator {
       super.languageVersion,
       this.openPRinBrowser = false,
       super.targetBranch,
+      this.registryLocation,
       this.dockerfile});
 
   @override
@@ -67,6 +70,10 @@ class PackagePipelineGCloud extends PipelineGenerator {
     if (openPRinBrowser && targetBranch != null) {
       args.add("-w");
     }
+    if (registryLocation != null) {
+      args.addAll(["--registry-location", registryLocation!]);
+    }
+
     return args;
   }
 }

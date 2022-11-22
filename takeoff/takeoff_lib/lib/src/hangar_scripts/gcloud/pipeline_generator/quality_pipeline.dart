@@ -18,6 +18,8 @@ class QualityPipelineGCloud extends PipelineGenerator {
   /// Machine type for pipeline runner.
   MachineType? machineType;
 
+  String? registryLocation;
+
   QualityPipelineGCloud(
       {required super.configFile,
       required super.pipelineName,
@@ -29,7 +31,8 @@ class QualityPipelineGCloud extends PipelineGenerator {
       required this.sonarToken,
       super.targetBranch,
       super.languageVersion,
-      this.machineType});
+      this.machineType,
+      this.registryLocation});
 
   @override
   List<String> toCommand() {
@@ -47,6 +50,9 @@ class QualityPipelineGCloud extends PipelineGenerator {
     ]);
     if (machineType != null) {
       args.addAll(["-m", machineType!.name]);
+    }
+    if (registryLocation != null) {
+      args.addAll(["--registry-location", registryLocation!]);
     }
     return args;
   }
