@@ -13,13 +13,13 @@ mixin _$CreateController on _CreateController, Store {
       Atom(name: '_CreateController.cloudProvider', context: context);
 
   @override
-  String get cloudProvider {
+  CloudProviderId get cloudProvider {
     _$cloudProviderAtom.reportRead();
     return super.cloudProvider;
   }
 
   @override
-  set cloudProvider(String value) {
+  set cloudProvider(CloudProviderId value) {
     _$cloudProviderAtom.reportWrite(value, super.cloudProvider, () {
       super.cloudProvider = value;
     });
@@ -29,13 +29,13 @@ mixin _$CreateController on _CreateController, Store {
       Atom(name: '_CreateController.repoProvider', context: context);
 
   @override
-  String get repoProvider {
+  ProviderCICD get repoProvider {
     _$repoProviderAtom.reportRead();
     return super.repoProvider;
   }
 
   @override
-  set repoProvider(String value) {
+  set repoProvider(ProviderCICD value) {
     _$repoProviderAtom.reportWrite(value, super.repoProvider, () {
       super.repoProvider = value;
     });

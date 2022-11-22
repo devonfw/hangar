@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 class CloudSelector extends StatelessWidget {
   final BoxBorder border = Border.all(color: Colors.grey, width: 3);
@@ -26,7 +27,7 @@ class CloudSelector extends StatelessWidget {
                   height: squareSize,
                   width: squareSize,
                   decoration: BoxDecoration(
-                    border: controller.cloudProvider == "Google"
+                    border: controller.cloudProvider == CloudProviderId.gcloud
                         ? selectedBorder
                         : border,
                     image: const DecorationImage(
@@ -35,7 +36,7 @@ class CloudSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.cloudProvider = "Google",
+              onTap: () => controller.cloudProvider = CloudProviderId.gcloud,
             ),
             const SizedBox(width: 20),
             GestureDetector(
@@ -44,7 +45,7 @@ class CloudSelector extends StatelessWidget {
                   height: squareSize,
                   width: squareSize,
                   decoration: BoxDecoration(
-                    border: controller.cloudProvider == "AWS"
+                    border: controller.cloudProvider == CloudProviderId.aws
                         ? selectedBorder
                         : border,
                     image: const DecorationImage(
@@ -53,7 +54,7 @@ class CloudSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.cloudProvider = "AWS",
+              onTap: () => controller.cloudProvider = CloudProviderId.aws,
             ),
             const SizedBox(width: 20),
             GestureDetector(
@@ -62,7 +63,7 @@ class CloudSelector extends StatelessWidget {
                   height: squareSize,
                   width: squareSize,
                   decoration: BoxDecoration(
-                    border: controller.cloudProvider == "Azure"
+                    border: controller.cloudProvider == CloudProviderId.azure
                         ? selectedBorder
                         : border,
                     image: const DecorationImage(
@@ -71,7 +72,7 @@ class CloudSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.cloudProvider = "Azure",
+              onTap: () => controller.cloudProvider = CloudProviderId.azure,
             ),
           ],
         ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
-import 'package:takeoff_gui/features/create/utils/langauges_versions.dart';
+import 'package:takeoff_gui/features/create/utils/languages_versions.dart';
 import 'package:takeoff_gui/features/create/widgets/dropdown_field.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
+import 'package:takeoff_gui/features/create/utils/provider_ci_cd.dart';
 
 class RepoSelector extends StatelessWidget {
   final BoxBorder border = Border.all(color: Colors.grey, width: 3);
@@ -26,7 +27,7 @@ class RepoSelector extends StatelessWidget {
                   height: squareSize,
                   width: squareSize,
                   decoration: BoxDecoration(
-                    border: controller.repoProvider == "Google"
+                    border: controller.repoProvider == ProviderCICD.gcloud
                         ? selectedBorder
                         : border,
                     image: const DecorationImage(
@@ -35,7 +36,7 @@ class RepoSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.repoProvider = "Google",
+              onTap: () => controller.repoProvider = ProviderCICD.gcloud,
             ),
             const SizedBox(width: 20),
             GestureDetector(
@@ -44,7 +45,7 @@ class RepoSelector extends StatelessWidget {
                   height: squareSize,
                   width: squareSize,
                   decoration: BoxDecoration(
-                    border: controller.repoProvider == "AzureDevOps"
+                    border: controller.repoProvider == ProviderCICD.azureDevOps
                         ? selectedBorder
                         : border,
                     image: const DecorationImage(
@@ -54,7 +55,7 @@ class RepoSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.repoProvider = "AzureDevOps",
+              onTap: () => controller.repoProvider = ProviderCICD.azureDevOps,
             ),
             const SizedBox(width: 20),
             GestureDetector(
@@ -63,7 +64,7 @@ class RepoSelector extends StatelessWidget {
                   height: squareSize,
                   width: squareSize,
                   decoration: BoxDecoration(
-                    border: controller.repoProvider == "Github"
+                    border: controller.repoProvider == ProviderCICD.github
                         ? selectedBorder
                         : border,
                     image: const DecorationImage(
@@ -72,7 +73,7 @@ class RepoSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.repoProvider = "Github",
+              onTap: () => controller.repoProvider = ProviderCICD.github,
             ),
           ],
         ),

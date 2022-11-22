@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
-import 'package:takeoff_gui/features/create/utils/langauges_versions.dart';
+import 'package:takeoff_gui/features/create/utils/languages_versions.dart';
+import 'package:takeoff_gui/features/create/utils/provider_ci_cd.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 part 'create_controller.g.dart';
@@ -12,10 +13,10 @@ abstract class _CreateController with Store {
   final TakeOffFacade facade = GetIt.I.get<TakeOffFacade>();
 
   @observable
-  String cloudProvider = "";
+  CloudProviderId cloudProvider = CloudProviderId.gcloud;
 
   @observable
-  String repoProvider = "";
+  ProviderCICD repoProvider = ProviderCICD.gcloud;
 
   @observable
   String projectName = "";
@@ -40,9 +41,14 @@ abstract class _CreateController with Store {
   @observable
   String googleCloudRegion = "";
 
-  void createProject() {
-    facade.createProjectGCloud(projectName, billingAccount, backendLanguage,
-        frontendLanguage, googleCloudRegion);
+  void createProject() async {
+    await facade.createProjectGCloud(
+        projectName: projectName,
+        billingAccount: billingAccount,
+        backendLanguage: backendLanguage,
+        frontendLanguage: frontendLanguage,
+        googleCloudRegion: '');
+    resetForm();
   }
 
   @action
@@ -59,8 +65,8 @@ abstract class _CreateController with Store {
 
   @action
   void resetForm() {
-    cloudProvider = "";
-    repoProvider = "";
+    cloudProvider = CloudProviderId.gcloud;
+    repoProvider = ProviderCICD.gcloud;
     projectName = "";
     billingAccount = "";
     frontendLanguage = LanguagesVersions.frontendLanguages[0];
