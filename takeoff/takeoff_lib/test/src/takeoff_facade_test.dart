@@ -98,6 +98,22 @@ void main() {
         false);
   });
 
+  test("LogOut the user", () async {
+    TakeOffFacade facade = TakeOffFacade();
+    String email = "${Random().nextInt(100000000)}@mail.com";
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    await cacheRepository.saveGoogleEmail(email);
+
+    // Check that the user is saved
+    expect(await facade.getCurrentAccount(CloudProviderId.gcloud), email);
+    // If user exists logOut returns true and getting the account returns empty
+    expect(await facade.logOut(CloudProviderId.gcloud), true);
+    expect(await facade.getCurrentAccount(CloudProviderId.gcloud), "");
+
+    // If user doesn't exist returns false
+    expect(await facade.logOut(CloudProviderId.gcloud), false);
+  });
+
   tearDown(() async {
     GetIt.I.unregister<Database>();
     await databaseFactoryIo.deleteDatabase("facade_test.db");

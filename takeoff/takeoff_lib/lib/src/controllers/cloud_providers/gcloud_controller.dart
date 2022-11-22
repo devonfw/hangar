@@ -132,9 +132,18 @@ class GoogleCloudController {
   }
 
   /// Returns the current logged Google Account or an empty String if there is none
-  Future<String> getAccount() async {
-    CacheRepository cacheRepository = CacheRepositoryImpl();
-    return await cacheRepository.getGoogleEmail();
+  Future<String> getAccount(
+      {GCloudAuthController? controller,
+      Stream<List<int>>? stdinStream}) async {
+    GCloudAuthController authController = controller ?? GCloudAuthController();
+    return await authController.getCurrentAccount();
+  }
+
+  Future<bool> logOut(
+      {GCloudAuthController? controller,
+      Stream<List<int>>? stdinStream}) async {
+    GCloudAuthController authController = controller ?? GCloudAuthController();
+    return await authController.logOut();
   }
 
   /// Removes the project ID from the cache DB and the correspondent workspace folder

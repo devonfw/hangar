@@ -90,4 +90,10 @@ class GCloudAuthController implements AuthController<GCloud> {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     return await cacheRepository.getGoogleEmail();
   }
+
+  @override
+  Future<bool> logOut() async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    return await cacheRepository.removeGoogleEmail();
+  }
 }
