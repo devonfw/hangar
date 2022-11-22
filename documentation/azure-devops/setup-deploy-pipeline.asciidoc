@@ -1,8 +1,9 @@
 :provider: Azure Devops
 :pipeline_type: Pipeline
-:trigger_sentence:
+:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline
 :pipeline_type2: pipeline
 :path_provider: azure-devops
+:openBrowserFlag: -w
 = Setting up a Deploy Pipeline on {provider}
 
 In this section we will create a deploy {pipeline_type} on {provider} to deploy the project application on an already provisioned Kubernetes cluster. This pipeline will be configured in order to be triggered every time package {pipeline_type} is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that package {pipeline_type} has passed. By default, it depends on the environment provisioning {pipeline_type} being successfully run on beforehand and, depending on the Kubernetes provider, it consumes the artifact produced by that. It also consumes variable groups created by package and environment provisioning {pipeline_type}.
