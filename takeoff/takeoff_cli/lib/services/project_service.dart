@@ -7,21 +7,19 @@ class ProjectsService {
     this._takeOffFacade,
   );
 
-  Future<void> initAccount(String cloud, String email) async {
-    CloudProviderId cloudProvider = CloudProviderId.fromString(cloud);
+  Future<void> initAccount(CloudProviderId cloudProvider, String email) async {
     await _takeOffFacade.init(email, cloudProvider);
   }
 
-  Future<void> listProjects(String cloud) async {
-    CloudProviderId providerId = CloudProviderId.fromString(cloud);
-    CloudProvider provider = CloudProvider.fromId(providerId);
+  Future<void> listProjects(CloudProviderId cloudProvider) async {
+    CloudProvider provider = CloudProvider.fromId(cloudProvider);
 
-    if ((await _takeOffFacade.getCurrentAccount(providerId)).isEmpty) {
+    if ((await _takeOffFacade.getCurrentAccount(cloudProvider)).isEmpty) {
       Log.error("You have not logged in with ${provider.name}");
       return;
     }
 
-    List<String> projects = await _takeOffFacade.getProjects(providerId);
+    List<String> projects = await _takeOffFacade.getProjects(cloudProvider);
 
     if (projects.isEmpty) {
       Log.warning("No projects created with ${provider.name}");
@@ -47,16 +45,16 @@ class ProjectsService {
     }
   }
 
-  Future<void> cleanProject(String cloud, String projectId) async {
-    CloudProviderId providerId = CloudProviderId.fromString(cloud);
-    CloudProvider provider = CloudProvider.fromId(providerId);
+  Future<void> cleanProject(
+      CloudProviderId cloudProviderId, String projectId) async {
+    CloudProvider provider = CloudProvider.fromId(cloudProviderId);
 
-    if ((await _takeOffFacade.getCurrentAccount(providerId)).isEmpty) {
+    if ((await _takeOffFacade.getCurrentAccount(cloudProviderId)).isEmpty) {
       Log.error("You have not logged in with ${provider.name}");
       return;
     }
 
-    List<String> projects = await _takeOffFacade.getProjects(providerId);
+    List<String> projects = await _takeOffFacade.getProjects(cloudProviderId);
 
     if (!projects.contains(projectId)) {
       Log.error(
@@ -64,7 +62,7 @@ class ProjectsService {
       return;
     }
 
-    if (!await _takeOffFacade.cleanProject(providerId, projectId)) {
+    if (!await _takeOffFacade.cleanProject(cloudProviderId, projectId)) {
       Log.error("There was an error removing project $projectId");
     } else {
       Log.success("Cleaned all data from project $projectId");
