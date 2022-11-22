@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:takeoff_gui/domain/project.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 part 'projects_controller.g.dart';
@@ -16,6 +17,13 @@ abstract class _ProjectsController with Store {
 
   @observable
   bool waitForToken = false;
+
+  @observable
+  ObservableMap<CloudProviderId, List<Project>> projects = ObservableMap.of({
+    CloudProviderId.aws: [],
+    CloudProviderId.azure: [],
+    CloudProviderId.gcloud: []
+  });
 
   @observable
   ObservableMap<CloudProviderId, String> accounts = ObservableMap.of({
@@ -49,6 +57,11 @@ abstract class _ProjectsController with Store {
   Future<void> updateInitAccounts() async {
     for (CloudProviderId cloud in CloudProviderId.values) {
       accounts[cloud] = await facade.getCurrentAccount(cloud);
+      if (accounts[cloud]!.isNotEmpty) {
+        projects[cloud] = (await facade.getProjects(cloud))
+            .map((String e) => Project(name: e))
+            .toList();
+      }
     }
   }
 
