@@ -16,12 +16,20 @@ class LanguagesVersions {
   ];
 
   static Map<Language, List<String>> versionsLanguages = {
-    Language.flutter: ["3.0", "3.1", "3.3"],
-    Language.angular: ["5.1", "5.2", "5.3"],
-    Language.python: ["2.7", "3.10", "3.11"],
-    Language.node: ["8.3", "8.5"],
-    Language.quarkus: ["1"],
-    Language.quarkusJVM: ["1", "2"],
+    Language.flutter: [
+      "3.0.0",
+      "3.0.5",
+      "3.3.2",
+      "3.3.4",
+      "3.3.5",
+      "3.3.6",
+      "3.3.7"
+    ],
+    Language.angular: ["latest"],
+    Language.python: ["3.9", "3.10", "3.11"],
+    Language.node: ["latest"],
+    Language.quarkus: ["latest"],
+    Language.quarkusJVM: ["latest"],
     Language.none: ["Not available"],
   };
 }
