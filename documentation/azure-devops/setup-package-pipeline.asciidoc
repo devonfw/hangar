@@ -65,7 +65,7 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+-w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
 
 === Examples
