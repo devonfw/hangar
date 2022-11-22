@@ -55,20 +55,20 @@ class GoogleCloudController {
         "Creating folder ${FoldersService.containerFolders["workspace"]}/$projectName",
         infoStream);
 
-    //DockerController controller = GetIt.I.get<DockerController>();
-    //if (!await controller.executeCommand([], ["mkdir", projectDir.path])) {
-    //throw CreateProjectException("Could not create project workspace");
-    //}
+    DockerController controller = GetIt.I.get<DockerController>();
+    if (!await controller.executeCommand([], ["mkdir", projectDir.path])) {
+      throw CreateProjectException("Could not create project workspace");
+    }
 
-    //ProjectController projectController = ProjectControllerGCloud(
-    //CreateProjectGCloud(
-    //projectName: projectName, billingAccount: billingAccount));
+    ProjectController projectController = ProjectControllerGCloud(
+        CreateProjectGCloud(
+            projectName: projectName, billingAccount: billingAccount));
 
-    //logAndStream("Creating project in Google Cloud", infoStream);
+    logAndStream("Creating project in Google Cloud", infoStream);
 
-    //if (!await projectController.createProject()) {
-    //throw CreateProjectException("Could not create project in Google Cloud");
-    //}
+    if (!await projectController.createProject()) {
+      throw CreateProjectException("Could not create project in Google Cloud");
+    }
 
     String serviceKeyPath = "${projectDir.path}/key.json";
 
@@ -117,13 +117,13 @@ class GoogleCloudController {
     }
     logAndStream("Setting up Sonarqube", infoStream);
 
-    //SonarqubeController sonarqubeController = SonarqubeController();
-    //if (!await sonarqubeController.execute(SetUpSonar(
-    //serviceAccountFile: serviceKeyPath,
-    //project: projectName,
-    //stateFolder: "${projectDir.path}/sonarqube"))) {
-    //throw CreateProjectException("Could not set up SonarQube");
-    //}
+    SonarqubeController sonarqubeController = SonarqubeController();
+    if (!await sonarqubeController.execute(SetUpSonar(
+        serviceAccountFile: serviceKeyPath,
+        project: projectName,
+        stateFolder: "${projectDir.path}/sonarqube"))) {
+      throw CreateProjectException("Could not set up SonarQube");
+    }
 
     File sonarOutputFile = File(
         "${GetIt.I.get<FoldersService>().getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}sonarqube${Platform.pathSeparator}terraform.tfoutput.json");
