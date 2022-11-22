@@ -65,6 +65,21 @@ abstract class _ProjectsController with Store {
     }
   }
 
+  Future<void> logOut(CloudProviderId cloud) async {
+    switch (cloud) {
+      case CloudProviderId.gcloud:
+        await facade.logOut(CloudProviderId.gcloud);
+        break;
+      case CloudProviderId.aws:
+        Log.warning("Not implemented yet");
+        break;
+      case CloudProviderId.azure:
+        Log.warning("Not implemented yet");
+        break;
+    }
+    updateInitAccounts();
+  }
+
   void resetChannel() {
     waitForToken = false;
     channel.close();
