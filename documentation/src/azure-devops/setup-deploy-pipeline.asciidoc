@@ -1,6 +1,7 @@
 :provider: Azure Devops
 :pipeline_type: Pipeline
-:trigger_sentence:
+:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline
 :pipeline_type2: pipeline
 :path_provider: azure-devops
-include::../common_templates/setup-deploy-pipeline.asciidoc[]  
+:openBrowserFlag: -w
+include::../common_templates/setup-deploy-pipeline.asciidoc[]
