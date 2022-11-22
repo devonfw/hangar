@@ -44,7 +44,7 @@ abstract class PipelineGenerator implements Script {
       configFile,
       "-n",
       pipelineName,
-      "-d",
+      "--local-directory",
       localDirectory
     ];
     if (language != Language.none) {

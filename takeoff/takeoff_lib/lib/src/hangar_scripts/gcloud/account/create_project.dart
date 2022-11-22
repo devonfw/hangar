@@ -40,7 +40,7 @@ class CreateProjectGCloud implements Script {
   @override
   List<String> toCommand() {
     List<String> args = [
-      "/scripts/repositories/gcloud/create-project.sh",
+      "/scripts/accounts/gcloud/create-project.sh",
       "-n",
       projectName,
       "-b",

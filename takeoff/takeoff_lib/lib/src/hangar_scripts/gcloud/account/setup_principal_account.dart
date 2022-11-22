@@ -49,7 +49,7 @@ class SetUpPrincipalAccountGCloud implements Script {
   @override
   List<String> toCommand() {
     List<String> args = ["/scripts/accounts/gcloud/setup-principal-account.sh"];
-    if (serviceAccount.isEmpty) {
+    if (serviceAccount.isNotEmpty) {
       args.addAll(["-s", serviceAccount]);
     } else {
       args.addAll(["-g", googleAccount]);
@@ -61,6 +61,9 @@ class SetUpPrincipalAccountGCloud implements Script {
     }
     if (customRoleYamlPath != null && customRoleId != null) {
       args.addAll(["-c", customRoleYamlPath!, "-i", customRoleId!]);
+    }
+    if (serviceKeyPath != null) {
+      args.addAll(["-k", serviceKeyPath!]);
     }
 
     return args;

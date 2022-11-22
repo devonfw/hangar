@@ -23,6 +23,7 @@ class DeployPipelineGCloud extends PipelineGenerator {
       required this.serviceName,
       required this.gCloudRegion,
       super.targetBranch,
+      super.languageVersion,
       this.port,
       this.machineType});
 
@@ -32,6 +33,9 @@ class DeployPipelineGCloud extends PipelineGenerator {
     args.insert(0, "/scripts/pipelines/gcloud/pipeline_generator.sh");
     args.addAll(
         ["--service-name", serviceName, "--gcloud-region", gCloudRegion]);
+    if (languageVersion != null) {
+      args.addAll(["--language-version", languageVersion!]);
+    }
     if (port != null) {
       args.addAll(["--port", port.toString()]);
     }

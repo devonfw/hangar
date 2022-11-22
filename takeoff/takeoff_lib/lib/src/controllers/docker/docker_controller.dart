@@ -43,6 +43,7 @@ abstract class DockerController {
     Log.info("Executing ${Log.dockerProcessToString(args)}");
 
     if (await dockerProc.exitCode != 0) {
+      Log.error("Exit code ${await dockerProc.exitCode}");
       Log.error("There was an unexpected error with the docker command");
       return false;
     }
