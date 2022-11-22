@@ -102,6 +102,11 @@ enableFirebaseServices() {
 enableMapsAPIs() {
     # Geocoding API service (coordinates to location)
     echo "Enabling Maps APIs:"
+    if ! gcloud services enable apikeys.googleapis.com --project "$projectName"; then
+        echo -e "${red}Error: Cannot enable API keys"
+        echo -ne "${white}"
+        exit 216
+    fi
     echo "Enabling Geocoding Backend..."
     if ! gcloud services enable geocoding-backend.googleapis.com --project "$projectName"; then
         echo -e "${red}Error: Cannot enable Geocoding Backend API"
@@ -126,6 +131,16 @@ enableMapsAPIs() {
             echo -e "${red}Error: Cannot enable Maps IOS Backend API"
             echo -ne "${white}"
             exit 223
+        fi
+    fi
+    # WEB MAPS API service
+    if [[ "$setupWeb" == "true" ]]
+    then
+        echo "Enabling Maps WEB..."
+        if ! gcloud services enable --project "$projectName" maps-backend.googleapis.com ; then
+            echo -e "${red}Error: Cannot enable Maps Backend API"
+            echo -ne "${white}"
+            exit 216
         fi
     fi
     # Static MAPS API service (coordinates to screenshot)
@@ -175,6 +190,37 @@ createFirebaseSDKAccount() {
     fi
 }
 
+setupAndroidKeystore() {
+    # keystore password
+    # repeat password
+    # first and last name
+    # organizational unit
+    # organization
+    # city or locality
+    # state or province
+    # country code
+    # country code confirmation
+    echo -e "android\nandroid\n\n\n\n\n\n\nyes\n" | keytool -genkey -v -keystore $outputPath"/keystore.jks" -keyalg RSA -keysize 2048 -validity 10000 -alias upload -keypass android &> /dev/null
+    echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA1 -m 1 > $outputPath"/shaKeys.txt"
+    echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA256 -m 1 >> $outputPath"/shaKeys.txt"
+}
+
+registerShaKeys() {
+    appId="${projectName}_android"
+    sha1Key=$(echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA1 -m 1 | cut -d' ' -f3)
+    sha256Key=$(echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA256 -m 1 | cut -d' ' -f3)
+    if ! firebase apps:android:sha:create $appId $sha1Key ; then
+        echo -e "${red}Error: Cannot add SHA1 key."
+        echo -ne "${white}"
+        exit 303
+    fi
+    if ! firebase apps:android:sha:create $appId $sha256Key ; then
+        echo -e "${red}Error: Cannot add SHA256 key."
+        echo -ne "${white}"
+        exit 304
+    fi
+}
+
 createPlatformApps() {
     base_create_app_command="firebase apps:create --project ${projectName}"
     base_sdkconfig_command="firebase apps:sdkconfig --project ${projectName}"
@@ -192,6 +238,8 @@ createPlatformApps() {
             echo -ne "${white}"
             exit 250
         fi
+        setupAndroidKeystore
+        registerShaKeys
         command=$base_sdkconfig_command" --out ${outputPath}/google-services.json ANDROID"
         if ! eval "$command"; then
             echo -e "${red}Error while exporting SDK Android Config." >&2
