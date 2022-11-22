@@ -53,11 +53,23 @@ void main() async {
     expect(controller.accounts[cloud], account);
   });
 
-  test('Test updateInitAccounts', () async {
+  test('Test resetChannel', () async {
     controller.waitForToken = true;
     StreamController oldChannel = StreamController();
     controller.resetChannel();
     expect(controller.waitForToken, false);
     expect(oldChannel != controller.channel, true);
+  });
+
+  test('Test logOut', () async {
+    await controller.logOut(CloudProviderId.aws);
+    verify(facade.getCurrentAccount(any)).called(greaterThan(0));
+
+    await controller.logOut(CloudProviderId.azure);
+    verify(facade.getCurrentAccount(any)).called(greaterThan(0));
+
+    await controller.logOut(CloudProviderId.gcloud);
+    verify(facade.logOut(CloudProviderId.gcloud)).called(1);
+    verify(facade.getCurrentAccount(any)).called(greaterThan(0));
   });
 }

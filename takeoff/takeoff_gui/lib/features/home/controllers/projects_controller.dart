@@ -77,7 +77,7 @@ abstract class _ProjectsController with Store {
         Log.warning("Not implemented yet");
         break;
     }
-    updateInitAccounts();
+    await updateInitAccounts();
   }
 
   void resetChannel() {

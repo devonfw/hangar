@@ -64,6 +64,20 @@ class MockTakeOffFacade extends _i1.Mock implements _i2.TakeOffFacade {
         returnValueForMissingStub: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
   @override
+  _i3.Future<bool> logOut(
+    _i4.CloudProviderId? cloudProvider, {
+    _i3.Stream<List<int>>? stdinStream,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #logOut,
+          [cloudProvider],
+          {#stdinStream: stdinStream},
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+        returnValueForMissingStub: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+  @override
   _i3.Future<bool> createProjectGCloud(
     String? projectName,
     String? billingAccount,
