@@ -13,8 +13,8 @@ elif [[ ${FLUTTER_PLATFORM} == "web" ]]; then
     if [[ ${FLUTTER_WEB_RENDERER} == "" ]]; then
         flutter build web --release --web-renderer auto --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false
         # Check if the web renderer is supported
-    elif ([ "${FLUTTER_WEB_RENDERER}" == "canvaskit" ] || [ "${FLUTTER_WEB_RENDERER}" == "html" ]); then
-        flutter build web --release --web-renderer ${FLUTTER_WEB_RENDERER} --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false
+    elif [ "${FLUTTER_WEB_RENDERER}" == "canvaskit" ] || [ "${FLUTTER_WEB_RENDERER}" == "html" ]; then
+        flutter build web --release --web-renderer "${FLUTTER_WEB_RENDERER}" --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false
     else
         echo -e "${red}Error: Web renderer ${FLUTTER_WEB_RENDERER} not supported ." >&2
         exit 1
