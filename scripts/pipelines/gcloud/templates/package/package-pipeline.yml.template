@@ -10,18 +10,31 @@ steps:
     # In case of more than 1 tar, we extract the most recent one)
     for i in $(ls -t build_*.tar)
     do
-        tar -xf $i
+        tar -xvf $i
         break
     done
 
-- name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
+- name: ${_DOCKER_IMAGE}
+  entrypoint: bash
   args:
     - -c
     - |
-      echo $$REGISTRY_CREDENTIALS > credentials.env
+      set -e
+      echo -e "\n\n"
+      echo "SETTING UP ENVIRONMENT"
+      echo ""
+      if test -f "./.pipelines/scripts/package-setup-environment.sh"; 
+      then
+        source ./.pipelines/scripts/package-setup-environment.sh ${_REGISTRY}
+      fi
+      echo -e "\n\n"
+      echo "LOADING CREDENTIALS AND GETTING REGISTRY"
+      echo $$registry_credentials > credentials.env
       . credentials.env
       rm credentials.env
+      echo -e "\n\n"
+      echo "EXECUTING package.sh"
+      echo ".pipelines/scripts/package.sh  -f \"${_DOCKERFILE}\" -c . -u \"$${DOCKER_USER}\" -p \"$${DOCKER_PASSWORD}\" -r \"${_REGISTRY}\" -i \"${_IMAGE_NAME}\" -b \"${_BRANCH_NAME}\" -l \"${_REGION}\" -a \"$${AWS_ACCESS_KEY}\" -s \"$${AWS_SECRET_ACCESS_KEY}\" -l \"$${AWS_REGION}\""
       .pipelines/scripts/package.sh  -f "${_DOCKERFILE}" -c . -u "$${DOCKER_USER}" -p "$${DOCKER_PASSWORD}" -r "${_REGISTRY}" -i "${_IMAGE_NAME}" -b "${_BRANCH_NAME}" -l "${_REGION}" -a "$${AWS_ACCESS_KEY}" -s "$${AWS_SECRET_ACCESS_KEY}" -l "$${AWS_REGION}"
 
   env:
@@ -35,8 +48,3 @@ availableSecrets:
   secretManager:
   - versionName: projects/${PROJECT_ID}/secrets/registry-credentials/versions/latest
     env: REGISTRY_CREDENTIALS
-
-
-
-
-
