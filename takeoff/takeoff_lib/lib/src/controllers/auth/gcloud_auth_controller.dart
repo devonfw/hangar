@@ -28,10 +28,10 @@ class GCloudAuthController implements AuthController<GCloud> {
         [DockerController.imageName] +
         ["gcloud", "auth", "login", email];
 
+    Log.info("Authenticating with Google Cloud");
     Process gCloudProcess =
         await Process.start("docker", args, runInShell: true);
 
-    Log.info("Opening Google Authentication in the browser");
     bool openedUrl = false;
 
     StreamSubscription<List<int>> stderrHandler =
@@ -40,6 +40,7 @@ class GCloudAuthController implements AuthController<GCloud> {
       if (!openedUrl && !message.startsWith("WARNING")) {
         String url = message.split("\n").last.trim();
         if (Uri.tryParse(url) != null) {
+          Log.info("Opening Google Authentication in the browser");
           UrlLaucher.launch(url);
         }
         openedUrl = true;

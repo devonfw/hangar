@@ -6,7 +6,8 @@ class SonarqubeController {
   Future<bool> execute(SetUpSonar script) async {
     DockerController controller = GetIt.I.get<DockerController>();
 
-    if (!await controller.executeCommand([], script.toCommand())) {
+    if (!await controller.executeCommand(
+        ["--workdir", "/scripts/sonarqube/gcloud"], script.toCommand())) {
       return false;
     }
 

@@ -40,11 +40,19 @@ class GoogleCloudController {
       String? frontendVersion,
       required String googleCloudRegion,
       StreamController<String>? infoStream}) async {
+    GCloudAuthController gCloudAuthController = GCloudAuthController();
+    String currentAccount = await gCloudAuthController.getCurrentAccount();
+    if (currentAccount.isEmpty) {
+      throw CreateProjectException(
+          "You need to be logged in Google Cloud. Execute the init command for Google Cloud.");
+    }
+    await gCloudAuthController.authenticate(currentAccount);
+
     Directory projectDir = Directory(
         "${FoldersService.containerFolders["workspace"]}/$projectName");
 
     logAndStream(
-        "Creating folder ${FoldersService.containerFolders["workspace"]}/$projectName}",
+        "Creating folder ${FoldersService.containerFolders["workspace"]}/$projectName",
         infoStream);
 
     DockerController controller = GetIt.I.get<DockerController>();
@@ -88,24 +96,23 @@ class GoogleCloudController {
 
     RepositoryController repoController = RepositoryController();
 
-    String backendLocalDir = "${projectDir.path}/Backend";
-    String frontendLocalDir = "${projectDir.path}/Frontend";
-
     logAndStream("Creating BackEnd Repository", infoStream);
 
     if (!await repoController.createRepository(CreateRepoGCloud(
+        name: "Backend",
         project: projectName,
         action: RepoAction.create,
-        directory: backendLocalDir))) {
+        directory: projectDir.path))) {
       throw CreateProjectException("Could not create BackEnd repository");
     }
 
     logAndStream("Creating FrontEnd Repository", infoStream);
 
     if (!await repoController.createRepository(CreateRepoGCloud(
+        name: "Frontend",
         project: projectName,
         action: RepoAction.create,
-        directory: frontendLocalDir))) {
+        directory: projectDir.path))) {
       throw CreateProjectException("Could not create FrontEnd repository");
     }
     logAndStream("Setting up Sonarqube", infoStream);
@@ -114,16 +121,19 @@ class GoogleCloudController {
     if (!await sonarqubeController.execute(SetUpSonar(
         serviceAccountFile: serviceKeyPath,
         project: projectName,
-        stateFolder: "$projectDir/sonarqube"))) {
+        stateFolder: "${projectDir.path}/sonarqube"))) {
       throw CreateProjectException("Could not set up SonarQube");
     }
 
-    File sonarOutputFile =
-        File("$projectDir/sonarqube/terraform.tfoutput.json");
+    File sonarOutputFile = File(
+        "${GetIt.I.get<FoldersService>().getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}sonarqube${Platform.pathSeparator}terraform.tfoutput.json");
     SonarOutput sonarOutput =
         SonarOutput.fromMap(jsonDecode(sonarOutputFile.readAsStringSync()));
 
     PipelineControllerGCloud pipelineController = PipelineControllerGCloud();
+
+    String backendLocalDir = "${projectDir.path}/Backend";
+    String frontendLocalDir = "${projectDir.path}/Frontend";
 
     logAndStream("Building BackEnd pipelines", infoStream);
 
@@ -151,7 +161,9 @@ class GoogleCloudController {
           localDir: frontendLocalDir,
           googleCloudRegion: googleCloudRegion,
           sonarUrl: sonarOutput.url,
-          sonarToken: sonarOutput.token);
+          sonarToken: sonarOutput.token,
+          registryLocation:
+              (frontendLanguage == Language.flutter) ? "europe" : null);
     } on CreatePipelineException catch (e) {
       throw CreateProjectException(
           "Could not build the FrontEnd pipelines: ${e.message}");
@@ -159,6 +171,10 @@ class GoogleCloudController {
 
     infoStream?.add("Project $projectName succesfully created!");
     Log.success("Project $projectName succesfully created!");
+    infoStream
+        ?.add("https://console.cloud.google.com/welcome?project=$projectName");
+    Log.success(
+        "You can view the project by entering in: https://console.cloud.google.com/welcome?project=$projectName");
 
     return true;
   }

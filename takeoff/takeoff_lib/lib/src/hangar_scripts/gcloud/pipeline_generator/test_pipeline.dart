@@ -35,6 +35,9 @@ class TestPipelineGCloud extends PipelineGenerator {
     if (artifactPath != null) {
       args.addAll(["-a", artifactPath!]);
     }
+    if (languageVersion != null) {
+      args.addAll(["--language-version", languageVersion!]);
+    }
     return args;
   }
 }
