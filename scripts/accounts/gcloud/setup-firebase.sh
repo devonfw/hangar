@@ -20,7 +20,7 @@ while true; do
 done
 
 helpFunction() {
-   echo "Enables Firebase on a project and required APIs"
+   echo "Enables Firebase and required APIs on a Google Cloud project."
    echo ""
    echo "Arguments:"
    echo -e "\t-n                   [Required] Name of the project."
