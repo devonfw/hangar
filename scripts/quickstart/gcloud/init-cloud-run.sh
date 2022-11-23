@@ -23,6 +23,7 @@ helpFunction() {
    echo -e "\t-p, --project        [Required] ID of the project."
    echo -e "\t-n, --name           [Required] Name of the new Cloud Run Service."
    echo -e "\t-r, --region                    Region to create Cloud Run Service on."
+   echo -e "\t-o, --output                    Output file path to store the service URL."
 }
 
 # Colours for the messages.
