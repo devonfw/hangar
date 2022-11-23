@@ -43,6 +43,7 @@ class CreateDialog extends StatelessWidget {
             controller.createProject();
             showDialog(
               context: context,
+              barrierDismissible: false,
               builder: (BuildContext context) => CreateStepsDialog(),
             );
           },

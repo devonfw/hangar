@@ -87,9 +87,9 @@ abstract class _CreateController with Store {
         projectUrl = event;
         createSteps.add(
             CreateMessage(TypeMessage.success, "Project create succesfully"));
-        resetForm();
+      } else {
+        createSteps.add(CreateMessage(TypeMessage.info, event));
       }
-      createSteps.add(CreateMessage(TypeMessage.info, event));
     });
     try {
       await facade.createProjectGCloud(

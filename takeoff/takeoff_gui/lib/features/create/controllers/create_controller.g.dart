@@ -88,6 +88,22 @@ mixin _$CreateController on _CreateController, Store {
     });
   }
 
+  late final _$projectUrlAtom =
+      Atom(name: '_CreateController.projectUrl', context: context);
+
+  @override
+  String get projectUrl {
+    _$projectUrlAtom.reportRead();
+    return super.projectUrl;
+  }
+
+  @override
+  set projectUrl(String value) {
+    _$projectUrlAtom.reportWrite(value, super.projectUrl, () {
+      super.projectUrl = value;
+    });
+  }
+
   late final _$regionAtom =
       Atom(name: '_CreateController.region', context: context);
 
@@ -254,6 +270,7 @@ cloudProvider: ${cloudProvider},
 repoProvider: ${repoProvider},
 createSteps: ${createSteps},
 projectName: ${projectName},
+projectUrl: ${projectUrl},
 region: ${region},
 billingAccount: ${billingAccount},
 frontendLanguage: ${frontendLanguage},

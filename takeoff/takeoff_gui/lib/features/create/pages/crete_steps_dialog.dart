@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
-import 'package:takeoff_gui/features/create/utils/type_message.dart';
+import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CreateStepsDialog extends StatelessWidget {
@@ -21,8 +21,11 @@ class CreateStepsDialog extends StatelessWidget {
                 builder: (_) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    const Text("Creating project...",
-                        style: TextStyle(fontSize: 30)),
+                    Text(
+                        controller.hasFinished
+                            ? "Project creation finished"
+                            : "Creating project...",
+                        style: const TextStyle(fontSize: 30)),
                     if (!controller.hasFinished)
                       const CircularProgressIndicator(),
                   ],
@@ -43,10 +46,7 @@ class CreateStepsDialog extends StatelessWidget {
                               controller.createSteps[index].message,
                               style: TextStyle(
                                   color: controller
-                                              .createSteps[index].typeMessage ==
-                                          TypeMessage.info
-                                      ? Colors.green
-                                      : Colors.red),
+                                      .createSteps[index].typeMessage.color),
                             )),
                       ),
                     ),
@@ -65,7 +65,9 @@ class CreateStepsDialog extends StatelessWidget {
                   if (controller.isSuccess) {
                     launchUrl(Uri.parse(controller.projectUrl));
                     controller.projectUrl = "";
+                    GetIt.I.get<ProjectsController>().updateInitAccounts();
                   }
+                  controller.resetForm();
                   Navigator.of(context).pop();
                 },
                 child: Text(controller.isSuccess ? "Open project" : "Close"));
