@@ -28,7 +28,7 @@ init-cloud-run.sh.sh \
 === Flags
 [subs=attributes+]
 ```
--p, --project                [Required] Id of the project.
+-p, --project                [Required] Short name (ID) of the project.
 -n, --name                   [Required] Name that will be set to the Cloud Run Service endpoint.
 -r, --region                            Region to create the Cloud Run service on.
 -o, --output                            Output File to store the created service public URL.
