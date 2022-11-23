@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-FLAGS=$(getopt -a --options n:r:p:h:o: --long "help,project:,region:,name:,output:" -- "$@")
+FLAGS=$(getopt -a --options n:r:p:ho: --long "help,project:,region:,name:,output:" -- "$@")
 
 eval set -- "$FLAGS"
 
