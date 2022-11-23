@@ -17,7 +17,7 @@ while true; do
 done
 
 helpFunction() {
-   echo "Inits Cloud Run Instance and Returns Public URL"
+   echo "Inits Cloud Run Instance and returns public URL"
    echo ""
    echo "Arguments:"
    echo -e "\t-p, --project        [Required] ID of the project."
