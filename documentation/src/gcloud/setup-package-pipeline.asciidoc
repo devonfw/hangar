@@ -14,5 +14,9 @@
 :build-pipeline:
 :quality-pipeline:
 :machineType:
+:languageVersion:
+:registryLocation:
+:flutterPlatform:
+:flutterWebRenderer:
 :openBrowserFlag:
 include::../common_templates/setup-package-pipeline.asciidoc[]
