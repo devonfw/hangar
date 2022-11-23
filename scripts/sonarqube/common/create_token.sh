@@ -26,7 +26,7 @@ function terraformGetSQToken {
             sq_token_output=$(terraform output -state=temp.tfstate | grep "$terraformSQToken" | cut -d' ' -f 3)
             rm -f temp.tfstate
         elif [[ -f "$FILE_OUTPUT" ]]; then
-            sq_token_output=$(cat "$FILE_OUTPUT" | grep "$terraformSQToken" | cut -d' ' -f 3)
+            sq_token_output=$(grep "$terraformSQToken" "$FILE_OUTPUT" | cut -d' ' -f 3)
         fi
     fi
     if [[ -n "$sq_token_output" ]]; then
@@ -55,7 +55,7 @@ red='\e[0;31m'
 if [[ -z "$sonarUrl" ]]; then
     echo -e "${red}Error: Missing paramenters, -s or --sonar-url is mandatory." >&2
     echo -e "${red}Use -h or --help flag to display help." >&2
-    echo -e "${white}"
+    echo -e "${white}" >&2
     exit 2
 fi
 
@@ -93,14 +93,14 @@ if $sonar_ready; then
     elif [[ "$setToken" == *"already exists"* ]]; then
         echo "{\"token\":\"Generated before and the value cannot be readed. Use create_token.sh script or go to sonarqube and generate a new one manually if you need it.\"}"
     else
-        echo -e "${red}ERROR: Token cannot be created."
-        echo -e "${red}  Sonarqube response: $setToken."
-        echo -e "${white}"
+        echo -e "${red}ERROR: Token cannot be created." >&2
+        echo -e "${red}  Sonarqube response: $setToken." >&2
+        echo -e "${white}" >&2
         exit 3
     fi
 else
-    echo -e "${red}ERROR: Token cannot be created."
-    echo -e "${red}  Sonarqube is not ready, the health check status is: $health."
-    echo -e "${white}"
+    echo -e "${red}ERROR: Token cannot be created." >&2
+    echo -e "${red}  Sonarqube is not ready, the health check status is: $health." >&2
+    echo -e "${white}" >&2
     exit 4
 fi

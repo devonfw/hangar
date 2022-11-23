@@ -12,8 +12,8 @@ do
     ## Read Key
     if [[ "$arg" == "--"* ]]; then
         if [[ "$pingpong" == "ping" ]]; then
-            echo -e "${red}ERROR: Missing value for variable $key."
-            echo -e "${white}"
+            echo -e "${red}ERROR: Missing value for variable $key." >&2
+            echo -e "${white}" >&2
             exit 1
         fi
         pingpong="ping"
@@ -29,8 +29,8 @@ do
     # Read Value
     else
         if [[ "$pingpong" == "pong" ]]; then
-            echo -e "${red}ERROR: Received two values for variable $key or variable not properly passed as flag."
-            echo -e "${white}"
+            echo -e "${red}ERROR: Received two values for variable $key or variable not properly passed as flag." >&2
+            echo -e "${white}" >&2
             exit 1
         fi
         pingpong="pong"
@@ -58,8 +58,8 @@ do
                     echo "$key=\"$value\"" >> "$file_set_vars"
                 fi
             else
-                echo -e "${red}ERROR: Missing file where vars are stored. It must be the first arg (key and value) and the key to set it is: --file_set_vars."
-                echo -e "${white}"
+                echo -e "${red}ERROR: Missing file where vars are stored. It must be the first arg (key and value) and the key to set it is: --file_set_vars." >&2
+                echo -e "${white}" >&2
                 exit 1
             fi
         fi

@@ -104,6 +104,7 @@ if [[ -n "$state" ]]; then
     echo -e "\n${blue}Exporting terraform state...${white}"
     mkdir -p "$state"
     terraform output > "$state/$outputFile"
+    terraform output -json > "$state/${outputFile}.json"
     if cp -f "./$stateFile" "$state/$stateFile"; then
         if cp -f "./$varsFile" "$state/$varsFile"; then
             echo -e "${green}Terraform state successfully exported.${white}"
