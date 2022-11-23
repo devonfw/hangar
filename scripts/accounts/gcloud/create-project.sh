@@ -114,7 +114,7 @@ fi
 
 echo "Enabling Cloud Resource Manager..."
 if ! gcloud services enable cloudresourcemanager.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable Cloud Resource Manager"
+   echo -e "${red}Error: Cannot enable Cloud Resource Manager API"
    echo -ne "${white}"
    exit 225
 fi
