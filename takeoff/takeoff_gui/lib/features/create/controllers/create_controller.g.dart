@@ -16,6 +16,13 @@ mixin _$CreateController on _CreateController, Store {
           Computed<List<ProviderCICD>>(() => super.providersCICD,
               name: '_CreateController.providersCICD'))
       .value;
+  Computed<bool>? _$formIsValidComputed;
+
+  @override
+  bool get formIsValid =>
+      (_$formIsValidComputed ??= Computed<bool>(() => super.formIsValid,
+              name: '_CreateController.formIsValid'))
+          .value;
   Computed<bool>? _$hasFinishedComputed;
 
   @override
@@ -279,6 +286,7 @@ backendLanguage: ${backendLanguage},
 backendVersion: ${backendVersion},
 googleCloudRegion: ${googleCloudRegion},
 providersCICD: ${providersCICD},
+formIsValid: ${formIsValid},
 hasFinished: ${hasFinished}
     ''';
   }

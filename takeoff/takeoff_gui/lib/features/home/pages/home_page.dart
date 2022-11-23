@@ -16,18 +16,20 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     projectsController.updateInitAccounts();
-    return Scaffold(
-      floatingActionButton: const FloatingActionMenu(),
-      appBar: AppBar(
-        title: const Text("Take Off"),
-      ),
-      body: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Observer(builder: (context) {
-              return CloudProjectsList(
+    return Observer(
+      builder: (_) => Scaffold(
+        floatingActionButton: projectsController.isLogged
+            ? const FloatingActionMenu()
+            : Container(),
+        appBar: AppBar(
+          title: const Text("Take Off"),
+        ),
+        body: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              CloudProjectsList(
                 name: "Google Cloud",
                 projects:
                     projectsController.projects[CloudProviderId.gcloud] ?? [],
@@ -41,26 +43,28 @@ class HomePage extends StatelessWidget {
                     projectsController.logOut(CloudProviderId.gcloud),
                 authAccount:
                     projectsController.accounts[CloudProviderId.gcloud]!,
-              );
-            }),
-            CloudProjectsList(
-              name: "Azure",
-              projects:
-                  projectsController.projects[CloudProviderId.azure] ?? [],
-              // TODO Add loggin method
-              authenticateCallback: () => print("Authenticating on Azure"),
-              logOutCallback: () => print("LogOut on Azure"),
-              authAccount: projectsController.accounts[CloudProviderId.azure]!,
-            ),
-            CloudProjectsList(
-              name: 'AWS',
-              projects: projectsController.projects[CloudProviderId.aws] ?? [],
-              // TODO Add loggin method
-              authenticateCallback: () => print("Authenticating on AWS"),
-              logOutCallback: () => print("LogOut on AWS"),
-              authAccount: projectsController.accounts[CloudProviderId.aws]!,
-            ),
-          ],
+              ),
+              CloudProjectsList(
+                name: "Azure",
+                projects:
+                    projectsController.projects[CloudProviderId.azure] ?? [],
+                // TODO Add loggin method
+                authenticateCallback: () => print("Authenticating on Azure"),
+                logOutCallback: () => print("LogOut on Azure"),
+                authAccount:
+                    projectsController.accounts[CloudProviderId.azure]!,
+              ),
+              CloudProjectsList(
+                name: 'AWS',
+                projects:
+                    projectsController.projects[CloudProviderId.aws] ?? [],
+                // TODO Add loggin method
+                authenticateCallback: () => print("Authenticating on AWS"),
+                logOutCallback: () => print("LogOut on AWS"),
+                authAccount: projectsController.accounts[CloudProviderId.aws]!,
+              ),
+            ],
+          ),
         ),
       ),
     );

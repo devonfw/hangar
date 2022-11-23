@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/features/create/pages/crete_steps_dialog.dart';
@@ -35,18 +36,22 @@ class CreateDialog extends StatelessWidget {
         ),
       )),
       actions: [
-        CustomFloatingButton(
-          text: "Create",
-          icon: Icons.add,
-          onPressed: () {
-            Navigator.of(context).pop();
-            controller.createProject();
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) => CreateStepsDialog(),
-            );
-          },
+        Observer(
+          builder: (_) => CustomFloatingButton(
+            text: "Create",
+            icon: Icons.add,
+            onPressed: !controller.formIsValid
+                ? null
+                : () {
+                    Navigator.of(context).pop();
+                    controller.createProject();
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) => CreateStepsDialog(),
+                    );
+                  },
+          ),
         ),
         CustomFloatingButton(
           text: "Close",

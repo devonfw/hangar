@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomFloatingButton extends StatelessWidget {
   final String text;
   final IconData icon;
-  final Function onPressed;
+  final Function? onPressed;
   final Color? color;
   const CustomFloatingButton({
     Key? key,
@@ -16,7 +16,7 @@ class CustomFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => onPressed(),
+      onPressed: onPressed == null ? null : () => onPressed!(),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         minimumSize: const Size(150, 50),

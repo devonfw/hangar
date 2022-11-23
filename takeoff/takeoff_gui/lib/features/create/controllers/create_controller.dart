@@ -68,6 +68,10 @@ abstract class _CreateController with Store {
   }
 
   @computed
+  bool get formIsValid =>
+      projectName.isNotEmpty && billingAccount.isNotEmpty && region.isNotEmpty;
+
+  @computed
   bool get hasFinished {
     List<TypeMessage> messages =
         createSteps.map((element) => element.typeMessage).toList();

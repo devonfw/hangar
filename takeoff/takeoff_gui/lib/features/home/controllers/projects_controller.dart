@@ -32,6 +32,16 @@ abstract class _ProjectsController with Store {
     CloudProviderId.gcloud: ""
   });
 
+  @computed
+  bool get isLogged {
+    for (CloudProviderId cloud in accounts.keys) {
+      if (accounts[cloud]!.isNotEmpty) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @action
   Future<bool> initAccount(String email, CloudProviderId cloud) {
     late Future<bool> exitStatus =
