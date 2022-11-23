@@ -31,7 +31,7 @@ init-cloud-run.sh.sh \
 -p, --project                [Required] Short name (ID) of the project.
 -n, --name                   [Required] Name for the Cloud Run service endpoint.
 -r, --region                            Region where the Cloud Run service will be created.
--o, --output                            Output File to store the created service public URL.
+-o, --output                            Output file path to store the created service public URL.
 ```
 
 === Example
