@@ -1,7 +1,7 @@
 :provider_name: Google Cloud
 :provider_path: gcloud
 :example_required_flags: -p projectId -n name
-= Setting up Cloud Run service in {provider_name}
+= Setting up a Google Cloud Run service
 
 By the end of this guide, a Cloud Run service on {provider_name} will be created in an automated way using a script and the public URL will be returned or written into an output file.
 
