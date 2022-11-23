@@ -13,6 +13,8 @@ class TestPipelineGCloud extends PipelineGenerator {
   /// e.g. where the application stores logs or any other blob on runtime.
   String? artifactPath;
 
+  String? registryLocation;
+
   TestPipelineGCloud(
       {required super.configFile,
       required super.pipelineName,
@@ -22,6 +24,7 @@ class TestPipelineGCloud extends PipelineGenerator {
       super.targetBranch,
       super.languageVersion,
       this.machineType,
+      this.registryLocation,
       this.artifactPath});
 
   @override
@@ -37,6 +40,9 @@ class TestPipelineGCloud extends PipelineGenerator {
     }
     if (languageVersion != null) {
       args.addAll(["--language-version", languageVersion!]);
+    }
+    if (registryLocation != null) {
+      args.addAll(["--registry-location", registryLocation!]);
     }
     return args;
   }

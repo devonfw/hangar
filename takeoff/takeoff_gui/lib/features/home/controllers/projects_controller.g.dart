@@ -25,6 +25,22 @@ mixin _$ProjectsController on _ProjectsController, Store {
     });
   }
 
+  late final _$projectsAtom =
+      Atom(name: '_ProjectsController.projects', context: context);
+
+  @override
+  ObservableMap<CloudProviderId, List<Project>> get projects {
+    _$projectsAtom.reportRead();
+    return super.projects;
+  }
+
+  @override
+  set projects(ObservableMap<CloudProviderId, List<Project>> value) {
+    _$projectsAtom.reportWrite(value, super.projects, () {
+      super.projects = value;
+    });
+  }
+
   late final _$accountsAtom =
       Atom(name: '_ProjectsController.accounts', context: context);
 
@@ -68,6 +84,7 @@ mixin _$ProjectsController on _ProjectsController, Store {
   String toString() {
     return '''
 waitForToken: ${waitForToken},
+projects: ${projects},
 accounts: ${accounts}
     ''';
   }
