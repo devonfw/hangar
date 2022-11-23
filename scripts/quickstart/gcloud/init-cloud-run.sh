@@ -79,7 +79,7 @@ createCloudRunService() {
         echo -ne "${white}"
         exit 240
     fi
-    serviceUrl=$(gcloud run services describe $serviceName --format 'value(status.url)' --project "$projectName" --region "$region")
+    serviceUrl=$(gcloud run services describe "$serviceName" --format 'value(status.url)' --project "$projectName" --region "$region")
     echo "$serviceUrl"
     if [[ "$outputFile" != "" ]]; then
         echo "$serviceUrl" > "$outputFile"
