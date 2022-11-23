@@ -18,7 +18,8 @@ void main() async {
     await tester.pumpWidget(createApp(CloudProviderHeader(
         authAccount: "",
         name: providerName,
-        authenticateCallback: () => true)));
+        authenticateCallback: () => true,
+        logOutCallback: () => true)));
 
     expect(find.byIcon(Icons.login_outlined), findsOneWidget);
   });
@@ -27,30 +28,51 @@ void main() async {
     await tester.pumpWidget(createApp(CloudProviderHeader(
         authAccount: "",
         name: providerName,
-        authenticateCallback: () => true)));
+        authenticateCallback: () => true,
+        logOutCallback: () => true)));
 
     expect(find.text("Not authenticated"), findsOneWidget);
   });
 
-  testWidgets('Headers without authenticated user', (tester) async {
+  testWidgets('Headers with authenticated user', (tester) async {
     String providerName = "testProviderName";
     String userAccount = "user@mail.com";
     await tester.pumpWidget(createApp(CloudProviderHeader(
         name: providerName,
         authAccount: userAccount,
-        authenticateCallback: () => true)));
+        authenticateCallback: () => true,
+        logOutCallback: () => true)));
 
     expect(find.text(userAccount), findsOneWidget);
   });
 
-  testWidgets('Headers without authenticated user', (tester) async {
+  testWidgets('Auth callback is called', (tester) async {
+    String providerName = "";
+    String userAccount = "";
+    bool testVar = false;
+    await tester.pumpWidget(createApp(CloudProviderHeader(
+        name: providerName,
+        authAccount: userAccount,
+        authenticateCallback: () => testVar = true,
+        logOutCallback: () => testVar = false)));
+
+    expect(testVar, false);
+
+    await tester.tap(find.byType(IconButton));
+    await tester.pumpAndSettle();
+
+    expect(testVar, true);
+  });
+
+  testWidgets('LogOut callback is called', (tester) async {
     String providerName = "testProviderName";
     String userAccount = "user@mail.com";
     bool testVar = false;
     await tester.pumpWidget(createApp(CloudProviderHeader(
         name: providerName,
         authAccount: userAccount,
-        authenticateCallback: () => testVar = true)));
+        authenticateCallback: () => testVar = false,
+        logOutCallback: () => testVar = true)));
 
     expect(testVar, false);
 
