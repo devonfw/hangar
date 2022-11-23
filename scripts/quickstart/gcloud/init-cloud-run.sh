@@ -19,11 +19,11 @@ done
 helpFunction() {
    echo "Creates a new Cloud Run service with a predefined HelloWorld image deployed and retrieves the public URL."
    echo ""
-   echo "Arguments:"
-   echo -e "\t-p, --project        [Required] ID of the project."
-   echo -e "\t-n, --name           [Required] Name of the new Cloud Run Service."
-   echo -e "\t-r, --region                    Region to create Cloud Run Service on."
-   echo -e "\t-o, --output                    Output file path to store the service URL."
+   echo "Flags:"
+   echo -e "\t-p, --project        [Required] Short name (ID) of the project.."
+   echo -e "\t-n, --name           [Required] Name for the Cloud Run service endpoint."
+   echo -e "\t-r, --region                    Region where the Cloud Run service will be created."
+   echo -e "\t-o, --output                    Output file path to store the created service public URL."
 }
 
 # Colours for the messages.
