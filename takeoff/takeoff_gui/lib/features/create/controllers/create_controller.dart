@@ -90,7 +90,7 @@ abstract class _CreateController with Store {
       if (event.contains("http")) {
         projectUrl = event;
         createSteps.add(
-            CreateMessage(TypeMessage.success, "Project create succesfully"));
+            CreateMessage(TypeMessage.success, "Project created succesfully"));
       } else {
         createSteps.add(CreateMessage(TypeMessage.info, event));
       }
