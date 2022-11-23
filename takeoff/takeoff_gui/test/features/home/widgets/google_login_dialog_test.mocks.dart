@@ -204,6 +204,15 @@ class MockProjectsController extends _i1.Mock
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
   @override
+  _i3.Future<void> logOut(_i2.CloudProviderId? cloud) => (super.noSuchMethod(
+        Invocation.method(
+          #logOut,
+          [cloud],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
   void resetChannel() => super.noSuchMethod(
         Invocation.method(
           #resetChannel,

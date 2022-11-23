@@ -34,22 +34,9 @@ abstract class _ProjectsController with Store {
 
   @action
   Future<bool> initAccount(String email, CloudProviderId cloud) {
-    late Future<bool> exitStatus;
-    switch (cloud) {
-      case CloudProviderId.gcloud:
-        exitStatus = facade.init(email, CloudProviderId.gcloud,
-            stdinStream: channel.stream);
-        waitForToken = true;
-        break;
-      case CloudProviderId.aws:
-        exitStatus = Future.value(false);
-        Log.warning("Not implemented yet");
-        break;
-      case CloudProviderId.azure:
-        exitStatus = Future.value(false);
-        Log.warning("Not implemented yet");
-        break;
-    }
+    late Future<bool> exitStatus =
+        facade.init(email, CloudProviderId.gcloud, stdinStream: channel.stream);
+    waitForToken = true;
     return exitStatus;
   }
 
@@ -63,6 +50,11 @@ abstract class _ProjectsController with Store {
             .toList();
       }
     }
+  }
+
+  Future<void> logOut(CloudProviderId cloud) async {
+    await facade.logOut(CloudProviderId.gcloud);
+    await updateInitAccounts();
   }
 
   void resetChannel() {
