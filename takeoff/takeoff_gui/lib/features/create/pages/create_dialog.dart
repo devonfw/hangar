@@ -3,8 +3,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/features/create/pages/crete_steps_dialog.dart';
+import 'package:takeoff_gui/features/create/utils/provider_ci_cd.dart';
 import 'package:takeoff_gui/features/create/widgets/widgets.dart';
 import 'package:takeoff_gui/features/home/widgets/custom_floating_button.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 class CreateDialog extends StatelessWidget {
   final CreateController controller = GetIt.I.get<CreateController>();
@@ -40,7 +42,9 @@ class CreateDialog extends StatelessWidget {
           builder: (_) => CustomFloatingButton(
             text: "Create",
             icon: Icons.add,
-            onPressed: !controller.formIsValid
+            onPressed: !controller.formIsValid ||
+                    controller.cloudProvider != CloudProviderId.gcloud ||
+                    controller.repoProvider != ProviderCICD.gcloud
                 ? null
                 : () {
                     Navigator.of(context).pop();
