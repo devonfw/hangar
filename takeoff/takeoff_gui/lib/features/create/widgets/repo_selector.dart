@@ -23,55 +23,66 @@ class RepoSelector extends StatelessWidget {
           children: [
             GestureDetector(
               child: Observer(
-                builder: (_) => Container(
-                  height: squareSize,
-                  width: squareSize,
-                  decoration: BoxDecoration(
-                    border: controller.repoProvider == ProviderCICD.gcloud
-                        ? selectedBorder
-                        : border,
-                    image: const DecorationImage(
-                        fit: BoxFit.scaleDown,
-                        image: AssetImage("assets/images/google_logo.png")),
-                  ),
-                ),
+                builder: (_) => (controller.providersCICD
+                        .contains(ProviderCICD.gcloud))
+                    ? Container(
+                        height: squareSize,
+                        width: squareSize,
+                        decoration: BoxDecoration(
+                          border: controller.repoProvider == ProviderCICD.gcloud
+                              ? selectedBorder
+                              : border,
+                          image: const DecorationImage(
+                              fit: BoxFit.scaleDown,
+                              image:
+                                  AssetImage("assets/images/google_logo.png")),
+                        ),
+                      )
+                    : SizedBox(width: squareSize, height: squareSize),
               ),
               onTap: () => controller.repoProvider = ProviderCICD.gcloud,
             ),
             const SizedBox(width: 20),
             GestureDetector(
               child: Observer(
-                builder: (_) => Container(
-                  height: squareSize,
-                  width: squareSize,
-                  decoration: BoxDecoration(
-                    border: controller.repoProvider == ProviderCICD.azureDevOps
-                        ? selectedBorder
-                        : border,
-                    image: const DecorationImage(
-                        fit: BoxFit.scaleDown,
-                        image:
-                            AssetImage("assets/images/azure_devops_logo.png")),
-                  ),
-                ),
-              ),
+                  builder: (_) => (controller.providersCICD
+                          .contains(ProviderCICD.azureDevOps))
+                      ? Container(
+                          height: squareSize,
+                          width: squareSize,
+                          decoration: BoxDecoration(
+                            border: controller.repoProvider ==
+                                    ProviderCICD.azureDevOps
+                                ? selectedBorder
+                                : border,
+                            image: const DecorationImage(
+                                fit: BoxFit.scaleDown,
+                                image: AssetImage(
+                                    "assets/images/azure_devops_logo.png")),
+                          ),
+                        )
+                      : SizedBox(width: squareSize, height: squareSize)),
               onTap: () => controller.repoProvider = ProviderCICD.azureDevOps,
             ),
             const SizedBox(width: 20),
             GestureDetector(
               child: Observer(
-                builder: (_) => Container(
-                  height: squareSize,
-                  width: squareSize,
-                  decoration: BoxDecoration(
-                    border: controller.repoProvider == ProviderCICD.github
-                        ? selectedBorder
-                        : border,
-                    image: const DecorationImage(
-                        fit: BoxFit.scaleDown,
-                        image: AssetImage("assets/images/github_logo.png")),
-                  ),
-                ),
+                builder: (_) => (controller.providersCICD
+                        .contains(ProviderCICD.azureDevOps))
+                    ? Container(
+                        height: squareSize,
+                        width: squareSize,
+                        decoration: BoxDecoration(
+                          border: controller.repoProvider == ProviderCICD.github
+                              ? selectedBorder
+                              : border,
+                          image: const DecorationImage(
+                              fit: BoxFit.scaleDown,
+                              image:
+                                  AssetImage("assets/images/github_logo.png")),
+                        ),
+                      )
+                    : SizedBox(width: squareSize, height: squareSize),
               ),
               onTap: () => controller.repoProvider = ProviderCICD.github,
             ),

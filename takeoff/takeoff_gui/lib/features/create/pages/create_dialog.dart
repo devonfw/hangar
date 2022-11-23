@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
+import 'package:takeoff_gui/features/create/pages/crete_steps_dialog.dart';
 import 'package:takeoff_gui/features/create/widgets/widgets.dart';
 import 'package:takeoff_gui/features/home/widgets/custom_floating_button.dart';
 
@@ -37,7 +38,14 @@ class CreateDialog extends StatelessWidget {
         CustomFloatingButton(
           text: "Create",
           icon: Icons.add,
-          onPressed: () => controller.createProject(),
+          onPressed: () {
+            Navigator.of(context).pop();
+            controller.createProject();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => CreateStepsDialog(),
+            );
+          },
         ),
         CustomFloatingButton(
           text: "Close",

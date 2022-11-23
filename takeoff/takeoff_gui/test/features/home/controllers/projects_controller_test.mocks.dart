@@ -64,23 +64,44 @@ class MockTakeOffFacade extends _i1.Mock implements _i2.TakeOffFacade {
         returnValueForMissingStub: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
   @override
-  _i3.Future<bool> createProjectGCloud(
-    String? projectName,
-    String? billingAccount,
-    _i5.Language? backendLanguage,
-    _i5.Language? frontendLanguage,
-    String? googleCloudRegion,
-  ) =>
+  _i3.Future<bool> logOut(
+    _i4.CloudProviderId? cloudProvider, {
+    _i3.Stream<List<int>>? stdinStream,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #logOut,
+          [cloudProvider],
+          {#stdinStream: stdinStream},
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+        returnValueForMissingStub: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+  @override
+  _i3.Future<bool> createProjectGCloud({
+    required String? projectName,
+    required String? billingAccount,
+    required _i5.Language? backendLanguage,
+    String? backendVersion,
+    required _i5.Language? frontendLanguage,
+    String? frontendVersion,
+    required String? googleCloudRegion,
+    _i3.StreamController<String>? infoStream,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #createProjectGCloud,
-          [
-            projectName,
-            billingAccount,
-            backendLanguage,
-            frontendLanguage,
-            googleCloudRegion,
-          ],
+          [],
+          {
+            #projectName: projectName,
+            #billingAccount: billingAccount,
+            #backendLanguage: backendLanguage,
+            #backendVersion: backendVersion,
+            #frontendLanguage: frontendLanguage,
+            #frontendVersion: frontendVersion,
+            #googleCloudRegion: googleCloudRegion,
+            #infoStream: infoStream,
+          },
         ),
         returnValue: _i3.Future<bool>.value(false),
         returnValueForMissingStub: _i3.Future<bool>.value(false),

@@ -7,6 +7,7 @@ import 'dart:async' as _i3;
 
 import 'package:mobx/mobx.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:takeoff_gui/domain/project.dart' as _i6;
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart'
     as _i5;
 import 'package:takeoff_lib/takeoff_lib.dart' as _i2;
@@ -113,6 +114,32 @@ class MockProjectsController extends _i1.Mock
         Invocation.setter(
           #waitForToken,
           _waitForToken,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i4.ObservableMap<_i2.CloudProviderId, List<_i6.Project>> get projects =>
+      (super.noSuchMethod(
+        Invocation.getter(#projects),
+        returnValue:
+            _FakeObservableMap_2<_i2.CloudProviderId, List<_i6.Project>>(
+          this,
+          Invocation.getter(#projects),
+        ),
+        returnValueForMissingStub:
+            _FakeObservableMap_2<_i2.CloudProviderId, List<_i6.Project>>(
+          this,
+          Invocation.getter(#projects),
+        ),
+      ) as _i4.ObservableMap<_i2.CloudProviderId, List<_i6.Project>>);
+  @override
+  set projects(
+          _i4.ObservableMap<_i2.CloudProviderId, List<_i6.Project>>?
+              _projects) =>
+      super.noSuchMethod(
+        Invocation.setter(
+          #projects,
+          _projects,
         ),
         returnValueForMissingStub: null,
       );

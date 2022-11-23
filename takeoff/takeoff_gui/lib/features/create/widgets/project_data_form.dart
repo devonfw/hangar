@@ -34,6 +34,20 @@ class ProjectDataForm extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: "Region"),
+                onChanged: (value) => controller.region = value,
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(child: Container()),
+          ],
+        ),
       ],
     );
   }

@@ -36,7 +36,7 @@ class CloudSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.cloudProvider = CloudProviderId.gcloud,
+              onTap: () => controller.setCloudProvider(CloudProviderId.gcloud),
             ),
             const SizedBox(width: 20),
             GestureDetector(
@@ -54,7 +54,7 @@ class CloudSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.cloudProvider = CloudProviderId.aws,
+              onTap: () => controller.setCloudProvider(CloudProviderId.aws),
             ),
             const SizedBox(width: 20),
             GestureDetector(
@@ -72,7 +72,7 @@ class CloudSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => controller.cloudProvider = CloudProviderId.azure,
+              onTap: () => controller.setCloudProvider(CloudProviderId.azure),
             ),
           ],
         ),

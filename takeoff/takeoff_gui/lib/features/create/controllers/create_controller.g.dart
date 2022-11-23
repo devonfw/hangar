@@ -9,6 +9,21 @@ part of 'create_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$CreateController on _CreateController, Store {
+  Computed<List<ProviderCICD>>? _$providersCICDComputed;
+
+  @override
+  List<ProviderCICD> get providersCICD => (_$providersCICDComputed ??=
+          Computed<List<ProviderCICD>>(() => super.providersCICD,
+              name: '_CreateController.providersCICD'))
+      .value;
+  Computed<bool>? _$hasFinishedComputed;
+
+  @override
+  bool get hasFinished =>
+      (_$hasFinishedComputed ??= Computed<bool>(() => super.hasFinished,
+              name: '_CreateController.hasFinished'))
+          .value;
+
   late final _$cloudProviderAtom =
       Atom(name: '_CreateController.cloudProvider', context: context);
 
@@ -41,6 +56,22 @@ mixin _$CreateController on _CreateController, Store {
     });
   }
 
+  late final _$createStepsAtom =
+      Atom(name: '_CreateController.createSteps', context: context);
+
+  @override
+  ObservableList<CreateMessage> get createSteps {
+    _$createStepsAtom.reportRead();
+    return super.createSteps;
+  }
+
+  @override
+  set createSteps(ObservableList<CreateMessage> value) {
+    _$createStepsAtom.reportWrite(value, super.createSteps, () {
+      super.createSteps = value;
+    });
+  }
+
   late final _$projectNameAtom =
       Atom(name: '_CreateController.projectName', context: context);
 
@@ -54,6 +85,22 @@ mixin _$CreateController on _CreateController, Store {
   set projectName(String value) {
     _$projectNameAtom.reportWrite(value, super.projectName, () {
       super.projectName = value;
+    });
+  }
+
+  late final _$regionAtom =
+      Atom(name: '_CreateController.region', context: context);
+
+  @override
+  String get region {
+    _$regionAtom.reportRead();
+    return super.region;
+  }
+
+  @override
+  set region(String value) {
+    _$regionAtom.reportWrite(value, super.region, () {
+      super.region = value;
     });
   }
 
@@ -157,6 +204,17 @@ mixin _$CreateController on _CreateController, Store {
       ActionController(name: '_CreateController', context: context);
 
   @override
+  void setCloudProvider(CloudProviderId cloud) {
+    final _$actionInfo = _$_CreateControllerActionController.startAction(
+        name: '_CreateController.setCloudProvider');
+    try {
+      return super.setCloudProvider(cloud);
+    } finally {
+      _$_CreateControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setFrontendLanguage(Language lang) {
     final _$actionInfo = _$_CreateControllerActionController.startAction(
         name: '_CreateController.setFrontendLanguage');
@@ -194,13 +252,17 @@ mixin _$CreateController on _CreateController, Store {
     return '''
 cloudProvider: ${cloudProvider},
 repoProvider: ${repoProvider},
+createSteps: ${createSteps},
 projectName: ${projectName},
+region: ${region},
 billingAccount: ${billingAccount},
 frontendLanguage: ${frontendLanguage},
 frontendVersion: ${frontendVersion},
 backendLanguage: ${backendLanguage},
 backendVersion: ${backendVersion},
-googleCloudRegion: ${googleCloudRegion}
+googleCloudRegion: ${googleCloudRegion},
+providersCICD: ${providersCICD},
+hasFinished: ${hasFinished}
     ''';
   }
 }
