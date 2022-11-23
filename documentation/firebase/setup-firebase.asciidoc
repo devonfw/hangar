@@ -32,12 +32,12 @@ setup-firebase.sh \
 [subs="attributes"]
 ```
 -n                   [Required] Name of the project.
--o, --output         [Required] Output Path to store credentials
--r                              Region to create Firestore Database
---enable-maps                   Enables APIs related to Maps Services
---setup-ios                     Enables IOS APIs and creates IOS App
---setup-android                 Enables Android APIs and creates Android App
---setup-web                     Enables Web APIs and creates Web App
+-o, --output         [Required] Output path to store credentials.
+-r                              Region where to create Firestore Database.
+--enable-maps                   Enables APIs related to Maps services.
+--setup-ios                     Enables IOS APIs and creates IOS App.
+--setup-android                 Enables Android APIs and creates Android App.
+--setup-web                     Enables Web APIs and creates Web App.
 ```
 === Typical use cases
 
