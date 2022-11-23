@@ -49,4 +49,4 @@ TIP: This is non-exhaustive list. Make your own combination of flags if all of t
 
 ==== Creating a project with ANDROID, IOS and WEB applications
 [subs="attributes"]
-  ./setup-firebase.sh -n <project name> -o /output --setup-android --setup-ios --setup-web
+  ./setup-firebase.sh -n <project name> -o ./output --setup-android --setup-ios --setup-web
