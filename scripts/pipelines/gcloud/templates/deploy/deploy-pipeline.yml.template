@@ -41,7 +41,8 @@ steps:
       then
         echo -e "\n\n"
         echo "EXECUTING secret.sh"
-        ./.pipelines/scripts/secrets.sh "$_K8S_NAMESPACE" "$_K8S_IMAGE_PULL_SECRET" "$$DOCKER_USER" "$$DOCKER_PASSWORD" "$$REGISTRY" "$_K8S_DEPLOY_FILES/application-deployment.yaml"
+        . credentials.env
+        ./.pipelines/scripts/secrets.sh "$_K8S_NAMESPACE" "$_K8S_IMAGE_PULL_SECRET" "$${DOCKER_USER:-$$AWS_ACCESS_KEY}" "$${DOCKER_PASSWORD:-$$AWS_SECRET_ACCESS_KEY}" "$$REGISTRY" "$_K8S_DEPLOY_FILES/application-deployment.yaml"
       fi
       echo -e "\n\n"
       echo "EXECUTING deploy.sh"
