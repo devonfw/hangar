@@ -8,12 +8,14 @@ class CloudProjectsList extends StatelessWidget {
   final List<Project> projects;
   final String authAccount;
   final Function authenticateCallback;
+  final Function logOutCallback;
   const CloudProjectsList(
       {super.key,
       required this.name,
       required this.projects,
       required this.authenticateCallback,
-      required this.authAccount});
+      required this.authAccount,
+      required this.logOutCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class CloudProjectsList extends StatelessWidget {
               name: name,
               authenticateCallback: authenticateCallback,
               authAccount: authAccount,
+              logOutCallback: logOutCallback,
             ),
           ),
           const SizedBox(height: 10),

@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     projectsController.updateInitAccounts();
     return Scaffold(
-      floatingActionButton: const FloatingActionMenu(),
+      floatingActionButton: FloatingActionMenu(),
       appBar: AppBar(
         title: const Text("Take Off"),
       ),
@@ -37,6 +37,8 @@ class HomePage extends StatelessWidget {
                     builder: (BuildContext context) => GoogleLoginDialog(),
                   );
                 },
+                logOutCallback: () =>
+                    projectsController.logOut(CloudProviderId.gcloud),
                 authAccount:
                     projectsController.accounts[CloudProviderId.gcloud]!,
               );
@@ -47,6 +49,7 @@ class HomePage extends StatelessWidget {
                   projectsController.projects[CloudProviderId.azure] ?? [],
               // TODO Add loggin method
               authenticateCallback: () => print("Authenticating on Azure"),
+              logOutCallback: () => print("LogOut on Azure"),
               authAccount: projectsController.accounts[CloudProviderId.azure]!,
             ),
             CloudProjectsList(
@@ -54,6 +57,7 @@ class HomePage extends StatelessWidget {
               projects: projectsController.projects[CloudProviderId.aws] ?? [],
               // TODO Add loggin method
               authenticateCallback: () => print("Authenticating on AWS"),
+              logOutCallback: () => print("LogOut on AWS"),
               authAccount: projectsController.accounts[CloudProviderId.aws]!,
             ),
           ],

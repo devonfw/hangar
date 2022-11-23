@@ -20,7 +20,8 @@ void main() async {
         name: nameList,
         authAccount: "test@mail.com",
         projects: MockProjects.projectsAWS,
-        authenticateCallback: () => true)));
+        authenticateCallback: () => true,
+        logOutCallback: () => true)));
     expect(find.text(nameList), findsOneWidget);
     expect(find.byType(CloudProjectItem), findsWidgets);
   });
@@ -32,7 +33,8 @@ void main() async {
         name: nameList,
         authAccount: "",
         projects: MockProjects.projectsAWS,
-        authenticateCallback: () => true)));
+        authenticateCallback: () => true,
+        logOutCallback: () => true)));
     expect(find.text(nameList), findsOneWidget);
     expect(find.byType(CloudProjectItem), findsNothing);
   });

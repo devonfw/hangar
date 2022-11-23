@@ -21,7 +21,6 @@ class FoldersService {
     "workspace": "hangar_workspace",
     "firebase": "AppData\\Roaming\\configstore",
     "git": ".gitconfig",
-    "new": "new"
   };
 
   static Map<String, String> linuxHostFolders = {
@@ -34,7 +33,6 @@ class FoldersService {
     "workspace": "hangar_workspace",
     "firebase": ".config/configstore",
     "git": ".gitconfig",
-    "new": "new"
   };
 
   /// Names of the folders that will be created in .takeoff/
@@ -48,7 +46,6 @@ class FoldersService {
     "workspace": "/scripts/workspace",
     "firebase": "/root/.config/configstore",
     "git": "/root/.gitconfig",
-    "new": "/root/new"
   };
 
   /// Returns the Cache folder as a file. It it does not exists, it's created.

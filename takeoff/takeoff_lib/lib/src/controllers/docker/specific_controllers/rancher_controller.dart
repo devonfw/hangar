@@ -12,7 +12,7 @@ class RancherController extends DockerController {
     Map<String, String> hostFolders = foldersService.getHostFolders();
 
     hostFolders = hostFolders.map((name, path) =>
-        MapEntry(name, "C:${path.replaceAll("\\", "/").substring(2)}"));
+        MapEntry(name, "/mnt/c${path.replaceAll("\\", "/").substring(2)}"));
 
     Map<String, String> containerFolders = FoldersService.containerFolders;
 

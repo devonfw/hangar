@@ -25,12 +25,16 @@ class TakeOffFacade {
   /// The [DockerController] is initialized as a singleton to avoid checking the
   /// docker installation multiple times during the execution, consuming unnecessary resources.
   Future<bool> initialize() async {
-    GetIt.I.registerSingleton<PlatformService>(PlatformService());
-    GetIt.I.registerSingleton<FoldersService>(FoldersService());
-    DockerController dockerController =
-        await DockerControllerFactory().create();
-    GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
-    GetIt.I.registerSingleton<Database>(await DatabaseSingleton().initialize());
+    // This conditional is used to avoid exceptions using hot reload when
+    if (!GetIt.I.isRegistered<PlatformService>()) {
+      GetIt.I.registerSingleton<PlatformService>(PlatformService());
+      GetIt.I.registerSingleton<FoldersService>(FoldersService());
+      DockerController dockerController =
+          await DockerControllerFactory().create();
+      GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
+      GetIt.I
+          .registerSingleton<Database>(await DatabaseSingleton().initialize());
+    }
 
     return await SystemService().checkSystemPrerequisites();
   }

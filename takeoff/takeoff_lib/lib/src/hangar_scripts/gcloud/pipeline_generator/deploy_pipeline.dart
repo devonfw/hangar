@@ -15,6 +15,8 @@ class DeployPipelineGCloud extends PipelineGenerator {
   /// Machine type for pipeline runner.
   MachineType? machineType;
 
+  String? registryLocation;
+
   DeployPipelineGCloud(
       {required super.configFile,
       required super.pipelineName,
@@ -25,6 +27,7 @@ class DeployPipelineGCloud extends PipelineGenerator {
       super.targetBranch,
       super.languageVersion,
       this.port,
+      this.registryLocation,
       this.machineType});
 
   @override
@@ -35,6 +38,9 @@ class DeployPipelineGCloud extends PipelineGenerator {
         ["--service-name", serviceName, "--gcloud-region", gCloudRegion]);
     if (languageVersion != null) {
       args.addAll(["--language-version", languageVersion!]);
+    }
+    if (registryLocation != null) {
+      args.addAll(["--registry-location", registryLocation!]);
     }
     if (port != null) {
       args.addAll(["--port", port.toString()]);
