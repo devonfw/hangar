@@ -8,7 +8,7 @@ By the end of this guide, an environment on Firebase will be created in an autom
 
 == Setting up Firebase Services using the provided script
 
-The script located at `/scripts/accounts/gcloud/setup-firebase.sh` allows you to either:
+The script located at `/scripts/accounts/gcloud/setup-firebase.sh` allows you to:
 
 . Create a Firebase project with an ANDROID, IOS and WEB aplication.
 . Enable and setup Firestore.
