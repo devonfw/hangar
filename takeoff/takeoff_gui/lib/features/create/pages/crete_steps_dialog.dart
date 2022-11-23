@@ -14,45 +14,47 @@ class CreateStepsDialog extends StatelessWidget {
     return AlertDialog(
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        child: Column(
-          children: [
-            Observer(
-              builder: (_) => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text("Creating project...",
-                      style: TextStyle(fontSize: 30)),
-                  if (!controller.hasFinished)
-                    const CircularProgressIndicator(),
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Observer(
+                builder: (_) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text("Creating project...",
+                        style: TextStyle(fontSize: 30)),
+                    if (!controller.hasFinished)
+                      const CircularProgressIndicator(),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 50),
-            SizedBox(
-              height: 600,
-              width: 600,
-              child: DecoratedBox(
-                decoration: const BoxDecoration(color: Colors.black),
-                child: Observer(
-                  builder: (_) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      itemCount: controller.createSteps.length,
-                      itemBuilder: ((context, index) => Text(
-                            controller.createSteps[index].message,
-                            style: TextStyle(
-                                color:
-                                    controller.createSteps[index].typeMessage ==
-                                            TypeMessage.info
-                                        ? Colors.green
-                                        : Colors.red),
-                          )),
+              const SizedBox(height: 50),
+              SizedBox(
+                height: 600,
+                width: 600,
+                child: DecoratedBox(
+                  decoration: const BoxDecoration(color: Colors.black),
+                  child: Observer(
+                    builder: (_) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        itemCount: controller.createSteps.length,
+                        itemBuilder: ((context, index) => Text(
+                              controller.createSteps[index].message,
+                              style: TextStyle(
+                                  color: controller
+                                              .createSteps[index].typeMessage ==
+                                          TypeMessage.info
+                                      ? Colors.green
+                                      : Colors.red),
+                            )),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: [
