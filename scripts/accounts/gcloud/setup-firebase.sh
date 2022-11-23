@@ -246,7 +246,7 @@ createPlatformApps() {
         fi
         setupAndroidKeystore
         if ! gcloud services enable apikeys.googleapis.com --project "${projectName}" ; then
-            echo -e "${red}Error while enabling api keys api." >&2
+            echo -e "${red}Error while enabling API keys API." >&2
             echo -ne "${white}"
             exit 250
         fi
