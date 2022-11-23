@@ -167,7 +167,7 @@ addFirebaseToGcloudProject() {
             exit 201
         fi
     else
-        echo -e "Firebase already added to $projectName"
+        echo -e "Firebase already added to $projectName."
     fi
 }
 
