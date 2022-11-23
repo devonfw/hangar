@@ -169,6 +169,9 @@ class GoogleCloudController {
           "Could not build the FrontEnd pipelines: ${e.message}");
     }
 
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    await cacheRepository.saveGoogleProjectId(projectName);
+
     infoStream?.add("Project $projectName succesfully created!");
     Log.success("Project $projectName succesfully created!");
     infoStream
