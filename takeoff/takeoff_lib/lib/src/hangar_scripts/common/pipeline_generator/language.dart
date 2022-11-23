@@ -15,4 +15,7 @@ enum Language {
     return Language.values.firstWhere((element) => element.name == string,
         orElse: () => Language.none);
   }
+
+  @override
+  String toString() => name;
 }

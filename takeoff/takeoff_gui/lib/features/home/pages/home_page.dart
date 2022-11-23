@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     projectsController.updateInitAccounts();
     return Scaffold(
-      floatingActionButton: const FloatingActionMenu(),
+      floatingActionButton: FloatingActionMenu(),
       appBar: AppBar(
         title: const Text("Take Off"),
       ),

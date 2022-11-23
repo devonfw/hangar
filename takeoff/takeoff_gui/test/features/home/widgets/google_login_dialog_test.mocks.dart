@@ -167,6 +167,12 @@ class MockProjectsController extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
+  bool get isLogged => (super.noSuchMethod(
+        Invocation.getter(#isLogged),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
   _i4.ReactiveContext get context => (super.noSuchMethod(
         Invocation.getter(#context),
         returnValue: _FakeReactiveContext_3(
