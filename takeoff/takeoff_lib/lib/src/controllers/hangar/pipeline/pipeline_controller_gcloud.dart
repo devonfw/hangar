@@ -43,10 +43,11 @@ class PipelineControllerGCloud extends PipelineController {
     if (!await execute(TestPipelineGCloud(
         configFile:
             "/scripts/pipelines/gcloud/templates/test/test-pipeline.cfg",
-        pipelineName: "test-$projectName-backend",
+        pipelineName: "test-$projectName-${appEnd.name}",
         language: language,
         languageVersion: languageVersion,
         localDirectory: localDir,
+        registryLocation: registryLocation,
         buildPipelineName: buildPipelineName))) {
       throw CreatePipelineException(
           "Test pipeline could not be created for ${appEnd.name}");
@@ -62,7 +63,8 @@ class PipelineControllerGCloud extends PipelineController {
         languageVersion: languageVersion,
         testPipelineName: testPipelineName,
         sonarUrl: sonarUrl,
-        sonarToken: sonarToken))) {
+        sonarToken: sonarToken,
+        registryLocation: registryLocation))) {
       throw CreatePipelineException(
           "Quality pipeline could not be created for ${appEnd.name}");
     }
@@ -70,12 +72,13 @@ class PipelineControllerGCloud extends PipelineController {
     if (!await execute(PackagePipelineGCloud(
       configFile:
           "/scripts/pipelines/gcloud/templates/package/package-pipeline.cfg",
-      pipelineName: "package-$projectName-backend",
+      pipelineName: "package-$projectName-${appEnd.name}",
       language: language,
       languageVersion: languageVersion,
       localDirectory: localDir,
       buildPipelineName: buildPipelineName,
       qualityPipelineName: qaPipelineName,
+      registryLocation: registryLocation,
       imageName: "$projectName-${appEnd.name}-image",
     ))) {
       throw CreatePipelineException(
@@ -85,10 +88,11 @@ class PipelineControllerGCloud extends PipelineController {
     if (!await execute(DeployPipelineGCloud(
         configFile:
             "/scripts/pipelines/gcloud/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg",
-        pipelineName: "deploy-$projectName-backend",
+        pipelineName: "deploy-$projectName-${appEnd.name}",
         language: language,
         languageVersion: languageVersion,
         localDirectory: localDir,
+        registryLocation: registryLocation,
         gCloudRegion: googleCloudRegion,
         serviceName: "$projectName-${appEnd.name}-service"))) {
       throw CreatePipelineException(

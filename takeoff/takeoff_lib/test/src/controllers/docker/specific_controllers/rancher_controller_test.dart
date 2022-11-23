@@ -25,23 +25,23 @@ void main() {
     RancherController controller = RancherController();
     List<String> expectedMappings = [
       "-v",
-      "C:/Users/user/AppData/Roaming/gcloud:/root/.config/gcloud",
+      "/c/Users/user/AppData/Roaming/gcloud:/root/.config/gcloud",
       "-v",
-      "C:/Users/user/.aws:/root/.aws",
+      "/c/Users/user/.aws:/root/.aws",
       "-v",
-      "C:/Users/user/.azure:/root/.azure",
+      "/c/Users/user/.azure:/root/.azure",
       "-v",
-      "C:/Users/user/.kube:/root/.kube",
+      "/c/Users/user/.kube:/root/.kube",
       "-v",
-      "C:/Users/user/AppData/Roaming/GitHub CLI:/root/.config/gh",
+      "/c/Users/user/AppData/Roaming/GitHub CLI:/root/.config/gh",
       "-v",
-      "C:/Users/user/.ssh:/root/.ssh",
+      "/c/Users/user/.ssh:/root/.ssh",
       "-v",
-      "C:/Users/user/hangar_workspace:/scripts/workspace",
+      "/c/Users/user/hangar_workspace:/scripts/workspace",
       "-v",
-      "C:/Users/user/AppData/Roaming/configstore:/root/.config/configstore",
+      "/c/Users/user/AppData/Roaming/configstore:/root/.config/configstore",
       "-v",
-      "C:/Users/user/.gitconfig:/root/.gitconfig",
+      "/c/Users/user/.gitconfig:/root/.gitconfig",
     ];
 
     expect(controller.getVolumeMappings(), expectedMappings);
