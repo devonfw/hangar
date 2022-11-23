@@ -17,7 +17,7 @@ while true; do
 done
 
 helpFunction() {
-   echo "Inits Cloud Run Instance and returns public URL"
+   echo "Creates a new Cloud Run service with a predefined HelloWorld image deployed and retrieves the public URL."
    echo ""
    echo "Arguments:"
    echo -e "\t-p, --project        [Required] ID of the project."
