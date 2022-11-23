@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller_impl.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
@@ -16,7 +17,7 @@ import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
 class TakeOffFacade {
-  final GoogleCloudController _googleController = GoogleCloudController();
+  final GoogleCloudController _googleController = GoogleCloudControllerImpl();
 
   /// Initializes all the singletons neeeded for the app to run and checks prerequisites.
   ///
@@ -103,7 +104,7 @@ class TakeOffFacade {
       CloudProviderId cloudProvider, String projectId) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await GoogleCloudController().cleanProject(projectId);
+        return await _googleController.cleanProject(projectId);
       case CloudProviderId.aws:
         return false;
       case CloudProviderId.azure:
