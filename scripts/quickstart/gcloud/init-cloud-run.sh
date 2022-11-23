@@ -74,7 +74,7 @@ createCloudRunService() {
     if [[ "$region" == "" ]]; then
         region="europe-west6"
     fi
-    if ! gcloud run deploy $serviceName --image=us-docker.pkg.dev/cloudrun/container/hello --region "$region" --project "$projectName" --allow-unauthenticated; then
+    if ! gcloud run deploy "$serviceName" --image=us-docker.pkg.dev/cloudrun/container/hello --region "$region" --project "$projectName" --allow-unauthenticated; then
         echo -e "${red}Error: Cannot create Cloud Run Instance"
         echo -ne "${white}"
         exit 240
