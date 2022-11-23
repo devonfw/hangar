@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-FLAGS=$(getopt -a --options n:r:o:h --long "help,project-name:,firestore-region:,output:,enable-maps,setup-ios,setup-android,setup-web" -- "$@")
+FLAGS=$(getopt -a --options n:r:o:h --long "help,output:,enable-maps,setup-ios,setup-android,setup-web" -- "$@")
 
 eval set -- "$FLAGS"
 
