@@ -24,12 +24,12 @@ helpFunction() {
    echo ""
    echo "Arguments:"
    echo -e "\t-n                   [Required] Name of the project."
-   echo -e "\t-o, --output         [Required] Output Path to store credentials"
-   echo -e "\t-r                              Region to create Firestore Database"
-   echo -e "\t--enable-maps                   Enables APIs related to Maps Services"
-   echo -e "\t--setup-ios                     Enables IOS APIs and creates IOS App"
-   echo -e "\t--setup-android                 Enables Android APIs and creates Android App"
-   echo -e "\t--setup-web                     Enables Web APIs and creates Web App"
+   echo -e "\t-o, --output         [Required] Output path to store credentials."
+   echo -e "\t-r                              Region where to create Firestore Database."
+   echo -e "\t--enable-maps                   Enables APIs related to Maps services."
+   echo -e "\t--setup-ios                     Enables IOS APIs and creates IOS App."
+   echo -e "\t--setup-android                 Enables Android APIs and creates Android App."
+   echo -e "\t--setup-web                     Enables Web APIs and creates Web App."
 }
 
 # Colours for the messages.
