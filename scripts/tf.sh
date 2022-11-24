@@ -31,7 +31,7 @@ function helpFunction() {
 }
 
 vars=""
-while [[ -n "${@}" ]]; do
+while [[ $# -gt 0 ]]; do
     case "$1" in
         'apply' | 'destroy')             command="$1 --auto-approve"; shift ;;
         'output')                        command="$1"; silent="true"; shift ;;
