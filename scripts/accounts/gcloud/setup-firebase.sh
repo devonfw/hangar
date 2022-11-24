@@ -265,7 +265,7 @@ createPlatformApps() {
         command=$base_create_app_command" --bundle-id ${packageName} --app-store-id \"\" IOS ${projectName}_ios"
         if ! eval "$command"; then
             echo -e "${red}Error while creating IOS APP." >&2
-            echo -ne "${white}"
+            echo -ne "${white}" >&2
             exit 252
         fi
         command=$base_sdkconfig_command" --out ${outputPath}/GoogleService-Info.plist IOS"
