@@ -32,7 +32,8 @@ class CloudSelector extends StatelessWidget {
                         : border,
                     image: const DecorationImage(
                         fit: BoxFit.scaleDown,
-                        image: AssetImage("assets/images/google_logo.png")),
+                        image:
+                            AssetImage("assets/images/google_cloud_logo.png")),
                   ),
                 ),
               ),

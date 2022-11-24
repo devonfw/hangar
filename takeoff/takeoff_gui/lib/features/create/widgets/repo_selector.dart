@@ -23,22 +23,23 @@ class RepoSelector extends StatelessWidget {
           children: [
             GestureDetector(
               child: Observer(
-                builder: (_) => (controller.providersCICD
-                        .contains(ProviderCICD.gcloud))
-                    ? Container(
-                        height: squareSize,
-                        width: squareSize,
-                        decoration: BoxDecoration(
-                          border: controller.repoProvider == ProviderCICD.gcloud
-                              ? selectedBorder
-                              : border,
-                          image: const DecorationImage(
-                              fit: BoxFit.scaleDown,
-                              image:
-                                  AssetImage("assets/images/google_logo.png")),
-                        ),
-                      )
-                    : SizedBox(width: squareSize, height: squareSize),
+                builder: (_) =>
+                    (controller.providersCICD.contains(ProviderCICD.gcloud))
+                        ? Container(
+                            height: squareSize,
+                            width: squareSize,
+                            decoration: BoxDecoration(
+                              border:
+                                  controller.repoProvider == ProviderCICD.gcloud
+                                      ? selectedBorder
+                                      : border,
+                              image: const DecorationImage(
+                                  fit: BoxFit.scaleDown,
+                                  image: AssetImage(
+                                      "assets/images/google_cloud_logo.png")),
+                            ),
+                          )
+                        : SizedBox(width: squareSize, height: squareSize),
               ),
               onTap: () => controller.repoProvider = ProviderCICD.gcloud,
             ),

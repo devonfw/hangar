@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/pages/create_dialog.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/home/widgets/custom_floating_button.dart';
+import 'package:takeoff_gui/features/quickstart/pages/quickstart_dialog.dart';
 
 class FloatingActionMenu extends StatelessWidget {
   final ProjectsController controller = GetIt.I.get<ProjectsController>();
@@ -33,8 +34,12 @@ class FloatingActionMenu extends StatelessWidget {
         Observer(
           builder: (_) => CustomFloatingButton(
             icon: Icons.rocket_launch,
-            //TODO Show quickstart dialog
-            onPressed: controller.isLogged ? () => print("QuickStart!") : null,
+            onPressed: controller.isLogged
+                ? () => showDialog(
+                      context: context,
+                      builder: ((context) => QuickstartDialog()),
+                    )
+                : null,
             text: "QuickStart",
           ),
         ),
