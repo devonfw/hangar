@@ -282,7 +282,7 @@ createPlatformApps() {
         command=$base_create_app_command" WEB ${projectName}_web"
         if ! eval "$command"; then
             echo -e "${red}Error while creating WEB APP." >&2
-            echo -ne "${white}"
+            echo -ne "${white}" >&2
             exit 254
         fi
         command=$base_sdkconfig_command" --out ${outputPath}/webconfig.json WEB"
