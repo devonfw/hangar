@@ -8,6 +8,8 @@ import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffCli {
   void run(List<String> args) async {
+    print(title);
+
     TakeOffFacade facade = TakeOffFacade();
     await facade.initialize();
 
@@ -19,4 +21,14 @@ class TakeOffCli {
       ..addCommand(AzureCommand(projectsService))
       ..run(args);
   }
+
+  String title = "      |         \n"
+      "     / \\       \n"
+      "    / _ \\      \n"
+      "   |.o '.|     _______    _         ____   __  __\n"
+      "   |'._.'|    |__   __|  | |       / __ \\ / _|/ _|\n"
+      "   |     |       | | __ _| | _____| |  | | |_| |_ \n"
+      " ,'|  |  |`.     | |/ _` | |/ / _ \\ |  | |  _|  _|\n"
+      "/  |  |  |  \\    | | (_| |   <  __/ |__| | | | |  \n"
+      "|,-'--|--'-.|    |_|\\__,_|_|\\_\\___|\\____/|_| |_|  \n";
 }

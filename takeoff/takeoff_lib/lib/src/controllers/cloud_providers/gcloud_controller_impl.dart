@@ -206,7 +206,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String account = await _checkAuthentication();
     String accountName = account.split('@').first;
     String projectName =
-        "wayat-takeoff-$accountName-${now.hour}-${now.minute}-${now.day}-${now.month}-${now.year}";
+        "wayat-takeoff-$accountName-${now.hour}-${now.minute}-${now.day}-${now.month}-${now.year}"
+            .substring(0, 29);
 
     return await createProject(
         projectName: projectName,
