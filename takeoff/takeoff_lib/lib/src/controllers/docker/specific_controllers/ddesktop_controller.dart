@@ -5,7 +5,7 @@ import 'package:takeoff_lib/src/utils/system/system_service.dart';
 /// [DockerController] implementation for Windows systems with Docker Desktop.
 class DockerDesktopController extends DockerController {
   DockerDesktopController({SystemService? systemService})
-      : super(systemService: systemService);
+      : super(command: "docker", systemService: systemService);
 
   @override
   List<String> getVolumeMappings() {

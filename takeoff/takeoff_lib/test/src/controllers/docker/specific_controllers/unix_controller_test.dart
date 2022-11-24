@@ -21,7 +21,7 @@ void main() {
   });
 
   test("Volume mappings are correct", () {
-    UnixController controller = UnixController();
+    UnixController controller = UnixController(command: "docker");
     List<String> expectedMappings = [
       "-v",
       "/home/user/.config/gcloud:/root/.config/gcloud",

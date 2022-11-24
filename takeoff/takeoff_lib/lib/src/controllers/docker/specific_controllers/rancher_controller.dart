@@ -4,8 +4,8 @@ import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
 /// [DockerController] implementation for Windows systems with Rancher Desktop.
 class RancherController extends DockerController {
-  RancherController({SystemService? systemService})
-      : super(systemService: systemService);
+  RancherController({required String command, SystemService? systemService})
+      : super(command: command, systemService: systemService);
 
   @override
   List<String> getVolumeMappings() {
