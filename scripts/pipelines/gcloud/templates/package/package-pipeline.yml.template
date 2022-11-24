@@ -1,4 +1,13 @@
 steps:
+- id: "Get secret"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+        set -e
+        [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+        
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
 
@@ -23,7 +32,7 @@ steps:
       echo -e "\n\n"
       echo "SETTING UP ENVIRONMENT"
       echo ""
-      if test -f "./.pipelines/scripts/package-setup-environment.sh"; 
+      if test -f "./.pipelines/scripts/package-setup-environment.sh";
       then
         source ./.pipelines/scripts/package-setup-environment.sh ${_REGISTRY}
       fi
