@@ -64,10 +64,10 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
     --aws-region               [Required, if AWS] AWS region for ECR."
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
-ifdef:languageVersion[-m, --language-version                        [Required, if Flutter or Python] Language or framework version.]
-ifdef:registryLocation[-m, --registry-location                        [Required, if Flutter] Artifact registry location.]
-ifdef:flutterPlatform[-m, --flutter-platform                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
-ifdef:flutterWebRenderer[-m, --flutter-web-renderer                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
+languageVersion[-m, --language-version                        [Required, if Flutter or Python] Language or framework version.]
+registryLocation[-m, --registry-location                        [Required, if Flutter] Artifact registry location.]
+flutterPlatform[-m, --flutter-platform                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
+flutterWebRenderer[-m, --flutter-web-renderer                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
 ```
 
 === Examples
@@ -112,7 +112,6 @@ ifdef:flutterWebRenderer[-m, --flutter-web-renderer                        Flutt
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
-
 ==== Flutter project
 
 ===== Web platform

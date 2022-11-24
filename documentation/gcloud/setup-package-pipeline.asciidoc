@@ -13,11 +13,6 @@
 :no-PR-or-MR:
 :build-pipeline:
 :quality-pipeline:
-:machineType:
-:languageVersion:
-:registryLocation:
-:flutterPlatform:
-:flutterWebRenderer:
 :openBrowserFlag:
 = Setting up a Package {pipeline_type} on {provider}
 
@@ -54,11 +49,6 @@ pipeline_generator.sh \
   [--aws-secret-access-key <aws secret access key>] \
   [--aws-region <aws region>] \
   [-b <branch>] \
-  [-m <machine type for {pipeline_type} runner>]
-  --language-version <version> \
-  --registry-location <registry location> \
-  --flutter-platform <web, android> \
-  --flutter-web-renderer <auto (default), canvaskit, html> \
 ```
 
 NOTE: The config file for the package {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/package/package-pipeline.cfg`.
@@ -81,11 +71,10 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--m, --machine-type                        Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
-ifdef:languageVersion[-m, --language-version                        [Required, if Flutter or Python] Language or framework version.]
-ifdef:registryLocation[-m, --registry-location                        [Required, if Flutter] Artifact registry location.]
-ifdef:flutterPlatform[-m, --flutter-platform                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
-ifdef:flutterWebRenderer[-m, --flutter-web-renderer                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
+languageVersion[-m, --language-version                        [Required, if Flutter or Python] Language or framework version.]
+registryLocation[-m, --registry-location                        [Required, if Flutter] Artifact registry location.]
+flutterPlatform[-m, --flutter-platform                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
+flutterWebRenderer[-m, --flutter-web-renderer                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
 ```
 
 === Examples
@@ -130,7 +119,6 @@ ifdef:flutterWebRenderer[-m, --flutter-web-renderer                        Flutt
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
-
 ==== Flutter project
 
 ===== Web platform
