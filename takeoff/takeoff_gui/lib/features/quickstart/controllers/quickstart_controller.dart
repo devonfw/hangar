@@ -9,4 +9,19 @@ class QuickstartController = _QuickstartController with _$QuickstartController;
 abstract class _QuickstartController with Store {
   @observable
   Apps app = Apps.wayat;
+
+  @observable
+  String billingAccount = "";
+
+  @observable
+  String region = "";
+
+  @action
+  void resetForm() {
+    billingAccount = "";
+    region = "";
+  }
+
+  @computed
+  bool get isValidForm => billingAccount.isNotEmpty && region.isNotEmpty;
 }
