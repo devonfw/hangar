@@ -55,7 +55,7 @@ red='\e[0;31m'
 if [[ -z "$sonarUrl" ]]; then
     echo -e "${red}Error: Missing paramenters, -s or --sonar-url is mandatory." >&2
     echo -e "${red}Use -h or --help flag to display help." >&2
-    echo -e "${white}" >&2
+    echo -ne "${white}" >&2
     exit 2
 fi
 
@@ -95,12 +95,12 @@ if $sonar_ready; then
     else
         echo -e "${red}ERROR: Token cannot be created." >&2
         echo -e "${red}  Sonarqube response: $setToken." >&2
-        echo -e "${white}" >&2
+        echo -ne "${white}" >&2
         exit 3
     fi
 else
     echo -e "${red}ERROR: Token cannot be created." >&2
     echo -e "${red}  Sonarqube is not ready, the health check status is: $health." >&2
-    echo -e "${white}" >&2
+    echo -ne "${white}" >&2
     exit 4
 fi

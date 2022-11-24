@@ -64,7 +64,7 @@ silent_cmd() {
 if [[ -z "$command" ]]; then
     echo -e "${red}Error: Missing command, need one of the main commands is mandatory." >&2
     echo -e "${red}Use -h or --help flag to display help." >&2
-    echo -e "${white}"
+    echo -ne "${white}" >&2
     exit 2
 fi
 
@@ -122,13 +122,13 @@ if [[ -n "$state" ]]; then
         if cp -f "./$varsFile" "$state/$varsFile"; then
             silent_cmd echo -e "${green}Terraform state successfully exported.${white}"
         else
-            echo -e "${red}Error: Imposible to copy $varsFile file."
-            echo -e "${white}"
+            echo -e "${red}Error: Imposible to copy $varsFile file." >&2
+            echo -ne "${white}" >&2
             exit 3
         fi
     else
-        echo -e "${red}Error: Imposible to copy $varsFile file."
-        echo -e "${white}"
+        echo -e "${red}Error: Imposible to copy $varsFile file." >&2
+        echo -ne "${white}" >&2
         exit 2
     fi
 fi
