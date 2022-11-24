@@ -11,7 +11,8 @@ By the end of this guide, a Cloud Run service on {provider_name} will be created
 
 * Have a Google Cloud project already setup and Google Cloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
 
-== Initializing a Cloud Run Service using provided script
+== Initializing a Cloud Run service using provided script
+
 
 The script located at `/scripts/quickstart/{provider_path}/init-cloud-run.sh` allows you to:
 
