@@ -51,7 +51,7 @@ checkMandatoryArguments() {
     then
         echo -e "${red}Error: Missing paramenters, -o is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
-        echo -ne "${white}"
+        echo -ne "${white}" >&2
         exit 2
     fi
     if ! test -d "$outputPath"; then
