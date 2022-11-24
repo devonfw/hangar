@@ -22,7 +22,6 @@ class CreateRepoGCloud extends CreateRepo {
     List<String> args = super.toCommand();
     args.insertAll(
         0, ["/scripts/repositories/gcloud/create-repo.sh", "-p", project]);
-
     return args;
   }
 }

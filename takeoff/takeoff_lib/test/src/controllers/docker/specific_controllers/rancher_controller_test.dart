@@ -25,23 +25,23 @@ void main() {
     RancherController controller = RancherController(command: "docker");
     List<String> expectedMappings = [
       "-v",
-      "/c/Users/user/AppData/Roaming/gcloud:/root/.config/gcloud",
+      "/mnt/c/Users/user/AppData/Roaming/gcloud:/root/.config/gcloud",
       "-v",
-      "/c/Users/user/.aws:/root/.aws",
+      "/mnt/c/Users/user/.aws:/root/.aws",
       "-v",
-      "/c/Users/user/.azure:/root/.azure",
+      "/mnt/c/Users/user/.azure:/root/.azure",
       "-v",
-      "/c/Users/user/.kube:/root/.kube",
+      "/mnt/c/Users/user/.kube:/root/.kube",
       "-v",
-      "/c/Users/user/AppData/Roaming/GitHub CLI:/root/.config/gh",
+      "/mnt/c/Users/user/AppData/Roaming/GitHub CLI:/root/.config/gh",
       "-v",
-      "/c/Users/user/.ssh:/root/.ssh",
+      "/mnt/c/Users/user/.ssh:/root/.ssh",
       "-v",
-      "/c/Users/user/hangar_workspace:/scripts/workspace",
+      "/mnt/c/Users/user/hangar_workspace:/scripts/workspace",
       "-v",
-      "/c/Users/user/AppData/Roaming/configstore:/root/.config/configstore",
+      "/mnt/c/Users/user/AppData/Roaming/configstore:/root/.config/configstore",
       "-v",
-      "/c/Users/user/.gitconfig:/root/.gitconfig",
+      "/mnt/c/Users/user/.gitconfig:/root/.gitconfig",
     ];
 
     expect(controller.getVolumeMappings(), expectedMappings);
