@@ -104,6 +104,17 @@ class TakeOffFacade {
         infoStream: infoStream);
   }
 
+  /// Creates Wayat in Google Cloud
+  Future<bool> quickstartWayat(
+      {required String billingAccount,
+      required String googleCloudRegion,
+      StreamController<String>? infoStream}) async {
+    return await _googleController.wayatQuickstart(
+        billingAccount: billingAccount,
+        googleCloudRegion: googleCloudRegion,
+        infoStream: infoStream);
+  }
+
   Future<bool> cleanProject(
       CloudProviderId cloudProvider, String projectId) async {
     switch (cloudProvider) {

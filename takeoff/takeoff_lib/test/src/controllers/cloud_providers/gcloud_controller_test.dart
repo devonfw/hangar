@@ -41,7 +41,8 @@ void main() {
     }
     directory.createSync(recursive: true);
 
-    GoogleCloudController googleCloudController = GoogleCloudController();
+    GoogleCloudControllerImpl googleCloudController =
+        GoogleCloudControllerImpl();
     await googleCloudController.cleanProject(projectId);
 
     expect(directory.existsSync(), false);
