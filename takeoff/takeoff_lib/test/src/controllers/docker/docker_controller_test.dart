@@ -11,45 +11,14 @@ import 'docker_controller_factory_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<SystemService>(), MockSpec<FoldersService>()])
 void main() {
-  MockSystemService mockSystemService = MockSystemService();
   MockFoldersService mockFoldersService = MockFoldersService();
 
   setUpAll(() {
     GetIt.I.registerSingleton<FoldersService>(mockFoldersService);
   });
 
-  test("checkDockerInstallation returns false if docker is not installed", () {
-    when(mockSystemService.isDockerInstalled()).thenReturn(false);
-
-    DockerController dockerController =
-        UnixController(systemService: mockSystemService);
-
-    expect(dockerController.checkDockerInstallation(), false);
-  });
-
-  test("checkDockerInstallation returns false if docker is not running", () {
-    when(mockSystemService.isDockerInstalled()).thenReturn(true);
-    when(mockSystemService.isDockerRunning()).thenReturn(false);
-
-    DockerController dockerController =
-        UnixController(systemService: mockSystemService);
-
-    expect(dockerController.checkDockerInstallation(), false);
-  });
-
-  test("checkDockerInstallation returns true if Docker is installed & running",
-      () {
-    when(mockSystemService.isDockerInstalled()).thenReturn(true);
-    when(mockSystemService.isDockerRunning()).thenReturn(true);
-
-    DockerController dockerController =
-        UnixController(systemService: mockSystemService);
-
-    expect(dockerController.checkDockerInstallation(), true);
-  });
-
   test("Docker execute command is built correctly", () {
-    DockerController dockerController = UnixController();
+    DockerController dockerController = UnixController(command: "docker");
     when(mockFoldersService.getHostFolders()).thenReturn(
       {
         "gcloud": "/folder/gcloud",

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:get_it/get_it.dart';
 import 'package:takeoff_lib/src/controllers/auth/auth_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
@@ -20,8 +21,7 @@ class GCloudAuthController implements AuthController<GCloud> {
   Future<bool> authenticate(
     String email,
   ) async {
-    DockerController dockerController =
-        await DockerControllerFactory().create();
+    DockerController dockerController = GetIt.I.get<DockerController>();
 
     List<String> volumeMappings = dockerController.getVolumeMappings();
 
@@ -31,8 +31,9 @@ class GCloudAuthController implements AuthController<GCloud> {
         ["gcloud", "auth", "login", email];
 
     Log.info("Authenticating with Google Cloud");
+    Log.info("Launching ${dockerController.command} + $args");
     Process gCloudProcess =
-        await Process.start("docker", args, runInShell: true);
+        await Process.start(dockerController.command, args, runInShell: true);
 
     bool openedUrl = false;
 
@@ -75,7 +76,8 @@ class GCloudAuthController implements AuthController<GCloud> {
     stdoutHandler.cancel();
 
     if (exitCode != 0) {
-      Log.error("Could not login in Google Cloud");
+      Log.error(
+          "The hangar docker process exited with an exit code of $exitCode");
       return false;
     }
 

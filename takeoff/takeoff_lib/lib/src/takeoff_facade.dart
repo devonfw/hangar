@@ -7,6 +7,7 @@ import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller.da
 import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller_impl.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
+import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
@@ -29,6 +30,14 @@ class TakeOffFacade {
     if (!GetIt.I.isRegistered<PlatformService>()) {
       GetIt.I.registerSingleton<PlatformService>(PlatformService());
       GetIt.I.registerSingleton<FoldersService>(FoldersService());
+      GetIt.I.registerSingleton<DockerType>(DockerType(
+          installation: DockerInstallation.unknown,
+          command: DockerCommand.none));
+
+      if (!await SystemService().checkSystemPrerequisites()) {
+        return false;
+      }
+
       DockerController dockerController =
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
@@ -36,7 +45,7 @@ class TakeOffFacade {
           .registerSingleton<Database>(await DatabaseSingleton().initialize());
     }
 
-    return await SystemService().checkSystemPrerequisites();
+    return true;
   }
 
   /// Returns the currently stored email for each Cloud Provider.

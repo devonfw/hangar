@@ -5,6 +5,7 @@ import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/controllers/docker/specific_controllers/ddesktop_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/specific_controllers/rancher_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/specific_controllers/unix_controller.dart';
+import 'package:takeoff_lib/src/utils/logger/log.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
@@ -23,13 +24,20 @@ class DockerControllerFactory {
 
   /// Returns the appropiate [DockerController] instance.
   Future<DockerController> create() async {
-    switch (await checkDockerInstallationType()) {
+    DockerType dockerType = await checkDockerInstallationType();
+    switch (dockerType.installation) {
       case DockerInstallation.rancherDesktop:
-        return RancherController();
+        Log.info("Rancher desktop with ${dockerType.command.name}");
+        return RancherController(command: dockerType.command.name);
       case DockerInstallation.dockerDesktop:
+        Log.info("Docker desktop with ${dockerType.command.name}");
         return DockerDesktopController();
       case DockerInstallation.unix:
-        return UnixController();
+        Log.info("Unix system with ${dockerType.command.name}");
+        return UnixController(command: dockerType.command.name);
+      case DockerInstallation.unknown:
+        throw UnsupportedError(
+            "TakeOff could not determine the docker installation");
     }
   }
 
@@ -37,15 +45,17 @@ class DockerControllerFactory {
   ///
   /// The argument [systemService] is only for testing purposes
   @visibleForTesting
-  Future<DockerInstallation> checkDockerInstallationType() async {
+  Future<DockerType> checkDockerInstallationType() async {
+    DockerType dockerType = GetIt.I.get<DockerType>();
+
     if (platformService.isUnix) {
-      return DockerInstallation.unix;
+      dockerType.installation = DockerInstallation.unix;
+    } else if (await systemService.isDockerDesktopInstalled()) {
+      dockerType.installation = DockerInstallation.dockerDesktop;
+    } else {
+      dockerType.installation = DockerInstallation.rancherDesktop;
     }
 
-    if (await systemService.isDockerDesktopInstalled()) {
-      return DockerInstallation.dockerDesktop;
-    }
-
-    return DockerInstallation.rancherDesktop;
+    return dockerType;
   }
 }

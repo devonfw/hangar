@@ -9,6 +9,8 @@ import 'package:takeoff_lib/src/utils/system/system_service.dart';
 /// Defines all Docker related operations, such as creating images, launching containers
 /// and checking installation requirements.
 abstract class DockerController {
+  final String command;
+
   /// Reference to the FolderService singleton.
   ///
   /// Is instanced in the main DockerController file because it's used
@@ -18,7 +20,7 @@ abstract class DockerController {
   /// Service to make system calls
   final SystemService systemService;
 
-  DockerController({SystemService? systemService})
+  DockerController({required this.command, SystemService? systemService})
       : systemService = systemService ?? SystemService();
 
   static String imageName = "hangar";
@@ -36,7 +38,7 @@ abstract class DockerController {
       List<String> dockerArgs, List<String> commands) async {
     List<String> args = buildCommands(dockerArgs, commands);
 
-    Process dockerProc = await Process.start("docker", args);
+    Process dockerProc = await Process.start(command, args);
     stdout.addStream(dockerProc.stdout);
     stderr.addStream(dockerProc.stderr);
 
@@ -75,20 +77,4 @@ abstract class DockerController {
   ///
   /// `["-v", "hostFolder:containerFolder", "-v", "hostFolder2:ContainerFolder2"]`
   List<String> getVolumeMappings();
-
-  /// Whether Docker is installed and running.
-  ///
-  /// Both of this conditions are prerequisites for TakeOff to run.
-  bool checkDockerInstallation() {
-    if (!systemService.isDockerInstalled()) {
-      Log.error("Docker is not installed");
-      return false;
-    }
-    if (!systemService.isDockerRunning()) {
-      Log.error("Docker is not running");
-      return false;
-    }
-
-    return true;
-  }
 }

@@ -22,7 +22,7 @@ void main() {
   });
 
   test("Volume mappings are correct", () {
-    RancherController controller = RancherController();
+    RancherController controller = RancherController(command: "docker");
     List<String> expectedMappings = [
       "-v",
       "/mnt/c/Users/user/AppData/Roaming/gcloud:/root/.config/gcloud",
