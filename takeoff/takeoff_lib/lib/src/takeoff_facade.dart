@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller_impl.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
+import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
@@ -16,7 +18,7 @@ import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
 class TakeOffFacade {
-  final GoogleCloudController _googleController = GoogleCloudController();
+  final GoogleCloudController _googleController = GoogleCloudControllerImpl();
 
   /// Initializes all the singletons neeeded for the app to run and checks prerequisites.
   ///
@@ -28,6 +30,14 @@ class TakeOffFacade {
     if (!GetIt.I.isRegistered<PlatformService>()) {
       GetIt.I.registerSingleton<PlatformService>(PlatformService());
       GetIt.I.registerSingleton<FoldersService>(FoldersService());
+      GetIt.I.registerSingleton<DockerType>(DockerType(
+          installation: DockerInstallation.unknown,
+          command: DockerCommand.none));
+
+      if (!await SystemService().checkSystemPrerequisites()) {
+        return false;
+      }
+
       DockerController dockerController =
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
@@ -35,7 +45,7 @@ class TakeOffFacade {
           .registerSingleton<Database>(await DatabaseSingleton().initialize());
     }
 
-    return await SystemService().checkSystemPrerequisites();
+    return true;
   }
 
   /// Returns the currently stored email for each Cloud Provider.
@@ -103,11 +113,22 @@ class TakeOffFacade {
         infoStream: infoStream);
   }
 
+  /// Creates Wayat in Google Cloud
+  Future<bool> quickstartWayat(
+      {required String billingAccount,
+      required String googleCloudRegion,
+      StreamController<String>? infoStream}) async {
+    return await _googleController.wayatQuickstart(
+        billingAccount: billingAccount,
+        googleCloudRegion: googleCloudRegion,
+        infoStream: infoStream);
+  }
+
   Future<bool> cleanProject(
       CloudProviderId cloudProvider, String projectId) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await GoogleCloudController().cleanProject(projectId);
+        return await _googleController.cleanProject(projectId);
       case CloudProviderId.aws:
         return false;
       case CloudProviderId.azure:

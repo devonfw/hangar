@@ -24,6 +24,9 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<FoldersService>(mockFoldersService);
+    GetIt.I.registerSingleton<DockerType>(DockerType(
+        installation: DockerInstallation.unknown,
+        command: DockerCommand.docker));
   });
 
   group("DockerController factory with Unix tests", () {
@@ -36,8 +39,8 @@ void main() {
 
     test("checkDockerInstallationType is correct", () async {
       DockerControllerFactory factory = DockerControllerFactory();
-      expect(
-          await factory.checkDockerInstallationType(), DockerInstallation.unix);
+      expect((await factory.checkDockerInstallationType()).installation,
+          DockerInstallation.unix);
     });
 
     test("create is correct", () async {
@@ -64,7 +67,7 @@ void main() {
     test("checkDockerInstallationType is correct", () async {
       DockerControllerFactory factory =
           DockerControllerFactory(systemService: mockSystemService);
-      expect(await factory.checkDockerInstallationType(),
+      expect((await factory.checkDockerInstallationType()).installation,
           DockerInstallation.rancherDesktop);
     });
 
@@ -93,7 +96,7 @@ void main() {
     test("checkDockerInstallationType is correct", () async {
       DockerControllerFactory factory =
           DockerControllerFactory(systemService: mockSystemService);
-      expect(await factory.checkDockerInstallationType(),
+      expect((await factory.checkDockerInstallationType()).installation,
           DockerInstallation.dockerDesktop);
     });
 

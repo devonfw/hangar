@@ -5,8 +5,8 @@ import 'package:takeoff_lib/src/utils/system/system_service.dart';
 /// [DockerController] implementation for Unix systems, that do not need
 /// Rancher Desktop nor Docker Desktop.
 class UnixController extends DockerController {
-  UnixController({SystemService? systemService})
-      : super(systemService: systemService);
+  UnixController({required String command, SystemService? systemService})
+      : super(command: command, systemService: systemService);
 
   @override
   List<String> getVolumeMappings() {

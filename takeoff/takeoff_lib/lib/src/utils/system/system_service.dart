@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
-import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
+import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
+import 'package:takeoff_lib/src/utils/logger/log.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 
 class SystemService {
@@ -12,12 +13,35 @@ class SystemService {
   ///
   /// These are that there is a valid Docker installation and the cache folders are created.
   Future<bool> checkSystemPrerequisites() async {
-    if (!GetIt.I.get<DockerController>().checkDockerInstallation()) {
+    DockerCommand command = checkDockerCommand();
+    switch (command) {
+      case DockerCommand.none:
+        Log.error("Neither docker nor nerdctl are running");
+        return false;
+      default:
+        GetIt.I.get<DockerType>().command = command;
+        break;
+    }
+    if (!foldersService.createHostFolders()) {
+      Log.error("Could not create host folders");
       return false;
     }
-    if (!foldersService.createHostFolders()) return false;
 
     return true;
+  }
+
+  /// Whether Docker is installed and running.
+  ///
+  /// Both of this conditions are prerequisites for TakeOff to run.
+  DockerCommand checkDockerCommand() {
+    if (isNerdctlRunning()) {
+      return DockerCommand.nerdctl;
+    }
+    if (isDockerRunning()) {
+      return DockerCommand.docker;
+    }
+
+    return DockerCommand.none;
   }
 
   /// Whether Docker Desktop is installed
@@ -33,18 +57,21 @@ class SystemService {
 
   /// Whether the Docker daemon is running
   bool isDockerRunning() {
-    ProcessResult dockerProc = Process.runSync("docker", ["ps"]);
-    return dockerProc.exitCode == 0;
-  }
-
-  /// Whether Docker is installed.
-  bool isDockerInstalled() {
-    late ProcessResult dockerProc;
     try {
-      dockerProc = Process.runSync("docker", ["-v"]);
+      ProcessResult dockerProc = Process.runSync("docker", ["ps"]);
+      return dockerProc.exitCode == 0;
     } on ProcessException {
       return false;
     }
-    return dockerProc.exitCode == 0;
+  }
+
+  /// Whether the Docker daemon is running
+  bool isNerdctlRunning() {
+    try {
+      ProcessResult dockerProc = Process.runSync("nerdctl", ["ps"]);
+      return dockerProc.exitCode == 0;
+    } on ProcessException {
+      return false;
+    }
   }
 }
