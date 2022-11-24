@@ -17,6 +17,35 @@ The scope of this section is to deploy {container_instance_type} running SonarQu
 
 == Usage
 
+=== Easy usage
+
+To make it easier to use for users who do not know terraform, or for those who need only one command to be executed, we have prepared a script that executes all the steps automatically.
+
+```
+./sonarqube.sh [command] --state-folder "path_to_save_state" [options]
+```
+
+The commands can be:
+```
+    COMMAND       DESCRIPTION
+    apply         Create or update infrastructure
+    destroy       Destroy previously-created infrastructure
+    output        Show output values from your terraform. With output command only one option is readed `--output-key`, all other options are ignored.
+                    If you want to show the output as json, add an option `--output-key --json`.
+                    If you want to recover only one output value add an option `--output-key $key` where $key is the name of the output var.
+```
+
+The options for `apply` and `destroy` commands can be the next:
+
+[subs=attributes+]
+```
+{terraform_vars}
+```
+
+WARNING:  *Remember to securely store all the content inside the state-folder*, otherwise you will not be able to perform any changes, including detroying them, from Terraform.
+
+=== Expert usage
+
 First, you need to initialize the working directory containing Terraform configuration files (located at `/scripts/sonarqube/{provider_path}`) and install any required plugins:
 
 ```
@@ -48,7 +77,7 @@ In particular, this will create an Ubuntu-based in {container_instance_type} and
 
 You will get the public url of {container_instance_type} and an admin token to connect with sonar as output. Take note of it, you will need it later on.
 
-=== Manage terraform output
+==== Manage terraform output
 
 You can recover all the outputs from terraform after having used apply command using the next command:
 
@@ -64,20 +93,7 @@ terraform output $outputKeyName
 
 NOTE:  Remember that command needs `terraform.tfstate` file to work.
 
-=== Change Sonarqube default admin password
-
-After a few minutes, you will be able to access SonarQube web interface on the url provided by terraform output and the following credentials:
-
-* Username:   `admin`
-* Password:   `admin`
-
-IMPORTANT: Change the default password promptly. After that, update the password in terraform vars with the next command:
-
-```
-./set-terraform-variables.sh --sonarqube_password ${YOUR_NEW_PASSWORD}
-```
-
-== Appendix: Destroy SonarQube instance
+==== Destroy SonarQube instance
 
 As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can easily destroy it and all associated resources by executing:
 
@@ -85,13 +101,30 @@ As long as you keep the `terraform.tfstate` file generated when creating the Son
 terraform destroy
 ```
 
-== Appendix: Modify SonarQube instance infrastructure
+==== Modify SonarQube instance infrastructure
 
 As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can apply changes to the infrastructure deployed.
 
 If you are going to apply a change in the infrastructure, you will have to modify the terraform files and reapply the changes with the command `terraform apply`.
 
-IMPORTANT: In windows, keep in mind that after applying any changes, you will lose the value of the token, so be sure to copy or write it down before applying any changes.
+IMPORTANT: In windows, keep in mind that after applying any changes, you will lose the value of the token so be sure to copy or write it down before applying any changes. To avoid this we have implemented a method but to work you must store the standard terraform output in a file called terraform.tfoutput. This can be done with the following command:
+
+```
+terraform output > terraform.tfoutput
+```
+
+== Change Sonarqube default admin password
+
+After having deployed sonarqube by following this guide, you will be able to access SonarQube web interface on the url provided by terraform output and the following credentials:
+
+* Username:   `admin`
+* Password:   `admin`
+
+IMPORTANT: Change the default password promptly. After that, update the password in terraform vars, you can do it manually or with the next command:
+
+```
+./set-terraform-variables.sh --sonarqube_password ${YOUR_NEW_PASSWORD}
+```
 
 == Appendix: More information about terraform for {provider_name}
 * {terraform_tutorials}[Official Terraform tutorials]
