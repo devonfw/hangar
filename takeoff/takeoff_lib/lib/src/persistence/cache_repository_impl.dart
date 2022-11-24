@@ -47,7 +47,8 @@ class CacheRepositoryImpl extends CacheRepository {
 
     // Because ids is an immutable list of dynamic type, we have to transform
     // each element to String and create a new list that is not read only.
-    List<String> newList = ids.map((e) => e.toString()).toList();
+    // We first convert it to set to avoid duplicate project IDs
+    List<String> newList = ids.map((e) => e.toString()).toSet().toList();
     newList.add(projectId);
 
     await store.record("${email}_$_googleProjectIdsKey").put(db, newList);
