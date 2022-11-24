@@ -288,7 +288,7 @@ createPlatformApps() {
         command=$base_sdkconfig_command" --out ${outputPath}/webconfig.json WEB"
         if ! eval "$command"; then
             echo -e "${red}Error while exporting SDK WEB Config." >&2
-            echo -ne "${white}"
+            echo -ne "${white}" >&2
             exit 255
         fi
     fi
