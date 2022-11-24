@@ -37,7 +37,7 @@ function help_secret {
   echo ""
   echo "  -d, --local-directory       [Required] Local directory of your project."
   echo "  -f, --local-file-path       [Required] Local path of the file you want to upload."
-  echo "  -p, --remote-file-path      [Required] Path where the secret will be dowloaded inside the pipeline (with the file name)."
+  echo "  -r, --remote-file-path      [Required] Path where the secret will be dowloaded inside the pipeline (with the file name)."
   echo "  -b, --target-branch         [Required] Name of the branch to which the merge will target."
   echo "  -n, --secret-name                      Name of the secret as it will appear in the secret manager. if not set, we use the name of the file given with '-f'. NOTE: the name has to be compliant with the regex [a-zA-Z0-9_]."
 
@@ -115,6 +115,7 @@ function addSecretFiles {
   # Commiting the conf file
   echo -e "${green}Commiting and pushing into Git remote...${white}"
   git add -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
+  find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
   git commit -m "[skip ci] Adding secret conf file"
   git push -u origin "$sourceBranch"
   echo ""
