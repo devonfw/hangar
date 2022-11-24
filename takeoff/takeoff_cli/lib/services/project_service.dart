@@ -53,6 +53,17 @@ class ProjectsService {
     }
   }
 
+  Future<void> quickstartWayat(
+      {required String billingAccount,
+      required String googleCloudRegion}) async {
+    try {
+      await _takeOffFacade.quickstartWayat(
+          billingAccount: billingAccount, googleCloudRegion: googleCloudRegion);
+    } on CreateProjectException catch (e) {
+      Log.error(e.message);
+    }
+  }
+
   Future<void> cleanProject(
       CloudProviderId cloudProviderId, String projectId) async {
     CloudProvider provider = CloudProvider.fromId(cloudProviderId);
