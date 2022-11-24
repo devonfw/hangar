@@ -1,4 +1,0 @@
-resourcemanager.projects.create
-source.repos.list
-source.repos.create
-source.repos.get

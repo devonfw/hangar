@@ -1,9 +1,0 @@
-:provider: Google Cloud
-:pipeline_type: pipeline
-:trigger_sentence: This pipeline will be configured to be triggered every time there is a commit to the Cloud Source Repository
-:pipeline_type2: pipeline
-:path_provider: gcloud
-:no-PR-or-MR:
-:machineType:
-:openBrowserFlag:
-include::../common_templates/setup-build-pipeline.asciidoc[]

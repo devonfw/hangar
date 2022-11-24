@@ -1,4 +1,0 @@
-roles/viewer
-roles/source.admin
-roles/secretmanager.admin
-roles/cloudbuild.builds.editor

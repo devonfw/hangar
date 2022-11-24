@@ -1,6 +1,0 @@
-title: My Custom Role
-description: "Become Source Repository Reader"
-stage: GA
-includedPermissions:
-- source.repos.get
-- source.repos.list
