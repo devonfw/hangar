@@ -56,7 +56,7 @@ checkMandatoryArguments() {
     fi
     if ! test -d "$outputPath"; then
         echo -e "${red}Error: Wrong output path." >&2
-        echo -ne "${white}"
+        echo -ne "${white}" >&2
         exit 2
     fi
     currentPath="$(pwd)"
