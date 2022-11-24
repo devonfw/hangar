@@ -271,7 +271,7 @@ createPlatformApps() {
         command=$base_sdkconfig_command" --out ${outputPath}/GoogleService-Info.plist IOS"
         if ! eval "$command"; then
             echo -e "${red}Error while exporting SDK IOS Config." >&2
-            echo -ne "${white}"
+            echo -ne "${white}" >&2
             exit 253
         fi
     fi
