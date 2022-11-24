@@ -1,0 +1,41 @@
+steps:
+- name: gcr.io/cloud-builders/gsutil
+  entrypoint: bash
+  args:
+  - -c
+  - |
+    #Install terraform
+    apt-get update
+    apt-get install -y gnupg software-properties-common wget dnsutils
+    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
+    apt-get update
+    apt-get install terraform
+
+    #Terraform init
+    cd .terraform/gce/
+    terraform init -input=false
+
+    if [ "${_OPERATION}" == "create" ]; then
+      #Create cluster
+      terraform apply -input=false -auto-approve
+      gcloud components install kubectl
+      gcloud container clusters get-credentials $(terraform output -raw kubernetes_cluster_name) --region $(terraform output -raw region) --project=${PROJECT_ID}
+      ../../.pipelines/scripts/setup-helm.sh
+      ../../.pipelines/scripts/install-nginx-ingress.sh
+      #Get hostname
+      clusterip="$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+      clusterhostname=$(nslookup "${clusterip}" | awk '/name = / {print $4}' | sed 's/.$//')
+      if [ "${_INSTALL_RANCHER}" == "true" ]; then
+        ../../.pipelines/scripts/install-rancher.sh ${clusterhostname}
+      fi
+      #Create cluster_info.env and upload to bucket (needed for deploy pipeline)
+      touch cluster_info.env
+      echo "export CLUSTER_NAME=${PROJECT_ID}-gke" >> cluster_info.env
+      echo "export DNS_NAME=${clusterhostname}" >> cluster_info.env
+      echo "export CLUSTER_REGION=$(terraform output -raw region)" >> cluster_info.env
+      gsutil cp cluster_info.env gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/cluster_info.env
+    else
+      terraform apply -destroy -auto-approve
+    fi
