@@ -49,6 +49,11 @@ pipeline_generator.sh \
   [--aws-secret-access-key <aws secret access key>] \
   [--aws-region <aws region>] \
   [-b <branch>] \
+  -m <machine type for {pipeline_type} runner> \
+  --language-version <version> \
+  --registry-location <registry location> \
+  --flutter-platform <web, android> \
+  --flutter-web-renderer <auto (default), canvaskit, html> \
 ```
 
 NOTE: The config file for the package {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/package/package-pipeline.cfg`.
@@ -71,10 +76,10 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
-languageVersion[-m, --language-version                        [Required, if Flutter or Python] Language or framework version.]
-registryLocation[-m, --registry-location                        [Required, if Flutter] Artifact registry location.]
-flutterPlatform[-m, --flutter-platform                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
-flutterWebRenderer[-m, --flutter-web-renderer                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
+--language-version                        [Required, if Flutter or Python] Language or framework version.]
+--registry-location                        [Required, if Flutter] Artifact registry location.]
+--flutter-platform                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
+--flutter-web-renderer                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
 ```
 
 === Examples
