@@ -66,10 +66,10 @@ ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} 
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
 ifdef::machineType[-m, --machine-type                        Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
-ifdef:languageVersion[-m, --machine-type                        [Required, if Flutter or Python] Language or framework version.]
-ifdef:registryLocation[-m, --machine-type                        [Required, if Flutter] Artifact registry location.]
-ifdef:flutterPlatform[-m, --machine-type                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
-ifdef:flutterWebRenderer[-m, --machine-type                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
+ifdef:languageVersion[-m, --language-version                        [Required, if Flutter or Python] Language or framework version.]
+ifdef:registryLocation[-m, --registry-location                        [Required, if Flutter] Artifact registry location.]
+ifdef:flutterPlatform[-m, --flutter-platform                        [Required, if Flutter] Target platform to compile. Accepted values: android, web.]
+ifdef:flutterWebRenderer[-m, --flutter-web-renderer                        Flutter web renderer. Accepted values: auto (default), canvaskit, html.]
 ```
 
 === Examples
