@@ -23,13 +23,6 @@ mixin _$CreateController on _CreateController, Store {
       (_$formIsValidComputed ??= Computed<bool>(() => super.formIsValid,
               name: '_CreateController.formIsValid'))
           .value;
-  Computed<bool>? _$hasFinishedComputed;
-
-  @override
-  bool get hasFinished =>
-      (_$hasFinishedComputed ??= Computed<bool>(() => super.hasFinished,
-              name: '_CreateController.hasFinished'))
-          .value;
 
   late final _$cloudProviderAtom =
       Atom(name: '_CreateController.cloudProvider', context: context);
@@ -63,22 +56,6 @@ mixin _$CreateController on _CreateController, Store {
     });
   }
 
-  late final _$createStepsAtom =
-      Atom(name: '_CreateController.createSteps', context: context);
-
-  @override
-  ObservableList<CreateMessage> get createSteps {
-    _$createStepsAtom.reportRead();
-    return super.createSteps;
-  }
-
-  @override
-  set createSteps(ObservableList<CreateMessage> value) {
-    _$createStepsAtom.reportWrite(value, super.createSteps, () {
-      super.createSteps = value;
-    });
-  }
-
   late final _$projectNameAtom =
       Atom(name: '_CreateController.projectName', context: context);
 
@@ -92,22 +69,6 @@ mixin _$CreateController on _CreateController, Store {
   set projectName(String value) {
     _$projectNameAtom.reportWrite(value, super.projectName, () {
       super.projectName = value;
-    });
-  }
-
-  late final _$projectUrlAtom =
-      Atom(name: '_CreateController.projectUrl', context: context);
-
-  @override
-  String get projectUrl {
-    _$projectUrlAtom.reportRead();
-    return super.projectUrl;
-  }
-
-  @override
-  set projectUrl(String value) {
-    _$projectUrlAtom.reportWrite(value, super.projectUrl, () {
-      super.projectUrl = value;
     });
   }
 
@@ -275,9 +236,7 @@ mixin _$CreateController on _CreateController, Store {
     return '''
 cloudProvider: ${cloudProvider},
 repoProvider: ${repoProvider},
-createSteps: ${createSteps},
 projectName: ${projectName},
-projectUrl: ${projectUrl},
 region: ${region},
 billingAccount: ${billingAccount},
 frontendLanguage: ${frontendLanguage},
@@ -286,8 +245,7 @@ backendLanguage: ${backendLanguage},
 backendVersion: ${backendVersion},
 googleCloudRegion: ${googleCloudRegion},
 providersCICD: ${providersCICD},
-formIsValid: ${formIsValid},
-hasFinished: ${hasFinished}
+formIsValid: ${formIsValid}
     ''';
   }
 }

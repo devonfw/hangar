@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
+import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
+import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CreateStepsDialog extends StatelessWidget {
-  final CreateController controller = GetIt.I.get<CreateController>();
-  CreateStepsDialog({super.key});
+class MonitorDialog extends StatelessWidget {
+  final MonitorController controller = GetIt.I.get<MonitorController>();
+  MonitorDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +42,12 @@ class CreateStepsDialog extends StatelessWidget {
                     builder: (_) => Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListView.builder(
-                        itemCount: controller.createSteps.length,
+                        itemCount: controller.steps.length,
                         itemBuilder: ((context, index) => Text(
-                              controller.createSteps[index].message,
+                              controller.steps[index].message,
                               style: TextStyle(
                                   color: controller
-                                      .createSteps[index].typeMessage.color),
+                                      .steps[index].typeMessage.color),
                             )),
                       ),
                     ),
@@ -60,17 +61,18 @@ class CreateStepsDialog extends StatelessWidget {
       actions: [
         Observer(builder: (_) {
           if (controller.hasFinished) {
-            return ElevatedButton(
+            return CustomButton(
                 onPressed: () {
                   if (controller.isSuccess) {
                     launchUrl(Uri.parse(controller.projectUrl));
                     controller.projectUrl = "";
                     GetIt.I.get<ProjectsController>().updateInitAccounts();
                   }
-                  controller.resetForm();
+                  controller.resetChannel();
                   Navigator.of(context).pop();
                 },
-                child: Text(controller.isSuccess ? "Open project" : "Close"));
+                icon: Icons.browser_updated_outlined,
+                text: controller.isSuccess ? "Open project" : "Close");
           }
           return Container();
         })

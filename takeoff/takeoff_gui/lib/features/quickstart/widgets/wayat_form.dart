@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:takeoff_gui/common/monitor/pages/monitor_dialog.dart';
+import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
-import 'package:takeoff_lib/takeoff_lib.dart';
 
 class WayatForm extends StatelessWidget {
   final QuickstartController controller = GetIt.I.get<QuickstartController>();
-  final TakeOffFacade facade = GetIt.I.get<TakeOffFacade>();
+
   WayatForm({super.key});
 
   @override
@@ -49,10 +50,20 @@ class WayatForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Observer(
-              builder: (_) => ElevatedButton(
-                  onPressed:
-                      controller.isValidForm ? () => print("Click") : null,
-                  child: Text("Create")),
+              builder: (_) => CustomButton(
+                  onPressed: controller.isValidForm
+                      ? () {
+                          Navigator.of(context).pop();
+                          controller.createWayat();
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) => MonitorDialog(),
+                          );
+                        }
+                      : null,
+                  icon: Icons.add_box_outlined,
+                  text: "Create"),
             )
           ],
         )

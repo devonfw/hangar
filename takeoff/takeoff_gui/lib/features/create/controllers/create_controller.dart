@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
 import 'package:takeoff_gui/features/create/utils/cloud_providers_comb.dart';
-import 'package:takeoff_gui/features/create/utils/create_message.dart';
 import 'package:takeoff_gui/features/create/utils/languages_versions.dart';
 import 'package:takeoff_gui/features/create/utils/provider_ci_cd.dart';
-import 'package:takeoff_gui/features/create/utils/type_message.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 part 'create_controller.g.dart';
@@ -17,7 +14,7 @@ class CreateController = _CreateController with _$CreateController;
 abstract class _CreateController with Store {
   final TakeOffFacade facade = GetIt.I.get<TakeOffFacade>();
 
-  StreamController<String> channel = StreamController();
+  final MonitorController monitorController = GetIt.I.get<MonitorController>();
 
   @observable
   CloudProviderId cloudProvider = CloudProviderId.gcloud;
@@ -26,13 +23,7 @@ abstract class _CreateController with Store {
   ProviderCICD repoProvider = ProviderCICD.gcloud;
 
   @observable
-  ObservableList<CreateMessage> createSteps = ObservableList.of([]);
-
-  @observable
   String projectName = "";
-
-  @observable
-  String projectUrl = "";
 
   @observable
   String region = "";
@@ -71,43 +62,17 @@ abstract class _CreateController with Store {
   bool get formIsValid =>
       projectName.isNotEmpty && billingAccount.isNotEmpty && region.isNotEmpty;
 
-  @computed
-  bool get hasFinished {
-    List<TypeMessage> messages =
-        createSteps.map((element) => element.typeMessage).toList();
-    return messages.contains(TypeMessage.error) ||
-        messages.contains(TypeMessage.success);
-  }
-
-  bool get isSuccess {
-    List<TypeMessage> messages =
-        createSteps.map((element) => element.typeMessage).toList();
-    return messages.contains(TypeMessage.success);
-  }
-
   void createProject() async {
-    channel.stream.listen((event) {
-      if (event.contains("http")) {
-        projectUrl = event;
-        createSteps.add(
-            CreateMessage(TypeMessage.success, "Project created succesfully"));
-      } else {
-        createSteps.add(CreateMessage(TypeMessage.info, event));
-      }
-    });
-    try {
-      await facade.createProjectGCloud(
-          projectName: projectName,
-          billingAccount: billingAccount,
-          backendLanguage: backendLanguage,
-          backendVersion: backendVersion,
-          frontendLanguage: frontendLanguage,
-          frontendVersion: frontendVersion,
-          googleCloudRegion: region,
-          infoStream: channel);
-    } catch (e) {
-      createSteps.add(CreateMessage(TypeMessage.error, e.toString()));
-    }
+    monitorController.monitorProcess(() async =>
+        await facade.createProjectGCloud(
+            projectName: projectName,
+            billingAccount: billingAccount,
+            backendLanguage: backendLanguage,
+            backendVersion: backendVersion,
+            frontendLanguage: frontendLanguage,
+            frontendVersion: frontendVersion,
+            googleCloudRegion: region,
+            infoStream: monitorController.channel));
   }
 
   @action
@@ -135,12 +100,6 @@ abstract class _CreateController with Store {
     backendLanguage = LanguagesVersions.backendLanguages[0];
     backendVersion = LanguagesVersions
         .versionsLanguages[LanguagesVersions.backendLanguages[0]]![0];
-    createSteps = ObservableList.of([]);
-    resetChannel();
-  }
-
-  void resetChannel() {
-    channel.close();
-    channel = StreamController();
+    monitorController.resetChannel();
   }
 }

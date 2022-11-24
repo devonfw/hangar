@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:takeoff_gui/features/home/widgets/custom_floating_button.dart';
+import 'package:takeoff_gui/common/custom_button.dart';
 
 // @GenerateMocks([ClassToMock])
 void main() async {
@@ -22,13 +22,13 @@ void main() async {
     IconData icon = Icons.access_alarm;
     bool testVar = false;
     await tester.pumpWidget(createApp(
-      CustomFloatingButton(
+      CustomButton(
         text: buttonText,
         icon: icon,
         onPressed: () => testVar = true,
       ),
     ));
-    await tester.tap(find.byType(CustomFloatingButton));
+    await tester.tap(find.byType(CustomButton));
     await tester.pumpAndSettle();
 
     expect(find.text(buttonText), findsOneWidget);

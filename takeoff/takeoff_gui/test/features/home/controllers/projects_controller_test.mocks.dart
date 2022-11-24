@@ -107,6 +107,25 @@ class MockTakeOffFacade extends _i1.Mock implements _i2.TakeOffFacade {
         returnValueForMissingStub: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
   @override
+  _i3.Future<bool> quickstartWayat({
+    required String? billingAccount,
+    required String? googleCloudRegion,
+    _i3.StreamController<String>? infoStream,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #quickstartWayat,
+          [],
+          {
+            #billingAccount: billingAccount,
+            #googleCloudRegion: googleCloudRegion,
+            #infoStream: infoStream,
+          },
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+        returnValueForMissingStub: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+  @override
   _i3.Future<bool> cleanProject(
     _i4.CloudProviderId? cloudProvider,
     String? projectId,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/common/custom_scroll_behaviour.dart';
+import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/common/error_loading_page.dart';
 import 'package:takeoff_gui/common/loading_page.dart';
@@ -50,6 +51,7 @@ Future<void> registerSingletons() async {
   TakeOffFacade facade = TakeOffFacade();
   GetIt.I.registerSingleton<TakeOffFacade>(facade);
   GetIt.I.registerSingleton<ProjectsController>(ProjectsController());
+  GetIt.I.registerLazySingleton<MonitorController>(() => MonitorController());
   GetIt.I.registerLazySingleton<CreateController>(() => CreateController());
   GetIt.I.registerLazySingleton<QuickstartController>(
       () => QuickstartController());

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CustomFloatingButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final String text;
   final IconData icon;
   final Function? onPressed;
   final Color? color;
-  const CustomFloatingButton({
+  const CustomButton({
     Key? key,
     required this.text,
     required this.icon,

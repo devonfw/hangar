@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
-import 'package:takeoff_gui/features/create/pages/crete_steps_dialog.dart';
+import 'package:takeoff_gui/common/monitor/pages/monitor_dialog.dart';
 import 'package:takeoff_gui/features/create/utils/provider_ci_cd.dart';
 import 'package:takeoff_gui/features/create/widgets/widgets.dart';
-import 'package:takeoff_gui/features/home/widgets/custom_floating_button.dart';
+import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class CreateDialog extends StatelessWidget {
@@ -39,7 +39,7 @@ class CreateDialog extends StatelessWidget {
       )),
       actions: [
         Observer(
-          builder: (_) => CustomFloatingButton(
+          builder: (_) => CustomButton(
             text: "Create",
             icon: Icons.add,
             onPressed: !controller.formIsValid ||
@@ -52,12 +52,12 @@ class CreateDialog extends StatelessWidget {
                     showDialog(
                       context: context,
                       barrierDismissible: false,
-                      builder: (BuildContext context) => CreateStepsDialog(),
+                      builder: (BuildContext context) => MonitorDialog(),
                     );
                   },
           ),
         ),
-        CustomFloatingButton(
+        CustomButton(
           text: "Close",
           icon: Icons.close,
           color: Colors.red,
