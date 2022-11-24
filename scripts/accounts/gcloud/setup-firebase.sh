@@ -76,7 +76,7 @@ ckeckCliInstalled() {
     # Check if Firebase CLI is installed
     if ! [ -x "$(command -v firebase)" ]; then
         echo -e "${red}Error: Firebase CLI is not installed." >&2
-        echo -ne "${white}"
+        echo -ne "${white}" >&2
         exit 127
     fi
 }
