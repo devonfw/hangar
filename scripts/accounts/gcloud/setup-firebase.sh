@@ -254,7 +254,7 @@ createPlatformApps() {
         command=$base_sdkconfig_command" --out ${outputPath}/google-services.json ANDROID"
         if ! eval "$command"; then
             echo -e "${red}Error while exporting SDK Android Config." >&2
-            echo -ne "${white}"
+            echo -ne "${white}" >&2
             exit 251
         fi
     fi
