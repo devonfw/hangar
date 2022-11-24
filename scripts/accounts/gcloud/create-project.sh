@@ -122,6 +122,6 @@ fi
 echo "Enabling IAM Control..."
 if ! gcloud services enable iam.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable IAM Control API" >&2
-   echo -ne "${white}"
+   echo -ne "${white}" >&2
    exit 226
 fi
