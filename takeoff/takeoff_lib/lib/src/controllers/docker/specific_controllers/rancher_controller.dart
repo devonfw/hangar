@@ -10,9 +10,10 @@ class RancherController extends DockerController {
   @override
   List<String> getVolumeMappings() {
     Map<String, String> hostFolders = foldersService.getHostFolders();
+    String preprend = (command == "docker") ? "/mnt/c" : "";
 
     hostFolders = hostFolders.map((name, path) =>
-        MapEntry(name, "/mnt/c${path.replaceAll("\\", "/").substring(2)}"));
+        MapEntry(name, "$preprend${path.replaceAll("\\", "/").substring(2)}"));
 
     Map<String, String> containerFolders = FoldersService.containerFolders;
 
