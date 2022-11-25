@@ -38,14 +38,17 @@ pipeline_generator.sh \
   -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-  --language-version <version> \
   [-a <artifact source path>] \
   [-b <branch>] \
   [-w]
-```
+  [-m <machine type for {pipeline_type} runner>]
+endif::[]```
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
 
+ifeval::["{provider}" == "Azure Devops"]
+NOTE: If the test pipeline failed, check the logs for the failed test case(s) summary. In _More actions_ (three dots button) you can download complete logs which include additional diagnostic information. Also, you can retrieve the "additional pipeline output" artifact containing the application logs stored in the path specified in `-a` flag (if applicable).
+endif::[]
 
 === Flags
 [subs=attributes+]
@@ -54,10 +57,16 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 -n, --pipeline-name         [Required] Name that will be set to the {pipeline_type}.
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
--a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
+ifdef::build-pipeline[    --build-pipeline-name   [Required] Build {pipeline_type} name.]
+ifeval::["{provider}" == "Google Cloud"]
     --language-version      [Required, if Flutter or Python] Language or framework version.
+endif::[]
+-a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+ifndef::no-PR-or-MR[-w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
+ifeval::["{provider}" == "Google Cloud"]
+-m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
+endif::[]
 ```
 
 === Examples
@@ -91,6 +100,7 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop {openBrowserFlag}
 ```
+ifeval::["{provider}" == "Google Cloud"]
 
 ==== Python project
 
@@ -105,3 +115,4 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n flutter-project-test -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
 ```
+endif::[]
