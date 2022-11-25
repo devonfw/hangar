@@ -15,10 +15,10 @@
 --keypair_name         Keypair name to connect with ssh as defined in AWS. By default: sonarqube
 
 = Setting up a SonarQube instance in {provider_name}
-
-The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
-
 :toc:
+
+== Introduction
+The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
 
 == Getting Started
 === Prerequisites
