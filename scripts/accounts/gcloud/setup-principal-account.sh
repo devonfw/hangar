@@ -9,7 +9,7 @@ helpFunction()
     echo ""
     echo "Arguments:"
     echo "  -g     [Required] Google Account of an end user. Mutually exclusive with -s."
-    echo "  -s     [Required] Service Account email. Mutually exclusive with -g."
+    echo "  -s     [Required] Service Account name or email. Mutually exclusive with -g."
     echo "  -p     [Required] Short project name (ID) to which the principal will be enrolled."
     echo "  -r                Roles (basic or predefined) to be attached to the principal in the project, splitted by comma."
     echo "  -f                Path to a file containing the roles (basic or predefined) to be attached to the principal in the project."
@@ -23,14 +23,14 @@ while getopts g:s:p:r:f:c:i:k:h flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
-	s) service_account=${OPTARG};;
+	    s) service_account=${OPTARG};;
         p) project_id=${OPTARG};;
         r) roles=${OPTARG};;
         f) roles_file=${OPTARG};;
         c) custom_role_file=${OPTARG};;
-	i) custom_role_id=${OPTARG};;
-	k) key_path=${OPTARG};;
-	h) helpFunction ;;
+	    i) custom_role_id=${OPTARG};;
+	    k) key_path=${OPTARG};;
+	    h) helpFunction ;;
         ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
     esac
 done
@@ -95,16 +95,15 @@ fi
 
 
 #Check if the service account exists and if not, create it
-
-
 if [ -n "$service_account" ];
 then	
-    echo -e "${white}Checking if service account $service_account already exists..."
+    [[ "$serviceAccount" =~ .*"@".* ]] && service_account_email="$service_account@$project_id.iam.gserviceaccount.com" || service_account_email="$serviceAccount"
+    echo -e "${white}Checking if service account $service_account_email already exists..."
     service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
     service_accounts_array=($service_accounts)
-    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account_email} " ]];
     then
-	      echo -e "${white}Creating new service account: $service_account..."
+	      echo -e "${white}Creating new service account: $service_account_email..."
 	      if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
 	      then
 	          echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
