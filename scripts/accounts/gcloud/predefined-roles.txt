@@ -7,3 +7,4 @@ roles/compute.networkAdmin
 roles/compute.securityAdmin
 roles/storage.admin
 roles/artifactregistry.admin
+roles/iam.serviceAccountUser
