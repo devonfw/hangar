@@ -1,4 +1,3 @@
-:toc:
 # tag::partBeforePrerequisites[]
 = Setting up a SonarQube instance in {provider_name}
 

@@ -12,6 +12,8 @@
 --subnet_cidr_block                  The range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. By default: 10.0.1.0/30 + \
 -- instance_type                     Machine Instance type. By dafeault: e2-medium
 
+:toc:
+
 include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partBeforePrerequisites]
 === Prerequisites
 * https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli[Install Terraform].
