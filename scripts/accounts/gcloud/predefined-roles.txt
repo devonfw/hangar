@@ -4,3 +4,6 @@ roles/secretmanager.admin
 roles/cloudbuild.builds.editor
 roles/run.admin
 roles/iam.serviceAccountUser
+roles/firebase.managementServiceAgent
+roles/iam.serviceAccountAdmin
+roles/iam.serviceAccountKeyAdmin
