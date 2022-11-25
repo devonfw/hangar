@@ -43,7 +43,8 @@ endif::[]
 ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]
   [-m <machine type for {pipeline_type} runner>]
-endif::[]```
+endif::[]
+```
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
 
