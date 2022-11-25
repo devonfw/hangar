@@ -65,7 +65,7 @@ checkGcloudProjectName() {
     if ! gcloud projects describe "$projectName" 2> /dev/null ; then
         echo -e "${red}Error: Project $projectName does not exist." >&2
         echo -ne "${white}" >&2
-        exit 200
+        exit 1
     fi
 }
 
