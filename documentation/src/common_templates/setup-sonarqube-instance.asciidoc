@@ -11,6 +11,7 @@ The scope of this section is to deploy {container_instance_type} running SonarQu
 # tag::partAfterPrerequisites[]
 === Relevant files
 
+* `./sonarqube.sh` script to automatically do all the steps in only one execution command.
 * `main.tf` contains declarative definition written in HCL of AWS infrastructure.
 * `../common/setup_sonarqube.sh` script to be run on {container_instance_type} that installs and deploys a container running SonarQube.
 * `variables.tf` contains variable definition for `main.tf`.
