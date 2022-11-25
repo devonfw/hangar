@@ -77,7 +77,7 @@ createCloudRunService() {
     if ! gcloud run deploy "$serviceName" --image=us-docker.pkg.dev/cloudrun/container/hello --region "$region" --project "$projectName" --allow-unauthenticated; then
         echo -e "${red}Error: Cannot create Cloud Run Instance" >&2
         echo -ne "${white}" >&2
-        exit 240
+        exit 1
     fi
     serviceUrl=$(gcloud run services describe "$serviceName" --format 'value(status.url)' --project "$projectName" --region "$region")
     echo "$serviceUrl"
