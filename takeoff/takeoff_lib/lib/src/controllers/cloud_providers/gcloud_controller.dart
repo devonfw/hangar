@@ -22,6 +22,9 @@ abstract class GoogleCloudController {
   Future<bool> init(String email,
       {GCloudAuthController? controller, Stream<List<int>>? stdinStream});
 
+  /// Runs the Google Cloud CLI with the specified project and service account
+  Future<bool> run(String projectId);
+
   /// Returns the current logged Google Account or an empty String if there is none
   Future<String> getAccount(
       {GCloudAuthController? controller, Stream<List<int>>? stdinStream});
