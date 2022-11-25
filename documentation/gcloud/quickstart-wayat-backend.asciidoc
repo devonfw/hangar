@@ -2,7 +2,7 @@
 :provider_path: gcloud
 = Setting up the Wayat Backend in a new project
 
-The scope of this section is to initialize a project with the code of Wayat Backend in Python configured to be used with other Gcloud and Firebase services.
+The scope of this section is to initialize a project with the code of Wayat Backend in Python configured to be used with other Gcloud and Firebase services. 
 
 This script will automatically add the code (from a template) of the Wayat Backend, replace the necessary variables, commit the new files to your repo and upload the secret files to the Secret Manager.
 
