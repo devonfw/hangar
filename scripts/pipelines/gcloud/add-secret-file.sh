@@ -109,7 +109,7 @@ function addSecretFiles {
   gcloud secrets versions add "$secretName" --data-file="${localFilePath}"
   mkdir -p "${localDirectory}/${configFilePath}"
   mkdir -p "${localDirectory}/${scriptFilePath}"
-  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "secretName=PathToDowload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
+  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "# secretName=PathToDowload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   ! [[ "$pipelinesList" = "" ]] || pipelinesList="AllPipelines"
   echo "$secretName=$remoteFilePath #$pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secrets.sh" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
