@@ -181,6 +181,17 @@ function checkOrUploadFlutterImage {
     fi
 }
 
+function addRoles {
+  echo -e "${green}Executing setup-principal-account.sh to give the necessary roles to the cloud build service agent for this pipeline.${white}"
+  gCloudProjectNumber="$(gcloud projects list | grep "$gCloudProject" | awk '{ print $NF }')"
+  for i in $roles
+  do
+      echo "$i"
+      gcloud projects add-iam-policy-binding "${gCloudProject}" --member="serviceAccount:${gCloudProjectNumber}@cloudbuild.gserviceaccount.com" --role="$i" > /dev/null
+  done
+}
+
+
 obtainHangarPath
 
 # Load common functions
@@ -227,3 +238,7 @@ type commitFiles &> /dev/null && commitFiles
 createTrigger
 
 merge_branch
+
+[[ "$roles" == "" ]] || addRoles
+
+echo -e "${green}\nPipeline generated succesfully${white}"
