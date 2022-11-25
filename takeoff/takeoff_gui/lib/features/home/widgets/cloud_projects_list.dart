@@ -9,13 +9,14 @@ class CloudProjectsList extends StatelessWidget {
   final String authAccount;
   final Function authenticateCallback;
   final Function logOutCallback;
-  const CloudProjectsList(
-      {super.key,
-      required this.name,
-      required this.projects,
-      required this.authenticateCallback,
-      required this.authAccount,
-      required this.logOutCallback});
+  const CloudProjectsList({
+    super.key,
+    required this.name,
+    required this.projects,
+    required this.authenticateCallback,
+    required this.authAccount,
+    required this.logOutCallback,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,9 @@ class CloudProjectsList extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: projects.length,
                 itemBuilder: (context, index) {
-                  return CloudProjectItem(project: projects[index]);
+                  return CloudProjectItem(
+                    project: projects[index],
+                  );
                 },
                 scrollDirection: Axis.horizontal,
               ),

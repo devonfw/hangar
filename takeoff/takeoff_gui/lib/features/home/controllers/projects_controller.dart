@@ -16,6 +16,9 @@ abstract class _ProjectsController with Store {
   StreamController<List<int>> channel = StreamController();
 
   @observable
+  Project? selectedProject;
+
+  @observable
   bool waitForToken = false;
 
   @observable
@@ -56,7 +59,7 @@ abstract class _ProjectsController with Store {
       accounts[cloud] = await facade.getCurrentAccount(cloud);
       if (accounts[cloud]!.isNotEmpty) {
         projects[cloud] = (await facade.getProjects(cloud))
-            .map((String e) => Project(name: e))
+            .map((String e) => Project(name: e, cloud: cloud))
             .toList();
       }
     }
@@ -71,5 +74,12 @@ abstract class _ProjectsController with Store {
     waitForToken = false;
     channel.close();
     channel = StreamController();
+  }
+
+  void clean() {
+    Project? project = selectedProject;
+    if (project != null) {
+      facade.cleanProject(project.cloud, project.name);
+    }
   }
 }

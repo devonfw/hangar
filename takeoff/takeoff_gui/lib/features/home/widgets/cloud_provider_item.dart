@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:takeoff_gui/domain/project.dart';
+import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 
 class CloudProjectItem extends StatelessWidget {
-  const CloudProjectItem({
+  final ProjectsController controller = GetIt.I.get<ProjectsController>();
+  CloudProjectItem({
     Key? key,
     required this.project,
   }) : super(key: key);
@@ -20,8 +24,10 @@ class CloudProjectItem extends StatelessWidget {
           child: Card(
             child: Center(child: Text(project.name)),
           ),
-          //TODO Redirect to project view
-          onTap: () => print("pressed project ${project.name}"),
+          onTap: () {
+            controller.selectedProject = project;
+            context.go("/project/${project.cloud}/${project.name}");
+          },
         ),
       ),
     );
