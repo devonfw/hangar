@@ -94,15 +94,26 @@ else
 fi
 
 
-#Check if the service account exists and if not, create it
 if [ -n "$service_account" ];
-then	
-    [[ "$serviceAccount" =~ .*"@".* ]] && service_account_email="$service_account@$project_id.iam.gserviceaccount.com" || service_account_email="$serviceAccount"
-    echo -e "${white}Checking if service account $service_account_email already exists..."
+then
+    #Retrieve the list of service accounts available for the current project
     service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
     service_accounts_array=($service_accounts)
-    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account_email} " ]];
+    #Check the type of the service account (user-managed service account or other)
+    if [ "$serviceAccount" =~ .*"@".* ]; #Non user-managed service account
     then
+        echo -e "${white}Checking if service account $service_account already exists..."
+        if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
+        then
+            echo -e "${red}Error: Service account $service_account. does not exist" >&2
+	        echo -ne "${white}"
+	        exit 2
+        fi
+    else #User-managed service account
+        service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
+        echo -e "${white}Checking if service account $service_account already exists..."
+        if [[ ! " ${service_accounts_array[*]} " =~ " $service_account_email " ]];
+        then
 	      echo -e "${white}Creating new service account: $service_account_email..."
 	      if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
 	      then
@@ -113,19 +124,20 @@ then
 	          echo -e "${green}Service account $service_account created successfully."
 	          echo -ne "${white}"
 	      fi
-    else
-        echo -e "${white}The service account $service_account exists already. Proceeding to use it."
-    fi
-    echo -e "${white}Creating service-account keys for service account $service_account..."
-    key_path="${key_path:-./key.json}"
-    if ! gcloud iam service-accounts keys create "${key_path}" --iam-account="$service_account" &> /dev/null;
-    then
-        echo -e "${white}Error: Service account key could not be created." >&2
-        echo -ne "${white}"
-	#exit 2
-    else
-        echo -e "${green}Service account key creation ended successfully."
-	echo -ne "${white}"
+        else
+            echo -e "${white}The service account $service_account exists already. Proceeding to use it."
+        fi
+        echo -e "${white}Creating service-account keys for service account $service_account..."
+        key_path="${key_path:-./key.json}"
+        if ! gcloud iam service-accounts keys create "${key_path}" --iam-account="$service_account" &> /dev/null;
+        then
+            echo -e "${white}Error: Service account key could not be created." >&2
+            echo -ne "${white}"
+	        exit 2
+        else
+            echo -e "${green}Service account key creation ended successfully."
+	        echo -ne "${white}"
+        fi
     fi
 fi
 
@@ -136,7 +148,12 @@ then
     memberValue="user:$google_account"
 elif [ -n "$service_account" ]
 then
-    memberValue="serviceAccount:$service_account"
+    if [ -n "$service_account_email" ];
+    then
+        memberValue="serviceAccount:$service_account_email"
+    else
+        memberValue="serviceAccount:$service_account"
+    fi
 fi
 
 #Attach roles to principal in project (From command line)
