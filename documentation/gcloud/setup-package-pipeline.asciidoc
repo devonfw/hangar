@@ -24,7 +24,6 @@ The creation of the {pipeline_type2} will follow the project workflow, so a new 
 Then, the new branch will be merged into the appropriate branch (provided in `-b` flag).
 
 The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create a package {pipeline_type} based on a YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
-endif::no-PR-or-MR
 
 == Prerequisites
 
@@ -44,17 +43,17 @@ pipeline_generator.sh \
   --build-pipeline-name <build {pipeline_type} name> \
   --quality-pipeline-name <quality {pipeline_type} name> \
   -i <image name> \
+  --language-version <version> \
+  --registry-location <registry location> \
+  --flutter-platform <web, android> \
   [-u <registry user>] \
   [-p <registry password>] \
   [--aws-access-key <aws access key>] \
   [--aws-secret-access-key <aws secret access key>] \
   [--aws-region <aws region>] \
   [-b <branch>] \
-  -m <machine type for {pipeline_type} runner> \
-  --language-version <version> \
-  --registry-location <registry location> \
-  --flutter-platform <web, android> \
-  --flutter-web-renderer <auto (default), canvaskit, html> \
+  [-m <machine type for {pipeline_type} runner>] \
+  [--flutter-web-renderer <auto (default), canvaskit, html>] \
 ```
 
 NOTE: The config file for the package {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/package/package-pipeline.cfg`.
