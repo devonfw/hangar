@@ -33,9 +33,9 @@ pipeline_generator.sh \
   -l <language or framework> \
   -d <project local path> \
 ifeval::["{provider}" == "Google Cloud"]
-  --registry-location <artifact registry> \
+  [--language-version <version>] \
+  [--registry-location <artifact registry>] \
 endif::[]
-  --language-version <version> \
   [-t <target-directory>] \
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
@@ -52,9 +52,9 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
 ifeval::["{provider}" == "Google Cloud"]
+    --language-version   [Required, if Flutter or Python] Language or framework version.
     --registry-location  [Required, if Flutter] Artifact registry location.
 endif::[]
-    --language-version   [Required, if Flutter or Python] Language or framework version.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
@@ -88,6 +88,7 @@ ifdef::machineType[-m, --machine-type                  Machine type for {pipelin
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop {openBrowserFlag}
 ```
+ifeval::["{provider}" == "Google Cloud"]
 
 ==== Python project
 [subs=attributes+]
@@ -100,3 +101,4 @@ ifdef::machineType[-m, --machine-type                  Machine type for {pipelin
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n flutter-project-build -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project -b develop --language-version 3.3.4 --registry-location europe {openBrowserFlag}
 ```
+endif::[]
