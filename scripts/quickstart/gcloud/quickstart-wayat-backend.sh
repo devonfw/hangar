@@ -76,7 +76,7 @@ downloadTemplate() {
 
 prepareENVFile() {
     export storageBucket
-    envsubst '$storageBucket' < "$directory/env.template" > "$directory/PROD.env"
+    envsubst "$storageBucket" < "$directory/env.template" > "$directory/PROD.env"
     rm "$directory/env.template"
     cp "$workspace"/firebase.json "$directory"/firebase.json
 }
