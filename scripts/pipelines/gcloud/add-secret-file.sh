@@ -108,6 +108,7 @@ function addSecretFiles {
   echo "gcloud secrets versions add \"$secretName\" --data-file=\"${currentDirectory}/${localFilePath}\""
   gcloud secrets versions add "$secretName" --data-file="${localFilePath}"
   mkdir -p "${localDirectory}/${configFilePath}"
+  mkdir -p "${localDirectory}/${scriptFilePath}"
   [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "secretName=PathToDowload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   ! [[ "$pipelinesList" = "" ]] || pipelinesList="AllPipelines"
   echo "$secretName=$remoteFilePath #$pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
