@@ -9,7 +9,7 @@
 --project                 [Required] Short name (ID) of the project. + \
 --region                             The GCP region where the resources will be created. By default: europe-southwest1 + \
 --zone                               The zone inside the region that the machine should be created in. By default: europe-southwest1-a + \
---subnet_cidr_block                  The range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. By default: 10.0.1.0/30 + \
+--subnet_cidr_block                  The range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. By default: 10.0.1.0/29 + \
 -- instance_type                     Machine Instance type. By dafeault: e2-medium
 
 = Setting up a SonarQube instance in {provider_name}
