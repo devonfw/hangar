@@ -76,6 +76,7 @@ downloadTemplate() {
 
 prepareENVFile() {
     export storageBucket
+# shellcheck disable=SC2016
     envsubst '$storageBucket' < "$directory/env.template" > "$directory/PROD.env"
     rm "$directory/env.template"
     cp "$workspace"/firebase.json "$directory"/firebase.json
