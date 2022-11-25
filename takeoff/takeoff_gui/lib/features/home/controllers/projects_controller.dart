@@ -76,6 +76,13 @@ abstract class _ProjectsController with Store {
     channel = StreamController();
   }
 
+  void openCLI() {
+    Project? project = selectedProject;
+    if (project != null) {
+      facade.runProject(project.name, project.cloud);
+    }
+  }
+
   void clean() {
     Project? project = selectedProject;
     if (project != null) {

@@ -21,8 +21,7 @@ class SideBar extends StatelessWidget {
         SizedBox(
           width: 100,
           child: DecoratedBox(
-            decoration:
-                const BoxDecoration(color: Color.fromARGB(255, 23, 112, 185)),
+            decoration: const BoxDecoration(color: Colors.blue),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -54,9 +53,10 @@ class SideBar extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    const IconTextButton(
+                    IconTextButton(
                       text: "CLI",
                       icon: Icons.terminal,
+                      onPressed: () => controller.openCLI(),
                     ),
                     IconTextButton(
                       text: "Clean",

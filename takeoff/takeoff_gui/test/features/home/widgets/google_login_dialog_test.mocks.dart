@@ -235,6 +235,14 @@ class MockProjectsController extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
+  void openCLI() => super.noSuchMethod(
+        Invocation.method(
+          #openCLI,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
   void clean() => super.noSuchMethod(
         Invocation.method(
           #clean,
