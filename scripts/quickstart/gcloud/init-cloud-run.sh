@@ -63,7 +63,7 @@ ckeckCliInstalled() {
 checkGcloudProjectName() {
     # Check if exists a Google Cloud project with that project ID. 
     if ! gcloud projects describe "$projectName" 2> /dev/null ; then
-        echo -e "${red}Error: Project $projectName does not exist."
+        echo -e "${red}Error: Project $projectName does not exist." >&2
         echo -ne "${white}" >&2
         exit 200
     fi
