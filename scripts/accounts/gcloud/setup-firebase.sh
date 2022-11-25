@@ -20,16 +20,16 @@ while true; do
 done
 
 helpFunction() {
-   echo "Enables Firebase on a project and required APIs"
+   echo "Enables Firebase and required APIs on a Google Cloud project."
    echo ""
    echo "Arguments:"
    echo -e "\t-n                   [Required] Name of the project."
-   echo -e "\t-o, --output         [Required] Output Path to store credentials"
-   echo -e "\t-r                              Region to create Firestore Database"
-   echo -e "\t--enable-maps                   Enables APIs related to Maps Services"
-   echo -e "\t--setup-ios                     Enables IOS APIs and creates IOS App"
-   echo -e "\t--setup-android                 Enables Android APIs and creates Android App"
-   echo -e "\t--setup-web                     Enables Web APIs and creates Web App"
+   echo -e "\t-o, --output         [Required] Output path to store credentials."
+   echo -e "\t-r                              Region where to create Firestore Database."
+   echo -e "\t--enable-maps                   Enables APIs related to Maps services."
+   echo -e "\t--setup-ios                     Enables IOS APIs and creates IOS App."
+   echo -e "\t--setup-android                 Enables Android APIs and creates Android App."
+   echo -e "\t--setup-web                     Enables Web APIs and creates Web App."
 }
 
 # Colours for the messages.
@@ -77,7 +77,7 @@ ckeckCliInstalled() {
     if ! [ -x "$(command -v firebase)" ]; then
         echo -e "${red}Error: Firebase CLI is not installed." >&2
         echo -ne "${white}" >&2
-        exit 128
+        exit 127
     fi
 }
 
@@ -167,7 +167,7 @@ addFirebaseToGcloudProject() {
             exit 201
         fi
     else
-        echo -e "Firebase already added to $projectName"
+        echo -e "Firebase already added to $projectName."
     fi
 }
 
