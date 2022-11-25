@@ -91,6 +91,10 @@ addSecrets() {
     /scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/firebase.json" -r firebase.json -b develop
 }
 
+deployFirebaseRules() {
+    firebase deploy --only firestore,storage
+}
+
 #==============================================================
 # SCRIPT EXECUTION:
 
@@ -107,3 +111,5 @@ prepareENVFile
 commitFiles
 
 addSecrets
+
+deployFirebaseRules
