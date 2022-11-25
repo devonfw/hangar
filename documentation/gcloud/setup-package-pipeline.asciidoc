@@ -125,6 +125,27 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
+
+==== Python project
+
+===== Generic container registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project -u username -p password -b develop -w
+```
+
+===== AWS ECR
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
+```
+
+===== Google Cloud Artifact Registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i eu-southwest1-docker.pkg.dev/username/python-project -b develop -w
+```
+
 ==== Flutter project
 
 ===== Web platform
@@ -151,24 +172,4 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -b develop -w
-```
-
-==== Python project
-
-===== Generic container registry
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project -u username -p password -b develop -w
-```
-
-===== AWS ECR
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
-```
-
-===== Google Cloud Artifact Registry
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i eu-southwest1-docker.pkg.dev/username/python-project -b develop -w
 ```
