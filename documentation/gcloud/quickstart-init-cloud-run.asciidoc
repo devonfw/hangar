@@ -11,7 +11,6 @@ The scope of this section is to initialize a Google Cloud Run service to early r
 
 == Initializing a Cloud Run service using provided script
 
-
 The script located at `/scripts/quickstart/{provider_path}/init-cloud-run.sh` allows you to:
 
 . Create a new Cloud Run service with a predefined HelloWorld image deployed and retrieve the public URL. 
