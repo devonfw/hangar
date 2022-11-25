@@ -19,8 +19,8 @@ import 'package:takeoff_lib/src/controllers/hangar/pipeline/create_pipeline_exce
 import 'package:takeoff_lib/src/controllers/hangar/pipeline/pipeline_controller_gcloud.dart';
 import 'package:takeoff_lib/src/controllers/hangar/project/project_controller.dart';
 import 'package:takeoff_lib/src/controllers/hangar/project/project_controller_gcloud.dart';
-import 'package:takeoff_lib/src/controllers/hangar/quickstart/wayat_secrets_controller.dart';
-import 'package:takeoff_lib/src/controllers/hangar/quickstart/wayat_secrets_exception.dart';
+import 'package:takeoff_lib/src/controllers/hangar/quickstart/wayat_controller.dart';
+import 'package:takeoff_lib/src/controllers/hangar/quickstart/wayat_exception.dart';
 import 'package:takeoff_lib/src/controllers/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/controllers/hangar/sonar/sonar_output.dart';
@@ -33,7 +33,7 @@ import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/setup_principal_ac
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/account/verify_roles_and_permissions.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/quickstart/init_cloud_run.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/quickstart/setup_firebase.dart';
-import 'package:takeoff_lib/src/hangar_scripts/gcloud/quickstart/wayat_secrets.dart';
+import 'package:takeoff_lib/src/hangar_scripts/gcloud/quickstart/wayat_backend.dart';
 import 'package:takeoff_lib/src/hangar_scripts/gcloud/repo/create_repo.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
@@ -112,7 +112,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     );
 
     if (wayat) {
-      await _setUpWayatServices(projectDir, projectName, googleCloudRegion,
+      await _setUpWayatRepos(projectDir, projectName, googleCloudRegion,
           backendLocalDir, frontendLocalDir, infoStream);
     }
 
@@ -267,7 +267,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   }
 
   /// Helper method that will set run the specific wayat scripts when executing [wayatQuickstart].
-  Future<void> _setUpWayatServices(
+  Future<void> _setUpWayatRepos(
       Directory projectDir,
       String projectName,
       String googleCloudRegion,
@@ -287,14 +287,13 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
     _logAndStream("Setting up Wayat secrets", infoStream);
 
-    WayatSecretsController wayatSecretsController = WayatSecretsController();
+    WayatController wayatSecretsController = WayatController();
     try {
-      wayatSecretsController.setUpWayatSecrets(WayatSecrets(
-          projectName: projectName,
-          repoBack: backendLocalDir,
-          repoFront: frontendLocalDir,
-          firebaseCredentialsFolder: firebaseCredentialsFolder));
-    } on WayatSecretsException catch (e) {
+      wayatSecretsController.setUpWayat(WayatBackend(
+          workspace: projectDir.path,
+          backendRepoDir: backendLocalDir,
+          storageBucket: "$projectName.appspot.com"));
+    } on WayatException catch (e) {
       throw CreateProjectException(e.message);
     }
   }
