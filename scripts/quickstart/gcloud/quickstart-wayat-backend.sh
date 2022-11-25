@@ -87,8 +87,8 @@ commitFiles() {
 }
 
 addSecrets() {
-    scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/PROD.env" -r PROD.env -b develop  
-    scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/firebase.json" -r firebase.json -b develop
+    /scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/PROD.env" -r PROD.env -b develop  
+    /scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/firebase.json" -r firebase.json -b develop
 }
 
 #==============================================================
