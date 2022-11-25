@@ -5,3 +5,6 @@ roles/cloudbuild.builds.editor
 roles/compute.instanceAdmin.v1
 roles/compute.networkAdmin
 roles/compute.securityAdmin
+roles/firebase.managementServiceAgent
+roles/iam.serviceAccountAdmin
+roles/iam.serviceAccountKeyAdmin
