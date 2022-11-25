@@ -3,6 +3,7 @@
 :trigger_sentence: This pipeline will be configured to be triggered after the package pipeline on branches develop or release/*
 :pipeline_type2: pipeline
 :path_provider: gcloud
+:provider: gcloud
 :extra_args_quarkus: --build-pipeline-name quarkus-project-build --quality-pipeline-name quarkus-project-quality
 :extra_args_node: --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality
 :extra_args_angular: --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality
