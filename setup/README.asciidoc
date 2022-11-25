@@ -20,7 +20,7 @@ The following toolkits are included in the solution:
 - GitHub
 - Firebase CLI
 
-**Plus (+)** other tools like `unzip`, `git`, `wget` & `python`
+**Plus (+)** other tools like `unzip`, `git`, `wget`, `java` & `python`
 
 ## How to use
 
