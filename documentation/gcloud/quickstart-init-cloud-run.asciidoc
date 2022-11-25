@@ -20,7 +20,8 @@ The script located at `/scripts/quickstart/{provider_path}/init-cloud-run.sh` al
 
 === Usage
 ```
-init-cloud-run.sh.sh \
+init-cloud-run.sh \
+
     -p <projectId> \
     -n <name> \
     [-r <region>] \
