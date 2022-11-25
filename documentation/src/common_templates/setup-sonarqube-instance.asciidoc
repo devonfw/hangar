@@ -5,6 +5,7 @@ The scope of this section is to deploy {container_instance_type} running SonarQu
 
 == Getting Started
 # end::partBeforePrerequisites[]
+
 # tag::partAfterPrerequisites[]
 === Relevant files
 
@@ -22,24 +23,43 @@ The scope of this section is to deploy {container_instance_type} running SonarQu
 To make it easier to use for users who do not know terraform, or for those who need only one command to be executed, we have prepared a script that executes all the steps automatically.
 
 ```
-./sonarqube.sh [command] --state-folder "path_to_save_state" [options]
+./sonarqube.sh [command] [flags] [terraform variables]
 ```
 
-The commands can be:
+*Commands*
 ```
-    COMMAND       DESCRIPTION
-    apply         Create or update infrastructure
-    destroy       Destroy previously-created infrastructure
-    output        Show output values from your terraform. With output command only one option is readed `--output-key`, all other options are ignored.
-                    If you want to show the output as json, add an option `--output-key --json`.
-                    If you want to recover only one output value add an option `--output-key $key` where $key is the name of the output var.
+COMMAND       DESCRIPTION
+apply         Create or update infrastructure
+destroy       Destroy previously-created infrastructure
+output        Show output values from your terraform. With output command only one option is readed `--output-key`, all other flags and options are ignored.
+                If you want to show the output as json, add an option '--output-key --json'.
+                If you want to recover only one output value add an option '--output-key key' where key is the name of the output var.
 ```
 
-The options for `apply` and `destroy` commands can be the next:
+*Flags*
+```
+-s, --state-folder    The folder where you are going to save/import your terraform configuration."
+-k, --output-key      [ONLY FOR output] The key of the terraform output variable that you want to recover."
+-q, --quiet           To not print any command of the script, only the execution of 'terraform command'."
+-h, --help            Get help for commands."
+```
+
+*terraform variables*
+
+These options are variables to be replace by the set-terraform-variables.sh script. You can replace as many as you want of the next:
 
 [subs=attributes+]
 ```
 {terraform_vars}
+```
+
+*Examples*
+
+[subs=attributes+]
+```
+./sonarqube.sh apply --state-folder "path_to_save_state" {terraform_vars_example_short}
+
+./sonarqube.sh apply --state-folder "path_to_save_state" {terraform_vars_example_full}
 ```
 
 WARNING:  *Remember to securely store all the content inside the state-folder*, otherwise you will not be able to perform any changes, including detroying them, from Terraform.
@@ -52,16 +72,25 @@ First, you need to initialize the working directory containing Terraform configu
 terraform init 
 ```
 
-Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script, which allows you to create or update values for the required variables, passing them as flags. As a full example:
+Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script, which allows you to create or update values for the required variables, passing them as flags.
+
+You can replace as many as you want of the next:
 
 [subs=attributes+]
 ```
-./set-terraform-variables.sh {terraform_vars}
+{terraform_vars}
+```
+
+Examples of usage:
+
+[subs=attributes+]
+```
+./set-terraform-variables.sh {terraform_vars_example_short}
+
+./set-terraform-variables.sh {terraform_vars_example_full}
 ```
 
 WARNING: Unless changed, some of the variables used to deploy by default probably do not exist in your environment of {provider_name}.
-
-NOTE: To learn more about what is each variable read the description in the file `variables.tf` or `terraform.tfvars`.
 
 Finally, deploy SonarQube instance:
 
