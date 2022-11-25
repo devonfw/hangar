@@ -13,7 +13,6 @@ Then, the new branch will be merged into the appropriate branch (provided in `-b
 
 endif::[]
 The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create a package {pipeline_type} based on a YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
-endif::no-PR-or-MR
 
 == Prerequisites
 
@@ -34,6 +33,11 @@ ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
 ifdef::quality-pipeline[  --quality-pipeline-name <quality {pipeline_type} name> \]
 ifdef::ci-pipeline[  --ci-pipeline-name <ci {pipeline_type} name> \]
   -i <image name> \
+ifeval::["{provider_id}" == "gcloud"]
+  --language-version <version> \
+  --registry-location <registry location> \
+  --flutter-platform <web, android> \
+endif::[]
   [-u <registry user>] \
   [-p <registry password>] \
   [--aws-access-key <aws access key>] \
@@ -41,12 +45,9 @@ ifdef::ci-pipeline[  --ci-pipeline-name <ci {pipeline_type} name> \]
   [--aws-region <aws region>] \
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
-ifeval::[{provider} == gcloud]
-  -m <machine type for {pipeline_type} runner> \
-  --language-version <version> \
-  --registry-location <registry location> \
-  --flutter-platform <web, android> \
-  --flutter-web-renderer <auto (default), canvaskit, html> \
+ifeval::["{provider_id}" == "gcloud"]
+  [-m <machine type for {pipeline_type} runner>] \
+  [--flutter-web-renderer <auto (default), canvaskit, html>] \
 endif::[]
 ```
 
@@ -123,7 +124,7 @@ endif::[]
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
-ifeval::[{provider} == gcloud]
+ifeval::["{provider_id}" == "gcloud"]
 ==== Flutter project
 
 ===== Web platform
