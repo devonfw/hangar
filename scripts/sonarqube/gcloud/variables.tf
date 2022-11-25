@@ -5,7 +5,7 @@ variable "service_account_file" {
 
 variable "project" {
   type = string
-  description = "The GCP region where the resources will be created"
+  description = "The ID of the project in which the resource belongs"
 }
 
 variable "region" {
@@ -26,10 +26,4 @@ variable "subnet_cidr_block" {
 variable "instance_type" {
   type = string
   description = "Machine Instance type"
-}
-
-variable "sonarqube_password" {
-  type = string
-  description = "Password to connect with sonarqube, this password is to read from sonarqube, not to replace the password value"
-  default = "admin"
 }

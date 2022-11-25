@@ -10,5 +10,3 @@ nic_private_ip = "10.0.1.50"
 instance_type = "t3a.small"
 #Keypair name as defined in AWS
 keypair_name = "sonarqube"
-#Password to connect with sonarqube, this password is to read from sonarqube, not to replace the password value.
-sonarqube_password = "admin"

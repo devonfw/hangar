@@ -26,9 +26,3 @@ variable "keypair_name" {
   type = string
   description = "Keypair name as defined in AWS"
 }
-
-variable "sonarqube_password" {
-  type = string
-  description = "Password to connect with sonarqube, this password is to read from sonarqube, not to replace the password value"
-  default = "admin"
-}

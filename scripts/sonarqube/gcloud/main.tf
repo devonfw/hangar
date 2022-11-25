@@ -80,7 +80,7 @@ resource "google_compute_firewall" "sonarqube_firewall" {
 
 # Generate sonarqube token
 data "external" "sonarqube_create_token" {
-  program = ["sh", "-c", "${path.module}/../common/create_token.sh -p ${var.sonarqube_password} -s http://${google_compute_address.sonarqube-static-ip-address.address}:9000 --tf-output-sq-token sonarqube_token"]
+  program = ["sh", "-c", "${path.module}/../common/create_token.sh -s http://${google_compute_address.sonarqube-static-ip-address.address}:9000 --tf-output-sq-token sonarqube_token"]
   
   # Ensure firewall rule for sonar qube is provisioned before server, so that create sonarqube token doesn't fail.
   depends_on = [ 
