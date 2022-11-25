@@ -12,10 +12,11 @@
 --subnet_cidr_block                  The range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. By default: 10.0.1.0/30 + \
 -- instance_type                     Machine Instance type. By dafeault: e2-medium
 
-:toc:
 = Setting up a SonarQube instance in {provider_name}
 
 The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
+
+:toc:
 
 == Getting Started
 === Prerequisites
