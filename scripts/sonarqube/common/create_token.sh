@@ -24,10 +24,10 @@ function terraformGetSQToken {
     if [[ -f "$FILE" ]]; then
         if cp -f $FILE temp.tfstate; then
             sq_token_output=$(terraform output -state=temp.tfstate | grep "$terraformSQToken" | cut -d' ' -f 3)
-            rm -f temp.tfstate
         elif [[ -f "$FILE_OUTPUT" ]]; then
             sq_token_output=$(grep "$terraformSQToken" "$FILE_OUTPUT" | cut -d' ' -f 3)
         fi
+        rm -f temp.tfstate
     fi
     if [[ -n "$sq_token_output" ]]; then
         echo "{\"token\":$sq_token_output}"
