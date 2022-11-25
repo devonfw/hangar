@@ -23,8 +23,8 @@ import 'package:takeoff_lib/src/controllers/hangar/quickstart/wayat_secrets_cont
 import 'package:takeoff_lib/src/controllers/hangar/quickstart/wayat_secrets_exception.dart';
 import 'package:takeoff_lib/src/controllers/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
-import 'package:takeoff_lib/src/controllers/sonar/sonar_output.dart';
-import 'package:takeoff_lib/src/controllers/sonar/sonarqube_controller.dart';
+import 'package:takeoff_lib/src/controllers/hangar/sonar/sonar_output.dart';
+import 'package:takeoff_lib/src/controllers/hangar/sonar/sonarqube_controller.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/repo/repo_action.dart';
 import 'package:takeoff_lib/src/hangar_scripts/common/sonarqube/setup_sonar.dart';
@@ -144,12 +144,47 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         sonarOutput,
         (frontendLanguage == Language.flutter) ? "europe" : null);
 
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+    await cacheRepository.saveGoogleProjectId(projectName);
+
     infoStream?.add("Project $projectName succesfully created!");
     Log.success("Project $projectName succesfully created!");
     infoStream
         ?.add("https://console.cloud.google.com/welcome?project=$projectName");
     Log.success(
         "You can view the project by entering in: https://console.cloud.google.com/welcome?project=$projectName");
+
+    return true;
+  }
+
+  @override
+  Future<bool> run(String projectId) async {
+    CacheRepository cacheRepository = CacheRepositoryImpl();
+
+    if (!(await cacheRepository.getGoogleProjectIds()).contains(projectId)) {
+      Log.error("The project $projectId does not exist in the TakeOff cache");
+      return false;
+    }
+
+    FoldersService foldersService = GetIt.I.get<FoldersService>();
+    Directory projectFolder = Directory(
+        join(foldersService.getHostFolders()["workspace"]!, projectId));
+
+    if (!projectFolder.existsSync()) {
+      Log.error("The workspace folder of $projectId does not exist");
+      return false;
+    }
+
+    DockerController controller = GetIt.I.get<DockerController>();
+    await controller.executeCommand([
+      "-it",
+      "--workdir",
+      "/scripts/workspace/$projectId"
+    ], [
+      "/bin/bash",
+      "-c",
+      "gcloud config set project $projectId && gcloud config set account TakeOff@$projectId.iam.gserviceaccount.com && gcloud beta interactive"
+    ], startMode: ProcessStartMode.detached, runInShell: true);
 
     return true;
   }
