@@ -31,6 +31,11 @@ class ProjectsService {
     }
   }
 
+  Future<void> runProject(
+      String projectId, CloudProviderId cloudProvider) async {
+    _takeOffFacade.runProject(projectId, cloudProvider);
+  }
+
   Future<void> createGoogleProject(
       {required String projectName,
       required String billingAccount,

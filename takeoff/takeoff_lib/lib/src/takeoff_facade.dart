@@ -14,6 +14,7 @@ import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/languag
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/persistence/database/database_singleton.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
+import 'package:takeoff_lib/src/utils/logger/log.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
@@ -57,9 +58,19 @@ class TakeOffFacade {
       case CloudProviderId.gcloud:
         return await _googleController.getAccount();
       case CloudProviderId.aws:
-        return "";
       case CloudProviderId.azure:
         return "";
+    }
+  }
+
+  Future<bool> runProject(String project, CloudProviderId cloudProvider) async {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return _googleController.run(project);
+      case CloudProviderId.aws:
+      case CloudProviderId.azure:
+        Log.warning("Currently not supported");
+        return false;
     }
   }
 
@@ -74,7 +85,6 @@ class TakeOffFacade {
       case CloudProviderId.gcloud:
         return await _googleController.init(email, stdinStream: stdinStream);
       case CloudProviderId.aws:
-        return false;
       case CloudProviderId.azure:
         return false;
     }
@@ -86,7 +96,6 @@ class TakeOffFacade {
       case CloudProviderId.gcloud:
         return await _googleController.logOut();
       case CloudProviderId.aws:
-        return false;
       case CloudProviderId.azure:
         return false;
     }
@@ -130,7 +139,6 @@ class TakeOffFacade {
       case CloudProviderId.gcloud:
         return await _googleController.cleanProject(projectId);
       case CloudProviderId.aws:
-        return false;
       case CloudProviderId.azure:
         return false;
     }
@@ -142,7 +150,6 @@ class TakeOffFacade {
       case CloudProviderId.gcloud:
         return await cacheRepository.getGoogleProjectIds();
       case CloudProviderId.aws:
-        return [];
       case CloudProviderId.azure:
         return [];
     }

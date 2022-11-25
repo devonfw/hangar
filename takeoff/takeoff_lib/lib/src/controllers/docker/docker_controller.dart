@@ -34,20 +34,24 @@ abstract class DockerController {
   /// `docker run --rm -d -p [-v hostFolder:containerFolder] hangar ls`
   ///
   /// Returns whether the execution was succesful.
-  Future<bool> executeCommand(
-      List<String> dockerArgs, List<String> commands) async {
+  Future<bool> executeCommand(List<String> dockerArgs, List<String> commands,
+      {ProcessStartMode startMode = ProcessStartMode.normal,
+      bool runInShell = false}) async {
     List<String> args = buildCommands(dockerArgs, commands);
 
-    Process dockerProc = await Process.start(command, args);
-    stdout.addStream(dockerProc.stdout);
-    stderr.addStream(dockerProc.stderr);
+    Process dockerProc = await Process.start(command, args,
+        mode: startMode, runInShell: runInShell);
+    if (startMode != ProcessStartMode.detached) {
+      stdout.addStream(dockerProc.stdout);
+      stderr.addStream(dockerProc.stderr);
 
-    Log.info("Executing ${Log.dockerProcessToString(args)}");
+      Log.info("Executing ${Log.dockerProcessToString(args)}");
 
-    if (await dockerProc.exitCode != 0) {
-      Log.error("Exit code ${await dockerProc.exitCode}");
-      Log.error("There was an unexpected error with the docker command");
-      return false;
+      if (await dockerProc.exitCode != 0) {
+        Log.error("Exit code ${await dockerProc.exitCode}");
+        Log.error("There was an unexpected error with the docker command");
+        return false;
+      }
     }
 
     return true;

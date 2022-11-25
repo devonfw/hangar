@@ -35,7 +35,7 @@ class CloudProjectsList extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           // List of projects
-          if (authAccount.isNotEmpty)
+          if (authAccount.isNotEmpty && projects.isNotEmpty)
             SizedBox(
               height: 200,
               child: ListView.builder(
