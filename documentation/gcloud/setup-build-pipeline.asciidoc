@@ -4,7 +4,6 @@
 :pipeline_type2: pipeline
 :path_provider: gcloud
 :no-PR-or-MR:
-:machineType:
 :openBrowserFlag:
 = Setting up a Build {pipeline_type} on {provider}
 
