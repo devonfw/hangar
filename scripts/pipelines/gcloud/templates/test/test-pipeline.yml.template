@@ -1,4 +1,13 @@
 steps:
+- id: "Get secrets"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+        set -e
+        [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+
 - id: "Download artifact"
   name: gcr.io/cloud-builders/gsutil
   script: |

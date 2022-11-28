@@ -1,0 +1,44 @@
+:provider_name: Google Cloud
+:provider_path: gcloud
+:example_required_flags: -p projectId -n name
+= Setting up a Google Cloud Run service
+
+The scope of this section is to initialize a Google Cloud Run service to early retrieve its endpoint, before any execution of a Deployment pipeline, so it is known and usable (e.g. in other scripts) on beforehand. By the end of this guide, a Cloud Run service on {provider_name} will be created in an automated way using a script and the public URL will be returned or written into an output file.
+
+
+
+== Prerequisites
+
+* Have a Google Cloud project already setup and Google Cloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
+
+== Initializing a Cloud Run service using provided script
+
+
+The script located at `/scripts/quickstart/{provider_path}/init-cloud-run.sh` allows you to:
+
+. Create a new Cloud Run service with a predefined HelloWorld image deployed and retrieve the public URL. 
+
+=== Usage
+```
+init-cloud-run.sh.sh \
+    -p <projectId> \
+    -n <name> \
+    [-r <region>] \
+    [-o <output path>] 
+```
+
+=== Flags
+[subs=attributes+]
+```
+-p, --project                [Required] Short name (ID) of the project.
+-n, --name                   [Required] Name for the Cloud Run service endpoint.
+-r, --region                            Region where the Cloud Run service will be created.
+-o, --output                            Output file path to store the created service public URL.
+```
+
+=== Example
+
+[subs=attributes+]
+```
+./scripts/quickstart/{provider_path}/init-cloud-run.sh {example_required_flags} -r europe-west6 -o url.txt
+```

@@ -169,6 +169,7 @@ addFirebaseToGcloudProject() {
     else
         echo -e "Firebase already added to $projectName."
     fi
+    # firebase use "$projectName"
 }
 
 createFirestoreDB() {
@@ -189,7 +190,7 @@ createFirestoreDB() {
 createFirebaseSDKAccount() {
     echo "Creating Firebase SDK Service Account..."
     service_email=$(gcloud iam service-accounts list | grep firebase-adminsdk | tr -s ' ' | cut -d ' ' -f2)
-    if ! gcloud iam service-accounts keys create $outputPath"/firebase.json" --iam-account "$service_email" --project "$projectName"; then
+    if ! gcloud iam service-accounts keys create $outputPath"/firebase-key.json" --iam-account "$service_email" --project "$projectName"; then
         echo -e "${red}Error: Cannot create Firebase Service Account" >&2
         echo -ne "${white}" >&2
         exit 240
@@ -244,13 +245,13 @@ createPlatformApps() {
             echo -ne "${white}" >&2
             exit 250
         fi
-        setupAndroidKeystore
+        # setupAndroidKeystore
         if ! gcloud services enable apikeys.googleapis.com --project "${projectName}" ; then
             echo -e "${red}Error while enabling API keys API." >&2
             echo -ne "${white}" >&2
             exit 250
         fi
-        registerShaKeys
+        # registerShaKeys
         command=$base_sdkconfig_command" --out ${outputPath}/google-services.json ANDROID"
         if ! eval "$command"; then
             echo -e "${red}Error while exporting SDK Android Config." >&2
