@@ -22,7 +22,7 @@ helpFunction() {
    echo "Flags:"
    echo -e "\t-p, --project        [Required] Short name (ID) of the project.."
    echo -e "\t-n, --name           [Required] Name for the Cloud Run service endpoint."
-   echo -e "\t-r, --region                    Region where the Cloud Run service will be created."
+   echo -e "\t-r, --region         [Required] Region where the Cloud Run service will be created."
    echo -e "\t-o, --output                    Output file path to store the created service public URL."
 }
 
@@ -44,6 +44,13 @@ checkMandatoryArguments() {
     if [ -z "$serviceName" ];
     then
         echo -e "${red}Error: Missing paramenters, -n or --name is mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
+        echo -ne "${white}" >&2
+        exit 2
+    fi
+    if [ -z "$region" ];
+    then
+        echo -e "${red}Error: Missing paramenters, -r or --region is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
@@ -71,9 +78,6 @@ checkGcloudProjectName() {
 
 createCloudRunService() {
     echo "Creating Cloud Run Instance..."
-    if [[ "$region" == "" ]]; then
-        region="europe-west6"
-    fi
     if ! gcloud run deploy "$serviceName" --image=us-docker.pkg.dev/cloudrun/container/hello --region "$region" --project "$projectName" --allow-unauthenticated; then
         echo -e "${red}Error: Cannot create Cloud Run Instance" >&2
         echo -ne "${white}" >&2
