@@ -98,15 +98,15 @@ function addSecretFiles {
   fi
 
   # Creating the secret if it does not exist yet
-  if [[ $(gcloud secrets list 2> /dev/null | awk -v secretName="$secretName" '$1==secretName {print $1}') == "" ]]
+  if [[ $(gcloud secrets list --project "${gCloudProject}" 2> /dev/null | awk -v secretName="$secretName" '$1==secretName {print $1}') == "" ]]
   then
-      echo "gcloud secrets create $secretName"
-      gcloud secrets create "$secretName" --replication-policy="automatic"
+      echo "gcloud secrets create $secretName --project \"${gCloudProject}\""
+      gcloud secrets create "$secretName" --replication-policy="automatic" --project "${gCloudProject}"
   fi
 
   # Adding a version to the secret previously created
-  echo "gcloud secrets versions add \"$secretName\" --data-file=\"${currentDirectory}/${localFilePath}\""
-  gcloud secrets versions add "$secretName" --data-file="${localFilePath}"
+  echo "gcloud secrets versions add \"$secretName\" --data-file=\"${currentDirectory}/${localFilePath}\" --project "${gCloudProject}""
+  gcloud secrets versions add "$secretName" --data-file="${localFilePath}" --project "${gCloudProject}"
   mkdir -p "${localDirectory}/${configFilePath}"
   mkdir -p "${localDirectory}/${scriptFilePath}"
   [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "# secretName=PathToDowload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
