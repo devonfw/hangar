@@ -16,8 +16,7 @@ class ProjectDetails extends StatelessWidget {
           SideBar(),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Expanded(
-                child: Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // TODO add dropdown to select project here
@@ -27,7 +26,7 @@ class ProjectDetails extends StatelessWidget {
                   style: const TextStyle(fontSize: 30),
                 ),
               ],
-            )),
+            ),
           )
         ],
       ),
