@@ -8,3 +8,7 @@ roles/compute.securityAdmin
 roles/storage.admin
 roles/artifactregistry.admin
 roles/iam.serviceAccountUser
+roles/firebase.managementServiceAgent
+roles/iam.serviceAccountAdmin
+roles/iam.serviceAccountKeyAdmin
+
