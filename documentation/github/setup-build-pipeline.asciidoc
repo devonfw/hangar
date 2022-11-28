@@ -31,7 +31,6 @@ pipeline_generator.sh \
   -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-  --language-version <version> \
   [-t <target-directory>] \
   [-b <branch>] \
   [-w]
@@ -46,7 +45,6 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
-    --language-version   [Required, if Flutter or Python] Language or framework version.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
@@ -78,16 +76,4 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n angular-project-build -l angular -d C:/Users/$USERNAME/Desktop/angular-project -b develop {openBrowserFlag}
-```
-
-==== Python project
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n python-project-build -l python -d C:/Users/$USERNAME/Desktop/python-project -b develop --language-version 3.10 {openBrowserFlag}
-```
-
-==== Flutter project
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/build/build-pipeline.cfg -n flutter-project-build -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project -b develop --language-version 3.3.4 --registry-location europe {openBrowserFlag}
 ```

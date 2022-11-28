@@ -4,7 +4,6 @@
 :pipeline_type2: pipeline
 :path_provider: gcloud
 :no-PR-or-MR:
-:machineType:
 :openBrowserFlag:
 = Setting up a Build {pipeline_type} on {provider}
 
@@ -30,8 +29,8 @@ pipeline_generator.sh \
   -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-  --registry-location <artifact registry> \
-  --language-version <version> \
+  [--language-version <version>] \
+  [--registry-location <artifact registry>] \
   [-t <target-directory>] \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
@@ -46,8 +45,8 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
-    --registry-location  [Required, if Flutter] Artifact registry location.
     --language-version   [Required, if Flutter or Python] Language or framework version.
+    --registry-location  [Required, if Flutter] Artifact registry location.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.

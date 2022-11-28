@@ -35,11 +35,15 @@ pipeline_generator.sh \
   -l <language or framework> \
   -d <project local path> \
 ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
-  --language-version <version> \
+ifeval::["{provider}" == "Google Cloud"]
+  [--language-version <version>] \
+endif::[]
   [-a <artifact source path>] \
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
-ifdef::machineType[  [-m <machine type for {pipeline_type} runner>]]
+ifeval::["{provider}" == "Google Cloud"]
+  [-m <machine type for {pipeline_type} runner>]
+endif::[]
 ```
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
@@ -56,11 +60,15 @@ endif::[]
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
 ifdef::build-pipeline[    --build-pipeline-name   [Required] Build {pipeline_type} name.]
--a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
+ifeval::["{provider}" == "Google Cloud"]
     --language-version      [Required, if Flutter or Python] Language or framework version.
+endif::[]
+-a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
-ifdef::machineType[-m, --machine-type                     Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
+ifeval::["{provider}" == "Google Cloud"]
+-m, --machine-type                     Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
+endif::[]
 ```
 
 === Examples
@@ -94,6 +102,7 @@ ifdef::machineType[-m, --machine-type                     Machine type for {pipe
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop {openBrowserFlag}
 ```
+ifeval::["{provider}" == "Google Cloud"]
 
 ==== Python project
 
@@ -108,3 +117,4 @@ ifdef::machineType[-m, --machine-type                     Machine type for {pipe
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n flutter-project-test -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
 ```
+endif::[]
