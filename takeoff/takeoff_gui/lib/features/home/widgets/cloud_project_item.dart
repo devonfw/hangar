@@ -20,14 +20,17 @@ class CloudProjectItem extends StatelessWidget {
       child: SizedBox(
         height: 200,
         width: 200,
-        child: GestureDetector(
-          child: Card(
-            child: Center(child: Text(project.name)),
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            child: Card(
+              child: Center(child: Text(project.name)),
+            ),
+            onTap: () {
+              controller.selectedProject = project;
+              context.go("/project/${project.cloud}/${project.name}");
+            },
           ),
-          onTap: () {
-            controller.selectedProject = project;
-            context.go("/project/${project.cloud}/${project.name}");
-          },
         ),
       ),
     );

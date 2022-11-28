@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:takeoff_gui/domain/project.dart';
 import 'package:takeoff_gui/features/home/widgets/cloud_provider_header.dart';
-import 'package:takeoff_gui/features/home/widgets/cloud_provider_item.dart';
+import 'package:takeoff_gui/features/home/widgets/cloud_project_item.dart';
 
 class CloudProjectsList extends StatelessWidget {
   final String name;
