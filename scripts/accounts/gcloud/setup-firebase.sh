@@ -190,7 +190,7 @@ createFirestoreDB() {
 createFirebaseSDKAccount() {
     echo "Creating Firebase SDK Service Account..."
     service_email=$(gcloud iam service-accounts list | grep firebase-adminsdk | tr -s ' ' | cut -d ' ' -f2)
-    if ! gcloud iam service-accounts keys create $outputPath"/firebase.json" --iam-account "$service_email" --project "$projectName"; then
+    if ! gcloud iam service-accounts keys create $outputPath"/firebase-key.json" --iam-account "$service_email" --project "$projectName"; then
         echo -e "${red}Error: Cannot create Firebase Service Account" >&2
         echo -ne "${white}" >&2
         exit 240
