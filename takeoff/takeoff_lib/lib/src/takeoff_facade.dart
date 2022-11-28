@@ -80,10 +80,11 @@ class TakeOffFacade {
   ///
   /// Returns whether the process is succesful.
   Future<bool> init(String email, CloudProviderId cloudProvider,
-      {Stream<List<int>>? stdinStream}) async {
+      {Stream<List<int>>? stdinStream, bool useStdin = false}) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.init(email, stdinStream: stdinStream);
+        return await _googleController.init(email,
+            useStdin: useStdin, stdinStream: stdinStream);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;

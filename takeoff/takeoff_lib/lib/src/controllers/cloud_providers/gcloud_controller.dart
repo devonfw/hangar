@@ -20,7 +20,9 @@ abstract class GoogleCloudController {
   /// testing purposes and a stdin stream for the GUI client to be able to write
   /// to the authentication process.
   Future<bool> init(String email,
-      {GCloudAuthController? controller, Stream<List<int>>? stdinStream});
+      {bool useStdin = false,
+      GCloudAuthController? controller,
+      Stream<List<int>>? stdinStream});
 
   /// Runs the Google Cloud CLI with the specified project and service account
   Future<bool> run(String projectId);

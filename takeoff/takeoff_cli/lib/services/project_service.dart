@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class ProjectsService {
@@ -8,7 +7,7 @@ class ProjectsService {
   );
 
   Future<void> initAccount(CloudProviderId cloudProvider, String email) async {
-    await _takeOffFacade.init(email, cloudProvider);
+    await _takeOffFacade.init(email, cloudProvider, useStdin: true);
   }
 
   Future<void> listProjects(CloudProviderId cloudProvider) async {
