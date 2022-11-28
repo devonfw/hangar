@@ -14,26 +14,33 @@ class CreateGCloudCommand extends Command {
     argParser.addOption('name', abbr: 'n', mandatory: true);
     argParser.addOption('billing-account', abbr: 'a', mandatory: true);
     argParser.addOption('backend-language',
-
         abbr: 'b',
         allowed: [
           Language.node.name,
           Language.python.name,
           Language.quarkus.name,
-          Language.quarkusJVM.name
+          Language.quarkusJVM.name,
         ],
-        mandatory: true);
-    argParser.addOption("backend-version");
+        help:
+            "The technology for the BackEnd. Required if no frontend-language is specified.");
+    argParser.addOption("backend-version",
+        help:
+            "The version for the backend-language. This will have no effect unless backend-language is specified.");
     argParser.addOption('frontend-language',
-
         abbr: 'f',
         allowed: [
           Language.angular.name,
           Language.flutter.name,
         ],
-        mandatory: true);
-    argParser.addOption("frontend-version");
-    argParser.addOption('region', abbr: 'r', mandatory: true);
+        help:
+            "The technology for the FrontEnd. Required if no backend-language is specified.");
+    argParser.addOption("frontend-version",
+        help:
+            "The version for the frontend-language. This will have no effect unless frontend-language is specified.");
+    argParser.addOption('region',
+        abbr: 'r',
+        mandatory: true,
+        help: "Google Cloud region in which the project will be created.");
   }
 
   @override

@@ -41,7 +41,8 @@ abstract class DockerController {
 
     Process dockerProc = await Process.start(command, args,
         mode: startMode, runInShell: runInShell);
-    if (startMode != ProcessStartMode.detached) {
+    if (startMode != ProcessStartMode.detached &&
+        startMode != ProcessStartMode.detachedWithStdio) {
       stdout.addStream(dockerProc.stdout);
       stderr.addStream(dockerProc.stderr);
 

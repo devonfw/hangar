@@ -46,9 +46,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<bool> createProject(
       {required String projectName,
       required String billingAccount,
-      required Language backendLanguage,
+      Language? backendLanguage,
       String? backendVersion,
-      required Language frontendLanguage,
+      Language? frontendLanguage,
       String? frontendVersion,
       required String googleCloudRegion,
       StreamController<String>? infoStream,
@@ -61,6 +61,11 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       String? frontRepoSubpath,
       String? backRepoSubpath,
       bool wayat = false}) async {
+    if (backendLanguage == null && frontendLanguage == null) {
+      throw CreateProjectException(
+          "To create a project specify at least a BackEnd or FrontEnd language");
+    }
+
     await _checkAuthentication();
     _logAndStream(
         "Creating folder ${FoldersService.containerFolders["workspace"]}/$projectName",
@@ -91,9 +96,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String backendLocalDir = "${projectDir.path}/$backRepoName";
     String frontendLocalDir = "${projectDir.path}/$frontRepoName";
 
-    _logAndStream("Creating BackEnd Repository", infoStream);
-
     await _createRepositories(projectName, projectDir, infoStream,
+        backendLanguage: backendLanguage,
+        frontendLanguage: frontendLanguage,
         frontendRepoName: frontRepoName,
         backendRepoName: backRepoName,
         backAction: backRepoAction,
@@ -118,31 +123,35 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
     PipelineControllerGCloud pipelineController = PipelineControllerGCloud();
 
-    _logAndStream("Building BackEnd pipelines", infoStream);
+    if (backendLanguage != null) {
+      _logAndStream("Building BackEnd pipelines", infoStream);
 
-    await buildPipelines(
-        pipelineController,
-        projectName,
-        ApplicationEnd.backend,
-        backendLanguage,
-        backendVersion,
-        backendLocalDir,
-        googleCloudRegion,
-        sonarOutput,
-        null);
+      await buildPipelines(
+          pipelineController,
+          projectName,
+          ApplicationEnd.backend,
+          backendLanguage,
+          backendVersion,
+          backendLocalDir,
+          googleCloudRegion,
+          sonarOutput,
+          null);
+    }
 
-    _logAndStream("Building FrontEnd pipelines", infoStream);
+    if (frontendLanguage != null) {
+      _logAndStream("Building FrontEnd pipelines", infoStream);
 
-    await buildPipelines(
-        pipelineController,
-        projectName,
-        ApplicationEnd.frontend,
-        frontendLanguage,
-        frontendVersion,
-        frontendLocalDir,
-        googleCloudRegion,
-        sonarOutput,
-        (frontendLanguage == Language.flutter) ? "europe" : null);
+      await buildPipelines(
+          pipelineController,
+          projectName,
+          ApplicationEnd.frontend,
+          frontendLanguage,
+          frontendVersion,
+          frontendLocalDir,
+          googleCloudRegion,
+          sonarOutput,
+          (frontendLanguage == Language.flutter) ? "europe" : null);
+    }
 
     CacheRepository cacheRepository = CacheRepositoryImpl();
     await cacheRepository.saveGoogleProjectId(projectName);
@@ -183,8 +192,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     ], [
       "/bin/bash",
       "-c",
-      "gcloud config set account TakeOff@$projectId.iam.gserviceaccount.com && gcloud config set project $projectId && gcloud beta interactive"
-    ], startMode: ProcessStartMode.detached, runInShell: true);
+      "gcloud config set account TakeOff@$projectId.iam.gserviceaccount.com && gcloud config set project $projectId && gcloud beta interactive && exit"
+    ], startMode: ProcessStartMode.detachedWithStdio, runInShell: true);
 
     return true;
   }
@@ -437,7 +446,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   /// Helper method to create the repositories for [wayatQuickstart] and [createProject]
   Future<void> _createRepositories(String projectName, Directory projectDir,
       StreamController<String>? infoStream,
-      {RepoAction frontAction = RepoAction.create,
+      {required Language? backendLanguage,
+      required Language? frontendLanguage,
+      RepoAction frontAction = RepoAction.create,
       RepoAction backAction = RepoAction.create,
       String? frontImportUrl,
       String? backImportUrl,
@@ -447,28 +458,31 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       String frontendRepoName = "Frontend"}) async {
     RepositoryController repoController = RepositoryController();
 
-    _logAndStream("Creating BackEnd repository", infoStream);
+    if (backendLanguage != null) {
+      _logAndStream("Creating BackEnd repository", infoStream);
 
-    if (!await repoController.createRepository(CreateRepoGCloud(
-        name: backendRepoName,
-        project: projectName,
-        subpath: backSubpath,
-        action: backAction,
-        sourceGitUrl: backImportUrl,
-        directory: projectDir.path))) {
-      throw CreateProjectException("Could not create BackEnd repository");
+      if (!await repoController.createRepository(CreateRepoGCloud(
+          name: backendRepoName,
+          project: projectName,
+          subpath: backSubpath,
+          action: backAction,
+          sourceGitUrl: backImportUrl,
+          directory: projectDir.path))) {
+        throw CreateProjectException("Could not create BackEnd repository");
+      }
     }
+    if (frontendLanguage != null) {
+      _logAndStream("Creating FrontEnd Repository", infoStream);
 
-    _logAndStream("Creating FrontEnd Repository", infoStream);
-
-    if (!await repoController.createRepository(CreateRepoGCloud(
-        name: frontendRepoName,
-        project: projectName,
-        sourceGitUrl: frontImportUrl,
-        subpath: frontSubpath,
-        action: frontAction,
-        directory: projectDir.path))) {
-      throw CreateProjectException("Could not create FrontEnd repository");
+      if (!await repoController.createRepository(CreateRepoGCloud(
+          name: frontendRepoName,
+          project: projectName,
+          sourceGitUrl: frontImportUrl,
+          subpath: frontSubpath,
+          action: frontAction,
+          directory: projectDir.path))) {
+        throw CreateProjectException("Could not create FrontEnd repository");
+      }
     }
   }
 
