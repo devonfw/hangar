@@ -9,7 +9,7 @@ helpFunction()
     echo ""
     echo "Arguments:"
     echo "  -g     [Required] Google Account of an end user. Mutually exclusive with -s."
-    echo "  -s     [Required] Service Account email. Mutually exclusive with -g."
+    echo "  -s     [Required] Service Account name or email. Mutually exclusive with -g."
     echo "  -p     [Required] Short project name (ID) where the roles and permissions will be checked."
     echo "  -r                Roles to be checked, splitted by comma."
     echo "  -f                Path to a file containing the roles to be checked."
@@ -22,13 +22,13 @@ while getopts g:s:p:r:f:e:i:h flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
-	s) service_account=${OPTARG};;
+	    s) service_account=${OPTARG};;
         p) project_id=${OPTARG};;
         r) roles=${OPTARG};;
         f) roles_file=${OPTARG};;
         e) permissions=${OPTARG};;
-	i) permissions_file=${OPTARG};;
-	h) helpFunction ;;
+	    i) permissions_file=${OPTARG};;
+	    h) helpFunction ;;
         ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
     esac
 done
@@ -86,16 +86,17 @@ fi
 #Check if the service account exists
 if [ -n "$service_account" ];
 then
-    echo -e "${white}Checking if service account $service_account already exists..."	
+    [[ "$service_account" =~ .*"@".* ]] && service_account_email="$service_account" || service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
+    echo -e "${white}Checking if service account $service_account_email already exists..."	
     service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
     service_accounts_array=($service_accounts)
-    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account_email} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
     then
-        echo -e "${red}Error: Service account $service_account does not exist. Please, provide a valid one." >&2
+        echo -e "${red}Error: Service account $service_account_email does not exist. Please, provide a valid one." >&2
         echo -ne "${white}"
 	exit 2
     else
-        echo -e "${white}The service account $service_account is valid."
+        echo -e "${white}The service account $service_account_email is valid."
     fi
 fi
 
@@ -105,7 +106,7 @@ then
     memberValue="$google_account"
 elif [ -n "$service_account" ]
 then
-    memberValue="$service_account"
+    memberValue="$service_account_email"
 fi
 
 echo -e "${white}Retrieving roles and permissions for $memberValue in project $project_id..."

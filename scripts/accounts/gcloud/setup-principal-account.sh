@@ -30,7 +30,7 @@ do
         c) custom_role_file=${OPTARG};;
 	    i) custom_role_id=${OPTARG};;
 	    k) key_path=${OPTARG};;
-	    h) helpFunction ;;
+        h) helpFunction ;;
         ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
     esac
 done
@@ -100,10 +100,10 @@ then
     service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
     service_accounts_array=($service_accounts)
     #Check the type of the service account (user-managed service account or other)
-    if [ "$serviceAccount" =~ .*"@".* ]; #Non user-managed service account
+    if [[ "$service_account" =~ .*"@".* ]]; #Non user-managed service account
     then
         echo -e "${white}Checking if service account $service_account already exists..."
-        if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]];
+        if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
         then
             echo -e "${red}Error: Service account $service_account. does not exist" >&2
 	        echo -ne "${white}"
@@ -112,7 +112,7 @@ then
     else #User-managed service account
         service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
         echo -e "${white}Checking if service account $service_account already exists..."
-        if [[ ! " ${service_accounts_array[*]} " =~ " $service_account_email " ]];
+        if [[ ! " ${service_accounts_array[*]} " =~ " $service_account_email " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
         then
 	      echo -e "${white}Creating new service account: $service_account_email..."
 	      if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
