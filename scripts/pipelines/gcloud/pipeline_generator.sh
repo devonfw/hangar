@@ -182,7 +182,7 @@ function checkOrUploadFlutterImage {
 }
 
 function addRoles {
-  echo -e "${green}Executing setup-principal-account.sh to give the necessary roles to the cloud build service agent for this pipeline.${white}"
+  echo -e "${green}Giving the necessary roles for this pipeline to the Cloud Build service account...${white}"
   gCloudProjectNumber="$(gcloud projects list | grep "$gCloudProject" | awk '{ print $NF }')"
   for i in $roles
   do
