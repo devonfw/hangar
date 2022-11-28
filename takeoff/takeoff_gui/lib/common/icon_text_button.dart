@@ -22,16 +22,18 @@ class IconTextButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onPressed,
         child: SizedBox(
-          width: size ?? 70,
-          height: size ?? 70,
           child: Column(
             children: [
               Icon(
                 icon,
-                color: color ?? Colors.black,
-                size: size != null ? (size! - 20) : 50,
+                color: color ?? Colors.white,
+                size: size != null ? (size! - 20) : 35,
               ),
-              Text(text),
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: color ?? Colors.white),
+              ),
             ],
           ),
         ),

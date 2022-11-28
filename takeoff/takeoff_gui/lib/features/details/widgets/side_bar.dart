@@ -18,10 +18,11 @@ class SideBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 100,
-          child: DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.blue),
+        Material(
+          elevation: 10,
+          child: Container(
+            width: 80,
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -77,7 +78,7 @@ class SideBar extends StatelessWidget {
             ),
           ),
         ),
-        const VerticalDivider(thickness: 1, width: 1, color: Colors.black),
+        //const VerticalDivider(thickness: 1, width: 1, color: Colors.black),
       ],
     );
   }
