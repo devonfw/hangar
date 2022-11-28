@@ -183,7 +183,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     ], [
       "/bin/bash",
       "-c",
-      "gcloud config set project $projectId && gcloud config set account TakeOff@$projectId.iam.gserviceaccount.com && gcloud beta interactive"
+      "gcloud config set account TakeOff@$projectId.iam.gserviceaccount.com && gcloud config set project $projectId && gcloud beta interactive"
     ], startMode: ProcessStartMode.detached, runInShell: true);
 
     return true;
