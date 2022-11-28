@@ -33,6 +33,8 @@ pipeline_generator.sh \
   --registry-location <artifact registry> \
   --language-version <version> \
   [-t <target-directory>] \
+  [--secret-vars <secret vars list>]
+  [--env-vars <env vars list>]
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
 ```
@@ -49,6 +51,8 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
     --registry-location  [Required, if Flutter] Artifact registry location.
     --language-version   [Required, if Flutter or Python] Language or framework version.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
+ifndef::secretVar[    --secret-vars                   Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+ifndef::envVar[    --env-vars                      Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
 ```

@@ -41,6 +41,8 @@ pipeline_generator.sh \
   --build-pipeline-name <build {pipeline_type} name> \
   --language-version <version> \
   [-a <artifact source path>] \
+  [--secret-vars <secret vars list>]
+  [--env-vars <env vars list>]
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
 ```
@@ -58,6 +60,8 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
     --build-pipeline-name   [Required] Build {pipeline_type} name.
 -a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
     --language-version      [Required, if Flutter or Python] Language or framework version.
+ifndef::secretVar[    --secret-vars                   Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+ifndef::envVar[    --env-vars                      Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                     Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
 ```
