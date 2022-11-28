@@ -104,6 +104,14 @@ class MockProjectsController extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
+  set selectedProject(_i6.Project? _selectedProject) => super.noSuchMethod(
+        Invocation.setter(
+          #selectedProject,
+          _selectedProject,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
   bool get waitForToken => (super.noSuchMethod(
         Invocation.getter(#waitForToken),
         returnValue: false,
@@ -222,6 +230,22 @@ class MockProjectsController extends _i1.Mock
   void resetChannel() => super.noSuchMethod(
         Invocation.method(
           #resetChannel,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void openCLI() => super.noSuchMethod(
+        Invocation.method(
+          #openCLI,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void clean() => super.noSuchMethod(
+        Invocation.method(
+          #clean,
           [],
         ),
         returnValueForMissingStub: null,

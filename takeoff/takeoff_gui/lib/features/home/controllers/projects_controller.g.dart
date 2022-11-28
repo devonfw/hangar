@@ -17,6 +17,22 @@ mixin _$ProjectsController on _ProjectsController, Store {
               name: '_ProjectsController.isLogged'))
           .value;
 
+  late final _$selectedProjectAtom =
+      Atom(name: '_ProjectsController.selectedProject', context: context);
+
+  @override
+  Project? get selectedProject {
+    _$selectedProjectAtom.reportRead();
+    return super.selectedProject;
+  }
+
+  @override
+  set selectedProject(Project? value) {
+    _$selectedProjectAtom.reportWrite(value, super.selectedProject, () {
+      super.selectedProject = value;
+    });
+  }
+
   late final _$waitForTokenAtom =
       Atom(name: '_ProjectsController.waitForToken', context: context);
 
@@ -91,6 +107,7 @@ mixin _$ProjectsController on _ProjectsController, Store {
   @override
   String toString() {
     return '''
+selectedProject: ${selectedProject},
 waitForToken: ${waitForToken},
 projects: ${projects},
 accounts: ${accounts},

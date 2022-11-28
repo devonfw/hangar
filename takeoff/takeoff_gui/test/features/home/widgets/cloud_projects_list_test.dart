@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
+import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/home/widgets/cloud_projects_list.dart';
-import 'package:takeoff_gui/features/home/widgets/cloud_provider_item.dart';
+import 'package:takeoff_gui/features/home/widgets/cloud_project_item.dart';
 import 'package:takeoff_gui/mocks/mock_projects.dart';
+import 'cloud_projects_list_test.mocks.dart';
 
+@GenerateNiceMocks([MockSpec<ProjectsController>()])
 void main() async {
+  setUpAll(() {
+    MockProjectsController mockController = MockProjectsController();
+    GetIt.I.registerSingleton<ProjectsController>(mockController);
+  });
+
   Widget createApp(Widget body) {
     return MaterialApp(
       home: Scaffold(
