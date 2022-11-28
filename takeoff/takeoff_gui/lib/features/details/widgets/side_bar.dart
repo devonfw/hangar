@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:takeoff_gui/common/icon_text_button.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/features/create/pages/create_dialog.dart';
+import 'package:takeoff_gui/features/details/widgets/clean_dialog.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
 import 'package:takeoff_gui/features/quickstart/pages/quickstart_dialog.dart';
@@ -62,10 +63,10 @@ class SideBar extends StatelessWidget {
                     IconTextButton(
                       text: "Clean",
                       icon: Icons.cleaning_services,
-                      onPressed: () {
-                        context.go("/");
-                        controller.clean();
-                      },
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: ((context) => CleanDialog()),
+                      ),
                     ),
                     IconTextButton(
                       text: "Home",
