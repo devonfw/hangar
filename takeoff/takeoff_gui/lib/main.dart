@@ -5,6 +5,7 @@ import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/common/error_loading_page.dart';
 import 'package:takeoff_gui/common/loading_page.dart';
+import 'package:takeoff_gui/features/create/controllers/project_form_controllers/project_form_controllers.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
 import 'package:takeoff_gui/navigation/app_router.dart';
@@ -55,4 +56,9 @@ Future<void> registerSingletons() async {
   GetIt.I.registerLazySingleton<CreateController>(() => CreateController());
   GetIt.I.registerLazySingleton<QuickstartController>(
       () => QuickstartController());
+  GetIt.I.registerLazySingleton<GoogleFormController>(
+      () => GoogleFormController());
+  GetIt.I.registerLazySingleton<AwsFormController>(() => AwsFormController());
+  GetIt.I
+      .registerLazySingleton<AzureFormController>(() => AzureFormController());
 }

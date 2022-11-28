@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
+import 'package:takeoff_gui/features/create/controllers/project_form_controllers/google_form_controller.dart';
 
-class ProjectDataForm extends StatelessWidget {
-  final CreateController controller = GetIt.I.get<CreateController>();
-  ProjectDataForm({
+class GoogleForm extends StatelessWidget {
+  final GoogleFormController controller = GetIt.I.get<GoogleFormController>();
+  GoogleForm({
     Key? key,
   }) : super(key: key);
 

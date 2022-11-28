@@ -9,6 +9,13 @@ part of 'create_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$CreateController on _CreateController, Store {
+  Computed<CreateFormController>? _$formControllerComputed;
+
+  @override
+  CreateFormController get formController => (_$formControllerComputed ??=
+          Computed<CreateFormController>(() => super.formController,
+              name: '_CreateController.formController'))
+      .value;
   Computed<List<ProviderCICD>>? _$providersCICDComputed;
 
   @override
@@ -16,13 +23,12 @@ mixin _$CreateController on _CreateController, Store {
           Computed<List<ProviderCICD>>(() => super.providersCICD,
               name: '_CreateController.providersCICD'))
       .value;
-  Computed<bool>? _$formIsValidComputed;
+  Computed<bool>? _$isValidComputed;
 
   @override
-  bool get formIsValid =>
-      (_$formIsValidComputed ??= Computed<bool>(() => super.formIsValid,
-              name: '_CreateController.formIsValid'))
-          .value;
+  bool get isValid => (_$isValidComputed ??= Computed<bool>(() => super.isValid,
+          name: '_CreateController.isValid'))
+      .value;
 
   late final _$cloudProviderAtom =
       Atom(name: '_CreateController.cloudProvider', context: context);
@@ -53,54 +59,6 @@ mixin _$CreateController on _CreateController, Store {
   set repoProvider(ProviderCICD value) {
     _$repoProviderAtom.reportWrite(value, super.repoProvider, () {
       super.repoProvider = value;
-    });
-  }
-
-  late final _$projectNameAtom =
-      Atom(name: '_CreateController.projectName', context: context);
-
-  @override
-  String get projectName {
-    _$projectNameAtom.reportRead();
-    return super.projectName;
-  }
-
-  @override
-  set projectName(String value) {
-    _$projectNameAtom.reportWrite(value, super.projectName, () {
-      super.projectName = value;
-    });
-  }
-
-  late final _$regionAtom =
-      Atom(name: '_CreateController.region', context: context);
-
-  @override
-  String get region {
-    _$regionAtom.reportRead();
-    return super.region;
-  }
-
-  @override
-  set region(String value) {
-    _$regionAtom.reportWrite(value, super.region, () {
-      super.region = value;
-    });
-  }
-
-  late final _$billingAccountAtom =
-      Atom(name: '_CreateController.billingAccount', context: context);
-
-  @override
-  String get billingAccount {
-    _$billingAccountAtom.reportRead();
-    return super.billingAccount;
-  }
-
-  @override
-  set billingAccount(String value) {
-    _$billingAccountAtom.reportWrite(value, super.billingAccount, () {
-      super.billingAccount = value;
     });
   }
 
@@ -168,22 +126,6 @@ mixin _$CreateController on _CreateController, Store {
     });
   }
 
-  late final _$googleCloudRegionAtom =
-      Atom(name: '_CreateController.googleCloudRegion', context: context);
-
-  @override
-  String get googleCloudRegion {
-    _$googleCloudRegionAtom.reportRead();
-    return super.googleCloudRegion;
-  }
-
-  @override
-  set googleCloudRegion(String value) {
-    _$googleCloudRegionAtom.reportWrite(value, super.googleCloudRegion, () {
-      super.googleCloudRegion = value;
-    });
-  }
-
   late final _$_CreateControllerActionController =
       ActionController(name: '_CreateController', context: context);
 
@@ -236,16 +178,13 @@ mixin _$CreateController on _CreateController, Store {
     return '''
 cloudProvider: ${cloudProvider},
 repoProvider: ${repoProvider},
-projectName: ${projectName},
-region: ${region},
-billingAccount: ${billingAccount},
 frontendLanguage: ${frontendLanguage},
 frontendVersion: ${frontendVersion},
 backendLanguage: ${backendLanguage},
 backendVersion: ${backendVersion},
-googleCloudRegion: ${googleCloudRegion},
+formController: ${formController},
 providersCICD: ${providersCICD},
-formIsValid: ${formIsValid}
+isValid: ${isValid}
     ''';
   }
 }
