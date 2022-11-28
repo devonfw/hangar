@@ -46,5 +46,5 @@ quickstart-wayat-backend.sh \
 
 [subs=attributes+]
 ```
-./scripts/quickstart/{provider_path}/quickstart-wayat-backend.sh {example_required_flags}
+./scripts/quickstart/{provider_path}/quickstart-wayat-backend.sh {example_required_flags} 
 ```
