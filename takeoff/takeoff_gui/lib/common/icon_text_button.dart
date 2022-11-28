@@ -19,22 +19,25 @@ class IconTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: onPressed,
-        child: SizedBox(
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                color: color ?? Colors.white,
-                size: size != null ? (size! - 20) : 35,
-              ),
-              Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: color ?? Colors.white),
-              ),
-            ],
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: onPressed,
+          child: SizedBox(
+            child: Column(
+              children: [
+                Icon(
+                  icon,
+                  color: color ?? Colors.white,
+                  size: size != null ? (size! - 20) : 30,
+                ),
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14, color: color ?? Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
       ),
