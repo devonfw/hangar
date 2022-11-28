@@ -169,7 +169,7 @@ addFirebaseToGcloudProject() {
     else
         echo -e "Firebase already added to $projectName."
     fi
-    firebase use "$projectName"
+    # firebase use "$projectName"
 }
 
 createFirestoreDB() {
@@ -245,13 +245,13 @@ createPlatformApps() {
             echo -ne "${white}" >&2
             exit 250
         fi
-        setupAndroidKeystore
+        # setupAndroidKeystore
         if ! gcloud services enable apikeys.googleapis.com --project "${projectName}" ; then
             echo -e "${red}Error while enabling API keys API." >&2
             echo -ne "${white}" >&2
             exit 250
         fi
-        registerShaKeys
+        # registerShaKeys
         command=$base_sdkconfig_command" --out ${outputPath}/google-services.json ANDROID"
         if ! eval "$command"; then
             echo -e "${red}Error while exporting SDK Android Config." >&2
