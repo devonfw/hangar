@@ -1,4 +1,4 @@
-:example_required_flags: -w /workspace/demoproject -d /workspace/demoproject/backend --storage-bucket bucket.appspot.com
+:example_required_flags: -w /workspace/demoproject -d /workspace/demoproject/backend -p projectID --storage-bucket bucket.appspot.com
 :provider_path: gcloud
 = Setting up the Wayat Backend in a new project
 
@@ -29,6 +29,7 @@ The script located at `/scripts/quickstart/{provider_path}/quickstart-wayat-back
 quickstart-wayat-backend.sh \
     -w <workspace for the project> \
     -d <directory of the backend repository> \
+    -p <project ID> \
     --storage-bucket <bucket to store images>
 ```
 
@@ -37,6 +38,7 @@ quickstart-wayat-backend.sh \
 ```
 -w, --workspace                [Required] Workspace of the project containing firebase keys.
 -d, --directory                [Required] Directory for the repository of the backend.
+-p, --project                  [Required] Project shortname (ID)
 --storage-bucket               [Required] Storage bucket to be used for storing images of the app.
 ```
 
