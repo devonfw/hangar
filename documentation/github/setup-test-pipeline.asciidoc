@@ -38,7 +38,6 @@ pipeline_generator.sh \
   -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-  --language-version <version> \
   [-a <artifact source path>] \
   [--secret-vars <secret vars list>]
   [--env-vars <env vars list>]
@@ -94,18 +93,4 @@ ifndef::envVar[    --env-vars                      Environment variable needed f
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop {openBrowserFlag}
-```
-
-==== Python project
-
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n python-project-test -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
-```
-
-==== Flutter project
-
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n flutter-project-test -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
 ```
