@@ -9,5 +9,5 @@ EXPOSE 80
 
 RUN chmod +x docker-entrypoint.sh
 
-COPY main.py logging.yaml PROD.env firebase.json ./
+COPY main.py logging.yaml PROD.env firebase-key.json ./
 CMD ["./docker-entrypoint.sh"]
