@@ -38,7 +38,7 @@ steps:
       fi
       echo -e "\n\n"
       echo "LOADING CREDENTIALS AND GETTING REGISTRY"
-      echo $$registry_credentials > credentials.env
+      echo $$REGISTRY_CREDENTIALS > credentials.env
       . credentials.env
       rm credentials.env
       echo -e "\n\n"
