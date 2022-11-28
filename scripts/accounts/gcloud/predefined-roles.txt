@@ -2,6 +2,13 @@ roles/viewer
 roles/source.admin
 roles/secretmanager.admin
 roles/cloudbuild.builds.editor
+roles/compute.instanceAdmin.v1
+roles/compute.networkAdmin
+roles/compute.securityAdmin
+roles/storage.admin
+roles/artifactregistry.admin
+roles/iam.serviceAccountUser
 roles/firebase.managementServiceAgent
 roles/iam.serviceAccountAdmin
 roles/iam.serviceAccountKeyAdmin
+
