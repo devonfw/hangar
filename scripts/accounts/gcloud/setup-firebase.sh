@@ -303,6 +303,7 @@ createPlatformApps() {
 nextSteps() {
     echo "Next steps:"
     echo "1- Accept consent screen: https://console.cloud.google.com/apis/credentials/consent?project=$projectName"
+    echo "2- Go to https://console.cloud.google.com/google/maps-apis/api-list?project=$projectName, choose Maps Static API, then go to Credentials and copy the current secret"
 }
 
 #==============================================================
