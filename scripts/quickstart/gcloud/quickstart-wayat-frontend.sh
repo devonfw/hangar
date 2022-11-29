@@ -117,8 +117,12 @@ prepareENVFile() {
     packageName="com.takeoff.${packageName//_/}"
     export backendUrl
     export projectName
-    export messageSenderId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep messagingSenderId | awk '{print $2}' | sed s/\"//g)
+    export messageSenderId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep messagingSenderId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export mapsStaticSecret
+    export webClientId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter ANDROID | grep client_id | awk 'FNR == 3 {print $2}' | sed s/\"//g | sed s/,//g)
+    export webApiKey=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep apiKey | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export webAppId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep appId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export webAuthDomain=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep authDomain | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export bundleId=$packageName
     export storageBucket
     
@@ -126,10 +130,12 @@ prepareENVFile() {
     envsubst '$backendUrl' < "$directory/env.template" > "$directory/env.template"
     envsubst '$projectName' < "$directory/env.template" > "$directory/env.template"
     envsubst '$messageSenderId' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$storageBucket' < "$directory/env.template" > "$directory/.env"
+    envsubst '$mapsStaticSecret' < "$directory/env.template" > "$directory/env.template"
+    envsubst '$webClientId' < "$directory/env.template" > "$directory/env.template"
+    envsubst '$webApiKey' < "$directory/env.template" > "$directory/env.template"
+    envsubst '$webAppId' < "$directory/env.template" > "$directory/env.template"
+    envsubst '$webAuthDomain' < "$directory/env.template" > "$directory/env.template"
     rm "$directory/env.template"
-    rm "$directory/firebaserc.template"
-    cp "$workspace"/firebase-key.json "$directory"/firebase-key.json
 }
 
 commitFiles() {
