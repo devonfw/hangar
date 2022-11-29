@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_lib/src/controllers/auth/auth_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
-import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/gcloud.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
@@ -12,10 +11,29 @@ import 'package:takeoff_lib/src/utils/logger/log.dart';
 import 'package:takeoff_lib/src/utils/url_launcher/url_launcher.dart';
 
 /// Specific implementation of the authentication process for Google Cloud
+///
+/// When [stdinStream] is not null, it will use the data from that stream to
+/// pass it as the Google Cloud token.
+///
+/// If [useStdin] is true, it will read a line from the standard input to
+/// pass it as the Google Cloud token,
+///
+/// If [useStdin] is `false` and [stdinStream] is `null`, that means that you
+/// expect that the user is already authenticated and that Google Cloud has
+/// to reuse the credentials. This is, for example, in the beginning of the
+/// `createProject`, `quickstartWayat` or `run` processes, when you need to
+/// make sure that the account used is the user's and not a previously
+/// set service account. This arguments will not work to log in, only to
+/// set the CLI to the logged account.
+///
+/// [useStdin] cannot be `true` if [stdinStream] is not `null`.
 class GCloudAuthController implements AuthController<GCloud> {
   Stream<List<int>>? stdinStream;
+  bool useStdin;
 
-  GCloudAuthController({this.stdinStream});
+  GCloudAuthController({this.useStdin = false, this.stdinStream}) {
+    assert((useStdin && stdinStream == null) || (!useStdin));
+  }
 
   @override
   Future<bool> authenticate(
@@ -44,7 +62,11 @@ class GCloudAuthController implements AuthController<GCloud> {
         String url = message.split("\n").last.trim();
         if (Uri.tryParse(url) != null) {
           Log.info("Opening Google Authentication in the browser");
-          UrlLaucher.launch(url);
+          await UrlLaucher.launch(url);
+          if (useStdin) {
+            String? line = stdin.readLineSync();
+            gCloudProcess.stdin.writeln(line?.trim());
+          }
         }
         openedUrl = true;
       } else {
@@ -52,28 +74,24 @@ class GCloudAuthController implements AuthController<GCloud> {
       }
     });
 
+    StreamSubscription<List<int>>? stdinHandler;
+
     StreamSubscription<List<int>> stdoutHandler =
         gCloudProcess.stdout.listen((event) {
       stdout.writeln(String.fromCharCodes(event));
     });
 
-    late StreamSubscription<List<int>> stdinHandler;
-
     if (stdinStream != null) {
       stdinHandler = stdinStream!.listen((event) {
-        gCloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
-      });
-    } else {
-      stdinHandler = stdin.listen((event) {
         gCloudProcess.stdin.writeln(String.fromCharCodes(event).trim());
       });
     }
 
     int exitCode = await gCloudProcess.exitCode;
 
-    stderrHandler.cancel();
-    stdinHandler.cancel();
-    stdoutHandler.cancel();
+    await stderrHandler.cancel();
+    await stdinHandler?.cancel();
+    await stdoutHandler.cancel();
 
     if (exitCode != 0) {
       Log.error(

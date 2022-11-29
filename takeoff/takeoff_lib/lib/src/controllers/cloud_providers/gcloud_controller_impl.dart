@@ -170,6 +170,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<bool> run(String projectId) async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
 
+    // TODO: Check if we should use the normal or service account
+    await _checkAuthentication();
+
     if (!(await cacheRepository.getGoogleProjectIds()).contains(projectId)) {
       Log.error("The project $projectId does not exist in the TakeOff cache");
       return false;
@@ -192,18 +195,19 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     ], [
       "/bin/bash",
       "-c",
-      "gcloud config set account TakeOff@$projectId.iam.gserviceaccount.com && gcloud config set project $projectId && gcloud beta interactive && exit"
-    ], startMode: ProcessStartMode.detachedWithStdio, runInShell: true);
+      "gcloud config set project $projectId && gcloud beta interactive && exit"
+    ], startMode: ProcessStartMode.detached, runInShell: true);
 
     return true;
   }
 
   @override
   Future<bool> init(String email,
-      {GCloudAuthController? controller,
+      {bool useStdin = false,
+      GCloudAuthController? controller,
       Stream<List<int>>? stdinStream}) async {
-    GCloudAuthController authController =
-        controller ?? GCloudAuthController(stdinStream: stdinStream);
+    GCloudAuthController authController = controller ??
+        GCloudAuthController(useStdin: useStdin, stdinStream: stdinStream);
     return await authController.authenticate(email);
   }
 
@@ -365,7 +369,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       throw CreateProjectException(
           "You need to be logged in Google Cloud. Execute the init command for Google Cloud.");
     }
-    await gCloudAuthController.authenticate(currentAccount);
+    await gCloudAuthController.authenticate(
+      currentAccount,
+    );
     return currentAccount;
   }
 
