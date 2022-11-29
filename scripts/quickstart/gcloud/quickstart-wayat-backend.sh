@@ -65,7 +65,7 @@ checkMandatoryArguments() {
 }
 
 # Required CLI check
-ckeckCliInstalled() {
+checkCliInstalled() {
     # Check if GCloud CLI is installed
     if ! [ -x "$(command -v gcloud)" ]; then
         echo -e "${red}Error: GCloud CLI is not installed." >&2
