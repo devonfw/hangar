@@ -1,15 +1,22 @@
 steps:
-- name: ${_DOCKER_IMAGE}
+- id: "Execute build script"
+  name: ${_DOCKER_IMAGE}
   script: |
     #!/bin/bash
     set -e
     [[ -f .pipelines/scripts/build-setup-environment.sh ]] && source .pipelines/scripts/build-setup-environment.sh
     sh .pipelines/scripts/build.sh
 
-- name: ${_DOCKER_IMAGE}
-  args: ['tar', '-cf', 'build_${BUILD_ID}.tar', '${_TARGET_DIRECTORY}']
+- id: "Compress artifact"
+  name: alpine
+  script: |
+    #!/bin/sh
+    set -e
+    apk add --no-cache tar zstd
+    tar --zstd -cf build_${BUILD_ID}.tar.zst ${_TARGET_DIRECTORY}
 
-- name: gcr.io/cloud-builders/gsutil
+- id: "Upload artifact"
+  name: gcr.io/cloud-builders/gsutil
   args: ['cp','build_${BUILD_ID}.tar','gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/build_${BUILD_ID}.tar']
 
 # mark to insert trigger
