@@ -55,7 +55,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
 fi
 
 # Check if GCloud CLI is installed
-if [ "$firebase" == "true" ] && ![ -x "$(command -v firebase)" ]; then
+if [ "$firebase" == "true" ] && ! [ -x "$(command -v firebase)" ]; then
   echo -e "${red}Error: Firebase CLI is not installed." >&2
   echo -ne "${white}" >&2
   exit 127
@@ -68,10 +68,18 @@ else
    # Create the Google Cloud project.
    echo -e "${green}Creating project..."
    echo -ne "${white}"
-   command="gcloud projects create $projectName"
+   if [ "$firebase" == "true" ]; then
+      command="firebase projects:create $projectName --non-interactive"
+   else
+      command="gcloud projects create $projectName"
+   fi
 
    if [ -n "$description" ]; then
-      command=$command" --name=\"$description\""
+      if [ "$firebase" == "true" ]; then
+         command=$command" --display-name=\"$description\""
+      else
+         command=$command" --name=\"$description\""
+      fi
    fi
    if [ -n "$folder" ]; then
       command=$command" --folder=$folder"
