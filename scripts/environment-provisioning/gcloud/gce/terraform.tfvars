@@ -1,2 +1,2 @@
-project_id = "gke-testing-hangar"
+project_id = "projectid"
 region     = "us-central1"
