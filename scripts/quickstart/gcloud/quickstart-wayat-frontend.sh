@@ -15,7 +15,7 @@ while true; do
         --google-services )       googleServices=$2; shift 2;;
         --backend-url )           backendUrl=$2; shift 2;;
         --frontend-url )          frontendUrl=$2; shift 2;;
-        --storage-bucket )        storageBucket=$2; shift 2;;
+        --maps-static-secret )      mapsStaticSecret=$2; shift 2;;
         --) shift; break;;
     esac
 done
@@ -111,10 +111,21 @@ downloadTemplate() {
 }
 
 prepareENVFile() {
-    export storageBucket
+    # Remove '-' character
+    packageName="com.takeoff.${projectName//-/}"
+    # Remove '_' character
+    packageName="com.takeoff.${packageName//_/}"
+    export backendUrl
     export projectName
+    export messageSenderId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep messagingSenderId | awk '{print $2}' | sed s/\"//g)
+    export mapsStaticSecret
+    export bundleId=$packageName
+    export storageBucket
+    
 # shellcheck disable=SC2016
     envsubst '$backendUrl' < "$directory/env.template" > "$directory/env.template"
+    envsubst '$projectName' < "$directory/env.template" > "$directory/env.template"
+    envsubst '$messageSenderId' < "$directory/env.template" > "$directory/env.template"
     envsubst '$storageBucket' < "$directory/env.template" > "$directory/.env"
     rm "$directory/env.template"
     rm "$directory/firebaserc.template"
@@ -132,10 +143,24 @@ addSecrets() {
     "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$keystore" -r keystore.jks -b develop
 }
 
+setupPackageName() {
+    # Remove '-' character
+    packageName="com.takeoff.${projectName//-/}"
+    # Remove '_' character
+    packageName="com.takeoff.${packageName//_/}"
+    
+    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/build.gradle"
+    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/src/debug/AndroidManifest.xml"
+    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/src/main/AndroidManifest.xml"
+    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/src/profile/AndroidManifest.xml"
+    sed -i 's/com.takeof.project/$packageName/g' "$directory/ios/Runner.xcodeproj/project.pbxproj"
+    sed -i 's/com.takeof.project/$packageName/g' "$directory/lib/features/map/widgets/platform_map_widget/web_desktop_map_widget.dart"
+}
+
 corsCloudStorage() {
 # shellcheck disable=SC2016
     envsubst '$frontendUrl' < "$hangarPath/scripts/quickstart/gcloud/cors.json" > "$hangarPath/scripts/quickstart/gcloud/cors.json"
-    gsutil cors set "$hangarPath/scripts/quickstart/gcloud/cors.json" $storageBucket
+    gsutil cors set "$hangarPath/scripts/quickstart/gcloud/cors.json" "gs://${projectName}.appspot.com"
 }
 
 nextSteps() {
@@ -156,6 +181,8 @@ obtainHangarPath
 downloadTemplate
 
 prepareENVFile
+
+setupPackageName
 
 commitFiles
 
