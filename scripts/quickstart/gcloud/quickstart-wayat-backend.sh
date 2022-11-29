@@ -119,7 +119,7 @@ if [[ "$help" == "true" ]]; then helpFunction; exit; fi
 
 checkMandatoryArguments
 
-ckeckCliInstalled
+checkCliInstalled
 
 obtainHangarPath
 
