@@ -12,10 +12,9 @@ while true; do
         -d | --directory )        directory=$2; shift 2;;
         -p | --project )          projectName=$2; shift 2;;
         --keystore )              keystore=$2; shift 2;;
-        --google-services )       googleServices=$2; shift 2;;
         --backend-url )           backendUrl=$2; shift 2;;
         --frontend-url )          frontendUrl=$2; shift 2;;
-        --maps-static-secret )      mapsStaticSecret=$2; shift 2;;
+        --maps-static-secret )    mapsStaticSecret=$2; shift 2;;
         --) shift; break;;
     esac
 done
@@ -27,7 +26,10 @@ helpFunction() {
    echo -e "\t-w, --workspace        [Required] Path for the Takeoff Workspace Project directory"
    echo -e "\t-d, --directory        [Required] Path for the directory of the Frontend code"
    echo -e "\t-p, --project          [Required] Project shortname (ID)"
-   echo -e "\t--storage-bucket       [Required] Storage bucket for storing pictures"
+   echo -e "\t--keystore             [Required] Keystore file path"
+   echo -e "\t--backend-url          [Required] Backend service url"
+   echo -e "\t--frontend-url         [Required] Frontend service url"
+   echo -e "\t--maps-static-secret   [Required] Maps static API secret"
 }
 
 # Colours for the messages.
@@ -51,14 +53,35 @@ checkMandatoryArguments() {
         echo -ne "${white}" >&2
         exit 2
     fi
-    if [ -z "$storageBucket" ];
+    if [ -z "$projectName" ];
     then
-        echo -e "${red}Error: Missing paramenters, --storage-bucket is mandatory." >&2
+        echo -e "${red}Error: Missing paramenters, -p or --project is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
     fi
-    if [ -z "$projectName" ];
+    if [ -z "$keystore" ];
+    then
+        echo -e "${red}Error: Missing paramenters, -p or --project is mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
+        echo -ne "${white}" >&2
+        exit 2
+    fi
+    if [ -z "$backendUrl" ];
+    then
+        echo -e "${red}Error: Missing paramenters, -p or --project is mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
+        echo -ne "${white}" >&2
+        exit 2
+    fi
+    if [ -z "$frontendUrl" ];
+    then
+        echo -e "${red}Error: Missing paramenters, -p or --project is mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
+        echo -ne "${white}" >&2
+        exit 2
+    fi
+    if [ -z "$mapsStaticSecret" ];
     then
         echo -e "${red}Error: Missing paramenters, -p or --project is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
@@ -123,19 +146,45 @@ prepareENVFile() {
     export webApiKey=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep apiKey | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export webAppId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep appId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export webAuthDomain=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep authDomain | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export bundleId=$packageName
-    export storageBucket
+    export androidApiKey=$(firebase apps:sdkconfig --project=hangar-wayat-flutter ANDROID | grep current_key | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export androidAppId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter ANDROID | grep mobilesdk_app_id | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export iosApiKey=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep API_KEY -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export iosAppId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep GOOGLE_APP_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export iosAndroidClientId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep ANDROID_CLIENT_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export iosClientId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep CLIENT_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export iosBundleId=$packageName
     
 # shellcheck disable=SC2016
-    envsubst '$backendUrl' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$projectName' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$messageSenderId' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$mapsStaticSecret' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$webClientId' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$webApiKey' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$webAppId' < "$directory/env.template" > "$directory/env.template"
-    envsubst '$webAuthDomain' < "$directory/env.template" > "$directory/env.template"
+    envsubst '$backendUrl' < "$directory/env.template" > "$directory/.env"
+    envsubst '$projectName' < "$directory/.env" > "$directory/.env"
+    envsubst '$messageSenderId' < "$directory/.env" > "$directory/.env"
+    envsubst '$mapsStaticSecret' < "$directory/.env" > "$directory/.env"
+    envsubst '$webClientId' < "$directory/.env" > "$directory/.env"
+    envsubst '$webApiKey' < "$directory/.env" > "$directory/.env"
+    envsubst '$webAppId' < "$directory/.env" > "$directory/.env"
+    envsubst '$webAuthDomain' < "$directory/.env" > "$directory/.env"
+    envsubst '$androidApiKey' < "$directory/.env" > "$directory/.env"
+    envsubst '$androidAppId' < "$directory/.env" > "$directory/.env"
+    envsubst '$iosApiKey' < "$directory/.env" > "$directory/.env"
+    envsubst '$iosAppId' < "$directory/.env" > "$directory/.env"
+    envsubst '$iosAndroidClientId' < "$directory/.env" > "$directory/.env"
+    envsubst '$iosAndroidClientId' < "$directory/.env" > "$directory/.env"
+    envsubst '$iosBundleId' < "$directory/.env" > "$directory/.env"
     rm "$directory/env.template"
+    
+    export storePassword=android
+    export keyPassword=android
+    export keyAlias=upload
+    export storeFile=/workspace/keystore.jks
+# shellcheck disable=SC2016
+    envsubst '$storePassword' < "$directory/android/key.properties.template" > "$directory/android/key.properties"
+    envsubst '$keyPassword' < "$directory/android/key.properties" > "$directory/android/key.properties"
+    envsubst '$keyAlias' < "$directory/android/key.properties" > "$directory/android/key.properties"
+    envsubst '$storeFile' < "$directory/android/key.properties" > "$directory/android/key.properties"
+    rm "$directory/android/key.properties.template"
+
+    # google-services dile generation
+    firebase apps:sdkconfig --project ${projectName} --out ${directory}/google-services.json ANDROID
 }
 
 commitFiles() {
@@ -144,8 +193,8 @@ commitFiles() {
 
 addSecrets() {
     "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/.env" -r .env -b develop
-    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/key.properties" -r android/key.properties -b develop
-    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$googleServices" -r android/app/google-services.json -b develop
+    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/android/key.properties" -r android/key.properties -b develop
+    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/google-services.json" -r android/app/google-services.json -b develop
     "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$keystore" -r keystore.jks -b develop
 }
 
@@ -170,7 +219,11 @@ corsCloudStorage() {
 }
 
 nextSteps() {
-
+    echo "Next steps:"
+    echo "1- Go to https://console.cloud.google.com/apis/credentials/oauthclient/$webClientId?project=$projectName"
+    echo "and in \"JavaScript authoritative sources\" section add frontend url: $frontendUrl"
+    echo "2- Go to https://console.firebase.google.com/project/$projectName/appcheck/apps and register SafetyNet in android app"
+    echo "3- Go to https://console.firebase.google.com/project/$projectName/authentication/providers, then enable Google Sign In and Phone authentication"
 }
 
 #==============================================================
