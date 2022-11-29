@@ -67,10 +67,11 @@ then
 fi
 
 #Check if GCP CLI is installed
-if ! [ -x "$(command -v gcloud)" ]; then
-  echo -e "${red}Error: GCP CLI is not installed." >&2
-  echo -ne "${white}"
-  exit 127
+if ! [ -x "$(command -v gcloud)" ]; 
+then
+    echo -e "${red}Error: GCP CLI is not installed." >&2
+    echo -ne "${white}"
+    exit 127
 fi
 
 #Check if the provided project_id exists and in that case set it as working project
@@ -86,7 +87,7 @@ else
     then
         echo -e "${red}Error: Could not set current project to $project_id." >&2
         echo -ne "${white}"
-    exit 2
+        exit 2
     else
         echo -e "${green}Current project set to $project_id." >&2
         echo -ne "${white}"
@@ -114,16 +115,16 @@ then
         echo -e "${white}Checking if service account $service_account already exists..."
         if [[ ! " ${service_accounts_array[*]} " =~ " $service_account_email " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
         then
-          echo -e "${white}Creating new service account: $service_account_email..."
-          if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
-          then
-              echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
-              echo -ne "${white}"
-              exit 2
-          else
-              echo -e "${green}Service account $service_account created successfully."
-              echo -ne "${white}"
-          fi
+            echo -e "${white}Creating new service account: $service_account_email..."
+            if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
+            then
+                echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
+                echo -ne "${white}"
+                exit 2
+            else
+                echo -e "${green}Service account $service_account created successfully."
+                echo -ne "${white}"
+            fi
         else
             echo -e "${white}The service account $service_account exists already. Proceeding to use it."
         fi
@@ -163,14 +164,14 @@ then
     IFS=',' read -ra roles_array <<< "$roles"
     for role_to_check in "${roles_array[@]}"; do
         if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role="$role_to_check" &> /dev/null;
-    then
-        echo -e "${red}Error: Attaching role $role_to_check to $memberValue for project $project_id." >&2
-        echo -ne "${white}"
+        then
+            echo -e "${red}Error: Attaching role $role_to_check to $memberValue for project $project_id." >&2
+            echo -ne "${white}"
             exit 2
-    else
-        echo -e "${green}Attached role $role_to_check to $memberValue in project $project_id."
-        echo -ne "${white}"
-    fi
+        else
+            echo -e "${green}Attached role $role_to_check to $memberValue in project $project_id."
+            echo -ne "${white}"
+        fi
     done
 fi
 
@@ -182,11 +183,11 @@ then
     for role_to_check in "${roles_file_array[@]}"
     do
         if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role="$role_to_check" &> /dev/null;
-    then
-        echo -e "${red}Error: Attaching role $role_to_check to $memberValue in project $project_id." >&2
-        echo -ne "${white}"
-        exit 2
-    else
+        then
+            echo -e "${red}Error: Attaching role $role_to_check to $memberValue in project $project_id." >&2
+            echo -ne "${white}"
+            exit 2
+        else
             echo -e "${green}Attached role $role_to_check to $memberValue in project $project_id."
             echo -ne "${white}"
         fi
@@ -201,10 +202,10 @@ then
     then
         echo -e "${red}Error: Creating custom role $custom_role_id for project $project_id." >&2
         echo -ne "${white}"
-    exit 2
+        exit 2
     else
-    echo -e "${green}Created custom role $custom_role_id for project $project_id successfully."
-    echo -ne "${white}"
+        echo -e "${green}Created custom role $custom_role_id for project $project_id successfully."
+        echo -ne "${white}"
     fi
     echo -e "${white}Binding role $custom_role_id to principal $memberValue in project $project_id..."
     if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role=projects/"$project_id"/roles/"$custom_role_id" &> /dev/null;
