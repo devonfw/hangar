@@ -1,6 +1,6 @@
 terraform {
  backend "gcs" {
-   bucket  = "projectid_cloudbuild"
+   bucket  = "gke-test-hangar_cloudbuild"
    prefix  = "terraform/state"
  }
 }
