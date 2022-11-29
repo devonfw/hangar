@@ -1,5 +1,24 @@
 #!/bin/bash
 
+set -e
+FLAGS=$(getopt -a --options n:d:f:o:b:h --long "help,firebase" -- "$@")
+
+eval set -- "$FLAGS"
+
+while true; do
+    case "$1" in
+         -h | --help )             help="true"; shift 1;;
+         -n )                      projectName=$2; shift 2;;
+         -d )                      description=$2; shift 2;;
+         -f )                      folder=$2; shift 2;;
+         -o )                      organization=$2; shift 2;;
+         -b )                      billing=$2; shift 2;;
+         --firebase )              firebase="true"; shift 1;;
+         --) shift; break;;
+    esac
+done
+
+
 helpFunction()
 {
    echo "Creates a new project and enables billing and required APIs"
@@ -10,24 +29,14 @@ helpFunction()
    echo -e "\t-d            Description for the new project. If not specified, name will be used as description"
    echo -e "\t-f            Numeric ID of the folder for which the project will be configured."
    echo -e "\t-o            Numeric ID of the organization for which the project will be configured."
+   echo -e "\t--firebase    Create the new project as a Firebase Project."
 }
-
-while getopts "n:d:f:o:b:h" opt
-do
-   case "$opt" in
-      n ) projectName="$OPTARG" ;;
-      d ) description="$OPTARG" ;;
-      f ) folder="$OPTARG" ;;
-      o ) organization="$OPTARG" ;;
-      b ) billing="$OPTARG" ;;
-      h ) helpFunction; exit ;;
-      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
-   esac
-done
 
 white='\e[1;37m'
 green='\e[1;32m'
 red='\e[0;31m'
+
+if [[ "$help" == "true" ]]; then helpFunction; exit; fi
 
 # Mandatory argument check
 if [ -z "$projectName" ] || [ -z "$billing" ];
