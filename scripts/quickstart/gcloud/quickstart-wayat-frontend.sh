@@ -134,24 +134,29 @@ downloadTemplate() {
 }
 
 prepareENVFile() {
+    # Temporary files
+    firebase apps:sdkconfig --project=$projectName ANDROID > "${workspace}/google-services.json"
+    firebase apps:sdkconfig --project=$projectName IOS > "${workspace}/GoogleService-Info.plist"
+    firebase apps:sdkconfig --project=$projectName WEB > "${workspace}/web.tmp"
+
     # Remove '-' character
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
     packageName="com.takeoff.${packageName//_/}"
     export backendUrl
     export projectName
-    export messageSenderId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep messagingSenderId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export messageSenderId=$(cat "${workspace}/web.tmp" | grep messagingSenderId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export mapsStaticSecret
-    export webClientId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter ANDROID | grep client_id | awk 'FNR == 3 {print $2}' | sed s/\"//g | sed s/,//g)
-    export webApiKey=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep apiKey | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export webAppId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep appId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export webAuthDomain=$(firebase apps:sdkconfig --project=hangar-wayat-flutter WEB | grep authDomain | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export androidApiKey=$(firebase apps:sdkconfig --project=hangar-wayat-flutter ANDROID | grep current_key | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export androidAppId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter ANDROID | grep mobilesdk_app_id | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export iosApiKey=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep API_KEY -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
-    export iosAppId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep GOOGLE_APP_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
-    export iosAndroidClientId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep ANDROID_CLIENT_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
-    export iosClientId=$(firebase apps:sdkconfig --project=hangar-wayat-flutter IOS | grep CLIENT_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export webClientId=$(cat "${workspace}/google-services.json" | grep client_id | awk 'FNR == 3 {print $2}' | sed s/\"//g | sed s/,//g)
+    export webApiKey=$(cat "${workspace}/web.tmp" | grep apiKey | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export webAppId=$(cat "${workspace}/web.tmp" | grep appId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export webAuthDomain=$(cat "${workspace}/web.tmp" | grep authDomain | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export androidApiKey=$(cat "${workspace}/google-services.json" | grep current_key | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export androidAppId=$(cat "${workspace}/google-services.json" | grep mobilesdk_app_id | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export iosApiKey=$(cat "${workspace}/GoogleService-Info.plist" | grep API_KEY -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export iosAppId=$(cat "${workspace}/GoogleService-Info.plist" | grep GOOGLE_APP_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export iosAndroidClientId=$(cat "${workspace}/GoogleService-Info.plist" | grep ANDROID_CLIENT_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
+    export iosClientId=$(cat "${workspace}/GoogleService-Info.plist" | grep CLIENT_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
     export iosBundleId=$packageName
     
 # shellcheck disable=SC2016
@@ -184,7 +189,7 @@ prepareENVFile() {
     rm "$directory/android/key.properties.template"
 
     # google-services dile generation
-    firebase apps:sdkconfig --project ${projectName} --out ${directory}/google-services.json ANDROID
+    firebase apps:sdkconfig --project ${projectName} ANDROID > "${directory}/google-services.json"
 }
 
 commitFiles() {
