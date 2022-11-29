@@ -125,12 +125,12 @@ ckeckCliInstalled() {
 }
 
 downloadTemplate() {
-    wget -O "$workspace"/wayat-backend-template.zip https://github.com/devonfw/hangar/archive/refs/heads/template/wayat-flutter-frontend.zip
-    unzip "$workspace"/wayat-backend-template.zip -d "$workspace/tmp"
+    wget -O "$workspace"/wayat-frontend-template.zip https://github.com/devonfw/hangar/archive/refs/heads/template/wayat-flutter-frontend.zip
+    unzip "$workspace"/wayat-frontend-template.zip -d "$workspace/tmp"
     shopt -s dotglob
-    mv -f "$workspace"/tmp/hangar-template-wayat-python-backend/* "$directory"
+    mv -f "$workspace"/tmp/hangar-template-wayat-flutter-frontend/* "$directory"
     rm -rf "$workspace/tmp"
-    rm "$workspace"/wayat-backend-template.zip
+    rm "$workspace"/wayat-frontend-template.zip
 }
 
 prepareENVFile() {
@@ -188,7 +188,7 @@ prepareENVFile() {
 }
 
 commitFiles() {
-    cd "$directory" && git add -A && git commit -m "Init Wayat Backend Code" && git push
+    cd "$directory" && git add -A && git commit -m "Init Wayat Frontend Code" && git push
 }
 
 addSecrets() {
