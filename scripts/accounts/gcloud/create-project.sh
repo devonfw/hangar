@@ -68,10 +68,18 @@ else
    # Create the Google Cloud project.
    echo -e "${green}Creating project..."
    echo -ne "${white}"
-   command="gcloud projects create $projectName"
+   if [ "$firebase" == "true" ]; then
+      command="firebase projects:create $projectName"
+   else
+      command="gcloud projects create $projectName"
+   fi
 
    if [ -n "$description" ]; then
-      command=$command" --name=\"$description\""
+      if [ "$firebase" == "true" ]; then
+         command=$command" --display-name=\"$description\""
+      else
+         command=$command" --name=\"$description\""
+      fi
    fi
    if [ -n "$folder" ]; then
       command=$command" --folder=$folder"
