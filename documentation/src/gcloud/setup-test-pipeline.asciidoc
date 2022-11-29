@@ -10,6 +10,7 @@
 :extra_args_python: --build-pipeline-name python-project-build --language-version 3.10
 :extra_args_flutter:  --build-pipeline-name flutter-project-build --language-version 3.3.4
 :no-PR-or-MR:
-:machineType:
 :openBrowserFlag:
+:secretVar:
+:envVar:
 include::../common_templates/setup-test-pipeline.asciidoc[]
