@@ -66,8 +66,8 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
-ifndef::secretVar[    --secret-vars                   Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
-ifndef::envVar[    --env-vars                      Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+    --secret-vars                   Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+    --env-vars                      Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
