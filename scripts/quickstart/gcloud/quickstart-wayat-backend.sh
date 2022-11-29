@@ -74,6 +74,11 @@ ckeckCliInstalled() {
     fi
 }
 
+obtainHangarPath() {
+    # This line goes to the script directory independent of wherever the user is and then jumps 3 directories back to get the path
+    hangarPath=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../.. && pwd )
+}
+
 downloadTemplate() {
     wget -O "$workspace"/wayat-backend-template.zip https://github.com/devonfw/hangar/archive/refs/heads/template/wayat-python-backend.zip
     unzip "$workspace"/wayat-backend-template.zip -d "$workspace/tmp"
@@ -99,8 +104,8 @@ commitFiles() {
 }
 
 addSecrets() {
-    /scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/PROD.env" -r PROD.env -b develop  
-    /scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/firebase-key.json" -r firebase-key.json -b develop
+    "$hangarPath/scripts/pipelines/gcloud/add-secret-file.sh" -d "$directory" -f "$directory/PROD.env" -r PROD.env -b develop  
+    "$hangarPath/scripts/pipelines/gcloud/add-secret-file.sh" -d "$directory" -f "$directory/firebase-key.json" -r firebase-key.json -b develop
 }
 
 deployFirebaseRules() {
@@ -115,6 +120,8 @@ if [[ "$help" == "true" ]]; then helpFunction; exit; fi
 checkMandatoryArguments
 
 ckeckCliInstalled
+
+obtainHangarPath
 
 downloadTemplate
 
