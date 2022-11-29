@@ -212,7 +212,7 @@ then
     then
         echo -e "${red}Error: Attaching custom role $custom_role_id to $memberValue in project $project_id." >&2
         echo -ne "${white}"
-    exit 2
+        exit 2
     else
         echo -e "${green}Attached custom role $custom_role_id to $memberValue in project $project_id successfully."
         echo -ne "${white}"
