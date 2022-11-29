@@ -57,8 +57,8 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
     --sonar-token            [Required] SonarQube token.
 -d, --local-directory        [Required] Local directory of your project.
     --build-pipeline-name    [Required] Build {pipeline_type} name.
-    --secret-vars                   Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
-    --env-vars                      Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+    --secret-vars                       Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+    --env-vars                          Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                      Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
 ```
