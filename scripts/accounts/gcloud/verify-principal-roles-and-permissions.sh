@@ -9,7 +9,7 @@ helpFunction()
     echo ""
     echo "Arguments:"
     echo "  -g     [Required] Google Account of an end user. Mutually exclusive with -s."
-    echo "  -s     [Required] Service Account name. Mutually exclusive with -g."
+    echo "  -s     [Required] Service Account name or email. Mutually exclusive with -g."
     echo "  -p     [Required] Short project name (ID) where the roles and permissions will be checked."
     echo "  -r                Roles to be checked, splitted by comma."
     echo "  -f                Path to a file containing the roles to be checked."
@@ -22,13 +22,13 @@ while getopts g:s:p:r:f:e:i:h flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
-	s) service_account=${OPTARG};;
+        s) service_account=${OPTARG};;
         p) project_id=${OPTARG};;
         r) roles=${OPTARG};;
         f) roles_file=${OPTARG};;
         e) permissions=${OPTARG};;
-	i) permissions_file=${OPTARG};;
-	h) helpFunction ;;
+        i) permissions_file=${OPTARG};;
+        h) helpFunction ;;
         ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
     esac
 done
@@ -57,10 +57,11 @@ then
 fi
 
 #Check if GCP CLI is installed
-if ! [ -x "$(command -v gcloud)" ]; then
-  echo -e "${red}Error: GCP CLI is not installed." >&2
-  echo -ne "${white}"
-  exit 127
+if ! [ -x "$(command -v gcloud)" ]; 
+then
+    echo -e "${red}Error: GCP CLI is not installed." >&2
+    echo -ne "${white}"
+    exit 127
 fi
 
 #Check if the provided project_id exists and in that case set it as working project
@@ -76,23 +77,25 @@ else
     then
         echo -e "${red}Error: Could not set current project to $project_id." >&2
         echo -ne "${white}"
-	exit 2
+        exit 2
     else
-	echo -e "${green}Current project set to $project_id." >&2
-	echo -ne "${white}"
+        echo -e "${green}Current project set to $project_id." >&2
+        echo -ne "${white}"
     fi
 fi
 
-#Check if the service account exists and if not, create it
+#Check if the service account exists
 if [ -n "$service_account" ];
 then
-    service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
-    echo -e "${white}Checking if service account $service_account_email already exists..."
-    if ! gcloud iam service-accounts describe "$service_account_email" &> /dev/null;
+    [[ "$service_account" =~ .*"@".* ]] && service_account_email="$service_account" || service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
+    echo -e "${white}Checking if service account $service_account_email already exists..."	
+    service_accounts=$(gcloud projects get-iam-policy "$project_id" --format='flattened' --format='flattened' | grep members | grep serviceAccount: | cut -d ':' -f 3-)
+    service_accounts_array=($service_accounts)
+    if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account_email} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
     then
         echo -e "${red}Error: Service account $service_account_email does not exist. Please, provide a valid one." >&2
         echo -ne "${white}"
-	exit 2
+        exit 2
     else
         echo -e "${white}The service account $service_account_email is valid."
     fi
@@ -121,7 +124,7 @@ if [ -n "$permissions" ] || [ -n "$permissions_file" ]; then
     for role_to_check in "${all_roles_array[@]}"; do 
         if [[ "$role_to_check" == *"projects"* ]]; then
             customRoleName=$(echo "$role_to_check" | cut -d "/" -f 4)
-	    role_permissions=$(gcloud iam roles describe "$customRoleName" --project="$project_id" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
+            role_permissions=$(gcloud iam roles describe "$customRoleName" --project="$project_id" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
         else
             role_permissions=$(gcloud iam roles describe "$role_to_check" --format=json --flatten="includedPermissions[]" | grep "includedPermissions" | cut -d ":" -f 2 | cut -d "\"" -f 2)
         fi
@@ -140,15 +143,14 @@ then
     for role_to_check in "${roles_array[@]}"; do
         
         if [[ " ${all_roles_array[*]} " =~ " ${role_to_check} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738  
-	then
-	    echo -e "${green}OK        $role_to_check"
+        then
+            echo -e "${green}OK        $role_to_check"
         else
             echo -e "${red}FAILED      $role_to_check"
-	    exitCode=3
+            exitCode=3
             echo -ne "${white}"
         fi
         echo -ne "${white}"
-
     done
 fi
 
@@ -166,7 +168,7 @@ then
             echo -ne "${white}"
         else
             echo -e "${red}FAILED      $role_to_check"
-	    exitCode=3
+            exitCode=3
             echo -ne "${white}"
         fi
      done
@@ -180,13 +182,13 @@ then
     for permission_to_check in "${permissions_array[@]}"; do
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
         then
-	    echo -e "${green}OK        $permission_to_check"
-	    echo -ne "${white}"
-	else
-	    echo -e "${red}FAILED      $permission_to_check"
-	    exitCode=3
-	    echo -ne "${white}"
-	fi
+            echo -e "${green}OK        $permission_to_check"
+            echo -ne "${white}"
+        else
+            echo -e "${red}FAILED      $permission_to_check"
+            exitCode=3
+            echo -ne "${white}"
+        fi
     done
 fi
 
@@ -198,14 +200,14 @@ then
     for permission_to_check in "${permissions_file_array[@]}"
     do
         if [[ " ${all_permissions_array[*]} " =~ " ${permission_to_check} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
-	then
-	    echo -e "${green}OK        $permission_to_check"
-	    echo -ne "${white}"
-	else
-            echo -e "${red}FAILED      $permission_to_check"
-	    exitCode=3
+        then
+            echo -e "${green}OK        $permission_to_check"
             echo -ne "${white}"
-	fi
+        else
+            echo -e "${red}FAILED      $permission_to_check"
+            exitCode=3
+            echo -ne "${white}"
+        fi
     done
 fi
 
