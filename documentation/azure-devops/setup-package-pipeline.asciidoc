@@ -45,7 +45,6 @@ pipeline_generator.sh \
   [--env-vars <env vars list>]
   [-b <branch>] \
   [-w]
-
 ```
 
 NOTE: The config file for the package {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/package/package-pipeline.cfg`.
@@ -62,8 +61,8 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
     --build-pipeline-name      [Required] Build {pipeline_type} name.
     --quality-pipeline-name    [Required] Quality {pipeline_type} name.
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
--u, --registry-user            [Required, unless AWS] Container registry login user.
--p, --registry-password        [Required, unless AWS] Container registry login password.
+-u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
+-p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."

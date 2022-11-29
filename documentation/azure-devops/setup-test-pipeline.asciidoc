@@ -37,7 +37,6 @@ pipeline_generator.sh \
   -l <language or framework> \
   -d <project local path> \
   --build-pipeline-name <build {pipeline_type} name> \
-  --language-version <version> \
   [-a <artifact source path>] \
   [--secret-vars <secret vars list>]
   [--env-vars <env vars list>]
@@ -56,10 +55,9 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
     --build-pipeline-name   [Required] Build {pipeline_type} name.
--a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
-    --language-version      [Required, if Flutter or Python] Language or framework version.
 ifndef::secretVar[    --secret-vars                   Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
 ifndef::envVar[    --env-vars                      Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+-a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -94,18 +92,4 @@ ifndef::envVar[    --env-vars                      Environment variable needed f
 [subs=attributes+]
 ```
 ./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n angular-project-test -l angular -d C:/Users/$USERNAME/Desktop/node-project {extra_args_angular} -b develop {openBrowserFlag}
-```
-
-==== Python project
-
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n python-project-test -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -b develop {openBrowserFlag}
-```
-
-==== Flutter project
-
-[subs=attributes+]
-```
-./pipeline_generator.sh -c ./templates/test/test-pipeline.cfg -n flutter-project-test -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} -b develop {openBrowserFlag}
 ```

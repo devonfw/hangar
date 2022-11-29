@@ -4,7 +4,6 @@
 :pipeline_type2: pipeline
 :path_provider: gcloud
 :no-PR-or-MR:
-:machineType:
 :openBrowserFlag:
 = Setting up a Build {pipeline_type} on {provider}
 
@@ -30,8 +29,8 @@ pipeline_generator.sh \
   -n <{pipeline_type} name> \
   -l <language or framework> \
   -d <project local path> \
-  --registry-location <artifact registry> \
-  --language-version <version> \
+  [--language-version <version>] \
+  [--registry-location <artifact registry>] \
   [-t <target-directory>] \
   [--secret-vars <secret vars list>]
   [--env-vars <env vars list>]
@@ -48,8 +47,8 @@ NOTE: The config file for the build {pipeline_type} is located at `/scripts/pipe
 -n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.
 -l, --language           [Required] Language or framework of the project.
 -d, --local-directory    [Required] Local directory of your project.
-    --registry-location  [Required, if Flutter] Artifact registry location.
     --language-version   [Required, if Flutter or Python] Language or framework version.
+    --registry-location  [Required, if Flutter] Artifact registry location.
 -t, --target-directory              Target directory of build process. Takes precedence over the language/framework default one.
 ifndef::secretVar[    --secret-vars                   Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
 ifndef::envVar[    --env-vars                      Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
