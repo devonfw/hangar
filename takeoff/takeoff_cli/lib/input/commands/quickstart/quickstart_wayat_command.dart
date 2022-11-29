@@ -8,7 +8,7 @@ class QuickstartWayatCommand extends Command {
   @override
   final String description =
       "Automatically creates and deploys all the necessary"
-      " services and resources to have either Wayat or VipLane on the cloud.";
+      " services and resources to have Wayat on the cloud.";
 
   QuickstartWayatCommand(this.service) {
     argParser.addOption("billing-account", abbr: "b", mandatory: true);
