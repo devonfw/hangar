@@ -14,7 +14,7 @@ steps:
     apt-get install terraform
 
     #Terraform init
-    cd .terraform/gce/
+    cd .terraform/gke/
     terraform init -input=false
 
     if [ "${_OPERATION}" == "create" ]; then
