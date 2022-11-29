@@ -300,6 +300,11 @@ createPlatformApps() {
     fi
 }
 
+nextSteps() {
+    echo "Next steps:"
+    echo "1- Accept consent screen: https://console.cloud.google.com/apis/credentials/consent?project=$projectName"
+}
+
 #==============================================================
 # SCRIPT EXECUTION:
 
@@ -326,3 +331,5 @@ then
     echo "Creating APPs"
     createPlatformApps
 fi
+
+nextSteps
