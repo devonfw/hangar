@@ -46,7 +46,6 @@ class CustomFirebaseOptions {
     projectId: EnvModel.PROJECT_ID,
     authDomain: EnvModel.WEB_AUTH_DOMAIN,
     storageBucket: EnvModel.STORAGE_BUCKET,
-    measurementId: EnvModel.WEB_MEASUREMENT_ID,
   );
 
   static FirebaseOptions android = FirebaseOptions(
@@ -86,7 +85,6 @@ class CustomFirebaseOptions {
     projectId: EnvModel.PROJECT_ID,
     authDomain: EnvModel.WEB_AUTH_DOMAIN,
     storageBucket: EnvModel.STORAGE_BUCKET,
-    measurementId: EnvModel.WEB_MEASUREMENT_ID,
   );
   
   static FirebaseOptions linux = FirebaseOptions(
@@ -96,6 +94,5 @@ class CustomFirebaseOptions {
     projectId: EnvModel.PROJECT_ID,
     authDomain: EnvModel.WEB_AUTH_DOMAIN,
     storageBucket: EnvModel.STORAGE_BUCKET,
-    measurementId: EnvModel.WEB_MEASUREMENT_ID,
   );
 }

@@ -56,11 +56,6 @@ abstract class EnvModel {
   // ignore: non_constant_identifier_names
   static final String WEB_AUTH_DOMAIN = _EnvModel.WEB_AUTH_DOMAIN;
 
-  /// Google Cloud web measurement id
-  @EnviedField()
-  // ignore: non_constant_identifier_names
-  static final String WEB_MEASUREMENT_ID = _EnvModel.WEB_MEASUREMENT_ID;
-
   /// Google Cloud android api key
   @EnviedField()
   // ignore: non_constant_identifier_names
@@ -95,9 +90,4 @@ abstract class EnvModel {
   @EnviedField()
   // ignore: non_constant_identifier_names
   static final String IOS_BUNDLE_ID = _EnvModel.IOS_BUNDLE_ID;
-
-  /// Google Cloud desktop client id
-  @EnviedField()
-  // ignore: non_constant_identifier_names
-  static final String DESKTOP_CLIENT_ID = _EnvModel.DESKTOP_CLIENT_ID;
 }

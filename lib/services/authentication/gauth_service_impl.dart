@@ -65,9 +65,9 @@ class GoogleAuthService implements AuthService {
           scopes: ['email'],
         );
       } else if (_platformService.isDesktop) {
-        GoogleSignInDart.register(clientId: EnvModel.DESKTOP_CLIENT_ID);
+        GoogleSignInDart.register(clientId: EnvModel.WEB_CLIENT_ID);
         googleSignIn = GoogleSignIn(
-          clientId: EnvModel.DESKTOP_CLIENT_ID,
+          clientId: EnvModel.WEB_CLIENT_ID,
           scopes: ['email'],
         );
       } else {
