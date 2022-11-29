@@ -23,13 +23,13 @@ while getopts g:s:p:r:f:c:i:k:h flag
 do
     case "${flag}" in
         g) google_account=${OPTARG};;
-	    s) service_account=${OPTARG};;
+        s) service_account=${OPTARG};;
         p) project_id=${OPTARG};;
         r) roles=${OPTARG};;
         f) roles_file=${OPTARG};;
         c) custom_role_file=${OPTARG};;
-	    i) custom_role_id=${OPTARG};;
-	    k) key_path=${OPTARG};;
+        i) custom_role_id=${OPTARG};;
+        k) key_path=${OPTARG};;
         h) helpFunction ;;
         ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent.
     esac
@@ -86,7 +86,7 @@ else
     then
         echo -e "${red}Error: Could not set current project to $project_id." >&2
         echo -ne "${white}"
-	exit 2
+    exit 2
     else
         echo -e "${green}Current project set to $project_id." >&2
         echo -ne "${white}"
@@ -106,24 +106,24 @@ then
         if [[ ! " ${service_accounts_array[*]} " =~ " ${service_account} " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
         then
             echo -e "${red}Error: Service account $service_account. does not exist" >&2
-	        echo -ne "${white}"
-	        exit 2
+            echo -ne "${white}"
+            exit 2
         fi
     else #User-managed service account
         service_account_email="$service_account@$project_id.iam.gserviceaccount.com"
         echo -e "${white}Checking if service account $service_account already exists..."
         if [[ ! " ${service_accounts_array[*]} " =~ " $service_account_email " ]]; # Searches right literal in left array. More info: https://stackoverflow.com/a/15394738
         then
-	      echo -e "${white}Creating new service account: $service_account_email..."
-	      if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
-	      then
-	          echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
-	          echo -ne "${white}"
-	          exit 2
-	      else
-	          echo -e "${green}Service account $service_account created successfully."
-	          echo -ne "${white}"
-	      fi
+          echo -e "${white}Creating new service account: $service_account_email..."
+          if ! gcloud iam service-accounts create "$service_account" --display-name="$service_account" &> /dev/null;
+          then
+              echo -e "${red}Error: Cannot create service account with display name $service_account." >&2
+              echo -ne "${white}"
+              exit 2
+          else
+              echo -e "${green}Service account $service_account created successfully."
+              echo -ne "${white}"
+          fi
         else
             echo -e "${white}The service account $service_account exists already. Proceeding to use it."
         fi
@@ -133,10 +133,10 @@ then
         then
             echo -e "${white}Error: Service account key could not be created." >&2
             echo -ne "${white}"
-	        exit 2
+            exit 2
         else
             echo -e "${green}Service account key creation ended successfully."
-	        echo -ne "${white}"
+            echo -ne "${white}"
         fi
     fi
 fi
@@ -163,14 +163,14 @@ then
     IFS=',' read -ra roles_array <<< "$roles"
     for role_to_check in "${roles_array[@]}"; do
         if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role="$role_to_check" &> /dev/null;
-	then
-	    echo -e "${red}Error: Attaching role $role_to_check to $memberValue for project $project_id." >&2
-	    echo -ne "${white}"
+    then
+        echo -e "${red}Error: Attaching role $role_to_check to $memberValue for project $project_id." >&2
+        echo -ne "${white}"
             exit 2
-	else
-	    echo -e "${green}Attached role $role_to_check to $memberValue in project $project_id."
-	    echo -ne "${white}"
-	fi
+    else
+        echo -e "${green}Attached role $role_to_check to $memberValue in project $project_id."
+        echo -ne "${white}"
+    fi
     done
 fi
 
@@ -182,11 +182,11 @@ then
     for role_to_check in "${roles_file_array[@]}"
     do
         if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role="$role_to_check" &> /dev/null;
-	then
-	    echo -e "${red}Error: Attaching role $role_to_check to $memberValue in project $project_id." >&2
-	    echo -ne "${white}"
-	    exit 2
-	else
+    then
+        echo -e "${red}Error: Attaching role $role_to_check to $memberValue in project $project_id." >&2
+        echo -ne "${white}"
+        exit 2
+    else
             echo -e "${green}Attached role $role_to_check to $memberValue in project $project_id."
             echo -ne "${white}"
         fi
@@ -201,17 +201,17 @@ then
     then
         echo -e "${red}Error: Creating custom role $custom_role_id for project $project_id." >&2
         echo -ne "${white}"
-	exit 2
+    exit 2
     else
-	echo -e "${green}Created custom role $custom_role_id for project $project_id successfully."
-	echo -ne "${white}"
+    echo -e "${green}Created custom role $custom_role_id for project $project_id successfully."
+    echo -ne "${white}"
     fi
     echo -e "${white}Binding role $custom_role_id to principal $memberValue in project $project_id..."
     if ! gcloud projects add-iam-policy-binding "$project_id" --member="$memberValue" --role=projects/"$project_id"/roles/"$custom_role_id" &> /dev/null;
     then
         echo -e "${red}Error: Attaching custom role $custom_role_id to $memberValue in project $project_id." >&2
         echo -ne "${white}"
-	exit 2
+    exit 2
     else
         echo -e "${green}Attached custom role $custom_role_id to $memberValue in project $project_id successfully."
         echo -ne "${white}"
