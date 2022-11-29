@@ -37,8 +37,8 @@ ifeval::["{provider}" == "Google Cloud"]
   [--registry-location <artifact registry>] \
 endif::[]
   [-t <target-directory>] \
-ifndef::secretVar[  [--secret-vars <secret vars list>]]
-ifndef::envVar[  [--env-vars <env vars list>]]
+ifdef::secretVar[  [--secret-vars <secret vars list>]]
+ifdef::envVar[  [--env-vars <env vars list>]]
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]

@@ -39,8 +39,8 @@ ifeval::["{provider}" == "Google Cloud"]
   [--language-version <version>] \
 endif::[]
   [-a <artifact source path>] \
-ifndef::secretVar[  [--secret-vars <secret vars list>]]
-ifndef::envVar[  [--env-vars <env vars list>]]
+ifdef::secretVar[  [--secret-vars <secret vars list>]]
+ifdef::envVar[  [--env-vars <env vars list>]]
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]
@@ -65,8 +65,8 @@ ifdef::build-pipeline[    --build-pipeline-name   [Required] Build {pipeline_typ
 ifeval::["{provider}" == "Google Cloud"]
     --language-version      [Required, if Flutter or Python] Language or framework version.
 endif::[]
-ifndef::secretVar[    --secret-vars                      Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
-ifndef::envVar[    --env-vars                         Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
+ifdef::secretVar[    --secret-vars                      Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
+ifdef::envVar[    --env-vars                         Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
 -a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
