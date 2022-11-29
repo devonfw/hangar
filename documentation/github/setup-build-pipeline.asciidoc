@@ -32,8 +32,6 @@ pipeline_generator.sh \
   -l <language or framework> \
   -d <project local path> \
   [-t <target-directory>] \
-  [--secret-vars <secret vars list>]
-  [--env-vars <env vars list>]
   [-b <branch>] \
   [-w]
 ```

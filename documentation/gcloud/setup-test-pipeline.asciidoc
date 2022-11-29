@@ -11,6 +11,8 @@
 :extra_args_flutter:  --build-pipeline-name flutter-project-build --language-version 3.3.4
 :no-PR-or-MR:
 :openBrowserFlag:
+:secretVar:
+:envVar:
 = Setting up a Test {pipeline_type} on {provider}
 
 In this section we will create a test {pipeline_type} on {provider} for running project test cases. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.

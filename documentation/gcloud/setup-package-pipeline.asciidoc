@@ -14,6 +14,8 @@
 :build-pipeline:
 :quality-pipeline:
 :openBrowserFlag:
+:secretVar:
+:envVar:
 = Setting up a Package {pipeline_type} on {provider}
 
 In this section we will create a package {pipeline_type} to build and push a container image of the project application into the specified container registry. {trigger_sentence}. It consumes the artifact produced by the build {pipeline_type}.
