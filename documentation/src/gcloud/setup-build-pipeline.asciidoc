@@ -5,4 +5,6 @@
 :path_provider: gcloud
 :no-PR-or-MR:
 :openBrowserFlag:
+:secretVar:
+:envVar:
 include::../common_templates/setup-build-pipeline.asciidoc[]
