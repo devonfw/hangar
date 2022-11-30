@@ -53,6 +53,23 @@ Hangar --> TakeOff : Roles Validation Success
 TakeOff -> Gcloud : gcloud auth activate-service-account Key
 Gcloud --> TakeOff : Auth Service Account Success
 
+
+TakeOff -> Hangar : create-repo.sh Frontend
+Hangar -> Gcloud : gcloud repo create
+Gcloud --> Hangar : Repository Creation Success
+Hangar -> Gcloud : Import Code
+Gcloud --> Hangar : Import Code Success
+Hangar --> Cache : Project Code
+Hangar --> TakeOff : Repo URL Success
+
+TakeOff -> Hangar : create-repo.sh Backend
+Hangar -> Gcloud : gcloud repo create
+Gcloud --> Hangar : Repository Creation Success
+Hangar -> Gcloud : Import Code
+Gcloud --> Hangar : Import Code Success
+Hangar --> Cache : Project Code
+Hangar --> TakeOff : Repo URL Success
+
 TakeOff -> Hangar : setup-sonar.sh
 Hangar -> Hangar : terraform init
 Hangar -> Hangar : set-terraform-variables.sh
@@ -102,29 +119,21 @@ TakeOff -> Hangar : quickstart-wayat-backend.sh
 Cache -> Hangar : Firebase Secrets
 Hangar -> Hangar : Update Project Config
 Hangar --> Cache : Updated BE config
+Hangar -> Gcloud : Update BE Code Repo
+Gcloud --> Hangar : Code Update Success
+Hangar -> Gcloud : Apply Firebase Rules
+Gcloud --> Hangar : Firebase Rules Applied Success
 Hangar --> TakeOff : Quickstart Success
 
 TakeOff -> Hangar : quickstart-wayat-frontend.sh
 Cache -> Hangar : Firebase Secrets
 Hangar -> Hangar : Update Project Config
 Hangar --> Cache : Updated FE config
+Hangar -> Gcloud : Update FE Code Repo
+Gcloud --> Hangar : Code Update Success
+Hangar -> Gcloud : Apply Firebase Rules
+Gcloud --> Hangar : Firebase Rules Applied Success
 Hangar --> TakeOff : Quickstart Success
-
-TakeOff -> Hangar : create-repo.sh Frontend
-Hangar -> Gcloud : gcloud repo create
-Gcloud --> Hangar : Repository Creation Success
-Hangar -> Gcloud : Import Code
-Gcloud --> Hangar : Import Code Success
-Hangar --> Cache : Project Code
-Hangar --> TakeOff : Repo URL Success
-
-TakeOff -> Hangar : create-repo.sh Backend
-Hangar -> Gcloud : gcloud repo create
-Gcloud --> Hangar : Repository Creation Success
-Hangar -> Gcloud : Import Code
-Gcloud --> Hangar : Import Code Success
-Hangar --> Cache : Project Code
-Hangar --> TakeOff : Repo URL Success
 
 TakeOff -> Hangar : pipeline-generator.sh Build BE
 Hangar -> Gcloud : cloud build create pipeline
