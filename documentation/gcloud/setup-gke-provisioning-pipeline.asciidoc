@@ -35,7 +35,7 @@ NOTE: The config file for the GKE provisioning pipeline is located at `/scripts/
 ```
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
--d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
+-d, --local-directory    [Required] Local directory of your project
     --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ```
@@ -43,7 +43,7 @@ NOTE: The config file for the GKE provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/gke/gke-pipeline.cfg -n gke-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project  --rancher -b develop
+./pipeline_generator.sh -c ./templates/gke/gke-pipeline.cfg -n gke-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --rancher -b develop
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
@@ -56,14 +56,14 @@ In order to interact with your cluster you need to be logged in gcloud CLI. In c
 ```
 gcloud auth login
 ```
-Then execute get-credentials to login to the cluster. After that, you can execute whatever kubectl command.
+Then execute "gcloud container clusters get-credentials" to login to the cluster. After that, you can execute whatever kubectl command.
 ```
 gcloud container clusters get-credentials <projectid>-gke --region=<region> --project=<projectid>
 kubectl <command>
 
 ```
 
-To get the DNS name of the NGINX Ingress controller on the AKS cluster, go into Google Cloud Console > Buckets > gke-test-hangar_cloudbuild/pipelinesArtifacts/gke-provision/cluster_info.env > Authenticated URL
+To get the DNS name of the NGINX Ingress controller on the GKE cluster, navigate into Google Cloud Console > Buckets > gke-test-hangar_cloudbuild/pipelinesArtifacts/gke-provision and look up for the Authenticated URL field in the cluster_info.env file.
 
 Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
 
