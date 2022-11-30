@@ -13,7 +13,11 @@ do
     if [[ "$arg" == "--"* ]]; then
         if [[ "$pingpong" == "ping" ]]; then
             echo -e "${red}ERROR: Missing value for variable $key." >&2
+<<<<<<< HEAD
             echo -ne "${white}" >&2
+=======
+            echo -e "${white}" >&2
+>>>>>>> feature/gke-setup
             exit 1
         fi
         pingpong="ping"
