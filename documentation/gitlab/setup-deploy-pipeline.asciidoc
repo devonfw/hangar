@@ -1,8 +1,8 @@
-:provider: Azure Devops
-:pipeline_type: Pipeline
-:trigger_sentence_azure:
-:pipeline_type2: pipeline
-:path_provider: azure-devops
+:provider: Gitlab
+:pipeline_type: pipeline
+:trigger_sentence_gitlab:
+:pipeline_type2: Gitlab pipeline
+:path_provider: gitlab
 = Setting up a Deploy Pipeline on Azure DevOps
 
 In this section we will create a deploy pipeline on Azure DevOps to deploy the project application on an already provisioned Kubernetes cluster. This pipeline will be configured in order to be triggered every time package pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that package pipeline has passed. By default, it depends on the environment provisioning pipeline being successfully run on beforehand and, depending on the Kubernetes provider, it consumes the artifact produced by that. It also consumes variable groups created by package and environment provisioning pipelines.
@@ -25,10 +25,7 @@ The script located at `/scripts/pipelines/azure-devops/pipeline_generator.sh` wi
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <pipeline name> \
   -d <project local path> \
-  --package-pipeline-name <pipeline name> \
-  --env-provision-pipeline-name <pipeline name> \
   --k8s-provider <provider name> \
   --k8s-namespace <namespace> \
   --k8s-deploy-files-path <manifests path> \
@@ -41,10 +38,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 === Flags
 ```
 -c  --config-file                   [Required] Configuration file containing pipeline definition.
--n  --pipeline-name                 [Required] Name that will be set to the pipeline.
 -d  --local-directory               [Required] Local directory of your project.
-    --package-pipeline-name         [Required] Package pipeline name.
-    --env-provision-pipeline-name   [Required] Environment provisioning pipeline name.
     --k8s-provider                  [Required] Kubernetes cluster provider name. Accepted values: EKS, AKS.
     --k8s-namespace                 [Required] Kubernetes namespace where the application will be deployed.
     --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory.
@@ -56,8 +50,8 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 === Examples
 
 ```
- ./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -n quarkus-project-deploy -d C:/Users/$USERNAME/Desktop/quarkus-project --package-pipeline-name quarkus-project-package --env-provision-pipeline-name eks-provisioning --k8s-provider EKS --k8s-namespace hangar --k8s-deploy-files-path k8s -b develop -w
 
+ ./pipeline_generator.sh -c ./templates/deploy/deploy-pipeline.cfg -d C:/Users/$USERNAME/Desktop/quarkus-project --k8s-provider EKS --k8s-namespace hangar --k8s-deploy-files-path k8s -b develop -w
 ```
 
 
