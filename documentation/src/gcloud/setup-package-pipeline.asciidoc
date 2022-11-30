@@ -14,4 +14,6 @@
 :build-pipeline:
 :quality-pipeline:
 :openBrowserFlag:
+:secretVar:
+:envVar:
 include::../common_templates/setup-package-pipeline.asciidoc[]

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options n:f:r:p:d:b:h --long "secret-name:,local-file-path:,remote-file-path,:local-directory:,pipelines:,branch:,help" -- "$@")
+FLAGS=$(getopt -a --options n:f:r:p:d:b:hv: --long "secret-name:,local-file-path:,remote-file-path,:local-directory:,pipelines:,branch:,help,value:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -9,6 +9,7 @@ while true; do
         -d | --local-directory)   localDirectory=$2; shift 2;;
         -p | --pipelines)         pipelinesList=$2; shift 2;;
         -f | --local-file-path)   localFilePath=$2; shift 2;;
+        -v | --value)             secretValue="$2"; shift 2;;
         -r | --remote-file-path)  remoteFilePath=$2; shift 2;;
         -b | --branch)            targetBranch=$2; shift 2;;
         -h | --help)              help="true"; shift 1;;
@@ -26,20 +27,31 @@ commonTemplatesPath="scripts/pipelines/gcloud/templates/common" # Path for commo
 commonPipelineTemplatesPath="scripts/pipelines/common/templates/" # Path for common files of the pipelines
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
-configFilePath=".pipelines/config" # Path to the scripts.
+configFilePath=".pipelines/config" # Path to the config files.
 provider="gcloud"
-mandatoryFlags="$localDirectory,$localFilePath,$remoteFilePath,$targetBranch,"
-sourceBranch="feature/add-secret-file"
+sourceBranch="feature/add-secret"
+
+! [[ "$pipelinesList" = "" ]] || pipelinesList="AllPipelines"
+
+if [[ "$localFilePath" != "" ]]
+then
+  mandatoryFlags="$localDirectory,${localFilePath},${remoteFilePath},$targetBranch,"
+else
+  mandatoryFlags="$localDirectory,${secretName},${secretValue},$targetBranch,"
+fi
 
 function help_secret {
   echo ""
-  echo "Upload a file as a secret in the secret manager of Google Cloud to be used inside the choosen pipelines."
+  echo "Upload a file or a variable as a secret in the secret manager of Google Cloud to be used inside the chosen pipelines."
   echo ""
   echo "  -d, --local-directory       [Required] Local directory of your project."
-  echo "  -f, --local-file-path       [Required] Local path of the file you want to upload."
-  echo "  -r, --remote-file-path      [Required] Path where the secret will be dowloaded inside the pipeline (with the file name)."
+  echo "  -f, --local-file-path       [Required] Local path of the file you want to upload. (mutually exclusive with -v)"
+  echo "  -v, --value                 [Required] Value of the secret. (mutually exclusive with -f)"
+  echo "  -r, --remote-file-path      [Required if -f flag set] Path where the secret will be dowloaded inside the pipeline (with the file name)."
   echo "  -b, --target-branch         [Required] Name of the branch to which the merge will target."
-  echo "  -n, --secret-name                      Name of the secret as it will appear in the secret manager. if not set, we use the name of the file given with '-f'. NOTE: the name has to be compliant with the regex [a-zA-Z0-9_]."
+  echo "  -n, --secret-name           [Required if -v flag set] Name of the secret as it will appear in the secret manager. For the file case, we use the name of the file given with '-f'. NOTE: the name has to be compliant with the regex [a-zA-Z0-9_]."
+  echo ""
+  echo "NOTE: If '-v' and '-f' are both set, '-f' is choosen."
 
 
   exit
@@ -70,10 +82,14 @@ function checkArgs {
 
   # Checking if the file given with the -f exists
   cd "$currentDirectory"
+
   # Ensuring the UNIX format path
-  localFilePath=${localFilePath//'\'/"/"}
-  localFilePath=${localFilePath//'C:'/"/c"}
-  cd "$(dirname "${localFilePath}")" && [ -f "$(basename "${localFilePath}")" ] && localFilePath="$(pwd)/$(basename "${localFilePath}")"  || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
+  if [[ "$localFilePath" != "" ]]
+  then
+      localFilePath=${localFilePath//'\'/"/"}
+      localFilePath=${localFilePath//'C:'/"/c"}
+      cd "$(dirname "${localFilePath}")" && [ -f "$(basename "${localFilePath}")" ] && localFilePath="$(pwd)/$(basename "${localFilePath}")"  || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
+  fi
 }
 
 function getProjectRepo {
@@ -109,8 +125,7 @@ function addSecretFiles {
   gcloud secrets versions add "$secretName" --data-file="${localFilePath}" --project "${gCloudProject}"
   mkdir -p "${localDirectory}/${configFilePath}"
   mkdir -p "${localDirectory}/${scriptFilePath}"
-  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "# secretName=PathToDowload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
-  ! [[ "$pipelinesList" = "" ]] || pipelinesList="AllPipelines"
+  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "# secretName=PathToDownload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   echo "$secretName=$remoteFilePath #$pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secrets.sh" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
   # Commiting the conf file
@@ -120,6 +135,34 @@ function addSecretFiles {
   git commit -m "[skip ci] Adding secret conf file"
   git push -u origin "$sourceBranch"
   echo ""
+}
+
+function addSecretVars {
+
+    # Creating the secret if it does not exist yet
+    if [[ $(gcloud secrets list --project "${gCloudProject}" 2> /dev/null | awk -v secretName="$secretName" '$1==secretName {print $1}') == "" ]]
+    then
+      echo "gcloud secrets create $secretName"
+      gcloud secrets create "$secretName" --replication-policy="automatic"
+    fi
+
+    # Adding a version to the secret previously created
+    echo "gcloud secrets versions add \"$secretName\" --data-file=-"
+    echo "${secretValue}" | gcloud secrets versions add "$secretName" --data-file=- --project "${gCloudProject}"
+    mkdir -p "${localDirectory}/${configFilePath}"
+    [[ -f "${localDirectory}/${configFilePath}/SecretVars.conf" ]] || echo "# secretName #pipelinesList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+    echo "$secretName $pipelinesList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+
+    # Adding script to get secret and commiting changes
+    mkdir -p "${localDirectory}/${scriptFilePath}"
+    cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    # Commiting the conf file
+    echo -e "${green}Commiting and pushing into Git remote...${white}"
+    git add -f "${localDirectory}/${configFilePath}/SecretVars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
+    git commit -m "[skip ci] Adding secret vars conf file"
+    git push -u origin "$sourceBranch"
+    echo ""
 }
 
 
@@ -158,7 +201,12 @@ getProjectRepo
 
 createNewBranch
 
-addSecretFiles
+if [[ "$localFilePath" != "" ]]
+then
+    addSecretFiles
+else
+    addSecretVars
+fi
 
 merge_branch
 

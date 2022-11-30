@@ -7,6 +7,7 @@ steps:
     - |
         set -e
         [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
 
 - id: "Download artifact"
   name: gcr.io/cloud-builders/gsutil
@@ -27,10 +28,13 @@ steps:
 
 - id: "Execute test script"
   name: ${_DOCKER_IMAGE}
+  env:
+    - TRIGGER_NAME=$TRIGGER_NAME
   script: |
     #!/bin/bash
     set -e
     [[ -f .pipelines/scripts/test-setup-environment.sh ]] && source .pipelines/scripts/test-setup-environment.sh
+    [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
     .pipelines/scripts/test.sh
 
 # mark to insert trigger
