@@ -31,6 +31,7 @@ create-project.sh \
   [-d <description>] \
   [-f <folder>] \
   [-o <organization>]
+  [--firebase]
   
 ```
 
@@ -42,6 +43,7 @@ create-project.sh \
 -d               Description for the new project.
 -f               Numeric ID of the folder for which the project will be configured.
 -o               Numeric ID of the organization for which the project will be configured.
+--firebase       Creates the project as a Firebase project.
 
 
 ```
