@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-FLAGS=$(getopt -a --options w:d:p:h --long "help,workspace:,directory:,project:,keystore:,google-services:,storage-bucket:" -- "$@")
+FLAGS=$(getopt -a --options w:d:p:h --long "help,workspace:,directory:,project:,keystore:,backend-url:,frontend-url:,maps-static-secret:,google-services:,storage-bucket:" -- "$@")
 
 eval set -- "$FLAGS"
 
