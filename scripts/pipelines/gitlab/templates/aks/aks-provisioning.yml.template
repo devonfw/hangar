@@ -1,0 +1,147 @@
+default:
+  image:
+    name: ubuntu:latest
+    entrypoint:
+      - /usr/bin/env
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: always
+
+variables:
+  CLUSTER_NAME:
+    value: "$clusterName"
+    description: "Name for the AKS cluster to be created"
+  OPERATION: 
+    value: "$operation" 
+    description: "Operation to perform on cluster. Create or Destroy." 
+  INSTALL_RANCHER:
+    value: "$installRancher"   
+    description: "Installs Rancher on AKS when set to true." 
+  organization: "$CI_PROJECT_NAMESPACE"          
+  TF_STATE_NAME: "$storageContainerName"
+  TF_CACHE_KEY: default
+  TF_ROOT: "${CI_PROJECT_DIR}/.terraform/aks"
+  TF_USERNAME: ${GITLAB_USER_NAME}
+  TF_PASSWORD: ${GITLAB_PAT}
+  TF_ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${TF_STATE_NAME}"
+  TF_HTTP_ADDRESS: ${TF_ADDRESS}  
+  TF_HTTP_LOCK_ADDRESS: ${TF_ADDRESS}/lock
+  TF_HTTP_LOCK_METHOD: POST
+  TF_HTTP_UNLOCK_ADDRESS: ${TF_ADDRESS}/lock
+  TF_HTTP_UNLOCK_METHOD: DELETE
+  TF_HTTP_USERNAME: ${TF_USERNAME}
+  TF_HTTP_PASSWORD: ${TF_PASSWORD}
+  TF_HTTP_RETRY_WAIT_MIN: 5
+
+.Prerequisites_install: &Prerequisites_install
+  before_script:
+    - apt-get update
+    - apt-get install sudo -y
+    - apt-get install curl -y
+    - apt-get install zip -y
+    - apt-get install -y wget
+
+.configure_azcli: &login_azcli
+  # INSTALL AZCLI
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  - az --version  
+  - az login --username "${AZURE_USERNAME}" --password "${AZURE_PASSWORD}"
+
+.packages: &configure_packages   
+  # INSTALL KUBECTL
+  - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  - chmod +x ./kubectl
+  - mv ./kubectl /usr/local/bin/kubectl
+  # INSTALL HELM
+  - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+  - chmod +x get_helm.sh
+  - DESIRED_VERSION=v3.9.0 ./get_helm.sh
+
+.install-terraform: &install-terraform
+  # INSTALL 
+  - wget -nv https://releases.hashicorp.com/terraform/1.2.6/terraform_1.2.6_linux_amd64.zip
+  - unzip -qq terraform_1.2.6_linux_amd64.zip
+  - sudo mv terraform /usr/local/bin
+
+.configure_glab_auth: &glab_auth
+  - curl -s https://raw.githubusercontent.com/profclems/glab/trunk/scripts/install.sh | sudo sh
+  - glab auth login --token $GITLAB_PAT
+
+Provision:
+  <<: *Prerequisites_install
+  script: 
+    - *install-terraform
+    - *login_azcli
+    - cd ..
+    - terraform --version
+    - cd ${TF_ROOT}
+    - terraform init -var cluster_name=${CLUSTER_NAME}
+    - terraform apply -var cluster_name=${CLUSTER_NAME} --auto-approve
+    - mv ${TF_ROOT}/kubeconfig ${CI_PROJECT_DIR}
+    - *glab_auth
+    - cat ${CI_PROJECT_DIR}/kubeconfig | glab variable set -g $organization KUBECONFIG -t "file"
+  artifacts:
+    paths:
+      - "./kubeconfig"  
+  rules:
+  - if: '$OPERATION == "create"'
+    when: always  
+
+Install_nginx:
+  <<: *Prerequisites_install
+  needs: [Provision]
+  script:
+    - *configure_packages
+    - export KUBECONFIG=${KUBECONFIG}
+    - chmod 755 .pipelines/scripts/install-nginx-ingress.sh
+    - ./.pipelines/scripts/install-nginx-ingress.sh
+  rules:
+  - if: '$OPERATION == "create"'
+    when: always  
+
+Obtain_dns:
+  <<: *Prerequisites_install
+  needs: [Install_nginx]
+  script:
+    - *configure_packages
+    - *login_azcli
+    - export KUBECONFIG=${KUBECONFIG}
+    # Obtain-dns
+    - chmod 755 .pipelines/scripts/obtain-dns.sh
+    - ./.pipelines/scripts/obtain-dns.sh ${CLUSTER_NAME}  
+    - dnsname="${CLUSTER_NAME}.westeurope.cloudapp.azure.com"
+    # Create aks_dns_name variable 
+    - *glab_auth
+    - glab variable set -g $organization aks_dns_name -v "$dnsname" -t "env_var"
+  rules:
+  - if: '$OPERATION == "create"'
+    when: always  
+
+Install-rancher:
+  <<: *Prerequisites_install
+  needs: [Obtain_dns]
+  script:
+    - *configure_packages
+    - export KUBECONFIG=${KUBECONFIG}
+    # INSTALL RANCHER
+    - chmod 755 .pipelines/scripts/install-rancher.sh
+    - ./.pipelines/scripts/install-rancher.sh ${aks_dns_name}
+  rules:
+    - if: '$INSTALL_RANCHER == "true" && $OPERATION == "create"'
+      when: always
+
+Destroy-terraform:
+  <<: *Prerequisites_install   
+  script:
+    - *install-terraform
+    - *configure_packages
+    - cd ${TF_ROOT}
+    - terraform init    
+    - terraform apply -destroy -var cluster_name=${CLUSTER_NAME} --auto-approve
+  rules:
+    - if: '$OPERATION == "destroy"'
+      when: always 
