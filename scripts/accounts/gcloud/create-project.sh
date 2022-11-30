@@ -44,7 +44,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
   echo -ne "${white}" >&2
   exit 127
 fi
-# Check if exists a Google Cloud project with that project ID. 
+# Check if exists a Google Cloud project with that project ID.
 if gcloud projects describe "$projectName" &>/dev/null ; then
    echo "Project ID already exists."
 else
@@ -135,6 +135,13 @@ fi
 echo "Enabling IAM Control..."
 if ! gcloud services enable iam.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable IAM Control API" >&2
+   echo -ne "${white}" >&2
+   exit 227
+fi
+
+echo "Enabling Compute API..."
+if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Compute API" >&2
    echo -ne "${white}" >&2
    exit 227
 fi
