@@ -103,8 +103,8 @@ commitFiles() {
 }
 
 addSecrets() {
-    "$hangarPath/scripts/pipelines/gcloud/add-secret-file.sh" -d "$directory" -f "$directory/PROD.env" -r PROD.env -b develop  
-    "$hangarPath/scripts/pipelines/gcloud/add-secret-file.sh" -d "$directory" -f "$directory/firebase-key.json" -r firebase-key.json -b develop
+    "$hangarPath/scripts/pipelines/gcloud/add-secret.sh" -d "$directory" -f "$directory/PROD.env" -r PROD.env -b develop  
+    "$hangarPath/scripts/pipelines/gcloud/add-secret.sh" -d "$directory" -f "$directory/firebase-key.json" -r firebase-key.json -b develop
 }
 
 deployFirebaseRules() {
