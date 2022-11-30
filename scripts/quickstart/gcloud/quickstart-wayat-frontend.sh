@@ -140,12 +140,12 @@ prepareENVFile() {
     packageName="com.takeoff.${packageName//_/}"
     export backendUrl
     export projectName
-    export messageSenderId=$(cat "${workspace}/web.tmp" | grep messagingSenderId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export messageSenderId=$(cat "${workspace}/webconfig.json" | grep messagingSenderId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export mapsStaticSecret
     export webClientId=$(cat "${workspace}/google-services.json" | grep client_id | awk 'FNR == 3 {print $2}' | sed s/\"//g | sed s/,//g)
-    export webApiKey=$(cat "${workspace}/web.tmp" | grep apiKey | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export webAppId=$(cat "${workspace}/web.tmp" | grep appId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
-    export webAuthDomain=$(cat "${workspace}/web.tmp" | grep authDomain | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export webApiKey=$(cat "${workspace}/webconfig.json" | grep apiKey | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export webAppId=$(cat "${workspace}/webconfig.json" | grep appId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
+    export webAuthDomain=$(cat "${workspace}/webconfig.json" | grep authDomain | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export androidApiKey=$(cat "${workspace}/google-services.json" | grep current_key | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export androidAppId=$(cat "${workspace}/google-services.json" | grep mobilesdk_app_id | awk '{print $2}' | sed s/\"//g | sed s/,//g)
     export iosApiKey=$(cat "${workspace}/GoogleService-Info.plist" | grep API_KEY -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
