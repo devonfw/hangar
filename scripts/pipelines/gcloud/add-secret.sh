@@ -121,7 +121,7 @@ function addSecretFiles {
   fi
 
   # Adding a version to the secret previously created
-  echo "gcloud secrets versions add \"$secretName\" --data-file=\"${currentDirectory}/${localFilePath}\" --project "${gCloudProject}""
+  echo "gcloud secrets versions add \"$secretName\" --data-file=\"${localFilePath}\" --project "${gCloudProject}""
   gcloud secrets versions add "$secretName" --data-file="${localFilePath}" --project "${gCloudProject}"
   mkdir -p "${localDirectory}/${configFilePath}"
   mkdir -p "${localDirectory}/${scriptFilePath}"
