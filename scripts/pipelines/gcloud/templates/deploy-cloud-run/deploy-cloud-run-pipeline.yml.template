@@ -7,7 +7,8 @@ steps:
     - |
         set -e
         [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
-        
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
+
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   secretEnv: ['registry_credentials']
@@ -16,12 +17,9 @@ steps:
     - |
       set -e
       echo -e "\n\n"
-      # We get the name of the registry from the full image name
-      firstPartImage=$(echo $_IMAGE_NAME | cut -d'/' -f1)
-      echo $firstPartImage | grep "\." > /dev/null && REGISTRY=$firstPartImage || REGISTRY="docker.io"
       echo "SETTING UP ENVIRONMENT"
       echo ""
-      ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$$REGISTRY"
+      ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_IMAGE_NAME"
       echo -e "\n\n"
       echo "LOADING CREDENTIALS AND GETTING REGISTRY"
       echo $$registry_credentials > credentials.env
