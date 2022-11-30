@@ -1,0 +1,7 @@
+:provider: Google Cloud
+:pipeline_type: pipeline
+:trigger_sentence: This pipeline will be configured in order to be triggered every time package pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches
+:pipeline_type2: pipeline
+:path_provider: gcloud
+:no-PR-or-MR:
+include::../common_templates/setup-deploy-cloud-run-pipeline.asciidoc[]
