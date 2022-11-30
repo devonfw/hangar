@@ -75,7 +75,7 @@ function help {
 
     echo "      --rancher                          Install Rancher to manage the cluster."
     echo ""
-    echo "Deploy $pipeline_type flags:"
+    echo "Deploy to Kubernetes $pipeline_type flags:"
     echo ""
     echo "      --package-pipeline-name         [Required] Package $pipeline_type name."
     echo "      --env-provision-pipeline-name   [Required] Environment provisioning $pipeline_type name."
