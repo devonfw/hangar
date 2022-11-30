@@ -18,7 +18,6 @@ done
 
 
 helpFunction() {
-    # TODO
    echo "Inits the Wayat backend project in the specified workspace folder."
    echo ""
    echo "Flags:"
