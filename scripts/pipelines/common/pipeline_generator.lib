@@ -39,19 +39,19 @@ function help {
     [ "$provider" == "github" ] && echo "      --test-pipeline-name               Name of the job calling the test $pipeline_type."
     [ "$provider" == "github" ] && echo "      --quality-pipeline-name            Name of the job calling the quality $pipeline_type."
     [ "$provider" == "github" ] && echo ""
-    echo "Package pipeline flags:"
+    echo "Package $pipeline_type flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
     [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
     echo "      --flutter-platform      [Required, if Flutter] Target platform to compile. Accepted values: android, web."
     echo "      --flutter-web-renderer             Flutter web renderer. Accepted values: auto (default), canvaskit, html."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
-    [ "$provider" == "azure-devops" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
+    [ "$provider" == "azure-devops" ] || [ "$provider" == "gcloud" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
     [ "$provider" == "azure-devops" ] && echo "      --quality-pipeline-name [Required] Quality $pipeline_type name."
     [ "$provider" == "github" ] && echo "      --ci-pipeline-name      [Required] CI $pipeline_type name."
     echo "  -i, --image-name            [Required] Name (excluding tag) for the generated container image."
-    echo "  -u, --registry-user         [Required, unless AWS] Container registry login user."
-    echo "  -p, --registry-password     [Required, unless AWS] Container registry login password."
+    echo "  -u, --registry-user         [Required, unless AWS or GCP] Container registry login user."
+    echo "  -p, --registry-password     [Required, unless AWS or GCP] Container registry login password."
     echo "      --aws-access-key        [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     echo "      --aws-secret-access-key [Required, if AWS] AWS account secret access key."
     echo "      --aws-region            [Required, if AWS] AWS region for ECR."
@@ -75,7 +75,7 @@ function help {
 
     echo "      --rancher                          Install Rancher to manage the cluster."
     echo ""
-    echo "Deploy $pipeline_type flags:"
+    echo "Deploy to Kubernetes $pipeline_type flags:"
     echo ""
     echo "      --package-pipeline-name         [Required] Package $pipeline_type name."
     echo "      --env-provision-pipeline-name   [Required] Environment provisioning $pipeline_type name."
@@ -84,6 +84,15 @@ function help {
     echo "      --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory."
     echo "      --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images."
     echo ""
+    if [[ "$provider" == "gcloud" ]]
+    then
+      echo "Deploy to Cloud Run $pipeline_type flags:"
+      echo ""
+      echo "      --service-name                  [Required] Name for the Cloud Run service."
+      echo "      --gcloud-region                 [Required] Region where the service will be deployed."
+      echo "      --port                                     Listening port of the service. Default: 8080."
+    fi
+
 
     exit
 }
