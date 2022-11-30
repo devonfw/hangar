@@ -134,11 +134,6 @@ downloadTemplate() {
 }
 
 prepareENVFile() {
-    # Temporary files
-    firebase apps:sdkconfig --project=$projectName ANDROID > "${workspace}/google-services.json"
-    firebase apps:sdkconfig --project=$projectName IOS > "${workspace}/GoogleService-Info.plist"
-    firebase apps:sdkconfig --project=$projectName WEB > "${workspace}/web.tmp"
-
     # Remove '-' character
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
@@ -188,8 +183,6 @@ prepareENVFile() {
     envsubst '$storeFile' < "$directory/android/key.properties" > "$directory/android/key.properties"
     rm "$directory/android/key.properties.template"
 
-    # google-services dile generation
-    firebase apps:sdkconfig --project ${projectName} ANDROID > "${directory}/google-services.json"
 }
 
 commitFiles() {
