@@ -65,7 +65,12 @@ abstract class _CreateController with Store {
   }
 
   void createProject() async {
-    monitorController.monitorProcess(() async => formController.create());
+    monitorController.monitorProcess(() async => formController.create(
+        backendLanguage: backendLanguage,
+        backendVersion: backendVersion,
+        frontendLanguage: frontendLanguage,
+        frontendVersion: frontendVersion,
+        infoStream: monitorController.channel));
   }
 
   @action
