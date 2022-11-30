@@ -207,7 +207,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       GCloudAuthController? controller,
       Stream<List<int>>? stdinStream}) async {
     GCloudAuthController authController = controller ??
-        GCloudAuthController(useStdin: useStdin, guiStdinStream: stdinStream);
+        GCloudAuthController(useStdin: useStdin, stdinStream: stdinStream);
     return await authController.authenticate(email);
   }
 
