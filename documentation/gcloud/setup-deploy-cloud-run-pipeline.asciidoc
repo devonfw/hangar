@@ -32,7 +32,6 @@ pipeline_generator.sh \
   -d <project local path> \
   --service-name  <service name> \
   --gcloud-region <gcloud region> \
-
   [--port <listening port>] \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]]
