@@ -112,16 +112,29 @@ if ! gcloud services enable secretmanager.googleapis.com --project "$projectName
    exit 224
 fi
 
+echo "Enabling Compute Engine..."
+if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Compute Engine API" >&2
+   echo -ne "${white}" >&2
+   exit 225
+fi
+
+echo "Enabling Kubernetes Engine..."
+if ! gcloud services enable container.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Kubernetes Engine API"
+   echo -ne "${white}"
+   exit 225
+fi
 echo "Enabling Cloud Resource Manager..."
 if ! gcloud services enable cloudresourcemanager.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Cloud Resource Manager API"  >&2
    echo -ne "${white}" >&2
-   exit 225
+   exit 226
 fi
 
 echo "Enabling IAM Control..."
 if ! gcloud services enable iam.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable IAM Control API" >&2
    echo -ne "${white}" >&2
-   exit 226
+   exit 227
 fi

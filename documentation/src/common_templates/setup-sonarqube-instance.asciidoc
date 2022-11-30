@@ -1,19 +1,4 @@
-:provider_name: AWS
-:container_instance_type: an AWS EC2 instance
-:provider_path: aws
-:terraform_vars: --region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
-:terraform_tutorials: https://developer.hashicorp.com/terraform/tutorials/aws
-:terraform_vars_example_short: --region eu-west-1 --keypair_name sonarqube
-:terraform_vars_example_full: --region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
-:terraform_vars: + \
---region               The AWS region where the resources will be created. By default: eu-west-1 + \
---vpc_cidr_block       Virtual private network IP range (CIDR). By default: 10.0.0.0/16 + \
---subnet_cidr_block    The range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. + \
-                       By default: 10.0.1.0/24 + \
---nic_private_ip       Instance private IP within subnet range.  By default: 10.0.1.50 + \
---instance_type        Machine Instance type. By default: t3a.small + \
---keypair_name         Keypair name to connect with ssh as defined in AWS. By default: sonarqube
-
+# tag::partBeforePrerequisites[]
 = Setting up a SonarQube instance in {provider_name}
 :toc:
 
@@ -21,19 +6,9 @@
 The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
 
 == Getting Started
-=== Prerequisites
-* https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli[Install Terraform].
+# end::partBeforePrerequisites[]
 
-* https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
-
-* Have a SSH keypair for the SonarQube instance. You can use an existing one or create a new one with the following command:
-
-```
-aws ec2 create-key-pair --key-name sonarqube --query 'KeyMaterial' --output text > sonarqube.pem
-```
-
-IMPORTANT: This will create a public key, directly stored in AWS (current region only), and a private key stored in the `sonarqube.pem` file, that will be necessary if you ever need to access the instance, so be sure you store it securely.
-
+# tag::partAfterPrerequisites[]
 === Relevant files
 
 * `./sonarqube.sh` script to automatically do all the steps in only one execution command.
@@ -97,7 +72,7 @@ WARNING:  *Remember to securely store all the content inside the state-folder*, 
 First, you need to initialize the working directory containing Terraform configuration files (located at `/scripts/sonarqube/{provider_path}`) and install any required plugins:
 
 ```
-terraform init
+terraform init 
 ```
 
 Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script, which allows you to create or update values for the required variables, passing them as flags.
@@ -130,7 +105,7 @@ WARNING:  *Remember to securely store `terraform.tfstate` file*, otherwise you w
 
 NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on.
 
-In particular, this will create an Ubuntu-based in {container_instance_type} and deploy a Docker container running SonarQube.
+In particular, this will create an Ubuntu-based in {container_instance_type} and deploy a Docker container running SonarQube. 
 
 You will get the public url of {container_instance_type} and an admin token to connect with sonar as output. Take note of it, you will need it later on.
 
@@ -185,3 +160,8 @@ IMPORTANT: Change the default password promptly. After that, update the password
 
 == Appendix: More information about terraform for {provider_name}
 * {terraform_tutorials}[Official Terraform tutorials]
+ifdef::extra_information[]
+{extra_information}
+endif::[]
+
+# end::partAfterPrerequisites[]
