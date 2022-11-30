@@ -197,10 +197,10 @@ commitFiles() {
 }
 
 addSecrets() {
-    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/.env" -r .env -b develop
-    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/android/key.properties" -r android/key.properties -b develop
-    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$directory/google-services.json" -r android/app/google-services.json -b develop
-    "$hangarPath"/scripts/pipelines/gcloud/add-secret-file.sh -d "$directory" -f "$keystore" -r keystore.jks -b develop
+    "$hangarPath"/scripts/pipelines/gcloud/add-secret.sh -d "$directory" -f "$directory/.env" -r .env -b develop
+    "$hangarPath"/scripts/pipelines/gcloud/add-secret.sh -d "$directory" -f "$directory/android/key.properties" -r android/key.properties -b develop
+    "$hangarPath"/scripts/pipelines/gcloud/add-secret.sh -d "$directory" -f "$directory/google-services.json" -r android/app/google-services.json -b develop
+    "$hangarPath"/scripts/pipelines/gcloud/add-secret.sh -d "$directory" -f "$keystore" -r keystore.jks -b develop
     "$hangarPath"/scripts/pipelines/gcloud/add-secret.sh -d "$directory" -n ANDROID_API_KEY -v $androidApiKey -b develop
 }
 
