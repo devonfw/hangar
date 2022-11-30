@@ -154,35 +154,22 @@ prepareENVFile() {
     export iosClientId=$(cat "${workspace}/GoogleService-Info.plist" | grep CLIENT_ID -A 2 | awk 'FNR == 2 {print $1}' | cut -d'<' -f2 | cut -d'>' -f2)
     export iosBundleId=$packageName
     
-# shellcheck disable=SC2016
-    envsubst '$backendUrl' < "$directory/env.template" > "$directory/.env"
-    envsubst '$projectName' < "$directory/.env" > "$directory/.env"
-    envsubst '$messageSenderId' < "$directory/.env" > "$directory/.env"
-    envsubst '$mapsStaticSecret' < "$directory/.env" > "$directory/.env"
-    envsubst '$webClientId' < "$directory/.env" > "$directory/.env"
-    envsubst '$webApiKey' < "$directory/.env" > "$directory/.env"
-    envsubst '$webAppId' < "$directory/.env" > "$directory/.env"
-    envsubst '$webAuthDomain' < "$directory/.env" > "$directory/.env"
-    envsubst '$androidApiKey' < "$directory/.env" > "$directory/.env"
-    envsubst '$androidAppId' < "$directory/.env" > "$directory/.env"
-    envsubst '$iosApiKey' < "$directory/.env" > "$directory/.env"
-    envsubst '$iosAppId' < "$directory/.env" > "$directory/.env"
-    envsubst '$iosAndroidClientId' < "$directory/.env" > "$directory/.env"
-    envsubst '$iosAndroidClientId' < "$directory/.env" > "$directory/.env"
-    envsubst '$iosBundleId' < "$directory/.env" > "$directory/.env"
+    variablesSubstitution='$backendUrl $projectName $messageSenderId $mapsStaticSecret $webClientId $webApiKey $webAppId $webAuthDomain $androidApiKey $androidAppId $iosApiKey $iosAppId $iosAndroidClientId $iosClientId $iosBundleId'
+    # shellcheck disable=SC2016
+    envsubst "\'$variablesSubstitution\'" < "$directory/env.template" > "$directory/.env"
     rm "$directory/env.template"
     
     export storePassword=android
     export keyPassword=android
     export keyAlias=upload
     export storeFile=/workspace/keystore.jks
-# shellcheck disable=SC2016
-    envsubst '$storePassword' < "$directory/android/key.properties.template" > "$directory/android/key.properties"
-    envsubst '$keyPassword' < "$directory/android/key.properties" > "$directory/android/key.properties"
-    envsubst '$keyAlias' < "$directory/android/key.properties" > "$directory/android/key.properties"
-    envsubst '$storeFile' < "$directory/android/key.properties" > "$directory/android/key.properties"
+
+    variablesSubstitution='$storePassword $keyPassword $keyAlias $storeFile'
+    # shellcheck disable=SC2016
+    envsubst "\'$variablesSubstitution\'" < "$directory/android/key.properties.template" > "$directory/android/key.properties"
     rm "$directory/android/key.properties.template"
 
+    cp "${workspace}/google-services.json" "$directory/google-services.json"
 }
 
 commitFiles() {
