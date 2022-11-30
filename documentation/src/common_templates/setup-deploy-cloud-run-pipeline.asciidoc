@@ -1,6 +1,7 @@
 = Setting up a Deploy in Cloud Run {pipeline_type} on {provider}
 
-In this section we will create a {pipeline_type} to deploy the project application as a service in Cloud Run. {trigger_sentence}.
+In this section we will create a {pipeline_type} to deploy the project application as a service in Google Cloud Run. {trigger_sentence}.
+
 
 The creation of the {pipeline_type2} will follow the project workflow, so a new branch named `feature/deploy-cloud-run` will be created and the YAML file for the {pipeline_type} will be pushed to it.
 
