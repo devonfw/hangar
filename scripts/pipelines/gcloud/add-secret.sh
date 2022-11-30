@@ -27,7 +27,7 @@ commonTemplatesPath="scripts/pipelines/gcloud/templates/common" # Path for commo
 commonPipelineTemplatesPath="scripts/pipelines/common/templates/" # Path for common files of the pipelines
 pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
-configFilePath=".pipelines/config" # Path to the scripts.
+configFilePath=".pipelines/config" # Path to the config files.
 provider="gcloud"
 sourceBranch="feature/add-secret"
 
@@ -42,14 +42,14 @@ fi
 
 function help_secret {
   echo ""
-  echo "Upload a file as a secret in the secret manager of Google Cloud to be used inside the choosen pipelines."
+  echo "Upload a file or a variable as a secret in the secret manager of Google Cloud to be used inside the chosen pipelines."
   echo ""
   echo "  -d, --local-directory       [Required] Local directory of your project."
   echo "  -f, --local-file-path       [Required] Local path of the file you want to upload. (mutually exclusive with -v)"
   echo "  -v, --value                 [Required] Value of the secret. (mutually exclusive with -f)"
   echo "  -r, --remote-file-path      [Required if -f flag set] Path where the secret will be dowloaded inside the pipeline (with the file name)."
   echo "  -b, --target-branch         [Required] Name of the branch to which the merge will target."
-  echo "  -n, --secret-name           [Required if -v flag set] Name of the secret as it will appear in the secret manager. if not set, we use the name of the file given with '-f'. NOTE: the name has to be compliant with the regex [a-zA-Z0-9_]."
+  echo "  -n, --secret-name           [Required if -v flag set] Name of the secret as it will appear in the secret manager. For the file case, we use the name of the file given with '-f'. NOTE: the name has to be compliant with the regex [a-zA-Z0-9_]."
   echo ""
   echo "NOTE: If '-v' and '-f' are both set, '-f' is choosen."
 
@@ -125,7 +125,7 @@ function addSecretFiles {
   gcloud secrets versions add "$secretName" --data-file="${localFilePath}" --project "${gCloudProject}"
   mkdir -p "${localDirectory}/${configFilePath}"
   mkdir -p "${localDirectory}/${scriptFilePath}"
-  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "# secretName=PathToDowload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
+  [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "# secretName=PathToDownload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   echo "$secretName=$remoteFilePath #$pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secrets.sh" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
   # Commiting the conf file
@@ -150,8 +150,8 @@ function addSecretVars {
     echo "gcloud secrets versions add \"$secretName\" --data-file=-"
     echo "${secretValue}" | gcloud secrets versions add "$secretName" --data-file=- --project "${gCloudProject}"
     mkdir -p "${localDirectory}/${configFilePath}"
-    [[ -f "${localDirectory}/${configFilePath}/SecretVars.conf" ]] || echo "# secretName #pipeline" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
-    echo "$secretName #$pipelinesList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+    [[ -f "${localDirectory}/${configFilePath}/SecretVars.conf" ]] || echo "# secretName #pipelinesList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+    echo "$secretName $pipelinesList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
 
     # Adding script to get secret and commiting changes
     mkdir -p "${localDirectory}/${scriptFilePath}"

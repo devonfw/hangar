@@ -206,8 +206,8 @@ function addSecretVars {
         echo "gcloud secrets versions add \"$secretName\" --data-file=-"
         echo "${secretValue}" | gcloud secrets versions add "$secretName" --data-file=- --project "${gCloudProject}"
         mkdir -p "${localDirectory}/${configFilePath}"
-        [[ -f "${localDirectory}/${configFilePath}/SecretVars.conf" ]] || echo "# secretName #pipeline" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
-        echo "$secretName #$pipelineName" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+        [[ -f "${localDirectory}/${configFilePath}/SecretVars.conf" ]] || echo "# secretName #pipelineList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+        echo "$secretName $pipelineName" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
     done
 
     # Adding script to get secret and commiting changes
