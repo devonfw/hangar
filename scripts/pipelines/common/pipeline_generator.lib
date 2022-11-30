@@ -86,11 +86,11 @@ function help {
     echo ""
     if [[ "$provider" == "gcloud" ]]
     then
-      echo "Deploy to cloud run $pipeline_type flags:"
+      echo "Deploy to Cloud Run $pipeline_type flags:"
       echo ""
-      echo "      --service-name                  [Required] Name for the cloud run service."
+      echo "      --service-name                  [Required] Name for the Cloud Run service."
       echo "      --gcloud-region                 [Required] Region where the service will be deployed."
-      echo "      --port                                     Listening port of the service. (default=8080)"
+      echo "      --port                                     Listening port of the service. Default: 8080."
     fi
 
 
