@@ -5,10 +5,10 @@ import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
-import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller_impl.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller_impl.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
-import 'package:takeoff_lib/src/persistence/database/database_singleton.dart';
+import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:test/expect.dart';
@@ -25,8 +25,7 @@ void main() {
 
   setUp(() async {
     GetIt.I.registerSingleton<Database>(
-        await DatabaseSingleton(dbPath: "gcloud_controller_test.db")
-            .initialize());
+        await DbFactory(dbPath: "gcloud_controller_test.db").create());
   });
 
   test("cleanProject removes the workspace folder and the project ID",

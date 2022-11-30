@@ -7,7 +7,7 @@ import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart' as _i4;
-import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart'
+import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart'
     as _i5;
 import 'package:takeoff_lib/src/takeoff_facade.dart' as _i2;
 
@@ -66,6 +66,7 @@ class MockTakeOffFacade extends _i1.Mock implements _i2.TakeOffFacade {
     String? email,
     _i4.CloudProviderId? cloudProvider, {
     _i3.Stream<List<int>>? stdinStream,
+    bool? useStdin = false,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -74,7 +75,10 @@ class MockTakeOffFacade extends _i1.Mock implements _i2.TakeOffFacade {
             email,
             cloudProvider,
           ],
-          {#stdinStream: stdinStream},
+          {
+            #stdinStream: stdinStream,
+            #useStdin: useStdin,
+          },
         ),
         returnValue: _i3.Future<bool>.value(false),
         returnValueForMissingStub: _i3.Future<bool>.value(false),

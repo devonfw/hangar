@@ -8,7 +8,7 @@ import 'package:sembast/sembast_io.dart';
 import 'package:takeoff_cli/services/project_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
-import 'package:takeoff_lib/src/persistence/database/database_singleton.dart';
+import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
@@ -29,8 +29,7 @@ void main() {
   setUp(() async {
     log.clear();
     GetIt.I.registerSingleton<Database>(
-        await DatabaseSingleton(dbPath: "project_service_test.db")
-            .initialize());
+        await DbFactory(dbPath: "project_service_test.db").create());
   });
 
   test(
