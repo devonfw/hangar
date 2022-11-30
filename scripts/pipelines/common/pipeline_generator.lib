@@ -39,7 +39,7 @@ function help {
     [ "$provider" == "github" ] && echo "      --test-pipeline-name               Name of the job calling the test $pipeline_type."
     [ "$provider" == "github" ] && echo "      --quality-pipeline-name            Name of the job calling the quality $pipeline_type."
     [ "$provider" == "github" ] && echo ""
-    echo "Package pipeline flags:"
+    echo "Package $pipeline_type flags:"
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
     [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
