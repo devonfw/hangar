@@ -1,0 +1,27 @@
+@startmindmap CommandsName
+<style>
+mindmapDiagram {
+    done {
+        BackgroundColor lightGreen
+    }
+    progress {
+        BackgroundColor orange
+    }
+    notDone {
+        BackgroundColor #FF7276
+    }
+}
+</style>
+* takeoff
+** gc <<done>>
+*** create <<done>>
+*** run <<done>>
+*** init <<done>>
+*** list <<done>>
+*** clean <<done>>
+** aws <<notDone>>
+** azure <<notDone>>
+** quickstart <<progress>>
+*** wayat <<progress>>
+*** viplane <<notDone>>
+@endmindmap
