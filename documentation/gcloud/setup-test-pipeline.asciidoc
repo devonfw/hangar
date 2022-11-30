@@ -10,7 +10,6 @@
 :extra_args_python: --build-pipeline-name python-project-build --language-version 3.10
 :extra_args_flutter:  --build-pipeline-name flutter-project-build --language-version 3.3.4
 :no-PR-or-MR:
-:machineType:
 :openBrowserFlag:
 = Setting up a Test {pipeline_type} on {provider}
 
@@ -39,7 +38,7 @@ pipeline_generator.sh \
   -l <language or framework> \
   -d <project local path> \
   --build-pipeline-name <build {pipeline_type} name> \
-  --language-version <version> \
+  [--language-version <version>] \
   [-a <artifact source path>] \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
@@ -56,8 +55,8 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 -l, --language              [Required] Language or framework of the project.
 -d, --local-directory       [Required] Local directory of your project.
     --build-pipeline-name   [Required] Build {pipeline_type} name.
--a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
     --language-version      [Required, if Flutter or Python] Language or framework version.
+-a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                     Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
 ```
