@@ -126,9 +126,9 @@ if ! gcloud services enable iam.googleapis.com --project "$projectName"; then
    exit 226
 fi
 
-echo "Enabling Secret Manager..."
+echo "Enabling Compute API..."
 if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable Secret Manager API" >&2
+   echo -e "${red}Error: Cannot enable Compute API" >&2
    echo -ne "${white}" >&2
    exit 227
 fi
