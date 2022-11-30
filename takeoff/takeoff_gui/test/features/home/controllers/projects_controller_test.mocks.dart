@@ -7,7 +7,7 @@ import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart' as _i4;
-import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart'
+import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart'
     as _i5;
 import 'package:takeoff_lib/src/takeoff_facade.dart' as _i2;
 

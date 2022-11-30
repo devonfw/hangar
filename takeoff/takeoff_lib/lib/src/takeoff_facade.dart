@@ -3,16 +3,16 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
-import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller.dart';
-import 'package:takeoff_lib/src/controllers/cloud_providers/gcloud_controller_impl.dart';
+import 'package:takeoff_lib/src/controllers/gcloud/gcloud_controller.dart';
+import 'package:takeoff_lib/src/controllers/gcloud/gcloud_controller_impl.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
-import 'package:takeoff_lib/src/hangar_scripts/common/pipeline_generator/language.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
-import 'package:takeoff_lib/src/persistence/database/database_singleton.dart';
+import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/logger/log.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
@@ -42,8 +42,7 @@ class TakeOffFacade {
       DockerController dockerController =
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
-      GetIt.I
-          .registerSingleton<Database>(await DatabaseSingleton().initialize());
+      GetIt.I.registerSingleton<Database>(await DbFactory().create());
     }
 
     return true;

@@ -5,14 +5,14 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
-import 'package:takeoff_lib/src/persistence/database/database_singleton.dart';
+import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void main() {
   setUp(() async {
     GetIt.I.registerSingleton<Database>(
-        await DatabaseSingleton(dbPath: "cache_repo_test.db").initialize());
+        await DbFactory(dbPath: "cache_repo_test.db").create());
   });
 
   test("saveGoogleEmail & getGoogleEmail are correct", () async {
