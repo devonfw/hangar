@@ -1,9 +1,22 @@
 steps:
+- id: "Get secrets"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+        set -e
+        [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
+
 - name: ${_DOCKER_IMAGE}
+  env:
+    - TRIGGER_NAME=$TRIGGER_NAME
   script: |
     #!/bin/bash
     set -e
     [[ -f .pipelines/scripts/build-setup-environment.sh ]] && source .pipelines/scripts/build-setup-environment.sh
+    [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
     sh .pipelines/scripts/build.sh
 
 - name: ${_DOCKER_IMAGE}
