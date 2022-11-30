@@ -177,7 +177,6 @@ addFirebaseToGcloudProject() {
     else
         echo -e "Firebase already added to $projectName."
     fi
-    # firebase use "$projectName"
 }
 
 createFirestoreDB() {
