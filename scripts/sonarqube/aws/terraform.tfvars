@@ -1,5 +1,5 @@
 #AWS region code of the location where the resources will be created
-aws_region = "eu-west-1"
+region = "eu-west-1"
 #Virtual private network (VPC) IP range (CIDR)
 vpc_cidr_block = "10.0.0.0/16"
 #Subnetwork IP range (CIDR) within VPC
