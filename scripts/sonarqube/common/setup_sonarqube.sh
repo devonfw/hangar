@@ -31,6 +31,12 @@ sudo docker volume create sonarqube-data
 sudo docker volume create sonarqube-logs
 sudo docker volume create sonarqube-extensions
 
+if [[ ! -f  "/var/lib/docker/volumes/sonarqube-extensions/_data/plugins/sonar-flutter-plugin-0.4.0.jar" ]]; then
+  echo -e "${green}Downloading the flutter plugin for SonarQube..."
+  echo -e "${white}"
+  sudo wget -P /var/lib/docker/volumes/sonarqube-extensions/_data/plugins https://github.com/insideapp-oss/sonar-flutter/releases/download/0.4.0/sonar-flutter-plugin-0.4.0.jar || echo "WARNING: sonar-flutter-plugin has not been found."
+fi
+
 #Get the maximum memory for the container.
 mem=$(grep MemTotal /proc/meminfo)
 length=${#mem}
