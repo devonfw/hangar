@@ -1,0 +1,113 @@
+name: $pipelineName
+
+on:
+  workflow_run:
+    workflows: $packagePipelineName
+    types: completed
+  workflow_dispatch:
+    inputs:
+      k8sProvider:
+        description: 'Deploy Cluster Name.'
+        required: true
+        type: string
+        default: '$k8sProvider'
+      secretsName:
+        description: 'ImagePullSecret Name.'
+        type: string
+        default: '$k8sImagePullSecret'
+# mark to insert additional artifact input #
+
+env:
+  k8sProvider: ${{ github.event.inputs.k8sProvider || '$k8sProvider' }}
+  deploymentYamlPath: "${{ github.workspace }}/$k8sDeployFiles/application-deployment.yaml"
+  ingressYamlPath: "${{ github.workspace }}/$k8sDeployFiles/ingress.yaml"
+  deployFilesPath: "${{ github.workspace }}/$k8sDeployFiles"
+  aksProvisionPipeline: 'aks-provisioning.yml'
+  packagePipelineYamlName: "package-pipeline.yml"
+  packageTagScript: ".github/workflows/scripts/package-extra.sh"
+  k8sNamespace: "$k8sNamespace"
+  kubeConfigPath: "/home/runner/.kube/config"
+  kubeConfigFolder: "/home/runner/.kube"
+# mark to insert additional artifact env var #
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: get info from package
+        uses: dawidd6/action-download-artifact@v2
+        id: downloadFromBuild
+        if: ${{ github.event_name == 'workflow_run' }}
+        with:
+          workflow: ${{ env.packagePipelineYamlName }}
+          run_number: ${{ github.event.workflow_run.run_number }}
+          check_artifacts:  true
+          name: package_workflow_info
+
+      - name: Get env var from the package-pipeline
+        uses: tw3lveparsecs/github-actions-setvars@v0.1
+        if: ${{ github.event_name == 'workflow_run' }}
+        with:
+          envFilePath: package_workflow_info.env
+
+      - name: Cancel Workflow (if the branch are not develop or release)
+        if: ${{ github.event_name == 'workflow_run' && env.branch_package_workflow != 'develop' && !(startsWith(env.branch_package_workflow, 'release/')) }}
+        uses: andymckay/cancel-action@0.2
+
+      - name: Checkout the repository
+        uses: actions/checkout@master
+        with:
+          ref: ${{ env.commit_package_workflow || github.sha }}
+
+      - name: Set additional Environment Variables
+        uses: tw3lveparsecs/github-actions-setvars@v0.1
+        with:
+          envFilePath: ".github/vars/*"
+
+      - name: Download artifact from AKS provision pipeline workflow
+        if: ${{ env.k8sProvider == 'AKS' }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ${{ env.aksProvisionPipeline }}
+          check_artifacts:  true
+          search_artifacts: true
+          name: kubeconfig
+
+      - name: MV kubeconfig AKS
+        if: ${{ env.k8sProvider == 'AKS' }}
+        run: mkdir -p ${{ env.kubeConfigFolder }}; mv ${{ github.workspace }}/kubeconfig ${{ env.kubeConfigPath }}
+
+      - name: Download artifact from EKS provision pipeline workflow
+        if: ${{ env.k8sProvider == 'EKS' }}
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws eks update-kubeconfig --name ${{ env.eks_cluster_name }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Create secrets
+        if: ${{ github.event.inputs.secretsName != '' }}
+        env:
+          KUBECONFIG: ${{ env.kubeConfigPath }}
+        run: .github/workflows/scripts/secrets.sh "${{ env.k8sNamespace }}" "${{ github.event.inputs.secretsName }}" "${{ secrets.DOCKER_USER }}" "${{ secrets.DOCKER_PASSWORD }}" "${{ env.registry }}" "${{ env.deploymentYamlPath }}"
+
+      - name: Deploy app AKS
+        if: ${{ env.k8sProvider == 'AKS' }}
+        env:
+          KUBECONFIG: ${{ env.kubeConfigPath }}
+        run: .github/workflows/scripts/deploy.sh "${{ env.k8sNamespace }}" "${{ env.imageName }}" "${{ env.aks_dns_name }}" "${{ env.deploymentYamlPath }}" "${{ env.ingressYamlPath }}" "${{ env.deployFilesPath }}" "${{ env.packageTagScript }}" "${{ env.branch_package_workflow || github.ref }}"
+
+      - name: Deploy app EKS
+        if: ${{ env.k8sProvider == 'EKS' }}
+        env:
+          KUBECONFIG: ${{ env.kubeConfigPath }}
+        run: .github/workflows/scripts/deploy.sh "${{ env.k8sNamespace }}" "${{ env.imageName }}" "${{ env.eks_dns_name }}" "${{ env.deploymentYamlPath }}" "${{ env.ingressYamlPath }}" "${{ env.deployFilesPath }}" "${{ env.packageTagScript }}" "${{ env.branch_package_workflow || github.ref }}"
+
+# mark to insert step for additional artifact #
+  on-failure:
+    name: CI Workflow Failed
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Cancel Workflow
+        uses: andymckay/cancel-action@0.2
