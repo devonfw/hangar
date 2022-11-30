@@ -13,13 +13,16 @@ steps:
     #!/bin/sh
     set -e
     apk add --no-cache tar zstd
-    tar --zstd -cf build_${BUILD_ID}.tar.zst ${_TARGET_DIRECTORY}
+    mkdir zstd_artifacts
+    tar --zstd -cf zstd_artifacts/build_${BUILD_ID}.tar.zst --exclude=./zstd_artifacts ${_TARGET_DIRECTORY}
+  env:
+    - 'BUILD_ID=${BUILD_ID}'
+    - '_TARGET_DIRECTORY=${_TARGET_DIRECTORY}'
 
 - id: "Upload artifact"
   name: gcr.io/cloud-builders/gsutil
-  args: ['cp','build_${BUILD_ID}.tar','gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/build_${BUILD_ID}.tar']
+  args: ['cp','zstd_artifacts/build_${BUILD_ID}.tar.zst','gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/build_${BUILD_ID}.tar.zst']
 
 # mark to insert trigger
 
 # mark to insert entry in artifact for additonal artifact #
-
