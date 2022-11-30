@@ -251,7 +251,7 @@ createPlatformApps() {
             echo -ne "${white}" >&2
             exit 250
         fi
-        # registerShaKeys
+        registerShaKeys
         command=$base_sdkconfig_command" --out ${outputPath}/google-services.json ANDROID"
         if ! eval "$command"; then
             echo -e "${red}Error while exporting SDK Android Config." >&2
