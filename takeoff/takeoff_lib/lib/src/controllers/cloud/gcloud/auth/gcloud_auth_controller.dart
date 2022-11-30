@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
-import 'package:takeoff_lib/src/controllers/common/auth/auth_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/auth/auth_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/gcloud.dart';

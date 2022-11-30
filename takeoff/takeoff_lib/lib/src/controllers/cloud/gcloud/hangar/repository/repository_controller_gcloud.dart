@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/repository/repository_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/repo/create_repo.dart';
 
 class RepositoryControllerGCloud

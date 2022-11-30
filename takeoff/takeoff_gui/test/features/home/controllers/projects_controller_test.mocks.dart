@@ -66,6 +66,7 @@ class MockTakeOffFacade extends _i1.Mock implements _i2.TakeOffFacade {
     String? email,
     _i4.CloudProviderId? cloudProvider, {
     _i3.Stream<List<int>>? stdinStream,
+    bool? useStdin = false,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -74,7 +75,10 @@ class MockTakeOffFacade extends _i1.Mock implements _i2.TakeOffFacade {
             email,
             cloudProvider,
           ],
-          {#stdinStream: stdinStream},
+          {
+            #stdinStream: stdinStream,
+            #useStdin: useStdin,
+          },
         ),
         returnValue: _i3.Future<bool>.value(false),
         returnValueForMissingStub: _i3.Future<bool>.value(false),

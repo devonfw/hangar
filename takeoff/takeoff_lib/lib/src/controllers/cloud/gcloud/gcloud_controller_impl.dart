@@ -4,27 +4,27 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/auth/gcloud_auth_controller.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/project/create_project_exception.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/gcloud_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/auth/gcloud_auth_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/project/create_project_exception.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/account/account_controller_gcloud.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/quickstart/cloud_run_controller.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/quickstart/cloud_run_exception.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/quickstart/firebase_controller.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/account/account_exception.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/quickstart/setup_firebase_exception.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/account/account_controller_gcloud.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/cloud_run_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/cloud_run_exception.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/firebase_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/account/account_exception.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/setup_firebase_exception.dart';
 import 'package:takeoff_lib/src/domain/application_end.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/pipeline/create_pipeline_exception.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/pipeline/pipeline_controller_gcloud.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/project/project_controller.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/project/project_controller_gcloud.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/quickstart/wayat_controller.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/hangar/quickstart/wayat_exception.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/repository/repository_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/pipeline/create_pipeline_exception.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/pipeline/pipeline_controller_gcloud.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/project/project_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/project/project_controller_gcloud.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/wayat_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/wayat_exception.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/sonar_output.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/sonar/sonarqube_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/sonar/sonarqube_controller.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/repo/repo_action.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/sonarqube/setup_sonar.dart';
@@ -207,7 +207,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       GCloudAuthController? controller,
       Stream<List<int>>? stdinStream}) async {
     GCloudAuthController authController = controller ??
-        GCloudAuthController(useStdin: useStdin, stdinStream: stdinStream);
+        GCloudAuthController(useStdin: useStdin, guiStdinStream: stdinStream);
     return await authController.authenticate(email);
   }
 

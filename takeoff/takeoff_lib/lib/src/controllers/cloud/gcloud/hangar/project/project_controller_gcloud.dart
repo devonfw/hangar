@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/project/project_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/project/project_controller.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/project/create_project.dart';
 
 /// Project controller for Google Cloud.

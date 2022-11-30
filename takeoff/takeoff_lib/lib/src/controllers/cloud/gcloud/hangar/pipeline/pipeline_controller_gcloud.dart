@@ -1,6 +1,6 @@
 import 'package:takeoff_lib/src/domain/application_end.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/pipeline/create_pipeline_exception.dart';
-import 'package:takeoff_lib/src/controllers/common/hangar/pipeline/pipeline_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/pipeline/create_pipeline_exception.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/hangar/pipeline/pipeline_controller.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/build_pipeline.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/deploy_pipeline.dart';

@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/gcloud_controller.dart';
-import 'package:takeoff_lib/src/controllers/gcloud/gcloud_controller_impl.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller_impl.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
