@@ -33,6 +33,7 @@ while true; do
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
+        --gcloud-region)          gcloudRegion="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
         -m | --machine-type)      machineType="$2"; shift 2;;
         --language-version)       languageVersion="$2"; shift 2;;

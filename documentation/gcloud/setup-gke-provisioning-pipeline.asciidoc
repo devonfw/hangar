@@ -16,14 +16,13 @@ The script located at `/scripts/pipelines/gcloud/pipeline_generator.sh` will aut
 
 == Creating the pipeline using provided script
 
-Before executing the script you will need to customize the region for the cluster. To do so, you can edit `terraform.tfvars` file.
-
 === Usage
 ```
 pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
+  --gcloud-region <region> \
   [--rancher] \
   [-b <branch>]
 
@@ -36,6 +35,7 @@ NOTE: The config file for the GKE provisioning pipeline is located at `/scripts/
 -c, --config-file        [Required] Configuration file containing pipeline definition.
 -n, --pipeline-name      [Required] Name that will be set to the pipeline.
 -d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --gcloud-region      [Required] Google Cloud region for provisioning resources.
     --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ```
@@ -43,7 +43,7 @@ NOTE: The config file for the GKE provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/gke/gke-pipeline.cfg -n gke-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project  --rancher -b develop
+./pipeline_generator.sh -c ./templates/gke/gke-pipeline.cfg -n gke-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --gcloud-region us-central1 --rancher -b develop
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
@@ -73,4 +73,4 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 
 === Appendix: Destroying the cluster
 
-To destroy the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
+To destroy the provisioned resources, go to Google Cloud Console > Triggers and select the gke-provisioning trigger, press run, set `operation` pipeline variable value to `destroy` and run the pipeline.
