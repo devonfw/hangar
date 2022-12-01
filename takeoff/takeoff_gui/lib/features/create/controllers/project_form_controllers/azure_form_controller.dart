@@ -14,12 +14,14 @@ abstract class _AzureFormController with Store implements CreateFormController {
   final TakeOffFacade facade = GetIt.I.get<TakeOffFacade>();
 
   @override
-  Future<void> create(
-      {Language? backendLanguage,
-      String? backendVersion,
-      Language? frontendLanguage,
-      String? frontendVersion,
-      StreamController<String>? infoStream}) {
+  Future<void> create({
+    Language? backendLanguage,
+    String? backendVersion,
+    Language? frontendLanguage,
+    String? frontendVersion,
+    StreamController<GuiMessage>? infoStream,
+    StreamController<String>? inputStream,
+  }) {
     return Future.value();
   }
 
