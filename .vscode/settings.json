@@ -13,7 +13,7 @@
         "toolbar.hoverBackground": "#D6D6D6",
         "statusBar.background": "#60BAE7",
         "statusBarItem.hoverBackground": "#D6D6D6",
-        "statusBar.foreground": "#15202b",
+        "statusBar.foreground": "#15202b"
     },
     "peacock.color": "#b52e31",
     "files.exclude": {
