@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 enum TypeMessage {
   info(color: Colors.blue),
-  error(color: Colors.red),
-  success(color: Colors.green);
+  action(color: Colors.grey),
+  success(color: Colors.green),
+  error(color: Colors.red);
 
   const TypeMessage({required this.color});
 

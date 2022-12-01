@@ -30,7 +30,7 @@ abstract class _QuickstartController with Store {
     monitorController.monitorProcess(() async => await facade.quickstartWayat(
         billingAccount: billingAccount,
         googleCloudRegion: region,
-        infoStream: monitorController.channel));
+        infoStream: monitorController.outputChannel));
   }
 
   @action

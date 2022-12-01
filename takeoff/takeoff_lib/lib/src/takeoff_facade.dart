@@ -9,14 +9,12 @@ import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
-import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
-import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
-import 'package:takeoff_lib/src/utils/logger/log.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffFacade {
   late GoogleCloudController _googleController;
@@ -105,31 +103,35 @@ class TakeOffFacade {
   }
 
   /// Calls the method that will create a project in Google Cloud.
-  Future<bool> createProjectGCloud(
-      {required String projectName,
-      required String billingAccount,
-      Language? backendLanguage,
-      String? backendVersion,
-      Language? frontendLanguage,
-      String? frontendVersion,
-      required String googleCloudRegion,
-      StreamController<String>? infoStream}) async {
+  Future<bool> createProjectGCloud({
+    required String projectName,
+    required String billingAccount,
+    Language? backendLanguage,
+    String? backendVersion,
+    Language? frontendLanguage,
+    String? frontendVersion,
+    required String googleCloudRegion,
+    StreamController<GuiMessage>? infoStream,
+    StreamController<String>? inputStream,
+  }) async {
     return await _googleController.createProject(
-        projectName: projectName,
-        billingAccount: billingAccount,
-        backendLanguage: backendLanguage,
-        backendVersion: backendVersion,
-        frontendLanguage: frontendLanguage,
-        frontendVersion: frontendVersion,
-        googleCloudRegion: googleCloudRegion,
-        infoStream: infoStream);
+      projectName: projectName,
+      billingAccount: billingAccount,
+      backendLanguage: backendLanguage,
+      backendVersion: backendVersion,
+      frontendLanguage: frontendLanguage,
+      frontendVersion: frontendVersion,
+      googleCloudRegion: googleCloudRegion,
+      infoStream: infoStream,
+      inputStream: inputStream,
+    );
   }
 
   /// Creates Wayat in Google Cloud
   Future<bool> quickstartWayat(
       {required String billingAccount,
       required String googleCloudRegion,
-      StreamController<String>? infoStream}) async {
+      StreamController<GuiMessage>? infoStream}) async {
     return await _googleController.wayatQuickstart(
         billingAccount: billingAccount,
         googleCloudRegion: googleCloudRegion,
