@@ -29,7 +29,7 @@ helpFunction()
    echo -e "\t-d            Description for the new project. If not specified, name will be used as description"
    echo -e "\t-f            Numeric ID of the folder for which the project will be configured."
    echo -e "\t-o            Numeric ID of the organization for which the project will be configured."
-   echo -e "\t--firebase    Create the new project as a Firebase Project."
+   echo -e "\t--firebase    Creates the project as a Firebase project."
 }
 
 white='\e[1;37m'
