@@ -49,7 +49,7 @@ checkMandatoryArguments() {
     # Firestore region
     if [ -z "$firestoreRegion" ];
     then
-        echo -e "${red}Error: Missing paramenters, -r is mandatory." >&2
+        echo -e "${red}Error: Missing parameters, -r is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
