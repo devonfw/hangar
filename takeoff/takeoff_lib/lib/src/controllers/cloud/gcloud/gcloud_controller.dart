@@ -1,18 +1,20 @@
 import 'dart:async';
 
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/auth/gcloud_auth_controller.dart';
-import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 abstract class GoogleCloudController {
-  Future<bool> createProject(
-      {required String projectName,
-      required String billingAccount,
-      Language? backendLanguage,
-      String? backendVersion,
-      Language? frontendLanguage,
-      String? frontendVersion,
-      required String googleCloudRegion,
-      StreamController<String>? infoStream});
+  Future<bool> createProject({
+    required String projectName,
+    required String billingAccount,
+    Language? backendLanguage,
+    String? backendVersion,
+    Language? frontendLanguage,
+    String? frontendVersion,
+    required String googleCloudRegion,
+    StreamController<GuiMessage>? infoStream,
+    StreamController<String>? inputStream,
+  });
 
   /// Logs in with Google Cloud.
   ///
@@ -42,5 +44,5 @@ abstract class GoogleCloudController {
   Future<bool> wayatQuickstart(
       {required String billingAccount,
       required String googleCloudRegion,
-      StreamController<String>? infoStream});
+      StreamController<GuiMessage>? infoStream});
 }

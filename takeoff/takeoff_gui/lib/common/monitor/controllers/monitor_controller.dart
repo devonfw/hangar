@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:takeoff_gui/features/create/utils/create_message.dart';
 import 'package:takeoff_gui/features/create/utils/type_message.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 part 'monitor_controller.g.dart';
 
@@ -10,7 +11,8 @@ part 'monitor_controller.g.dart';
 class MonitorController = _MonitorController with _$MonitorController;
 
 abstract class _MonitorController with Store {
-  StreamController<String> channel = StreamController();
+  StreamController<GuiMessage> outputChannel = StreamController.broadcast();
+  StreamController<String> inputChannel = StreamController.broadcast();
 
   @observable
   ObservableList<CreateMessage> steps = ObservableList.of([]);
@@ -27,14 +29,11 @@ abstract class _MonitorController with Store {
   }
 
   void monitorProcess(Function process) {
-    channel.stream.listen((event) {
-      if (event.contains("http")) {
-        projectUrl = event;
-        steps.add(
-            CreateMessage(TypeMessage.success, "Project created succesfully"));
-      } else {
-        steps.add(CreateMessage(TypeMessage.info, event));
+    outputChannel.stream.listen((event) {
+      if (event.type == MessageType.success) {
+        projectUrl = event.url!;
       }
+      steps.add(CreateMessage.fromGuiMessage(event));
     });
     try {
       process();
@@ -50,8 +49,10 @@ abstract class _MonitorController with Store {
   }
 
   void resetChannel() {
-    channel.close();
-    channel = StreamController();
+    outputChannel.close();
+    inputChannel.close();
+    inputChannel = StreamController.broadcast();
+    outputChannel = StreamController.broadcast();
     steps = ObservableList.of([]);
   }
 }

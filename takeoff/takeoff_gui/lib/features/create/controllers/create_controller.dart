@@ -70,7 +70,8 @@ abstract class _CreateController with Store {
         backendVersion: backendVersion,
         frontendLanguage: frontendLanguage,
         frontendVersion: frontendVersion,
-        infoStream: monitorController.channel));
+        infoStream: monitorController.outputChannel,
+        inputStream: monitorController.inputChannel));
   }
 
   @action

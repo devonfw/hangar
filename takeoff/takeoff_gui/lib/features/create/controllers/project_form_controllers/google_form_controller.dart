@@ -25,12 +25,14 @@ abstract class _GoogleFormController
   String billingAccount = "";
 
   @override
-  Future<void> create(
-      {Language? backendLanguage,
-      String? backendVersion,
-      Language? frontendLanguage,
-      String? frontendVersion,
-      StreamController<String>? infoStream}) {
+  Future<void> create({
+    Language? backendLanguage,
+    String? backendVersion,
+    Language? frontendLanguage,
+    String? frontendVersion,
+    StreamController<GuiMessage>? infoStream,
+    StreamController<String>? inputStream,
+  }) {
     return facade.createProjectGCloud(
         projectName: projectName,
         billingAccount: billingAccount,
@@ -39,7 +41,8 @@ abstract class _GoogleFormController
         frontendLanguage: frontendLanguage,
         frontendVersion: frontendVersion,
         googleCloudRegion: region,
-        infoStream: infoStream);
+        infoStream: infoStream,
+        inputStream: inputStream);
   }
 
   @computed
