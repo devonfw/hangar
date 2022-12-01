@@ -1,5 +1,5 @@
 # VSCode Config
-.vscode
+.vscode/*
 
 # Terraform files
 **/.terraform/**
