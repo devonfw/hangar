@@ -17,7 +17,7 @@ on:
 
 env:
   TAG: ${{ inputs.tag }}
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   build:
