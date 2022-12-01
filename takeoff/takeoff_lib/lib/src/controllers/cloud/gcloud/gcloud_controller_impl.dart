@@ -23,9 +23,13 @@ import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/wayat
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/wayat_exception.dart';
 import 'package:takeoff_lib/src/controllers/cloud/common/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/common/repo/branch_strategy.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_platform.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_web_renderer.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/quickstart/wayat_frontend.dart';
 import 'package:takeoff_lib/src/domain/sonar_output.dart';
 import 'package:takeoff_lib/src/controllers/cloud/common/hangar/sonar/sonarqube_controller.dart';
-import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
+import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/repo/repo_action.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/sonarqube/setup_sonar.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/project/create_project.dart';
@@ -42,6 +46,8 @@ import 'package:takeoff_lib/src/utils/logger/log.dart';
 /// Centralizes all the operations related with Google Cloud, such as
 /// creating a project, quickstarting wayat, account management or list projects
 class GoogleCloudControllerImpl implements GoogleCloudController {
+  FoldersService foldersService = GetIt.I.get<FoldersService>();
+
   @override
   Future<bool> createProject(
       {required String projectName,
@@ -127,30 +133,51 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       _logAndStream("Building BackEnd pipelines", infoStream);
 
       await buildPipelines(
-          pipelineController,
-          projectName,
-          ApplicationEnd.backend,
-          backendLanguage,
-          backendVersion,
-          backendLocalDir,
-          googleCloudRegion,
-          sonarOutput,
-          null);
+          pipelineController: pipelineController,
+          projectName: projectName,
+          appEnd: ApplicationEnd.backend,
+          language: backendLanguage,
+          languageVersion: backendVersion,
+          localDir: backendLocalDir,
+          googleCloudRegion: googleCloudRegion,
+          sonarOutput: sonarOutput);
     }
 
     if (frontendLanguage != null) {
       _logAndStream("Building FrontEnd pipelines", infoStream);
 
       await buildPipelines(
-          pipelineController,
-          projectName,
-          ApplicationEnd.frontend,
-          frontendLanguage,
-          frontendVersion,
-          frontendLocalDir,
-          googleCloudRegion,
-          sonarOutput,
-          (frontendLanguage == Language.flutter) ? "europe" : null);
+          pipelineController: pipelineController,
+          projectName: projectName,
+          appEnd: ApplicationEnd.frontend,
+          language: frontendLanguage,
+          languageVersion: frontendVersion,
+          localDir: frontendLocalDir,
+          googleCloudRegion: googleCloudRegion,
+          sonarOutput: sonarOutput,
+          registryLocation: googleCloudRegion,
+          flutterPlatform: (frontendLanguage == Language.flutter)
+              ? FlutterPlatform.web
+              : null,
+          flutterWebRenderer: (frontendLanguage == Language.flutter)
+              ? FlutterWebRenderer.canvaskit
+              : null);
+
+      if (wayat) {
+        _logAndStream("Building Android pipelines", infoStream);
+
+        await buildPipelines(
+            pipelineController: pipelineController,
+            projectName: projectName,
+            appEnd: ApplicationEnd.frontend,
+            language: frontendLanguage,
+            languageVersion: frontendVersion,
+            localDir: frontendLocalDir,
+            googleCloudRegion: googleCloudRegion,
+            sonarOutput: sonarOutput,
+            registryLocation: googleCloudRegion,
+            flutterPlatform: FlutterPlatform.android);
+      }
     }
 
     CacheRepository cacheRepository = CacheRepositoryImpl();
@@ -170,7 +197,6 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<bool> run(String projectId) async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
 
-    // TODO: Check if we should use the normal or service account
     await _checkAuthentication();
 
     if (!(await cacheRepository.getGoogleProjectIds()).contains(projectId)) {
@@ -178,7 +204,6 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       return false;
     }
 
-    FoldersService foldersService = GetIt.I.get<FoldersService>();
     Directory projectFolder = Directory(
         join(foldersService.getHostFolders()["workspace"]!, projectId));
 
@@ -231,9 +256,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<bool> cleanProject(String projectId) async {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     await cacheRepository.removeGoogleProject(projectId);
-    Directory projectWorkspace = Directory(join(
-        GetIt.I.get<FoldersService>().getHostFolders()["workspace"]!,
-        projectId));
+    Directory projectWorkspace = Directory(
+        join(foldersService.getHostFolders()["workspace"]!, projectId));
     if (await projectWorkspace.exists()) {
       try {
         await projectWorkspace.delete(recursive: true);
@@ -268,14 +292,6 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         infoStream: infoStream,
         backRepoName: "wayat-python",
         frontRepoName: "wayat-flutter",
-        backRepoAction: RepoAction.import,
-        frontRepoAction: RepoAction.import,
-        frontImportUrl:
-            "https://github.com/devonfw-forge/wayat-flutter-python-mvp.git",
-        backImportUrl:
-            "https://github.com/devonfw-forge/wayat-flutter-python-mvp.git",
-        frontRepoSubpath: "./wayat/frontend/",
-        backRepoSubpath: "./wayat/backend/",
         wayat: true);
   }
 
@@ -289,39 +305,81 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<String>? infoStream) async {
     _logAndStream("Initializing Cloud Run", infoStream);
 
-    await _initCloudRun(projectDir, projectName, googleCloudRegion);
+    String frontUrlCloudRun = "${projectDir.path}/frontUrlCloudRun";
+    String backUrlCloudRun = "${projectDir.path}/backUrlCloudRun";
 
-    String firebaseCredentialsFolder = "${projectDir.path}/firebase/";
+    await _initCloudRun(projectDir, projectName, googleCloudRegion,
+        frontUrlCloudRun, backUrlCloudRun);
+
+    File frontendUrlFile = File(
+        "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}frontUrlCloudRun");
+    File backendUrlFile = File(
+        "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}backUrlCloudRun");
+
+    String frontendUrl = frontendUrlFile.readAsStringSync();
+    String backendUrl = backendUrlFile.readAsStringSync();
 
     _logAndStream("Setting up Firebase & Firestore", infoStream);
 
-    await _setUpFirebase(projectName, firebaseCredentialsFolder,
-        enableMaps: true, setUpAndroid: true, setUpIos: true, setUpWeb: true);
+    await _setUpFirebase(projectName, projectDir.path,
+        enableMaps: true,
+        setUpAndroid: true,
+        setUpIos: true,
+        setUpWeb: true,
+        firestoreRegion: googleCloudRegion);
+
+    String acceptConsentUrl =
+        "https://console.cloud.google.com/apis/credentials/consent?project=$projectName";
+    Log.info(
+        "\n\n===========================\nOpen $acceptConsentUrl and accept the terms of Firebase\n===========================\n\n");
+    Log.info("Press enter to continue");
+    stdin.readLineSync();
+    String mapsStaticSecretUrl =
+        "https://console.cloud.google.com/google/maps-apis/api-list?project=$projectName";
+    Log.info(
+        "\n\n===========================\nOpen $mapsStaticSecretUrl and copy the maps secret\n===========================\n\n");
+    Log.info("Introduce the maps secret:");
+    String mapsStaticSecret = stdin.readLineSync() ?? "";
+    while (mapsStaticSecret.isEmpty) {
+      Log.warning("Maps Secret cannot be empty");
+      mapsStaticSecret = stdin.readLineSync() ?? "";
+    }
 
     _logAndStream("Setting up Wayat secrets", infoStream);
 
-    WayatController wayatSecretsController = WayatController();
+    WayatController wayatController = WayatController();
     try {
-      wayatSecretsController.setUpWayat(WayatBackend(
+      await wayatController.setUpWayat(WayatBackend(
+          projectName: projectName,
           workspace: projectDir.path,
           backendRepoDir: backendLocalDir,
           storageBucket: "$projectName.appspot.com"));
+
+      await wayatController.setUpWayat(WayatFrontend(
+          projectName: projectName,
+          workspace: projectDir.path,
+          frontendRepoDir: frontendLocalDir,
+          keystoreFile: "${projectDir.path}/keystore.jks",
+          backendUrl: backendUrl,
+          frontendUrl: frontendUrl,
+          mapsStaticSecret: mapsStaticSecret));
     } on WayatException catch (e) {
       throw CreateProjectException(e.message);
     }
   }
 
   /// Helper method to initialize Cloud Run in [wayatQuickstart]
-  Future<void> _initCloudRun(Directory projectDir, String projectName,
-      String googleCloudRegion) async {
-    String frontUrlCloudRun = "${projectDir.path}/frontUrlCloudRun";
-    String backUrlCloudRun = "${projectDir.path}/backUrlCloudRun";
-
+  Future<void> _initCloudRun(
+      Directory projectDir,
+      String projectName,
+      String googleCloudRegion,
+      String frontUrlCloudRun,
+      String backUrlCloudRun) async {
     CloudRunController cloudRunController = CloudRunController();
     try {
       await cloudRunController.initCloudRun(InitCloudRun(
           project: projectName,
-          name: "wayat-front-cloud-run",
+          name: "wayat-front",
           region: googleCloudRegion,
           urlOutputFile: frontUrlCloudRun));
     } on CloudRunException catch (e) {
@@ -330,7 +388,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     try {
       await cloudRunController.initCloudRun(InitCloudRun(
           project: projectName,
-          name: "wayat-back-cloud-run",
+          name: "wayat-back",
           region: googleCloudRegion,
           urlOutputFile: backUrlCloudRun));
     } on CloudRunException catch (e) {
@@ -401,7 +459,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     }
 
     File sonarOutputFile = File(
-        "${GetIt.I.get<FoldersService>().getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}sonarqube${Platform.pathSeparator}terraform.tfoutput.json");
+        "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}sonarqube${Platform.pathSeparator}terraform.tfoutput.json");
     SonarOutput sonarOutput =
         SonarOutput.fromMap(jsonDecode(sonarOutputFile.readAsStringSync()));
     return sonarOutput;
@@ -425,26 +483,31 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   }
 
   Future<void> buildPipelines(
-      PipelineControllerGCloud pipelineController,
-      String projectName,
-      ApplicationEnd appEnd,
-      Language language,
+      {required PipelineControllerGCloud pipelineController,
+      required String projectName,
+      required ApplicationEnd appEnd,
+      required Language language,
+      required String localDir,
+      required String googleCloudRegion,
+      required SonarOutput sonarOutput,
       String? languageVersion,
-      String localDir,
-      String googleCloudRegion,
-      SonarOutput sonarOutput,
-      String? registryLocation) async {
+      String? registryLocation,
+      FlutterPlatform? flutterPlatform,
+      FlutterWebRenderer? flutterWebRenderer}) async {
     try {
       await pipelineController.buildPipelines(
-          projectName: projectName,
-          appEnd: appEnd,
-          language: language,
-          languageVersion: languageVersion,
-          localDir: localDir,
-          googleCloudRegion: googleCloudRegion,
-          sonarUrl: sonarOutput.url,
-          sonarToken: sonarOutput.token,
-          registryLocation: registryLocation);
+        projectName: projectName,
+        appEnd: appEnd,
+        language: language,
+        languageVersion: languageVersion,
+        localDir: localDir,
+        googleCloudRegion: googleCloudRegion,
+        sonarUrl: sonarOutput.url,
+        sonarToken: sonarOutput.token,
+        registryLocation: registryLocation,
+        flutterPlatform: flutterPlatform,
+        flutterWebRenderer: flutterWebRenderer,
+      );
     } on CreatePipelineException catch (e) {
       throw CreateProjectException(
           "Could not build the ${appEnd.name} pipelines: ${e.message}");
@@ -473,6 +536,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
           name: backendRepoName,
           project: projectName,
           subpath: backSubpath,
+          setUpBranchStrategy: BranchStrategy.gitflow,
           action: backAction,
           sourceGitUrl: backImportUrl,
           directory: projectDir.path))) {
@@ -487,6 +551,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
           project: projectName,
           sourceGitUrl: frontImportUrl,
           subpath: frontSubpath,
+          setUpBranchStrategy: BranchStrategy.gitflow,
           action: frontAction,
           directory: projectDir.path))) {
         throw CreateProjectException("Could not create FrontEnd repository");

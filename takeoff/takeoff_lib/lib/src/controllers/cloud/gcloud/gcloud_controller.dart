@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/auth/gcloud_auth_controller.dart';
-import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
+import 'package:takeoff_lib/src/domain/language.dart';
 
 abstract class GoogleCloudController {
   Future<bool> createProject(

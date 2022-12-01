@@ -3,3 +3,4 @@ takeoff/takeoff_lib/coverage/lcov.info
 takeoff/takeoff_cli/takeoff_cli.exe
 takeoff/takeoff_gui/.vscode/launch.json
 takeoff/takeoff_gui/pubspec.lock
+takeoff/takeoff_cli/bin/takeoff_cli.exe

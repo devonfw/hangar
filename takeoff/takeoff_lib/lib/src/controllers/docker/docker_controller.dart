@@ -23,6 +23,7 @@ abstract class DockerController {
   DockerController({required this.command, SystemService? systemService})
       : systemService = systemService ?? SystemService();
 
+  // TODO: Change to devonfwforge/hangar
   static String imageName = "hangar";
 
   /// Launches a Hangar container with [dockerArgs] and mounted volumes executing
@@ -56,6 +57,12 @@ abstract class DockerController {
     }
 
     return true;
+  }
+
+  Future<bool> pullHangarImage() async {
+    ProcessResult pullResult =
+        await Process.run(command, ["pull", "devonfwforge/hangar"]);
+    return pullResult.exitCode == 0;
   }
 
   /// Builds the list of arguments for the "docker" command in [executeCommand]

@@ -7,12 +7,6 @@ class FirebaseController {
   Future<void> setUpFirebase(SetUpFirebase script) async {
     DockerController controller = GetIt.I.get<DockerController>();
 
-    if (!await controller
-        .executeCommand([], ["mkdir", script.credentialsOutputFolder])) {
-      throw SetUpFirebaseException(
-          "Could not create Firebase credentials output folder");
-    }
-
     if (!await controller.executeCommand([], script.toCommand())) {
       throw SetUpFirebaseException("Could not set up Firebase");
     }

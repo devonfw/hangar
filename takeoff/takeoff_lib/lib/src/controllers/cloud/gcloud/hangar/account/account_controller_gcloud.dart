@@ -46,7 +46,5 @@ class AccountControllerGCloud {
       Log.error(errorMessage);
       throw AccountException(errorMessage);
     }
-
-    // TODO: Check if we need to set the GOOGLE_APPLICATION_CREDENTIALS env variable
   }
 }

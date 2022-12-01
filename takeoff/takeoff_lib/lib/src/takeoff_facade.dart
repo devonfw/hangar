@@ -10,7 +10,7 @@ import 'package:takeoff_lib/src/controllers/docker/docker_controller_factory.dar
 import 'package:takeoff_lib/src/controllers/docker/docker_installation.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
-import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
+import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
@@ -19,7 +19,7 @@ import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
 
 class TakeOffFacade {
-  final GoogleCloudController _googleController = GoogleCloudControllerImpl();
+  late GoogleCloudController _googleController;
 
   /// Initializes all the singletons neeeded for the app to run and checks prerequisites.
   ///
@@ -43,6 +43,9 @@ class TakeOffFacade {
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
       GetIt.I.registerSingleton<Database>(await DbFactory().create());
+      await dockerController.pullHangarImage();
+
+      _googleController = GoogleCloudControllerImpl();
     }
 
     return true;
