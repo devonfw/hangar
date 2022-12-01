@@ -200,6 +200,7 @@ setupPackageName() {
 
 corsCloudStorage() {
 # shellcheck disable=SC2016
+    export $frontendUrl
     envsubst '$frontendUrl' < "$hangarPath/scripts/quickstart/gcloud/cors.json.template" > "$hangarPath/scripts/quickstart/gcloud/cors.json"
     gsutil cors set "$hangarPath/scripts/quickstart/gcloud/cors.json" "gs://${projectName}.appspot.com"
 }
@@ -232,5 +233,7 @@ setupPackageName
 commitFiles
 
 addSecrets
+
+corsCloudStorage
 
 nextSteps
