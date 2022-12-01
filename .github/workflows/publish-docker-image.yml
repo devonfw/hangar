@@ -1,12 +1,23 @@
 name: Publish Docker image
 
 on:
+  push:
+    branches:    
+      - master
+      - int
   workflow_dispatch:
     inputs:
       tag:
         description: 'Image tag'
         required: true 
-        type: string
+        default: 'dev' 
+        type: choice
+        options:
+        - dev
+
+env:
+  TAG: ${{ inputs.tag }}
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }
 
 jobs:
   build:
@@ -20,7 +31,21 @@ jobs:
         username: ${{ secrets.DOCKER_USER }}
         # Password or personal access token used to log against the Docker registry
         password: ${{ secrets.DOCKER_PASS }}
+    - name: Determine image tag
+      run: |
+        : "${TAG:=$(date +"%Y.%U.%u")}"
+        [[ "$BRANCH_NAME" == "int" ]] && TAG=int
+        echo "TAG=$TAG"
+        echo "TAG=$TAG" >> $GITHUB_ENV
     - name: Build Docker image
-      run: docker build . --file ./setup/Dockerfile --tag devonfwforge/hangar:${{ inputs.tag }}
+      run: docker build . --file ./setup/Dockerfile --tag devonfwforge/hangar:$TAG
     - name: Push Docker image
-      run: docker push devonfwforge/hangar:${{ inputs.tag }}
+      run: docker push devonfwforge/hangar:$TAG
+    - name: Push other tags
+      run: |
+        if [[ "$TAG" == "$(date +"%Y.%U.%u")" ]]; then
+            docker tag devonfwforge/hangar:$TAG devonfwforge/hangar:$(date +"%Y.%U")
+            docker tag devonfwforge/hangar:$TAG devonfwforge/hangar:latest
+            docker push devonfwforge/hangar:$(date +"%Y.%U")
+            docker push devonfwforge/hangar:latest
+        fi
