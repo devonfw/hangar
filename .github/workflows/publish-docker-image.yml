@@ -45,6 +45,6 @@ jobs:
         if [[ "$TAG" == "$(date +"%Y.%U.%u")" ]]; then
             docker tag devonfwforge/hangar:$TAG devonfwforge/hangar:$(date +"%Y.%U")
             docker tag devonfwforge/hangar:$TAG devonfwforge/hangar:latest
-            docker push devonfwforge/hangar:devonfwforge/hangar:$(date +"%Y.%U")
+            docker push devonfwforge/hangar:$(date +"%Y.%U")
             docker push devonfwforge/hangar:latest
         fi
