@@ -10,6 +10,7 @@
         "titleBar.inactiveBackground": "#60BAE799",
         "titleBar.activeForeground": "#15202b",
         "titleBar.inactiveForeground": "#15202b99",
+        "toolbar.hoverBackground": "#D6D6D6",
         "statusBar.background": "#60BAE7",
         "statusBarItem.hoverBackground": "#D6D6D6",
         "statusBar.foreground": "#15202b",
