@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-FLAGS=$(getopt -a --options w:d:p:h --long "help,workspace:,directory:,project:,keystore:,backend-url:,frontend-url:,maps-static-secret:,google-services:,storage-bucket:" -- "$@")
+FLAGS=$(getopt -a --options w:d:p:h --long "help,workspace:,directory:,project:,keystore:,backend-url:,frontend-url:,maps-static-secret:,storage-bucket:" -- "$@")
 
 eval set -- "$FLAGS"
 
@@ -200,7 +200,7 @@ setupPackageName() {
 
 corsCloudStorage() {
 # shellcheck disable=SC2016
-    envsubst '$frontendUrl' < "$hangarPath/scripts/quickstart/gcloud/cors.json" > "$hangarPath/scripts/quickstart/gcloud/cors.json"
+    envsubst '$frontendUrl' < "$hangarPath/scripts/quickstart/gcloud/cors.json.template" > "$hangarPath/scripts/quickstart/gcloud/cors.json"
     gsutil cors set "$hangarPath/scripts/quickstart/gcloud/cors.json" "gs://${projectName}.appspot.com"
 }
 
