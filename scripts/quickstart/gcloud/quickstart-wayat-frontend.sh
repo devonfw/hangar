@@ -137,7 +137,7 @@ prepareENVFile() {
     # Remove '-' character
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
-    packageName="com.takeoff.${packageName//_/}"
+    packageName="${packageName//_/}"
     export backendUrl
     export projectName
     export messageSenderId=$(cat "${workspace}/webconfig.json" | grep messagingSenderId | awk '{print $2}' | sed s/\"//g | sed s/,//g)
