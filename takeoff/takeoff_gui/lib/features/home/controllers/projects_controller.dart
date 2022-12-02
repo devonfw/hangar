@@ -89,4 +89,32 @@ abstract class _ProjectsController with Store {
       facade.cleanProject(project.cloud, project.name);
     }
   }
+
+  void openIDE() {
+    Project? project = selectedProject;
+    if (project != null) {
+      facade.openIde(project.name, project.cloud);
+    }
+  }
+
+  void openPipeline() {
+    Project? project = selectedProject;
+    if (project != null) {
+      facade.openPipeline(project.name, project.cloud);
+    }
+  }
+
+  void openFrontendRepo() {
+    Project? project = selectedProject;
+    if (project != null) {
+      facade.openFERepo(project.name, project.cloud);
+    }
+  }
+
+  void openBackendRepo() {
+    Project? project = selectedProject;
+    if (project != null) {
+      facade.openBERepo(project.name, project.cloud);
+    }
+  }
 }

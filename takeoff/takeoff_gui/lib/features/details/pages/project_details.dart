@@ -25,6 +25,8 @@ class ProjectDetails extends StatelessWidget {
                   "${project.name} project resources",
                   style: const TextStyle(fontSize: 30),
                 ),
+                const SizedBox(height: 40),
+                ResourceDetails(),
               ],
             ),
           )

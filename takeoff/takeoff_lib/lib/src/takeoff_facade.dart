@@ -156,4 +156,48 @@ class TakeOffFacade {
         return [];
     }
   }
+
+  void openIde(String project, CloudProviderId cloudProvider) {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+      // get link to open IDE in Google Cloud
+      case CloudProviderId.aws:
+      // get link to open IDE in AWS
+      case CloudProviderId.azure:
+      // get link to open IDE in Azure
+    }
+  }
+
+  void openPipeline(String project, CloudProviderId cloudProvider) {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+      // get link to open pipeline in Google Cloud
+      case CloudProviderId.aws:
+      // get link to open pipeline in AWS
+      case CloudProviderId.azure:
+      // get link to open pipeline in Azure
+    }
+  }
+
+  void openFERepo(String project, CloudProviderId cloudProvider) {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+      // get link to open frontend repo in Google Cloud
+      case CloudProviderId.aws:
+      // get link to open frontend repo in AWS
+      case CloudProviderId.azure:
+      // get link to open frontend repo in Azure
+    }
+  }
+
+  void openBERepo(String project, CloudProviderId cloudProvider) {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+      // get link to open backend repo in Google Cloud
+      case CloudProviderId.aws:
+      // get link to open backend repo in AWS
+      case CloudProviderId.azure:
+      // get link to open backend repo in Azure
+    }
+  }
 }
