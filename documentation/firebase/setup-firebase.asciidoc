@@ -1,0 +1,52 @@
+= Setting up an environment on Firebase
+
+By the end of this guide, an environment on Firebase will be created in an automated way using a script.
+
+== Prerequisites
+* Have a Google Cloud project already setup with billing and Cloud Source Repositories API enabled and GCloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
+* Install https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Git].
+
+== Setting up Firebase services using the provided script
+
+The script located at `/scripts/accounts/gcloud/setup-firebase.sh` allows you to:
+
+. Create a Firebase project with an ANDROID, IOS and WEB aplication.
+. Enable and setup Firestore.
+. Enable Geocoding API key.
+. Enable Maps SDK for ANDROID.
+. Enable Maps SDK for IOS.
+. Enable Map Static API.
+
+=== Usage
+```
+setup-firebase.sh \
+    -n <project name> \
+    -o <local directory> \
+    [-r <firebase region>] \
+    [--enable-maps] \
+    [--setup-ios] \
+    [--setup-android] \
+    [--setup-web] \
+```
+=== Flags
+[subs="attributes"]
+```
+-n                   [Required] Name of the project.
+-o, --output         [Required] Output path to store credentials.
+-r                   [Required] Region where to create Firestore Database.
+--enable-maps                   Enables APIs related to Maps services.
+--setup-ios                     Enables IOS APIs and creates IOS App.
+--setup-android                 Enables Android APIs and creates Android App.
+--setup-web                     Enables Web APIs and creates Web App.
+```
+=== Typical use cases
+
+TIP: This is non-exhaustive list. Make your own combination of flags if all of the following use cases does not fit your needs.
+
+==== Creating a project and enable Maps SDK
+[subs="attributes"]
+  ./setup-firebase.sh -n <project name> -o ./output --enable-maps
+
+==== Creating a project with ANDROID, IOS and WEB applications
+[subs="attributes"]
+  ./setup-firebase.sh -n <project name> -o ./output --setup-android --setup-ios --setup-web

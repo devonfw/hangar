@@ -6,7 +6,10 @@
 :extra_args_quarkus:
 :extra_args_node:
 :extra_args_angular:
+:extra_args_python:
+:extra_args_flutter:
 :extra_sentence_ci: Please note that this workflow, although manually triggerable, is designed to be executed as part of a CI workflow, which you can create following this xref:setup-ci-pipeline.asciidoc[guide].
+:openBrowserFlag: -w
 = Setting up a Quality {pipeline_type} on {provider}
 
 In this section we will create a quality {pipeline_type} for analyzing project code with SonarQube. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -61,19 +64,19 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n quarkus-project-quality -l quarkus --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/quarkus-project {extra_args_quarkus} -b develop {openBrowserFlag}
 ```
 
 ==== Node.js project
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project {extra_args_quarkus} -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n node-project-quality -l node --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/node-project {extra_args_quarkus} -b develop {openBrowserFlag}
 ```
 
 ==== Angular project
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n angular-project-quality -l angular --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/angular-project {extra_args_angular} -b develop -w
+./pipeline_generator.sh -c ./templates/quality/quality-pipeline.cfg -n angular-project-quality -l angular --sonar-url http://1.2.3.4:9000 --sonar-token 6ce6663b63fc02881c6ea4c7cBa6563b8247a04e -d C:/Users/$USERNAME/Desktop/angular-project {extra_args_angular} -b develop {openBrowserFlag}
 ```
