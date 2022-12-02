@@ -190,12 +190,12 @@ setupPackageName() {
     # Remove '_' character
     packageName="com.takeoff.${packageName//_/}"
     
-    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/build.gradle"
-    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/src/debug/AndroidManifest.xml"
-    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/src/main/AndroidManifest.xml"
-    sed -i 's/com.takeof.project/$packageName/g' "$directory/android/app/src/profile/AndroidManifest.xml"
-    sed -i 's/com.takeof.project/$packageName/g' "$directory/ios/Runner.xcodeproj/project.pbxproj"
-    sed -i 's/com.takeof.project/$packageName/g' "$directory/lib/features/map/widgets/platform_map_widget/web_desktop_map_widget.dart"
+    sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/build.gradle"
+    sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/debug/AndroidManifest.xml"
+    sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/main/AndroidManifest.xml"
+    sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/profile/AndroidManifest.xml"
+    sed -i "s/com.takeof.project/$packageName/g" "$directory/ios/Runner.xcodeproj/project.pbxproj"
+    sed -i "s/com.takeof.project/$packageName/g" "$directory/lib/features/map/widgets/platform_map_widget/web_desktop_map_widget.dart"
 }
 
 corsCloudStorage() {
