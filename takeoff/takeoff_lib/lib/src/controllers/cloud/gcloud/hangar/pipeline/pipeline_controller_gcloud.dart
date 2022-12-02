@@ -80,7 +80,7 @@ class PipelineControllerGCloud extends PipelineController {
             "Quality pipeline could not be created for ${appEnd.name}");
       }
     } else {
-      packagePipelineName = "-android";
+      packagePipelineName += "-android";
     }
 
     if (!await execute(PackagePipelineGCloud(
