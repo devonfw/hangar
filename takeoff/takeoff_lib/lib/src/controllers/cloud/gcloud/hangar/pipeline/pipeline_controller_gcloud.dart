@@ -31,6 +31,14 @@ class PipelineControllerGCloud extends PipelineController {
     String buildPipelineName = "build-$projectName-${appEnd.name}";
     String qaPipelineName = "qa-$projectName-${appEnd.name}";
     String testPipelineName = "test-$projectName-${appEnd.name}";
+    String packagePipelineName = "package-$projectName-${appEnd.name}";
+    String deployPipelineName = "deploy-$projectName-${appEnd.name}";
+    if (flutterPlatform == FlutterPlatform.android) {
+      buildPipelineName += "-android";
+      qaPipelineName += "-android";
+      testPipelineName += "-android";
+      packagePipelineName = "-android";
+    }
 
     if (!await execute(BuildPipelineGCloud(
         configFile:
@@ -47,7 +55,7 @@ class PipelineControllerGCloud extends PipelineController {
     if (!await execute(TestPipelineGCloud(
         configFile:
             "/scripts/pipelines/gcloud/templates/test/test-pipeline.cfg",
-        pipelineName: "test-$projectName-${appEnd.name}",
+        pipelineName: testPipelineName,
         language: language,
         languageVersion: languageVersion,
         localDirectory: localDir,
@@ -76,7 +84,7 @@ class PipelineControllerGCloud extends PipelineController {
     if (!await execute(PackagePipelineGCloud(
         configFile:
             "/scripts/pipelines/gcloud/templates/package/package-pipeline.cfg",
-        pipelineName: "package-$projectName-${appEnd.name}",
+        pipelineName: packagePipelineName,
         language: language,
         languageVersion: languageVersion,
         localDirectory: localDir,
@@ -94,7 +102,7 @@ class PipelineControllerGCloud extends PipelineController {
       if (!await execute(DeployPipelineGCloud(
           configFile:
               "/scripts/pipelines/gcloud/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg",
-          pipelineName: "deploy-$projectName-${appEnd.name}",
+          pipelineName: deployPipelineName,
           language: language,
           languageVersion: languageVersion,
           localDirectory: localDir,

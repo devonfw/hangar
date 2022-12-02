@@ -55,8 +55,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     Language? frontendLanguage,
     String? frontendVersion,
     required String googleCloudRegion,
-    StreamController<GuiMessage>? infoStream,
     StreamController<String>? inputStream,
+    StreamController<GuiMessage>? outputStream,
     String backRepoName = "Backend",
     String frontRepoName = "Frontend",
     RepoAction frontRepoAction = RepoAction.create,
@@ -76,7 +76,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     _logAndStream(
         GuiMessage.info(
             "Creating folder ${FoldersService.containerFolders["workspace"]}/$projectName"),
-        infoStream);
+        outputStream);
 
     Directory projectDir = await _createWorkspaceFolder(projectName);
 
@@ -85,7 +85,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
             projectName: projectName, billingAccount: billingAccount));
 
     _logAndStream(
-        GuiMessage.info("Creating project in Google Cloud"), infoStream);
+        GuiMessage.info("Creating project in Google Cloud"), outputStream);
 
     if (!await projectController.createProject()) {
       throw CreateProjectException("Could not create project in Google Cloud");
@@ -98,14 +98,14 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
     _logAndStream(
         GuiMessage.info("Setting up principal account and verifying roles"),
-        infoStream);
+        outputStream);
 
     await _verifyServiceAccountRoles(accountController);
 
     String backendLocalDir = "${projectDir.path}/$backRepoName";
     String frontendLocalDir = "${projectDir.path}/$frontRepoName";
 
-    await _createRepositories(projectName, projectDir, infoStream,
+    await _createRepositories(projectName, projectDir, outputStream,
         backendLanguage: backendLanguage,
         frontendLanguage: frontendLanguage,
         frontendRepoName: frontRepoName,
@@ -117,7 +117,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         frontSubpath: frontRepoSubpath,
         backSubpath: backRepoSubpath);
 
-    _logAndStream(GuiMessage.info("Setting up Sonarqube"), infoStream);
+    _logAndStream(GuiMessage.info("Setting up Sonarqube"), outputStream);
 
     SonarOutput sonarOutput = await _setUpSonarqube(
       serviceKeyPath,
@@ -127,13 +127,14 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
     if (wayat) {
       await _setUpWayatRepos(projectDir, projectName, googleCloudRegion,
-          backendLocalDir, frontendLocalDir, infoStream);
+          backendLocalDir, frontendLocalDir, outputStream, outputStream);
     }
 
     PipelineControllerGCloud pipelineController = PipelineControllerGCloud();
 
     if (backendLanguage != null) {
-      _logAndStream(GuiMessage.info("Building BackEnd pipelines"), infoStream);
+      _logAndStream(
+          GuiMessage.info("Building BackEnd pipelines"), outputStream);
 
       await buildPipelines(
           pipelineController: pipelineController,
@@ -147,7 +148,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     }
 
     if (frontendLanguage != null) {
-      _logAndStream(GuiMessage.info("Building FrontEnd pipelines"), infoStream);
+      _logAndStream(
+          GuiMessage.info("Building FrontEnd pipelines"), outputStream);
 
       await buildPipelines(
           pipelineController: pipelineController,
@@ -168,7 +170,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
       if (wayat) {
         _logAndStream(
-            GuiMessage.info("Building Android pipelines"), infoStream);
+            GuiMessage.info("Building Android pipelines"), outputStream);
 
         await buildPipelines(
             pipelineController: pipelineController,
@@ -188,7 +190,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     await cacheRepository.saveGoogleProjectId(projectName);
 
     Log.success("Project $projectName succesfully created!");
-    infoStream?.add(GuiMessage.success("Project created successfully",
+    outputStream?.add(GuiMessage.success("Project created successfully",
         "https://console.cloud.google.com/welcome?project=$projectName"));
     Log.success(
         "You can view the project by entering in: https://console.cloud.google.com/welcome?project=$projectName");
@@ -276,13 +278,14 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<bool> wayatQuickstart(
       {required String billingAccount,
       required String googleCloudRegion,
-      StreamController<GuiMessage>? infoStream}) async {
+      StreamController<String>? inputStream,
+      StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
-    String account = await _checkAuthentication();
-    String accountName = account.split('@').first;
     String projectName =
-        "wayat-takeoff-$accountName-${now.hour}-${now.minute}-${now.day}-${now.month}-${now.year}"
+        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year}"
             .substring(0, 29);
+    FirebaseController firebaseController = FirebaseController();
+    await firebaseController.authenticate(outputStream, inputStream);
 
     return await createProject(
         projectName: projectName,
@@ -292,7 +295,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         frontendLanguage: Language.flutter,
         frontendVersion: "3.3.6",
         googleCloudRegion: googleCloudRegion,
-        infoStream: infoStream,
+        inputStream: inputStream,
+        outputStream: outputStream,
         backRepoName: "wayat-python",
         frontRepoName: "wayat-flutter",
         wayat: true);
@@ -300,13 +304,15 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
   /// Helper method that will set run the specific wayat scripts when executing [wayatQuickstart].
   Future<void> _setUpWayatRepos(
-      Directory projectDir,
-      String projectName,
-      String googleCloudRegion,
-      String backendLocalDir,
-      String frontendLocalDir,
-      StreamController<GuiMessage>? infoStream) async {
-    _logAndStream(GuiMessage.info("Initializing Cloud Run"), infoStream);
+    Directory projectDir,
+    String projectName,
+    String googleCloudRegion,
+    String backendLocalDir,
+    String frontendLocalDir,
+    StreamController<GuiMessage>? inputStream,
+    StreamController<GuiMessage>? outputStream,
+  ) async {
+    _logAndStream(GuiMessage.info("Initializing Cloud Run"), inputStream);
 
     String frontUrlCloudRun = "${projectDir.path}/frontUrlCloudRun";
     String backUrlCloudRun = "${projectDir.path}/backUrlCloudRun";
@@ -323,7 +329,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String backendUrl = backendUrlFile.readAsStringSync();
 
     _logAndStream(
-        GuiMessage.info("Setting up Firebase & Firestore"), infoStream);
+        GuiMessage.info("Setting up Firebase & Firestore"), inputStream);
 
     await _setUpFirebase(projectName, projectDir.path,
         enableMaps: true,
@@ -334,22 +340,41 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
     String acceptConsentUrl =
         "https://console.cloud.google.com/apis/credentials/consent?project=$projectName";
-    Log.info(
-        "\n\n===========================\nOpen $acceptConsentUrl and accept the terms of Firebase\n===========================\n\n");
-    Log.info("Press enter to continue");
-    stdin.readLineSync();
-    String mapsStaticSecretUrl =
-        "https://console.cloud.google.com/google/maps-apis/api-list?project=$projectName";
-    Log.info(
-        "\n\n===========================\nOpen $mapsStaticSecretUrl and copy the maps secret\n===========================\n\n");
-    Log.info("Introduce the maps secret:");
-    String mapsStaticSecret = stdin.readLineSync() ?? "";
-    while (mapsStaticSecret.isEmpty) {
-      Log.warning("Maps Secret cannot be empty");
-      mapsStaticSecret = stdin.readLineSync() ?? "";
+
+    if (outputStream != null) {
+      outputStream.add(GuiMessage.browser(
+          "Accept Firebase's terms of service", acceptConsentUrl));
+      await inputStream?.stream.take(1).last;
+    } else {
+      Log.info(
+          "\n\n===========================\n\nOpen $acceptConsentUrl and accept the terms of Firebase\n\n===========================\n\n");
+      Log.info("Press enter to continue");
+      stdin.readLineSync();
     }
 
-    _logAndStream(GuiMessage.info("Setting up Wayat secrets"), infoStream);
+    String mapsStaticSecretUrl =
+        "https://console.cloud.google.com/google/maps-apis/api-list?project=$projectName";
+    String mapsStaticSecret = "";
+
+    if (outputStream != null) {
+      outputStream.add(GuiMessage.browser(
+          "Open the page and copy the Maps Secret", mapsStaticSecretUrl));
+      await inputStream?.stream.take(1).last;
+      outputStream
+          .add(GuiMessage.input("Introduce the Maps Secret", InputType.text));
+      mapsStaticSecret = (await inputStream?.stream.take(1).last)!.message;
+    } else {
+      Log.info(
+          "\n\n===========================\n\nOpen $mapsStaticSecretUrl and copy the maps secret\n\n===========================\n\n");
+      Log.info("Introduce the maps secret:");
+      mapsStaticSecret = stdin.readLineSync() ?? "";
+      while (mapsStaticSecret.isEmpty) {
+        Log.warning("Maps secret cannot be empty");
+        mapsStaticSecret = stdin.readLineSync() ?? "";
+      }
+    }
+
+    _logAndStream(GuiMessage.info("Setting up Wayat secrets"), inputStream);
 
     WayatController wayatController = WayatController();
     try {
@@ -520,7 +545,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
   /// Helper method to create the repositories for [wayatQuickstart] and [createProject]
   Future<void> _createRepositories(String projectName, Directory projectDir,
-      StreamController<GuiMessage>? infoStream,
+      StreamController<GuiMessage>? outputStream,
       {required Language? backendLanguage,
       required Language? frontendLanguage,
       RepoAction frontAction = RepoAction.create,
@@ -534,7 +559,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     RepositoryController repoController = RepositoryController();
 
     if (backendLanguage != null) {
-      _logAndStream(GuiMessage.info("Creating BackEnd repository"), infoStream);
+      _logAndStream(
+          GuiMessage.info("Creating BackEnd repository"), outputStream);
 
       if (!await repoController.createRepository(CreateRepoGCloud(
           name: backendRepoName,
@@ -549,7 +575,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     }
     if (frontendLanguage != null) {
       _logAndStream(
-          GuiMessage.info("Creating FrontEnd Repository"), infoStream);
+          GuiMessage.info("Creating FrontEnd Repository"), outputStream);
 
       if (!await repoController.createRepository(CreateRepoGCloud(
           name: frontendRepoName,

@@ -111,7 +111,7 @@ class TakeOffFacade {
     Language? frontendLanguage,
     String? frontendVersion,
     required String googleCloudRegion,
-    StreamController<GuiMessage>? infoStream,
+    StreamController<GuiMessage>? outputStream,
     StreamController<String>? inputStream,
   }) async {
     return await _googleController.createProject(
@@ -122,8 +122,8 @@ class TakeOffFacade {
       frontendLanguage: frontendLanguage,
       frontendVersion: frontendVersion,
       googleCloudRegion: googleCloudRegion,
-      infoStream: infoStream,
       inputStream: inputStream,
+      outputStream: outputStream,
     );
   }
 
@@ -131,11 +131,13 @@ class TakeOffFacade {
   Future<bool> quickstartWayat(
       {required String billingAccount,
       required String googleCloudRegion,
-      StreamController<GuiMessage>? infoStream}) async {
+      StreamController<GuiMessage>? outputStream,
+      StreamController<String>? inputStream}) async {
     return await _googleController.wayatQuickstart(
         billingAccount: billingAccount,
         googleCloudRegion: googleCloudRegion,
-        infoStream: infoStream);
+        outputStream: outputStream,
+        inputStream: inputStream);
   }
 
   Future<bool> cleanProject(

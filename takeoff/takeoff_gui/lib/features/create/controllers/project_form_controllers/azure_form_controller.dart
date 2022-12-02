@@ -19,7 +19,7 @@ abstract class _AzureFormController with Store implements CreateFormController {
     String? backendVersion,
     Language? frontendLanguage,
     String? frontendVersion,
-    StreamController<GuiMessage>? infoStream,
+    StreamController<GuiMessage>? outputStream,
     StreamController<String>? inputStream,
   }) {
     return Future.value();

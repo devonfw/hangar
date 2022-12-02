@@ -10,7 +10,7 @@ abstract class CreateFormController {
     String? backendVersion,
     Language? frontendLanguage,
     String? frontendVersion,
-    StreamController<GuiMessage>? infoStream,
+    StreamController<GuiMessage>? outputStream,
     StreamController<String>? inputStream,
   });
 

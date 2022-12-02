@@ -66,7 +66,7 @@ class UserInteractionDialog extends StatelessWidget {
           icon: Icons.check_box,
           onPressed: () {
             if (message.inputType != null) {
-              controller.inputChannel.add(textController.text);
+              controller.inputChannel.add(textController.text.trim());
             } else if (message.url != null) {
               controller.inputChannel.add("true");
             }

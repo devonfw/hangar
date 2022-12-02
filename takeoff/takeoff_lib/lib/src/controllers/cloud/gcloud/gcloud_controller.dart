@@ -13,8 +13,8 @@ abstract class GoogleCloudController {
     Language? frontendLanguage,
     String? frontendVersion,
     required String googleCloudRegion,
-    StreamController<GuiMessage>? infoStream,
     StreamController<String>? inputStream,
+    StreamController<GuiMessage>? outputStream,
   });
 
   /// Logs in with Google Cloud.
@@ -45,5 +45,6 @@ abstract class GoogleCloudController {
   Future<bool> wayatQuickstart(
       {required String billingAccount,
       required String googleCloudRegion,
-      StreamController<GuiMessage>? infoStream});
+      StreamController<String>? inputStream,
+      StreamController<GuiMessage>? outputStream});
 }
