@@ -152,7 +152,7 @@ function set_default_branch_and_policies {
     git checkout -b "$i"
     git push --set-upstream origin "$i"
   done
-  type set_default_branch_and_policies_content_1 &> /dev/null && set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+  ! (type set_default_branch_and_policies_content_1 &> /dev/null) || set_default_branch_and_policies_content_1 "$1" "$2" "$3" "$4" "$5" "$6" "$7"
   MSG_ERROR "Setting 'master' branch as default branch." $?
   echo ""
   echo -e "${blue}Setting policies for the repository."
@@ -234,8 +234,7 @@ function prepare_push_existing_repo {
   echo "--"
   echo -e "${blue}Start of the function to import a directory/repository.${white}"
   echo ""
-  git rev-parse --git-dir &> /dev/null
-  isGitRepo="$?"
+  git rev-parse --git-dir &> /dev/null && isGitRepo="$?"  || isGitRepo="$?"
   if [ $isGitRepo -eq 0 ]
   then
     echo "$(pwd) is already a git repository, skipping git init and first commit."

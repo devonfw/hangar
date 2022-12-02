@@ -46,17 +46,19 @@ echo "$branch" | grep release || tag_completed="${tag}_${branch_short}"
 echo docker build -f "$dockerFile" -t "$imageName:$tag_completed" "$context"
 docker build -f "$dockerFile" -t "$imageName":"$tag_completed" "$context"
 
-
 # We connect to the registry
-if test -z "$aws_access_key"
+if ! [[ "$registry" == *"docker.pkg.dev"* ]];
 then
-    echo "docker login -u=**** -p=**** $registry"
-    docker login -u="$username" -p="$password" "$registry"
-else
-    aws configure set aws_access_key_id "$aws_access_key"
-    aws configure set aws_secret_access_key "$aws_secret_access_key"
-    echo "aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry"
-    aws ecr get-login-password --region "$region" | docker login --username AWS --password-stdin "$registry"
+    if [[ "$aws_access_key" == "" ]];
+    then
+        echo "docker login -u=**** -p=**** $registry"
+        docker login -u="$username" -p="$password" "$registry"
+    else
+        aws configure set aws_access_key_id "$aws_access_key"
+        aws configure set aws_secret_access_key "$aws_secret_access_key"
+        echo "aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry"
+        aws ecr get-login-password --region "$region" | docker login --username AWS --password-stdin "$registry"
+    fi
 fi
 
 # We push the image previously built

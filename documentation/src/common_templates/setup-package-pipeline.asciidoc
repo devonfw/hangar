@@ -4,8 +4,14 @@ In this section we will create a package {pipeline_type} to build and push a con
 
 The creation of the {pipeline_type2} will follow the project workflow, so a new branch named `feature/package-pipeline` will be created and the YAML file for the {pipeline_type} will be pushed to it.
 
+ifndef::no-PR-or-MR[]
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
+endif::[]
+ifdef::no-PR-or-MR[]
+Then, the new branch will be merged into the appropriate branch (provided in `-b` flag).
+
+endif::[]
 The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create a package {pipeline_type} based on a YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
@@ -27,14 +33,25 @@ ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
 ifdef::quality-pipeline[  --quality-pipeline-name <quality {pipeline_type} name> \]
 ifdef::ci-pipeline[  --ci-pipeline-name <ci {pipeline_type} name> \]
   -i <image name> \
+ifeval::["{provider}" == "Google Cloud"]
+  [--language-version <version>] \
+  [--registry-location <registry location>] \
+  [--flutter-platform <web, android>] \
+  [--flutter-web-renderer <auto (default), canvaskit, html>] \
+endif::[]
   [-u <registry user>] \
   [-p <registry password>] \
   [--aws-access-key <aws access key>] \
   [--aws-secret-access-key <aws secret access key>] \
   [--aws-region <aws region>] \
+ifdef::secretVar[  [--secret-vars <secret vars list>]]
+ifdef::envVar[  [--env-vars <env vars list>]]
   [-b <branch>] \
-  [-w]
-
+ifndef::no-PR-or-MR[  [-w]]
+ifeval::["{provider}" == "Google Cloud"]
+  [-m <machine type for {pipeline_type} runner>] \
+  [--flutter-web-renderer <auto (default), canvaskit, html>]
+endif::[]
 ```
 
 NOTE: The config file for the package {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/package/package-pipeline.cfg`.
@@ -52,13 +69,24 @@ ifdef::build-pipeline[    --build-pipeline-name      [Required] Build {pipeline_
 ifdef::quality-pipeline[    --quality-pipeline-name    [Required] Quality {pipeline_type} name.]
 ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} name.]
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
--u, --registry-user            [Required, unless AWS] Container registry login user.
--p, --registry-password        [Required, unless AWS] Container registry login password.
+ifeval::["{provider}" == "Google Cloud"]
+--language-version             [Required, if Flutter or Python] Language or framework version.
+--registry-location            [Required, if Flutter] Artifact registry location.
+--flutter-platform             [Required, if Flutter] Target platform to compile. Accepted values: android, web.
+endif::[]
+-u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
+-p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
+ifdef::secretVar[    --secret-vars                         Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
+ifdef::envVar[    --env-vars                            Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
--w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+ifndef::no-PR-or-MR[-w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
+ifeval::["{provider}" == "Google Cloud"]
+-m, --machine-type                        Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
+    --flutter-web-renderer                Flutter web renderer. Accepted values: auto (default), canvaskit, html.
+endif::[]
 ```
 
 === Examples
@@ -103,3 +131,53 @@ ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} 
 ```
 ./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n angular-project-package -l angular -d C:/Users/$USERNAME/Desktop/angular-project --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality -i username/angular-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
 ```
+ifeval::["{provider}" == "Google Cloud"]
+
+==== Python project
+
+===== Generic container registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project -u username -p password -b develop -w
+```
+
+===== AWS ECR
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
+```
+
+===== Google Cloud Artifact Registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i eu-southwest1-docker.pkg.dev/username/python-project -b develop -w
+```
+
+==== Flutter project
+
+===== Web platform
+
+====== Generic container registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project -u username -p password -b develop -w
+```
+
+====== AWS ECR
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i username/flutter-project --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY --aws-region eu-west-1 -b develop -w
+```
+
+====== Google Cloud Artifact Registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_web} -i eu-southwest1-docker.pkg.dev/username/flutter-project -b develop -w
+```
+
+===== Android platform: Google Cloud Artifact Registry
+[subs=attributes+]
+```
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n flutter-project-package -l flutter -d C:/Users/$USERNAME/Desktop/flutter-project {extra_args_flutter} {extra_args_flutter_android} -b develop -w
+```
+endif::[]
