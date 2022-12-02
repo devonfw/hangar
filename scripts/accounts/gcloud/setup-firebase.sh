@@ -41,7 +41,7 @@ checkMandatoryArguments() {
     # Project name check
     if [ -z "$projectName" ];
     then
-        echo -e "${red}Error: Missing paramenters, -n is mandatory." >&2
+        echo -e "${red}Error: Missing parameters, -n is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
@@ -57,7 +57,7 @@ checkMandatoryArguments() {
     # Output path check
     if [ -z "$outputPath" ];
     then
-        echo -e "${red}Error: Missing paramenters, -o is mandatory." >&2
+        echo -e "${red}Error: Missing parameters, -o is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
