@@ -65,6 +65,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String? backImportUrl,
     String? frontRepoSubpath,
     String? backRepoSubpath,
+    bool firebase = false,
     bool wayat = false,
   }) async {
     if (backendLanguage == null && frontendLanguage == null) {
@@ -82,7 +83,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
     ProjectController projectController = ProjectControllerGCloud(
         CreateProjectGCloud(
-            projectName: projectName, billingAccount: billingAccount));
+            projectName: projectName,
+            billingAccount: billingAccount,
+            firebase: firebase));
 
     _logAndStream(
         GuiMessage.info("Creating project in Google Cloud"), outputStream);
@@ -281,9 +284,10 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<String>? inputStream,
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
-    String projectName =
-        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year}"
-            .substring(0, 29);
+    //String projectName =
+    //"wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year}"
+    //.substring(0, 29);
+    String projectName = "wayat-takeoff-12-8-44-2-12-20";
     FirebaseController firebaseController = FirebaseController();
     await firebaseController.authenticate(outputStream, inputStream);
 
@@ -299,6 +303,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         outputStream: outputStream,
         backRepoName: "wayat-python",
         frontRepoName: "wayat-flutter",
+        firebase: true,
         wayat: true);
   }
 
@@ -325,8 +330,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     File backendUrlFile = File(
         "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}backUrlCloudRun");
 
-    String frontendUrl = frontendUrlFile.readAsStringSync();
-    String backendUrl = backendUrlFile.readAsStringSync();
+    String frontendUrl = frontendUrlFile.readAsStringSync().trim();
+    String backendUrl = backendUrlFile.readAsStringSync().trim();
 
     _logAndStream(
         GuiMessage.info("Setting up Firebase & Firestore"), inputStream);
@@ -478,14 +483,14 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<SonarOutput> _setUpSonarqube(
       String serviceKeyPath, String projectName, Directory projectDir) async {
     SonarqubeController sonarqubeController = SonarqubeController();
-    if (!await sonarqubeController.execute(
-        SetUpSonar(
-            serviceAccountFile: serviceKeyPath,
-            project: projectName,
-            stateFolder: "${projectDir.path}/sonarqube"),
-        "gcloud")) {
-      throw CreateProjectException("Could not set up SonarQube");
-    }
+    //if (!await sonarqubeController.execute(
+    //SetUpSonar(
+    //serviceAccountFile: serviceKeyPath,
+    //project: projectName,
+    //stateFolder: "${projectDir.path}/sonarqube"),
+    //"gcloud")) {
+    //throw CreateProjectException("Could not set up SonarQube");
+    //}
 
     File sonarOutputFile = File(
         "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}sonarqube${Platform.pathSeparator}terraform.tfoutput.json");

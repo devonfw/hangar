@@ -26,7 +26,7 @@ class WayatFrontend extends WayatScript {
   @override
   List<String> toCommand() {
     List<String> args = [
-      "/scripts/quickstart/gcloud/quickstart-wayat-backend.sh",
+      "/scripts/quickstart/gcloud/quickstart-wayat-frontend.sh",
       "-p",
       projectName,
       "-w",
