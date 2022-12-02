@@ -233,7 +233,7 @@ createPlatformApps() {
     # Remove '-' character
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
-    packageName="${packageName//_/}"
+    packageName="com.takeoff.${packageName//_/}"
     # ANDROID setup:
     if [[ "$setupAndroid" == "true" ]]
     then
