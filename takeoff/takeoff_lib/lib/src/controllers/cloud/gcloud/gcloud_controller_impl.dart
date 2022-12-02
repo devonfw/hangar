@@ -221,7 +221,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     await controller.executeCommand([
       "-it",
       "--workdir",
-      "/scripts/workspace/$projectId"
+      "/workspace/$projectId"
     ], [
       "/bin/bash",
       "-c",
