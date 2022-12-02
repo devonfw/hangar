@@ -284,10 +284,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<String>? inputStream,
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
-    //String projectName =
-    //"wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year}"
-    //.substring(0, 29);
-    String projectName = "wayat-takeoff-12-8-44-2-12-20";
+    String projectName =
+        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year}"
+            .substring(0, 29);
     FirebaseController firebaseController = FirebaseController();
     await firebaseController.authenticate(outputStream, inputStream);
 
@@ -483,14 +482,14 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<SonarOutput> _setUpSonarqube(
       String serviceKeyPath, String projectName, Directory projectDir) async {
     SonarqubeController sonarqubeController = SonarqubeController();
-    //if (!await sonarqubeController.execute(
-    //SetUpSonar(
-    //serviceAccountFile: serviceKeyPath,
-    //project: projectName,
-    //stateFolder: "${projectDir.path}/sonarqube"),
-    //"gcloud")) {
-    //throw CreateProjectException("Could not set up SonarQube");
-    //}
+    if (!await sonarqubeController.execute(
+        SetUpSonar(
+            serviceAccountFile: serviceKeyPath,
+            project: projectName,
+            stateFolder: "${projectDir.path}/sonarqube"),
+        "gcloud")) {
+      throw CreateProjectException("Could not set up SonarQube");
+    }
 
     File sonarOutputFile = File(
         "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}sonarqube${Platform.pathSeparator}terraform.tfoutput.json");
