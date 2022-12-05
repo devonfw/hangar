@@ -2,10 +2,14 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
 import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
+import 'package:takeoff_lib/src/controllers/cloud/common/auth/auth_controller.dart';
+import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
+import 'package:takeoff_lib/src/domain/cloud_provider.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider_id.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
@@ -14,9 +18,16 @@ import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:test/test.dart';
 
+import 'takeoff_facade_test.mocks.dart';
+
+@GenerateNiceMocks([MockSpec<DockerController>(), MockSpec<AuthController<CloudProvider>>()])
 void main() {
+  MockDockerController mockDockerController = MockDockerController();
+  // MockAuthController mockAuthController = MockAuthController();
   late FoldersService foldersService;
   setUpAll(() {
+    // GetIt.I.registerSingleton<AuthController<CloudProvider>>(mockAuthController);
+    GetIt.I.registerSingleton<DockerController>(mockDockerController);
     GetIt.I.registerSingleton(PlatformService());
     foldersService = FoldersService();
     GetIt.I.registerSingleton(foldersService);
@@ -113,6 +124,21 @@ void main() {
     // If user doesn't exist returns false
     expect(await facade.logOut(CloudProviderId.gcloud), false);
   });
+
+  // test('runProject executes properly for google cloud', () async {
+  //   CacheRepository cacheRepository = CacheRepositoryImpl();
+  //   String email = "${Random().nextInt(100000000)}@mail.com";
+  //   String projectId = Random().nextInt(1000000000).toString();
+
+  //   await cacheRepository.saveGoogleEmail(email);
+  //   await cacheRepository.saveGoogleProjectId(projectId);
+
+  //   TakeOffFacade facade = TakeOffFacade();
+
+  //   final runProject = await facade.runProject(projectId, CloudProviderId.gcloud);
+
+  //   expect(runProject, true);
+  // });
 
   tearDown(() async {
     GetIt.I.unregister<Database>();
