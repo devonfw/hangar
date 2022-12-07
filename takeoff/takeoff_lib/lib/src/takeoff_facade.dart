@@ -159,45 +159,67 @@ class TakeOffFacade {
   }
 
   Future<bool> openIde(String project, CloudProviderId cloudProvider) async {
-    return await _openResourceFromUrl(project, cloudProvider);
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        String url =
+            "https://console.cloud.google.com/welcome?project=$project";
+        return await _launchUrl(url);
+      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
+      case CloudProviderId.aws:
+      case CloudProviderId.azure:
+        return false;
+    }
   }
 
   Future<bool> openPipeline(
       String project, CloudProviderId cloudProvider) async {
-    return await _openResourceFromUrl(project, cloudProvider);
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        String url =
+            "https://console.cloud.google.com/cloud-build/builds;region=global/9b9aaf90-71dc-48cc-8268-fa24e055eca0?project=$project";
+        return await _launchUrl(url);
+      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
+      case CloudProviderId.aws:
+      case CloudProviderId.azure:
+        return false;
+    }
   }
 
   Future<bool> openFERepo(String project, CloudProviderId cloudProvider) async {
-    return await _openResourceFromUrl(project, cloudProvider);
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        String frontRepoName = "Frontend";
+        String url =
+            "https://console.cloud.google.com/welcome?project=$project/$frontRepoName";
+        return await _launchUrl(url);
+      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
+      case CloudProviderId.aws:
+      case CloudProviderId.azure:
+        return false;
+    }
   }
 
   Future<bool> openBERepo(String project, CloudProviderId cloudProvider) async {
-    return await _openResourceFromUrl(project, cloudProvider);
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        String backRepoName = "Backend";
+        String url =
+            "https://console.cloud.google.com/welcome?project=$project/$backRepoName";
+        return await _launchUrl(url);
+      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
+      case CloudProviderId.aws:
+      case CloudProviderId.azure:
+        return false;
+    }
   }
-}
 
-Future<bool> _openResourceFromUrl(
-    String project, CloudProviderId cloudProvider) async {
-  switch (cloudProvider) {
-    case CloudProviderId.gcloud:
-      // get Url link
-      String url = ''; //TODO: get url of ide, pipeline, fe, be for gCloud
-      return await _launchUrl(url);
-    case CloudProviderId.aws:
-      String url = ''; //TODO: get url of ide, pipeline, fe, be for aws
-      return await _launchUrl(url);
-    case CloudProviderId.azure:
-      String url = ''; //TODO: get url of ide, pipeline, fe, be for azure
-      return await _launchUrl(url);
-  }
-}
-
-Future<bool> _launchUrl(String urlString) async {
-  Uri url = Uri.parse(urlString);
-  if (await canLaunchUrl(url)) {
-    await launchUrl(url);
-    return true;
-  } else {
-    throw 'Could not launch $url';
+  Future<bool> _launchUrl(String urlString) async {
+    Uri url = Uri.parse(urlString);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+      return true;
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
