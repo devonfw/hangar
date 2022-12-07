@@ -15,6 +15,7 @@ import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TakeOffFacade {
   final GoogleCloudController _googleController = GoogleCloudControllerImpl();
@@ -157,47 +158,46 @@ class TakeOffFacade {
     }
   }
 
-  void openIde(String project, CloudProviderId cloudProvider) {
-    switch (cloudProvider) {
-      case CloudProviderId.gcloud:
-      // get link to open IDE in Google Cloud
-      case CloudProviderId.aws:
-      // get link to open IDE in AWS
-      case CloudProviderId.azure:
-      // get link to open IDE in Azure
-    }
+  Future<bool> openIde(String project, CloudProviderId cloudProvider) async {
+    return await _openResourceFromUrl(project, cloudProvider);
   }
 
-  void openPipeline(String project, CloudProviderId cloudProvider) {
-    switch (cloudProvider) {
-      case CloudProviderId.gcloud:
-      // get link to open pipeline in Google Cloud
-      case CloudProviderId.aws:
-      // get link to open pipeline in AWS
-      case CloudProviderId.azure:
-      // get link to open pipeline in Azure
-    }
+  Future<bool> openPipeline(
+      String project, CloudProviderId cloudProvider) async {
+    return await _openResourceFromUrl(project, cloudProvider);
   }
 
-  void openFERepo(String project, CloudProviderId cloudProvider) {
-    switch (cloudProvider) {
-      case CloudProviderId.gcloud:
-      // get link to open frontend repo in Google Cloud
-      case CloudProviderId.aws:
-      // get link to open frontend repo in AWS
-      case CloudProviderId.azure:
-      // get link to open frontend repo in Azure
-    }
+  Future<bool> openFERepo(String project, CloudProviderId cloudProvider) async {
+    return await _openResourceFromUrl(project, cloudProvider);
   }
 
-  void openBERepo(String project, CloudProviderId cloudProvider) {
-    switch (cloudProvider) {
-      case CloudProviderId.gcloud:
-      // get link to open backend repo in Google Cloud
-      case CloudProviderId.aws:
-      // get link to open backend repo in AWS
-      case CloudProviderId.azure:
-      // get link to open backend repo in Azure
-    }
+  Future<bool> openBERepo(String project, CloudProviderId cloudProvider) async {
+    return await _openResourceFromUrl(project, cloudProvider);
+  }
+}
+
+Future<bool> _openResourceFromUrl(
+    String project, CloudProviderId cloudProvider) async {
+  switch (cloudProvider) {
+    case CloudProviderId.gcloud:
+      // get Url link
+      String url = ''; //TODO: get url of ide, pipeline, fe, be for gCloud
+      return await _launchUrl(url);
+    case CloudProviderId.aws:
+      String url = ''; //TODO: get url of ide, pipeline, fe, be for aws
+      return await _launchUrl(url);
+    case CloudProviderId.azure:
+      String url = ''; //TODO: get url of ide, pipeline, fe, be for azure
+      return await _launchUrl(url);
+  }
+}
+
+Future<bool> _launchUrl(String urlString) async {
+  Uri url = Uri.parse(urlString);
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+    return true;
+  } else {
+    throw 'Could not launch $url';
   }
 }
