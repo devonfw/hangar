@@ -1,0 +1,10 @@
+[
+    {
+      "origin": [
+        "$frontendUrl"
+      ],
+      "responseHeader": ["x-meta-goog-custom"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+]

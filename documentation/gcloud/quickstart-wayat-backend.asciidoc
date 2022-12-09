@@ -1,0 +1,50 @@
+:example_required_flags: -w /workspace/demoproject -d /workspace/demoproject/backend -p projectID --storage-bucket bucket.appspot.com
+:provider_path: gcloud
+= Setting up the Wayat Backend in a new project
+
+The scope of this section is to initialize a project with the code of Wayat Backend in Python configured to be used with other Gcloud and Firebase services. 
+
+This script will automatically add the code (from a template) of the Wayat Backend, replace the necessary variables, commit the new files to your repo and upload the secret files to the Secret Manager.
+
+== Prerequisites
+
+* Have a Google Cloud project already setup and Google Cloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
+
+* Have an empty repository with GitFlow branch strategy
+
+* Have all necessary Firebase and Gcloud services active
+
+== Initializing a Cloud Run service using provided script
+
+
+The script located at `/scripts/quickstart/{provider_path}/quickstart-wayat-backend.sh` allows you to:
+
+. Add all the backend code (from a template) of Wayat
+. Replace the necessary variables
+. Commit the new files to your repository
+. Upload the secret files to the Secret Manager.
+
+=== Usage
+```
+quickstart-wayat-backend.sh \
+    -w <workspace for the project> \
+    -d <directory of the backend repository> \
+    -p <project ID> \
+    --storage-bucket <bucket to store images>
+```
+
+=== Flags
+[subs=attributes+]
+```
+-w, --workspace                [Required] Workspace of the project containing firebase keys.
+-d, --directory                [Required] Directory for the repository of the backend.
+-p, --project                  [Required] Project shortname (ID)
+--storage-bucket               [Required] Storage bucket to be used for storing images of the app.
+```
+
+=== Example
+
+[subs=attributes+]
+```
+./scripts/quickstart/{provider_path}/quickstart-wayat-backend.sh {example_required_flags} 
+```
