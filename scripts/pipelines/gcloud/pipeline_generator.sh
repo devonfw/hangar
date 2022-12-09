@@ -13,7 +13,7 @@ while true; do
         -l | --language)          language=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --registry-location)      export registryLocation=$2; shift 2;;
-        --flutter-android-platform) export androidPlatform=true; shift 1;
+        --flutter-android-platform) export androidPlatform=true; shift 1;;
         --flutter-web-platform)   export webPlatform=true; shift 1;;
         --flutter-web-renderer)   export flutterWebRenderer=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
