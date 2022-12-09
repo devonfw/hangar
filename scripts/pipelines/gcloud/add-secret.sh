@@ -127,7 +127,7 @@ function addSecretFiles {
   mkdir -p "${localDirectory}/${scriptFilePath}"
   [[ -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" ]] || echo "# secretName=PathToDownload #pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
   echo "$secretName=$remoteFilePath #$pipelinesList" >> "${localDirectory}/${configFilePath}/pathsSecretFiles.conf"
-  cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secrets.sh" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
+  cp "$hangarPath/${commonTemplatesPath}/secret/get-${provider}-secrets.sh" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
   # Commiting the conf file
   echo -e "${green}Commiting and pushing into Git remote...${white}"
   git add -f "${localDirectory}/${configFilePath}/pathsSecretFiles.conf" "${localDirectory}/${scriptFilePath}/get-secrets.sh"
@@ -155,7 +155,7 @@ function addSecretVars {
 
     # Adding script to get secret and commiting changes
     mkdir -p "${localDirectory}/${scriptFilePath}"
-    cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    cp "$hangarPath/${commonTemplatesPath}/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
     # Commiting the conf file
     echo -e "${green}Commiting and pushing into Git remote...${white}"
     git add -f "${localDirectory}/${configFilePath}/SecretVars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
