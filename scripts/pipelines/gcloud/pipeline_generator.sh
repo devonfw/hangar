@@ -215,7 +215,7 @@ function addSecretVars {
 
     # Adding script to get secret and commiting changes
     mkdir -p "${localDirectory}/${scriptFilePath}"
-    cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    cp "$hangarPath/${commonTemplatesPath}/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
     # Commiting the conf file
     echo -e "${green}Commiting and pushing into Git remote...${white}"
     git add -f "${localDirectory}/${configFilePath}/SecretVars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
