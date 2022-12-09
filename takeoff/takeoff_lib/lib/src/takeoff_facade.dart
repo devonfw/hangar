@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller_impl.dart';
@@ -162,11 +163,8 @@ class TakeOffFacade {
   Future<bool> openIde(String project, CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        String url =
-            "${GCloudResourceUrl.baseConsolePath}/cloud-build/dashboard?project=$project";
-        //"https://console.cloud.google.com/cloud-build/triggers?project=$project";
+        String url = "${GCloudResourceUrl.baseSourcePath}/$project/";
         return await _launchUrl(url);
-      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
@@ -180,7 +178,6 @@ class TakeOffFacade {
         String url =
             "${GCloudResourceUrl.baseConsolePath}/cloud-build/dashboard?project=$project";
         return await _launchUrl(url);
-      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
@@ -190,11 +187,8 @@ class TakeOffFacade {
   Future<bool> openFERepo(String project, CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        String frontRepoName = "frontend";
-        String url =
-            "${GCloudResourceUrl.baseConsolePath}/$project/$frontRepoName";
+        String url = "${GCloudResourceUrl.baseSourcePath}/$project/frontend/";
         return await _launchUrl(url);
-      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
@@ -204,11 +198,8 @@ class TakeOffFacade {
   Future<bool> openBERepo(String project, CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        String backRepoName = "backend";
-        String url =
-            "${GCloudResourceUrl.baseConsolePath}/$project/$backRepoName";
+        String url = "${GCloudResourceUrl.baseSourcePath}/$project/backend/";
         return await _launchUrl(url);
-      // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
