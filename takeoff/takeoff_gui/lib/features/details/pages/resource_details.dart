@@ -9,7 +9,7 @@ class ResourceDetails extends StatelessWidget {
   final BoxBorder selectedBorder =
       Border.all(color: Colors.indigoAccent, width: 4);
   final double heignt = 70;
-  final double width = 100;
+  final double width = 120;
   final ProjectsController controller = GetIt.I.get<ProjectsController>();
 
   @override

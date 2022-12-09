@@ -14,6 +14,7 @@ import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/gcloud_url.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -162,7 +163,8 @@ class TakeOffFacade {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
         String url =
-            "https://console.cloud.google.com/welcome?project=$project";
+            "${GCloudResourceUrl.baseConsolePath}/cloud-build/dashboard?project=$project";
+        //"https://console.cloud.google.com/cloud-build/triggers?project=$project";
         return await _launchUrl(url);
       // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
@@ -176,7 +178,7 @@ class TakeOffFacade {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
         String url =
-            "https://console.cloud.google.com/cloud-build/builds;region=global/9b9aaf90-71dc-48cc-8268-fa24e055eca0?project=$project";
+            "${GCloudResourceUrl.baseConsolePath}/cloud-build/dashboard?project=$project";
         return await _launchUrl(url);
       // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
@@ -188,9 +190,9 @@ class TakeOffFacade {
   Future<bool> openFERepo(String project, CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        String frontRepoName = "Frontend";
+        String frontRepoName = "frontend";
         String url =
-            "https://console.cloud.google.com/welcome?project=$project/$frontRepoName";
+            "${GCloudResourceUrl.baseConsolePath}/$project/$frontRepoName";
         return await _launchUrl(url);
       // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
@@ -202,9 +204,9 @@ class TakeOffFacade {
   Future<bool> openBERepo(String project, CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        String backRepoName = "Backend";
+        String backRepoName = "backend";
         String url =
-            "https://console.cloud.google.com/welcome?project=$project/$backRepoName";
+            "${GCloudResourceUrl.baseConsolePath}/$project/$backRepoName";
         return await _launchUrl(url);
       // For takeOff_cli use Uri.parse(url) insted _launchUrl(url)
       case CloudProviderId.aws:
