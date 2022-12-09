@@ -1,5 +1,5 @@
 #!/bin/bash
-export tag=$(grep -m 1 version pubspec.yaml | tr -s ' ' | tr -d ':' | cut -d' ' -f2 | cut -d'+' -f1)
+export tag=$(grep -m 1 version pubspec.yaml | tr -s ' ' | tr -d ':' | cut -d' ' -f2 | cut -d'+' -f1 | tr -d '\n' | tr -d '\r')
 
 # Colours for the messages.
 red='\e[0;31m'
