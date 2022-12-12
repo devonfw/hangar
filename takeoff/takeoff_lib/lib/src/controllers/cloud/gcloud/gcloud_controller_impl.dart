@@ -265,8 +265,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<String>? inputStream,
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
-    String projectName =
-        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
+    String projectName = "wayat-takeoff-12-8-44-2-12-20";
+    //"wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
     FirebaseController firebaseController = FirebaseController();
     await firebaseController.authenticate(outputStream, inputStream);
 

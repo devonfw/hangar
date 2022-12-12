@@ -6,11 +6,26 @@ import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class UserInteractionDialog extends StatelessWidget {
+class UserInteractionDialog extends StatefulWidget {
   final GuiMessage message;
+
+  const UserInteractionDialog({super.key, required this.message});
+
+  @override
+  State<UserInteractionDialog> createState() => _UserInteractionDialogState();
+}
+
+class _UserInteractionDialogState extends State<UserInteractionDialog> {
   final MonitorController controller = GetIt.I.get<MonitorController>();
+
   final TextEditingController textController = TextEditingController();
-  UserInteractionDialog({super.key, required this.message});
+  late bool linkTapped;
+
+  @override
+  void initState() {
+    linkTapped = widget.message.url == null;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +39,24 @@ class UserInteractionDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
                   Text(
-                    "Please, do these steps",
+                    "Please, do next steps",
                     style: TextStyle(fontSize: 30),
                   ),
                 ],
               ),
               const SizedBox(height: 50),
-              Text(message.message),
+              Text(widget.message.message),
               const SizedBox(height: 10),
-              if (message.inputType != null)
+              if (widget.message.inputType != null)
                 Row(
                   children: [
                     Expanded(
                       child: TextField(
                         controller: textController,
-                        inputFormatters: message.inputType == InputType.number
-                            ? [FilteringTextInputFormatter.digitsOnly]
-                            : [],
+                        inputFormatters:
+                            widget.message.inputType == InputType.number
+                                ? [FilteringTextInputFormatter.digitsOnly]
+                                : [],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -53,25 +69,30 @@ class UserInteractionDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        if (message.url != null)
+        if (widget.message.url != null)
           CustomButton(
             text: "Open link",
             icon: Icons.check_box,
             onPressed: () {
-              launchUrl(Uri.parse(message.url!));
+              launchUrl(Uri.parse(widget.message.url!));
+              setState(() {
+                linkTapped = true;
+              });
             },
           ),
         CustomButton(
           text: "Confirm",
           icon: Icons.check_box,
-          onPressed: () {
-            if (message.inputType != null) {
-              controller.inputChannel.add(textController.text.trim());
-            } else if (message.url != null) {
-              controller.inputChannel.add("true");
-            }
-            Navigator.of(context).pop();
-          },
+          onPressed: (linkTapped)
+              ? () {
+                  if (widget.message.inputType != null) {
+                    controller.inputChannel.add(textController.text);
+                  } else if (widget.message.url != null) {
+                    controller.inputChannel.add("true");
+                  }
+                  Navigator.of(context).pop();
+                }
+              : null,
         )
       ],
     );
