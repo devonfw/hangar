@@ -188,7 +188,7 @@ setupPackageName() {
     # Remove '-' character
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
-    packageName="com.takeoff.${packageName//_/}"
+    packageName="${packageName//_/}"
     
     sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/build.gradle"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/debug/AndroidManifest.xml"
