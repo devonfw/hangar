@@ -211,6 +211,10 @@ nextSteps() {
     echo "and in \"JavaScript authoritative sources\" section add frontend url: $frontendUrl"
     echo "2- Go to https://console.firebase.google.com/project/$projectName/appcheck/apps and register SafetyNet in android app"
     echo "3- Go to https://console.firebase.google.com/project/$projectName/authentication/providers, then enable Google Sign In and Phone authentication"
+    echo "Next steps:" > $workspace/nextsteps.txt
+    echo "1- Go to https://console.cloud.google.com/apis/credentials/oauthclient/$webClientId?project=$projectName and in \"JavaScript authoritative sources\" section add frontend url: $frontendUrl" >> $workspaceç/nextsteps.txt
+    echo "2- Go to https://console.firebase.google.com/project/$projectName/appcheck/apps and register SafetyNet in android app" >> $workspaceç/nextsteps.txt
+    echo "3- Go to https://console.firebase.google.com/project/$projectName/authentication/providers, then enable Google Sign In and Phone authentication" >> $workspaceç/nextsteps.txt
 }
 
 #==============================================================
