@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
-import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller_impl.dart';
@@ -16,8 +15,8 @@ import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
 import 'package:takeoff_lib/src/utils/url_launcher/gcloud_url.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TakeOffFacade {
   final GoogleCloudController _googleController = GoogleCloudControllerImpl();
@@ -160,59 +159,32 @@ class TakeOffFacade {
     }
   }
 
-  Future<bool> openIde(String project, CloudProviderId cloudProvider) async {
+  Uri getResource(String project, CloudProviderId cloudProvider,
+      ResourceType resourceType) {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        String url = "${GCloudResourceUrl.baseSourcePath}/$project/";
-        return await _launchUrl(url);
+        return getGCloudResourceUrl(project, resourceType);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
-        return false;
+        return Uri.parse("");
     }
   }
 
-  Future<bool> openPipeline(
-      String project, CloudProviderId cloudProvider) async {
-    switch (cloudProvider) {
-      case CloudProviderId.gcloud:
+  Uri getGCloudResourceUrl(String project, ResourceType resourceType) {
+    switch (resourceType) {
+      case ResourceType.ide:
+        String url = "${GCloudResourceUrl.baseSourcePath}/$project";
+        return Uri.parse(url);
+      case ResourceType.pipeline:
         String url =
             "${GCloudResourceUrl.baseConsolePath}/cloud-build/dashboard?project=$project";
-        return await _launchUrl(url);
-      case CloudProviderId.aws:
-      case CloudProviderId.azure:
-        return false;
-    }
-  }
-
-  Future<bool> openFERepo(String project, CloudProviderId cloudProvider) async {
-    switch (cloudProvider) {
-      case CloudProviderId.gcloud:
+        return Uri.parse(url);
+      case ResourceType.frontend:
         String url = "${GCloudResourceUrl.baseSourcePath}/$project/frontend/";
-        return await _launchUrl(url);
-      case CloudProviderId.aws:
-      case CloudProviderId.azure:
-        return false;
-    }
-  }
-
-  Future<bool> openBERepo(String project, CloudProviderId cloudProvider) async {
-    switch (cloudProvider) {
-      case CloudProviderId.gcloud:
+        return Uri.parse(url);
+      case ResourceType.backend:
         String url = "${GCloudResourceUrl.baseSourcePath}/$project/backend/";
-        return await _launchUrl(url);
-      case CloudProviderId.aws:
-      case CloudProviderId.azure:
-        return false;
-    }
-  }
-
-  Future<bool> _launchUrl(String urlString) async {
-    Uri url = Uri.parse(urlString);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-      return true;
-    } else {
-      throw 'Could not launch $url';
+        return Uri.parse(url);
     }
   }
 }

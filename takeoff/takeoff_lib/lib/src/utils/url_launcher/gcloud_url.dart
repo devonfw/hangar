@@ -1,4 +1,7 @@
-class GCloudResourceUrl {
-  static const baseConsolePath = "https://console.cloud.google.com";
-  static const baseSourcePath = "https://source.cloud.google.com/";
+enum GCloudResourceUrl {
+  baseConsolePath("https://console.cloud.google.com"),
+  baseSourcePath("https://source.cloud.google.com/");
+
+  const GCloudResourceUrl(this.rawValue);
+  final String rawValue;
 }

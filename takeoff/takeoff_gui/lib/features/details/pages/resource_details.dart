@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 
 class ResourceDetails extends StatelessWidget {
   ResourceDetails({super.key});
@@ -19,7 +20,7 @@ class ResourceDetails extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: (() {
-            controller.openIDE();
+            controller.openResource(ResourceType.ide);
           }),
           child: Observer(
             builder: (_) => Container(
@@ -42,7 +43,7 @@ class ResourceDetails extends StatelessWidget {
         const SizedBox(height: 20),
         GestureDetector(
           onTap: () {
-            controller.openPipeline();
+            controller.openResource(ResourceType.pipeline);
           },
           child: Observer(
             builder: (_) => Container(
@@ -65,7 +66,7 @@ class ResourceDetails extends StatelessWidget {
         const SizedBox(height: 20),
         GestureDetector(
           onTap: () {
-            controller.openFrontendRepo();
+            controller.openResource(ResourceType.frontend);
           },
           child: Observer(
             builder: (_) => Container(
@@ -90,7 +91,7 @@ class ResourceDetails extends StatelessWidget {
         const SizedBox(height: 20),
         GestureDetector(
           onTap: () {
-            controller.openBackendRepo();
+            controller.openResource(ResourceType.backend);
           },
           child: Observer(
             builder: (_) => Container(
