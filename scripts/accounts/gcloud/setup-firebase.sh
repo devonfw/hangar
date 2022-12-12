@@ -25,7 +25,7 @@ helpFunction() {
    echo "Arguments:"
    echo -e "\t-n                   [Required] Name of the project."
    echo -e "\t-o, --output         [Required] Output path to store credentials."
-   echo -e "\t-r                              Region where to create Firestore Database."
+   echo -e "\t-r                   [Required] Region where to create Firestore Database."
    echo -e "\t--enable-maps                   Enables APIs related to Maps services."
    echo -e "\t--setup-ios                     Enables IOS APIs and creates IOS App."
    echo -e "\t--setup-android                 Enables Android APIs and creates Android App."
@@ -42,6 +42,14 @@ checkMandatoryArguments() {
     if [ -z "$projectName" ];
     then
         echo -e "${red}Error: Missing paramenters, -n is mandatory." >&2
+        echo -e "${red}Use -h flag to display help." >&2
+        echo -ne "${white}" >&2
+        exit 2
+    fi
+    # Firestore region
+    if [ -z "$firestoreRegion" ];
+    then
+        echo -e "${red}Error: Missing paramenters, -r is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
@@ -173,13 +181,10 @@ addFirebaseToGcloudProject() {
 
 createFirestoreDB() {
     echo "Creating Firestore Database..."
-    if [[ "$firestoreRegion" == "" ]]; then
-        firestoreRegion="europe-west6"
-    fi
-    if ! gcloud app create --region=$firestoreRegion &> /dev/null ; then
+    if ! gcloud app create --project=$projectName --region=$firestoreRegion &> /dev/null ; then
         echo -e "App Engine already created"
     fi
-    if ! gcloud firestore databases create --project $projectName --region=$firestoreRegion; then
+    if ! gcloud firestore databases create --project=$projectName --region=$firestoreRegion; then
         echo -e "${red}Error: Cannot Create Firestore Database" >&2
         echo -ne "${white}" >&2
         exit 230
@@ -188,8 +193,8 @@ createFirestoreDB() {
 
 createFirebaseSDKAccount() {
     echo "Creating Firebase SDK Service Account..."
-    service_email=$(gcloud iam service-accounts list | grep firebase-adminsdk | tr -s ' ' | cut -d ' ' -f2)
-    if ! gcloud iam service-accounts keys create $outputPath"/firebase.json" --iam-account "$service_email" --project "$projectName"; then
+    service_email=$(gcloud iam service-accounts list --project=$projectName | grep firebase-adminsdk | tr -s ' ' | cut -d ' ' -f2)
+    if ! gcloud iam service-accounts keys create $outputPath"/firebase-key.json" --iam-account "$service_email" --project="$projectName"; then
         echo -e "${red}Error: Cannot create Firebase Service Account" >&2
         echo -ne "${white}" >&2
         exit 240
@@ -212,7 +217,7 @@ setupAndroidKeystore() {
 }
 
 registerShaKeys() {
-    appId="${projectName}_android"
+    appId=$(firebase apps:list --project ${projectName} | grep ANDROID | awk '{print $4}')
     sha1Key=$(echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA1 -m 1 | cut -d' ' -f3)
     sha256Key=$(echo -e "android\n" | keytool -list -v -alias upload -keystore $outputPath"/keystore.jks" 2> /dev/null | grep SHA256 -m 1 | cut -d' ' -f3)
     if ! firebase apps:android:sha:create $appId $sha1Key --project ${projectName} ; then
@@ -233,7 +238,7 @@ createPlatformApps() {
     # Remove '-' character
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
-    packageName="com.takeoff.${packageName//_/}"
+    packageName="${packageName//_/}"
     # ANDROID setup:
     if [[ "$setupAndroid" == "true" ]]
     then
@@ -294,6 +299,12 @@ createPlatformApps() {
     fi
 }
 
+nextSteps() {
+    echo "Next steps:"
+    echo "1- Accept consent screen: https://console.cloud.google.com/apis/credentials/consent?project=$projectName"
+    echo "2- Go to https://console.cloud.google.com/google/maps-apis/api-list?project=$projectName, choose Maps Static API, then go to Credentials and copy the current secret"
+}
+
 #==============================================================
 # SCRIPT EXECUTION:
 
@@ -320,3 +331,5 @@ then
     echo "Creating APPs"
     createPlatformApps
 fi
+
+nextSteps

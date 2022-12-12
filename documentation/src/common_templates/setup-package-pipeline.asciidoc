@@ -44,6 +44,8 @@ endif::[]
   [--aws-access-key <aws access key>] \
   [--aws-secret-access-key <aws secret access key>] \
   [--aws-region <aws region>] \
+ifdef::secretVar[  [--secret-vars <secret vars list>]]
+ifdef::envVar[  [--env-vars <env vars list>]]
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]
@@ -77,6 +79,8 @@ endif::[]
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
+ifdef::secretVar[    --secret-vars                         Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
+ifdef::envVar[    --env-vars                            Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
 ifeval::["{provider}" == "Google Cloud"]
@@ -134,7 +138,7 @@ ifeval::["{provider}" == "Google Cloud"]
 ===== Generic container registry
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project -u username -p password -b develop -w 
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project -u username -p password -b develop -w
 ```
 
 ===== AWS ECR

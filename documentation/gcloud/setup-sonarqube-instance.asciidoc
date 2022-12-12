@@ -1,0 +1,194 @@
+:provider_name: Google Cloud
+:container_instance_type: a Compute Engine VM instance
+:provider_path: gcloud
+:terraform_tutorials: https://developer.hashicorp.com/terraform/tutorials/gcp-get-started
+:extra_information: https://cloud.google.com/docs/terraform[Official Gcloud documentation]
+:terraform_vars_example_short: --service_account_file key.json --project hangar
+:terraform_vars_example_full: --service_account_file key.json --project hangar --region europe-southwest1 --zone europe-southwest1-a --subnet_cidr_block 10.0.1.0/24 -- instance_type e2-medium
+:terraform_vars: --service_account_file    [Required] Json file with the google credentials. + \
+--project                 [Required] Short name (ID) of the project. + \
+--region                             The GCP region where the resources will be created. By default: europe-southwest1 + \
+--zone                               The zone inside the region that the machine should be created in. By default: europe-southwest1-a + \
+--subnet_cidr_block                  The range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. By default: 10.0.1.0/29 + \
+-- instance_type                     Machine Instance type. By dafeault: e2-medium
+
+= Setting up a SonarQube instance in {provider_name}
+:toc:
+
+== Introduction
+The scope of this section is to deploy {container_instance_type} running SonarQube for further usage from a CI pipeline. A set of scripts and a Terraform recipe have been created in order to assist you in the launch of a SonarQube instance with an embedded database.
+
+== Getting Started
+=== Prerequisites
+* https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli[Install Terraform].
+
+* https://cloud.google.com/sdk/docs/install-sdk[Install Google Cloud CLI].
+
+* Enable Compute Engine in your gcloud project. You can do it via webconsole or via glcoud cli using the following command:
+
+```
+gcloud services enable compute.googleapis.com --project "$projectName"
+```
+
+* Have a service account that is going to be used by terraform with the next roles:
+
+```
+roles/compute.instanceAdmin.v1
+roles/compute.networkAdmin
+roles/compute.securityAdmin
+```
+
+IMPORTANT: You need the key.json file of that service account to run terraform as it.
+
+=== Relevant files
+
+* `./sonarqube.sh` script to automatically do all the steps in only one execution command.
+* `main.tf` contains declarative definition written in HCL of AWS infrastructure.
+* `../common/setup_sonarqube.sh` script to be run on {container_instance_type} that installs and deploys a container running SonarQube.
+* `variables.tf` contains variable definition for `main.tf`.
+* `terraform.tfvars` contains values (user-changeable) for the variables defined in `variables.tf`.
+* `terraform.tfstate` contains current state of the created infrastructure. It is generated after use it and should be stored securely.
+* `set-terraform-variables.sh` assists user in setting the values of `terraform.tfvars`.
+
+== Usage
+
+=== Easy usage
+
+To make it easier to use for users who do not know terraform, or for those who need only one command to be executed, we have prepared a script that executes all the steps automatically.
+
+```
+./sonarqube.sh [command] [flags] [terraform variables]
+```
+
+*Commands*
+```
+COMMAND       DESCRIPTION
+apply         Create or update infrastructure
+destroy       Destroy previously-created infrastructure
+output        Show output values from your terraform. With output command only one option is readed `--output-key`, all other flags and options are ignored.
+                If you want to show the output as json, add an option '--output-key --json'.
+                If you want to recover only one output value add an option '--output-key key' where key is the name of the output var.
+```
+
+*Flags*
+```
+-s, --state-folder    The folder where you are going to save/import your terraform configuration."
+-k, --output-key      [ONLY FOR output] The key of the terraform output variable that you want to recover."
+-q, --quiet           To not print any command of the script, only the execution of 'terraform command'."
+-h, --help            Get help for commands."
+```
+
+*terraform variables*
+
+These options are variables to be replace by the set-terraform-variables.sh script. You can replace as many as you want of the next:
+
+[subs=attributes+]
+```
+{terraform_vars}
+```
+
+*Examples*
+
+[subs=attributes+]
+```
+./sonarqube.sh apply --state-folder "path_to_save_state" {terraform_vars_example_short}
+
+./sonarqube.sh apply --state-folder "path_to_save_state" {terraform_vars_example_full}
+```
+
+WARNING:  *Remember to securely store all the content inside the state-folder*, otherwise you will not be able to perform any changes, including detroying them, from Terraform.
+
+=== Expert usage
+
+First, you need to initialize the working directory containing Terraform configuration files (located at `/scripts/sonarqube/{provider_path}`) and install any required plugins:
+
+```
+terraform init
+```
+
+Then, you may need to customize some input variables about the environment. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables` script, which allows you to create or update values for the required variables, passing them as flags.
+
+You can replace as many as you want of the next:
+
+[subs=attributes+]
+```
+{terraform_vars}
+```
+
+Examples of usage:
+
+[subs=attributes+]
+```
+./set-terraform-variables.sh {terraform_vars_example_short}
+
+./set-terraform-variables.sh {terraform_vars_example_full}
+```
+
+WARNING: Unless changed, some of the variables used to deploy by default probably do not exist in your environment of {provider_name}.
+
+Finally, deploy SonarQube instance:
+
+```
+terraform apply --auto-approve
+```
+
+WARNING:  *Remember to securely store `terraform.tfstate` file*, otherwise you will not be able to perform any changes, including detroying them, from Terraform. More insights https://www.terraform.io/cli/run[here].
+
+NOTE: `terraform apply` command performs a plan and actually carries out the planned changes to each resource using the relevant infrastructure provider's API. You can use it to perform changes on the created resources later on.
+
+In particular, this will create an Ubuntu-based in {container_instance_type} and deploy a Docker container running SonarQube.
+
+You will get the public url of {container_instance_type} and an admin token to connect with sonar as output. Take note of it, you will need it later on.
+
+==== Manage terraform output
+
+You can recover all the outputs from terraform after having used apply command using the next command:
+
+```
+terraform output
+```
+
+Or you can get an specific output value using his key in the command:
+
+```
+terraform output $outputKeyName
+```
+
+NOTE:  Remember that command needs `terraform.tfstate` file to work.
+
+==== Destroy SonarQube instance
+
+As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can easily destroy it and all associated resources by executing:
+
+```
+terraform destroy
+```
+
+==== Modify SonarQube instance infrastructure
+
+As long as you keep the `terraform.tfstate` file generated when creating the SonarQube instance, you can apply changes to the infrastructure deployed.
+
+If you are going to apply a change in the infrastructure, you will have to modify the terraform files and reapply the changes with the command `terraform apply`.
+
+IMPORTANT: In windows, keep in mind that after applying any changes, you will lose the value of the token so be sure to copy or write it down before applying any changes. To avoid this we have implemented a method but to work you must store the standard terraform output in a file called terraform.tfoutput. This can be done with the following command:
+
+```
+terraform output > terraform.tfoutput
+```
+
+== Change Sonarqube default admin password
+
+After having deployed sonarqube by following this guide, you will be able to access SonarQube web interface on the url provided by terraform output and the following credentials:
+
+* Username:   `admin`
+* Password:   `admin`
+
+IMPORTANT: Change the default password promptly. After that, update the password in terraform vars, you can do it manually or with the next command:
+
+```
+./set-terraform-variables.sh --sonarqube_password ${YOUR_NEW_PASSWORD}
+```
+
+== Appendix: More information about terraform for {provider_name}
+* {terraform_tutorials}[Official Terraform tutorials]
+{extra_information}
