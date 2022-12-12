@@ -53,6 +53,9 @@ if ! [ -x "$(command -v gcloud)" ]; then
   echo -ne "${white}" >&2
   exit 127
 fi
+<<<<<<< HEAD
+# Check if exists a Google Cloud project with that project ID.
+=======
 
 # Check if GCloud CLI is installed
 if [ "$firebase" == "true" ] && ! [ -x "$(command -v firebase)" ]; then
@@ -61,7 +64,8 @@ if [ "$firebase" == "true" ] && ! [ -x "$(command -v firebase)" ]; then
   exit 127
 fi
 
-# Check if exists a Google Cloud project with that project ID. 
+# Check if exists a Google Cloud project with that project ID.
+>>>>>>> int
 if gcloud projects describe "$projectName" &>/dev/null ; then
    echo "Project ID already exists."
 else
@@ -96,7 +100,7 @@ else
 fi
 
 echo "Linking project to billing account..."
-if ! gcloud beta billing projects link "$projectName" --billing-account "$billing"; then 
+if ! gcloud beta billing projects link "$projectName" --billing-account "$billing"; then
    echo -e "${red}ERROR: Unable to link project to billing account" >&2
    echo -ne "${white}" >&2
    exit 210
@@ -168,5 +172,12 @@ echo "Enabling Compute API..."
 if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Compute API" >&2
    echo -ne "${white}" >&2
-   exit 227
+   exit 228
+fi
+
+echo "Enabling Cloud billing..."
+if ! gcloud services enable cloudbilling.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Cloud billing API" >&2
+   echo -ne "${white}" >&2
+   exit 229
 fi
