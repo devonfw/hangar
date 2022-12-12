@@ -17,7 +17,8 @@ class PackagePipelineGCloud extends PipelineGenerator {
   /// Open the Pull Request on the web browser if it cannot be automatically merged. Requires [targetBranch].
   bool openPRinBrowser;
 
-  FlutterPlatform? flutterPlatform;
+  bool? androidFlutterPlatform;
+  bool? webFlutterPlatform;
 
   FlutterWebRenderer? flutterWebRenderer;
 
@@ -42,7 +43,8 @@ class PackagePipelineGCloud extends PipelineGenerator {
       super.targetBranch,
       this.registryLocation,
       this.dockerfile,
-      this.flutterPlatform,
+      this.androidFlutterPlatform,
+      this.webFlutterPlatform,
       this.flutterWebRenderer});
 
   @override
@@ -73,8 +75,11 @@ class PackagePipelineGCloud extends PipelineGenerator {
     if (registryLocation != null) {
       args.addAll(["--registry-location", registryLocation!]);
     }
-    if (flutterPlatform != null) {
-      args.addAll(["--flutter-platform", flutterPlatform!.name]);
+    if (androidFlutterPlatform != null) {
+      args.add("--flutter-android-platform");
+    }
+    if (webFlutterPlatform != null) {
+      args.add("--flutter-web-platform");
     }
     if (flutterWebRenderer != null) {
       args.addAll(["--flutter-web-renderer", flutterWebRenderer!.name]);

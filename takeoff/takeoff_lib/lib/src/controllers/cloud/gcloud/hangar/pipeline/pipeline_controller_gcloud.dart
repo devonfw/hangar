@@ -27,7 +27,8 @@ class PipelineControllerGCloud extends PipelineController {
       required String sonarToken,
       String? registryLocation,
       String targetBranch = "develop",
-      FlutterPlatform? flutterPlatform,
+      bool? androidFlutterPlatform,
+      bool? webFlutterPlatform,
       FlutterWebRenderer? flutterWebRenderer}) async {
     String buildPipelineName = "build-$projectName-${appEnd.name}";
     String qaPipelineName = "qa-$projectName-${appEnd.name}";
@@ -35,54 +36,49 @@ class PipelineControllerGCloud extends PipelineController {
     String packagePipelineName = "package-$projectName-${appEnd.name}";
     String deployPipelineName = "deploy-$projectName-${appEnd.name}";
 
-    if (flutterPlatform != FlutterPlatform.android) {
-      if (!await execute(BuildPipelineGCloud(
-          configFile:
-              "/scripts/pipelines/gcloud/templates/build/build-pipeline.cfg",
-          pipelineName: buildPipelineName,
-          languageVersion: languageVersion,
-          registryLocation: registryLocation,
-          targetBranch: targetBranch,
-          language: language,
-          localDirectory: localDir))) {
-        throw CreatePipelineException(
-            "Build pipeline could not be created for ${appEnd.name}");
-      }
-
-      if (!await execute(TestPipelineGCloud(
-          configFile:
-              "/scripts/pipelines/gcloud/templates/test/test-pipeline.cfg",
-          pipelineName: testPipelineName,
-          language: language,
-          languageVersion: languageVersion,
-          localDirectory: localDir,
-          targetBranch: targetBranch,
-          registryLocation: registryLocation,
-          buildPipelineName: buildPipelineName))) {
-        throw CreatePipelineException(
-            "Test pipeline could not be created for ${appEnd.name}");
-      }
-
-      if (!await execute(QualityPipelineGCloud(
-          configFile:
-              "/scripts/pipelines/gcloud/templates/quality/quality-pipeline.cfg",
-          pipelineName: qaPipelineName,
-          language: language,
-          localDirectory: localDir,
-          buildPipelineName: buildPipelineName,
-          targetBranch: targetBranch,
-          languageVersion: languageVersion,
-          testPipelineName: testPipelineName,
-          sonarUrl: sonarUrl,
-          sonarToken: sonarToken,
-          registryLocation: registryLocation))) {
-        throw CreatePipelineException(
-            "Quality pipeline could not be created for ${appEnd.name}");
-      }
-    } else {
-      packagePipelineName += "-android";
+    if (!await execute(BuildPipelineGCloud(
+        configFile:
+            "/scripts/pipelines/gcloud/templates/build/build-pipeline.cfg",
+        pipelineName: buildPipelineName,
+        languageVersion: languageVersion,
+        registryLocation: registryLocation,
+        targetBranch: targetBranch,
+        language: language,
+        localDirectory: localDir))) {
+      throw CreatePipelineException(
+          "Build pipeline could not be created for ${appEnd.name}");
     }
 
+    if (!await execute(TestPipelineGCloud(
+        configFile:
+            "/scripts/pipelines/gcloud/templates/test/test-pipeline.cfg",
+        pipelineName: testPipelineName,
+        language: language,
+        languageVersion: languageVersion,
+        localDirectory: localDir,
+        targetBranch: targetBranch,
+        registryLocation: registryLocation,
+        buildPipelineName: buildPipelineName))) {
+      throw CreatePipelineException(
+          "Test pipeline could not be created for ${appEnd.name}");
+    }
+
+    if (!await execute(QualityPipelineGCloud(
+        configFile:
+            "/scripts/pipelines/gcloud/templates/quality/quality-pipeline.cfg",
+        pipelineName: qaPipelineName,
+        language: language,
+        localDirectory: localDir,
+        buildPipelineName: buildPipelineName,
+        targetBranch: targetBranch,
+        languageVersion: languageVersion,
+        testPipelineName: testPipelineName,
+        sonarUrl: sonarUrl,
+        sonarToken: sonarToken,
+        registryLocation: registryLocation))) {
+      throw CreatePipelineException(
+          "Quality pipeline could not be created for ${appEnd.name}");
+    }
     if (!await execute(PackagePipelineGCloud(
         configFile:
             "/scripts/pipelines/gcloud/templates/package/package-pipeline.cfg",
@@ -95,27 +91,26 @@ class PipelineControllerGCloud extends PipelineController {
         targetBranch: targetBranch,
         registryLocation: registryLocation,
         imageName: "$projectName-${appEnd.name}-image",
-        flutterPlatform: flutterPlatform,
+        webFlutterPlatform: webFlutterPlatform,
+        androidFlutterPlatform: androidFlutterPlatform,
         flutterWebRenderer: flutterWebRenderer))) {
       throw CreatePipelineException(
           "Package pipeline could not be created for ${appEnd.name}");
     }
 
-    if (flutterPlatform != FlutterPlatform.android) {
-      if (!await execute(DeployPipelineGCloud(
-          configFile:
-              "/scripts/pipelines/gcloud/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg",
-          pipelineName: deployPipelineName,
-          language: language,
-          languageVersion: languageVersion,
-          targetBranch: targetBranch,
-          localDirectory: localDir,
-          registryLocation: registryLocation,
-          gCloudRegion: googleCloudRegion,
-          serviceName: "$projectName-${appEnd.name}-service"))) {
-        throw CreatePipelineException(
-            "Deploy pipeline could not be created for ${appEnd.name}");
-      }
+    if (!await execute(DeployPipelineGCloud(
+        configFile:
+            "/scripts/pipelines/gcloud/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg",
+        pipelineName: deployPipelineName,
+        language: language,
+        languageVersion: languageVersion,
+        targetBranch: targetBranch,
+        localDirectory: localDir,
+        registryLocation: registryLocation,
+        gCloudRegion: googleCloudRegion,
+        serviceName: "$projectName-${appEnd.name}-service"))) {
+      throw CreatePipelineException(
+          "Deploy pipeline could not be created for ${appEnd.name}");
     }
   }
 }

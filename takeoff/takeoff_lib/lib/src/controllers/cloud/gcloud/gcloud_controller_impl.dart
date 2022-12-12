@@ -164,29 +164,11 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
           googleCloudRegion: googleCloudRegion,
           sonarOutput: sonarOutput,
           registryLocation: googleCloudRegion,
-          flutterPlatform: (frontendLanguage == Language.flutter)
-              ? FlutterPlatform.web
-              : null,
+          androidFlutterPlatform: frontendLanguage == Language.flutter,
+          webFlutterPlatform: frontendLanguage == Language.flutter,
           flutterWebRenderer: (frontendLanguage == Language.flutter)
               ? FlutterWebRenderer.canvaskit
               : null);
-
-      if (wayat) {
-        _logAndStream(
-            GuiMessage.info("Building Android pipelines"), outputStream);
-
-        await buildPipelines(
-            pipelineController: pipelineController,
-            projectName: projectName,
-            appEnd: ApplicationEnd.frontend,
-            language: frontendLanguage,
-            languageVersion: frontendVersion,
-            localDir: frontendLocalDir,
-            googleCloudRegion: googleCloudRegion,
-            sonarOutput: sonarOutput,
-            registryLocation: googleCloudRegion,
-            flutterPlatform: FlutterPlatform.android);
-      }
     }
 
     CacheRepository cacheRepository = CacheRepositoryImpl();
@@ -285,7 +267,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
     String projectName =
-        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year}"
+        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}"
             .substring(0, 29);
     FirebaseController firebaseController = FirebaseController();
     await firebaseController.authenticate(outputStream, inputStream);
@@ -525,7 +507,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       required SonarOutput sonarOutput,
       String? languageVersion,
       String? registryLocation,
-      FlutterPlatform? flutterPlatform,
+      bool? androidFlutterPlatform,
+      bool? webFlutterPlatform,
       FlutterWebRenderer? flutterWebRenderer}) async {
     try {
       await pipelineController.buildPipelines(
@@ -538,7 +521,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         sonarUrl: sonarOutput.url,
         sonarToken: sonarOutput.token,
         registryLocation: registryLocation,
-        flutterPlatform: flutterPlatform,
+        androidFlutterPlatform: androidFlutterPlatform,
+        webFlutterPlatform: webFlutterPlatform,
         flutterWebRenderer: flutterWebRenderer,
       );
     } on CreatePipelineException catch (e) {
