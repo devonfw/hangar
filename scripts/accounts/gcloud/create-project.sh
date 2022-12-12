@@ -53,9 +53,6 @@ if ! [ -x "$(command -v gcloud)" ]; then
   echo -ne "${white}" >&2
   exit 127
 fi
-<<<<<<< HEAD
-# Check if exists a Google Cloud project with that project ID.
-=======
 
 # Check if GCloud CLI is installed
 if [ "$firebase" == "true" ] && ! [ -x "$(command -v firebase)" ]; then
@@ -65,7 +62,6 @@ if [ "$firebase" == "true" ] && ! [ -x "$(command -v firebase)" ]; then
 fi
 
 # Check if exists a Google Cloud project with that project ID.
->>>>>>> int
 if gcloud projects describe "$projectName" &>/dev/null ; then
    echo "Project ID already exists."
 else
