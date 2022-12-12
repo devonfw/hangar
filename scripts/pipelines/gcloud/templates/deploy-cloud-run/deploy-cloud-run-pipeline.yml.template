@@ -19,7 +19,7 @@ steps:
       echo -e "\n\n"
       echo "SETTING UP ENVIRONMENT"
       echo ""
-      ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_IMAGE_NAME"
+      . ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_IMAGE_NAME"
       [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
       echo -e "\n\n"
       echo "LOADING CREDENTIALS AND GETTING REGISTRY"
