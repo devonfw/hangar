@@ -80,7 +80,6 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         outputStream);
 
     Directory projectDir = await _createWorkspaceFolder(projectName);
-
     ProjectController projectController = ProjectControllerGCloud(
         CreateProjectGCloud(
             projectName: projectName,
@@ -130,7 +129,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
     if (wayat) {
       await _setUpWayatRepos(projectDir, projectName, googleCloudRegion,
-          backendLocalDir, frontendLocalDir, outputStream, outputStream);
+          backendLocalDir, frontendLocalDir, inputStream, outputStream);
     }
 
     PipelineControllerGCloud pipelineController = PipelineControllerGCloud();
@@ -266,13 +265,12 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<String>? inputStream,
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
-    String projectName =
-        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}"
-            .substring(0, 29);
+    String projectName = "wayat-takeoff-12-8-44-2-12-20";
+    //"wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
     FirebaseController firebaseController = FirebaseController();
     await firebaseController.authenticate(outputStream, inputStream);
 
-    return await createProject(
+    if (!await createProject(
         projectName: projectName,
         billingAccount: billingAccount,
         backendLanguage: Language.python,
@@ -285,7 +283,20 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         backRepoName: "wayat-python",
         frontRepoName: "wayat-flutter",
         firebase: true,
-        wayat: true);
+        wayat: true)) {
+      return false;
+    }
+
+    File finalStepsFile = File(
+        "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}nextsteps.txt");
+    String finalSteps = finalStepsFile.readAsStringSync();
+
+    _logAndStream(
+        GuiMessage.info("THESE MANUAL STEPS SHOULD BE DONE FOR WAYAT TO WORK"),
+        outputStream);
+    _logAndStream(GuiMessage.info(finalSteps), outputStream);
+
+    return true;
   }
 
   /// Helper method that will set run the specific wayat scripts when executing [wayatQuickstart].
@@ -295,10 +306,10 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String googleCloudRegion,
     String backendLocalDir,
     String frontendLocalDir,
-    StreamController<GuiMessage>? inputStream,
+    StreamController<String>? inputStream,
     StreamController<GuiMessage>? outputStream,
   ) async {
-    _logAndStream(GuiMessage.info("Initializing Cloud Run"), inputStream);
+    _logAndStream(GuiMessage.info("Initializing Cloud Run"), outputStream);
 
     String frontUrlCloudRun = "${projectDir.path}/frontUrlCloudRun";
     String backUrlCloudRun = "${projectDir.path}/backUrlCloudRun";
@@ -315,7 +326,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String backendUrl = backendUrlFile.readAsStringSync().trim();
 
     _logAndStream(
-        GuiMessage.info("Setting up Firebase & Firestore"), inputStream);
+        GuiMessage.info("Setting up Firebase & Firestore"), outputStream);
 
     await _setUpFirebase(projectName, projectDir.path,
         enableMaps: true,
@@ -328,9 +339,12 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         "https://console.cloud.google.com/apis/credentials/consent?project=$projectName";
 
     if (outputStream != null) {
+      print("ACCEPT TERMS");
       outputStream.add(GuiMessage.browser(
           "Accept Firebase's terms of service", acceptConsentUrl));
+      print("INPUT STREAM NULL? ${inputStream != null}");
       await inputStream?.stream.take(1).last;
+      print("accepted");
     } else {
       Log.info(
           "\n\n===========================\n\nOpen $acceptConsentUrl and accept the terms of Firebase\n\n===========================\n\n");
@@ -343,12 +357,14 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String mapsStaticSecret = "";
 
     if (outputStream != null) {
+      print("COPY MAPS SECRET");
       outputStream.add(GuiMessage.browser(
           "Open the page and copy the Maps Secret", mapsStaticSecretUrl));
       await inputStream?.stream.take(1).last;
+
       outputStream
           .add(GuiMessage.input("Introduce the Maps Secret", InputType.text));
-      mapsStaticSecret = (await inputStream?.stream.take(1).last)!.message;
+      mapsStaticSecret = (await inputStream?.stream.take(1).last)!;
     } else {
       Log.info(
           "\n\n===========================\n\nOpen $mapsStaticSecretUrl and copy the maps secret\n\n===========================\n\n");
@@ -360,7 +376,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       }
     }
 
-    _logAndStream(GuiMessage.info("Setting up Wayat secrets"), inputStream);
+    _logAndStream(GuiMessage.info("Setting up Wayat secrets"), outputStream);
 
     WayatController wayatController = WayatController();
     try {
@@ -464,14 +480,14 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Future<SonarOutput> _setUpSonarqube(
       String serviceKeyPath, String projectName, Directory projectDir) async {
     SonarqubeController sonarqubeController = SonarqubeController();
-    if (!await sonarqubeController.execute(
-        SetUpSonar(
-            serviceAccountFile: serviceKeyPath,
-            project: projectName,
-            stateFolder: "${projectDir.path}/sonarqube"),
-        "gcloud")) {
-      throw CreateProjectException("Could not set up SonarQube");
-    }
+    //if (!await sonarqubeController.execute(
+    //SetUpSonar(
+    //serviceAccountFile: serviceKeyPath,
+    //project: projectName,
+    //stateFolder: "${projectDir.path}/sonarqube"),
+    //"gcloud")) {
+    //throw CreateProjectException("Could not set up SonarQube");
+    //}
 
     File sonarOutputFile = File(
         "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}sonarqube${Platform.pathSeparator}terraform.tfoutput.json");

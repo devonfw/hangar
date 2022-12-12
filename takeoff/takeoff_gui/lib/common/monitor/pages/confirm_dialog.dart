@@ -24,7 +24,7 @@ class UserInteractionDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
                   Text(
-                    "Please, do next steps",
+                    "Please, do these steps",
                     style: TextStyle(fontSize: 30),
                   ),
                 ],
