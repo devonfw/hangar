@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:takeoff_gui/features/details/widgets/resource_button.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 
@@ -18,99 +18,21 @@ class ResourceDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: (() {
-            controller.openResource(ResourceType.ide);
-          }),
-          child: Observer(
-            builder: (_) => Container(
-              height: heignt,
-              width: width,
-              decoration: BoxDecoration(border: border),
-              child: const Center(
-                child: Text(
-                  "Open IDE",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
-        ),
+        ResourceButton(
+            text: "Open IDE",
+            onPressed: () => controller.openResource(ResourceType.ide)),
         const SizedBox(height: 20),
-        GestureDetector(
-          onTap: () {
-            controller.openResource(ResourceType.pipeline);
-          },
-          child: Observer(
-            builder: (_) => Container(
-              height: heignt,
-              width: width,
-              decoration: BoxDecoration(border: border),
-              child: const Center(
-                child: Text(
-                  "Open Pipelines",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
-        ),
+        ResourceButton(
+            text: "Open Pipeline",
+            onPressed: () => controller.openResource(ResourceType.pipeline)),
         const SizedBox(height: 20),
-        GestureDetector(
-          onTap: () {
-            controller.openResource(ResourceType.frontend);
-          },
-          child: Observer(
-            builder: (_) => Container(
-              height: heignt,
-              width: width,
-              decoration: BoxDecoration(
-                border: border,
-              ),
-              child: const Center(
-                child: Text(
-                  "Open Frontend Repo",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
-        ),
+        ResourceButton(
+            text: "Open Frontend Repo",
+            onPressed: () => controller.openResource(ResourceType.frontend)),
         const SizedBox(height: 20),
-        GestureDetector(
-          onTap: () {
-            controller.openResource(ResourceType.backend);
-          },
-          child: Observer(
-            builder: (_) => Container(
-              height: heignt,
-              width: width,
-              decoration: BoxDecoration(
-                border: border,
-              ),
-              child: const Center(
-                child: Text("Open Backend Repo",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87),
-                    textAlign: TextAlign.center),
-              ),
-            ),
-          ),
-        ),
+        ResourceButton(
+            text: "Open Backend Repo",
+            onPressed: () => controller.openResource(ResourceType.backend)),
       ],
     );
   }

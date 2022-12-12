@@ -14,7 +14,6 @@ import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
-import 'package:takeoff_lib/src/utils/url_launcher/gcloud_url.dart';
 import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
@@ -163,28 +162,10 @@ class TakeOffFacade {
       ResourceType resourceType) {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return getGCloudResourceUrl(project, resourceType);
+        return _googleController.getGCloudResourceUrl(project, resourceType);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return Uri.parse("");
-    }
-  }
-
-  Uri getGCloudResourceUrl(String project, ResourceType resourceType) {
-    switch (resourceType) {
-      case ResourceType.ide:
-        String url = "${GCloudResourceUrl.baseSourcePath}/$project";
-        return Uri.parse(url);
-      case ResourceType.pipeline:
-        String url =
-            "${GCloudResourceUrl.baseConsolePath}/cloud-build/dashboard?project=$project";
-        return Uri.parse(url);
-      case ResourceType.frontend:
-        String url = "${GCloudResourceUrl.baseSourcePath}/$project/frontend/";
-        return Uri.parse(url);
-      case ResourceType.backend:
-        String url = "${GCloudResourceUrl.baseSourcePath}/$project/backend/";
-        return Uri.parse(url);
     }
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/auth/gcloud_auth_controller.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 abstract class GoogleCloudController {
@@ -45,4 +47,6 @@ abstract class GoogleCloudController {
       {required String billingAccount,
       required String googleCloudRegion,
       StreamController<GuiMessage>? infoStream});
+
+  Uri getGCloudResourceUrl(String project, ResourceType resourceType);
 }
