@@ -29,6 +29,7 @@ class ErrorLoadingPage extends StatelessWidget {
                 Text(
                   message,
                   style: const TextStyle(fontSize: 30),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
