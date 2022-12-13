@@ -36,7 +36,8 @@ ifdef::ci-pipeline[  --ci-pipeline-name <ci {pipeline_type} name> \]
 ifeval::["{provider}" == "Google Cloud"]
   [--language-version <version>] \
   [--registry-location <registry location>] \
-  [--flutter-platform <web, android>] \
+  [--flutter-web-platform] \
+  [--flutter-android-platform] \
   [--flutter-web-renderer <auto (default), canvaskit, html>] \
 endif::[]
   [-u <registry user>] \
@@ -70,7 +71,8 @@ ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} 
 ifeval::["{provider}" == "Google Cloud"]
 --language-version             [Required, if Flutter or Python] Language or framework version.
 --registry-location            [Required, if Flutter] Artifact registry location.
---flutter-platform             [Required, if Flutter] Target platform to compile. Accepted values: android, web.
+--flutter-web-platform         [Required, if Flutter] Web platform to compile.
+--flutter-android-platform     [Required, if Flutter] Android platform to compile.
 endif::[]
 -u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
 -p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
