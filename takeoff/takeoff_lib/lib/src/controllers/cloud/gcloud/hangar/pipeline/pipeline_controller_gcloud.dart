@@ -1,6 +1,7 @@
 import 'package:takeoff_lib/src/domain/application_end.dart';
 import 'package:takeoff_lib/src/controllers/cloud/common/hangar/pipeline/create_pipeline_exception.dart';
 import 'package:takeoff_lib/src/controllers/cloud/common/hangar/pipeline/pipeline_controller.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/common/machine_type.dart';
 import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/build_pipeline.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/deploy_pipeline.dart';
@@ -35,6 +36,8 @@ class PipelineControllerGCloud extends PipelineController {
     String testPipelineName = "test-$projectName-${appEnd.name}";
     String packagePipelineName = "package-$projectName-${appEnd.name}";
     String deployPipelineName = "deploy-$projectName-${appEnd.name}";
+    MachineType? machineType =
+        (language == Language.flutter) ? MachineType.E2_HIGHCPU_8 : null;
 
     if (!await execute(BuildPipelineGCloud(
         configFile:
@@ -44,6 +47,7 @@ class PipelineControllerGCloud extends PipelineController {
         registryLocation: registryLocation,
         targetBranch: targetBranch,
         language: language,
+        machineType: machineType,
         localDirectory: localDir))) {
       throw CreatePipelineException(
           "Build pipeline could not be created for ${appEnd.name}");
@@ -58,6 +62,7 @@ class PipelineControllerGCloud extends PipelineController {
         localDirectory: localDir,
         targetBranch: targetBranch,
         registryLocation: registryLocation,
+        machineType: machineType,
         buildPipelineName: buildPipelineName))) {
       throw CreatePipelineException(
           "Test pipeline could not be created for ${appEnd.name}");
@@ -72,6 +77,7 @@ class PipelineControllerGCloud extends PipelineController {
         buildPipelineName: buildPipelineName,
         targetBranch: targetBranch,
         languageVersion: languageVersion,
+        machineType: machineType,
         testPipelineName: testPipelineName,
         sonarUrl: sonarUrl,
         sonarToken: sonarToken,
@@ -90,6 +96,7 @@ class PipelineControllerGCloud extends PipelineController {
         qualityPipelineName: qaPipelineName,
         targetBranch: targetBranch,
         registryLocation: registryLocation,
+        machineType: machineType,
         imageName:
             "$googleCloudRegion-docker.pkg.dev/$projectName/${appEnd.name}/${appEnd.name}",
         webFlutterPlatform: webFlutterPlatform,
@@ -107,6 +114,7 @@ class PipelineControllerGCloud extends PipelineController {
         languageVersion: languageVersion,
         targetBranch: targetBranch,
         localDirectory: localDir,
+        machineType: machineType,
         registryLocation: registryLocation,
         gCloudRegion: googleCloudRegion,
         serviceName:

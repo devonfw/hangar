@@ -1,3 +1,4 @@
+import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/common/machine_type.dart';
 import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/pipeline_generator/pipeline_generator.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_web_renderer.dart';
@@ -29,6 +30,8 @@ class PackagePipelineGCloud extends PipelineGenerator {
 
   String? registryLocation;
 
+  MachineType? machineType;
+
   PackagePipelineGCloud(
       {required super.configFile,
       required super.pipelineName,
@@ -44,7 +47,8 @@ class PackagePipelineGCloud extends PipelineGenerator {
       this.dockerfile,
       this.androidFlutterPlatform,
       this.webFlutterPlatform,
-      this.flutterWebRenderer});
+      this.flutterWebRenderer,
+      this.machineType});
 
   @override
   List<String> toCommand() {
@@ -76,6 +80,9 @@ class PackagePipelineGCloud extends PipelineGenerator {
     }
     if (androidFlutterPlatform != null) {
       args.add("--flutter-android-platform");
+    }
+    if (machineType != null) {
+      args.addAll(["-m", machineType!.name]);
     }
     if (webFlutterPlatform != null) {
       args.add("--flutter-web-platform");
