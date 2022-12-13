@@ -25,6 +25,7 @@ class PipelineControllerGCloud extends PipelineController {
       required String sonarUrl,
       required String sonarToken,
       String? registryLocation,
+      String? deployServiceName,
       String targetBranch = "develop",
       bool? androidFlutterPlatform,
       bool? webFlutterPlatform,
@@ -108,7 +109,8 @@ class PipelineControllerGCloud extends PipelineController {
         localDirectory: localDir,
         registryLocation: registryLocation,
         gCloudRegion: googleCloudRegion,
-        serviceName: "$projectName-${appEnd.name}-service"))) {
+        serviceName:
+            deployServiceName ?? "$projectName-${appEnd.name}-service"))) {
       throw CreatePipelineException(
           "Deploy pipeline could not be created for ${appEnd.name}");
     }

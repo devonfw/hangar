@@ -39,7 +39,7 @@ class _UserInteractionDialogState extends State<UserInteractionDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
                   Text(
-                    "Please, do next steps",
+                    "Please, follow these steps",
                     style: TextStyle(fontSize: 30),
                   ),
                 ],

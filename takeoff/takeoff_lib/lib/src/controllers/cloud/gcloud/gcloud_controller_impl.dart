@@ -67,6 +67,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String? backImportUrl,
     String? frontRepoSubpath,
     String? backRepoSubpath,
+    String? deployFrontServiceName,
+    String? deployBackServiceName,
     bool firebase = false,
     bool wayat = false,
   }) async {
@@ -148,6 +150,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
           languageVersion: backendVersion,
           localDir: backendLocalDir,
           googleCloudRegion: googleCloudRegion,
+          deployServiceName: deployBackServiceName,
           sonarOutput: sonarOutput);
     }
 
@@ -164,6 +167,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
           localDir: frontendLocalDir,
           googleCloudRegion: googleCloudRegion,
           sonarOutput: sonarOutput,
+          deployServiceName: deployFrontServiceName,
           registryLocation: googleCloudRegion,
           androidFlutterPlatform: frontendLanguage == Language.flutter,
           webFlutterPlatform: frontendLanguage == Language.flutter,
@@ -268,7 +272,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
     String projectName =
-        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
+        "wayat-takeoff-${now.hour}-${now.minute}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
     FirebaseController firebaseController = FirebaseController();
     await firebaseController.authenticate(outputStream, inputStream);
 
@@ -284,6 +288,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         outputStream: outputStream,
         backRepoName: "wayat-python",
         frontRepoName: "wayat-flutter",
+        deployFrontServiceName: "wayat-front",
+        deployBackServiceName: "wayat-back",
         firebase: true,
         wayat: true)) {
       return false;
@@ -316,9 +322,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     }
 
     _logAndStream(
-        GuiMessage.info("THESE MANUAL STEPS SHOULD BE DONE FOR WAYAT TO WORK"),
+        GuiMessage.info("These manual steps should be done for wayat to work"),
         outputStream);
-    //_logAndStream(GuiMessage.info(finalSteps), outputStream);
 
     return true;
   }
@@ -396,7 +401,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       }
     }
 
-    _logAndStream(GuiMessage.info("Setting up Wayat secrets"), outputStream);
+    _logAndStream(GuiMessage.info("Setting up Wayat"), outputStream);
 
     WayatController wayatController = WayatController();
     try {
@@ -541,6 +546,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       required String localDir,
       required String googleCloudRegion,
       required SonarOutput sonarOutput,
+      String? deployServiceName,
       String? languageVersion,
       String? registryLocation,
       bool? androidFlutterPlatform,
@@ -548,19 +554,19 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       FlutterWebRenderer? flutterWebRenderer}) async {
     try {
       await pipelineController.buildPipelines(
-        projectName: projectName,
-        appEnd: appEnd,
-        language: language,
-        languageVersion: languageVersion,
-        localDir: localDir,
-        googleCloudRegion: googleCloudRegion,
-        sonarUrl: sonarOutput.url,
-        sonarToken: sonarOutput.token,
-        registryLocation: registryLocation,
-        androidFlutterPlatform: androidFlutterPlatform,
-        webFlutterPlatform: webFlutterPlatform,
-        flutterWebRenderer: flutterWebRenderer,
-      );
+          projectName: projectName,
+          appEnd: appEnd,
+          language: language,
+          languageVersion: languageVersion,
+          localDir: localDir,
+          googleCloudRegion: googleCloudRegion,
+          sonarUrl: sonarOutput.url,
+          sonarToken: sonarOutput.token,
+          registryLocation: registryLocation,
+          androidFlutterPlatform: androidFlutterPlatform,
+          webFlutterPlatform: webFlutterPlatform,
+          flutterWebRenderer: flutterWebRenderer,
+          deployServiceName: deployServiceName);
     } on CreatePipelineException catch (e) {
       throw CreateProjectException(
           "Could not build the ${appEnd.name} pipelines: ${e.message}");
