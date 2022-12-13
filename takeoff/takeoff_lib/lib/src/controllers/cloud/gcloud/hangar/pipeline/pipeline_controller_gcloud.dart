@@ -4,7 +4,6 @@ import 'package:takeoff_lib/src/controllers/cloud/common/hangar/pipeline/pipelin
 import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/build_pipeline.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/deploy_pipeline.dart';
-import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_platform.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_web_renderer.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/package_pipeline.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/quality_pipeline.dart';
@@ -90,7 +89,8 @@ class PipelineControllerGCloud extends PipelineController {
         qualityPipelineName: qaPipelineName,
         targetBranch: targetBranch,
         registryLocation: registryLocation,
-        imageName: "$projectName-${appEnd.name}-image",
+        imageName:
+            "$googleCloudRegion-docker.pkg.dev/$projectName/${appEnd.name}/${appEnd.name}",
         webFlutterPlatform: webFlutterPlatform,
         androidFlutterPlatform: androidFlutterPlatform,
         flutterWebRenderer: flutterWebRenderer))) {

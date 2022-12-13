@@ -45,7 +45,10 @@ class _UserInteractionDialogState extends State<UserInteractionDialog> {
                 ],
               ),
               const SizedBox(height: 50),
-              Text(widget.message.message),
+              SelectableText(
+                widget.message.message,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 10),
               if (widget.message.inputType != null)
                 Row(

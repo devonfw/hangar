@@ -1,6 +1,5 @@
 import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/pipeline_generator/pipeline_generator.dart';
-import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_platform.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_web_renderer.dart';
 
 /// Script to create a Package Pipeline in Google Cloud

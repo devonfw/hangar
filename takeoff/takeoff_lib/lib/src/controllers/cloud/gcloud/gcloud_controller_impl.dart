@@ -25,6 +25,8 @@ import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/repo/branch_strategy.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_platform.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_web_renderer.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/quickstart/steps_output/quickstart_step.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/quickstart/steps_output/quickstart_steps_output.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/quickstart/wayat_frontend.dart';
 import 'package:takeoff_lib/src/domain/sonar_output.dart';
 import 'package:takeoff_lib/src/controllers/cloud/common/hangar/sonar/sonarqube_controller.dart';
@@ -265,36 +267,61 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<String>? inputStream,
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
-    String projectName =
-        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
-    FirebaseController firebaseController = FirebaseController();
-    await firebaseController.authenticate(outputStream, inputStream);
+    //   String projectName =
+    //"wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
+    //FirebaseController firebaseController = FirebaseController();
+    //await firebaseController.authenticate(outputStream, inputStream);
 
-    if (!await createProject(
-        projectName: projectName,
-        billingAccount: billingAccount,
-        backendLanguage: Language.python,
-        backendVersion: "3.10",
-        frontendLanguage: Language.flutter,
-        frontendVersion: "3.3.6",
-        googleCloudRegion: googleCloudRegion,
-        inputStream: inputStream,
-        outputStream: outputStream,
-        backRepoName: "wayat-python",
-        frontRepoName: "wayat-flutter",
-        firebase: true,
-        wayat: true)) {
-      return false;
+    //if (!await createProject(
+    //projectName: projectName,
+    //billingAccount: billingAccount,
+    //backendLanguage: Language.python,
+    //backendVersion: "3.10",
+    //frontendLanguage: Language.flutter,
+    //frontendVersion: "3.3.6",
+    //googleCloudRegion: googleCloudRegion,
+    //inputStream: inputStream,
+    //outputStream: outputStream,
+    //backRepoName: "wayat-python",
+    //frontRepoName: "wayat-flutter",
+    //firebase: true,
+    //wayat: true)) {
+    //return false;
+    //}
+
+    String projectName = "wayat-takeoff-9-53-29-13-12-22";
+
+    await Future.delayed(Duration(seconds: 3));
+    if (outputStream != null) {
+      File finalStepsFile = File(
+          "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}nextsteps.json");
+      Map<String, dynamic> finalSteps =
+          jsonDecode(finalStepsFile.readAsStringSync());
+
+      QuickstartStepsOutput quickstartStepsOutput =
+          QuickstartStepsOutput.fromMap(finalSteps);
+
+      for (QuickstartStep step in quickstartStepsOutput.steps) {
+        String browserMessage = (step.textToCopy == null)
+            ? "1.Use the button below to open a page in your browser\n2.${step.instructions}"
+            : "1.Copy the frontend URL: ${step.textToCopy}"
+                "\n2.Use the button below to open a page in your browser"
+                "\n2.${step.instructions}";
+
+        outputStream.add(GuiMessage.browser(browserMessage, step.goToUrl));
+        await inputStream?.stream.take(1).last;
+      }
+    } else {
+      File finalStepsFile = File(
+          "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}nextsteps.txt");
+      String finalSteps = finalStepsFile.readAsStringSync();
+      _logAndStream(GuiMessage.info(finalSteps), outputStream);
     }
-
-    File finalStepsFile = File(
-        "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}nextsteps.txt");
-    String finalSteps = finalStepsFile.readAsStringSync();
 
     _logAndStream(
         GuiMessage.info("THESE MANUAL STEPS SHOULD BE DONE FOR WAYAT TO WORK"),
         outputStream);
-    _logAndStream(GuiMessage.info(finalSteps), outputStream);
+    //_logAndStream(GuiMessage.info(finalSteps), outputStream);
 
     return true;
   }
@@ -339,12 +366,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         "https://console.cloud.google.com/apis/credentials/consent?project=$projectName";
 
     if (outputStream != null) {
-      print("ACCEPT TERMS");
       outputStream.add(GuiMessage.browser(
           "Accept Firebase's terms of service", acceptConsentUrl));
-      print("INPUT STREAM NULL? ${inputStream != null}");
       await inputStream?.stream.take(1).last;
-      print("accepted");
     } else {
       Log.info(
           "\n\n===========================\n\nOpen $acceptConsentUrl and accept the terms of Firebase\n\n===========================\n\n");
@@ -357,7 +381,6 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     String mapsStaticSecret = "";
 
     if (outputStream != null) {
-      print("COPY MAPS SECRET");
       outputStream.add(GuiMessage.browser(
           "Open the page and copy the Maps Secret", mapsStaticSecretUrl));
       await inputStream?.stream.take(1).last;
