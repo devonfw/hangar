@@ -16,6 +16,8 @@ dependencies:
   flutter_mobx: ^2.0.6+3
   desktop_window: ^0.4.0
   url_launcher: ^6.1.7
+  flutter_localizations:
+    sdk: flutter
 
 
 dev_dependencies:
