@@ -40,6 +40,7 @@ while true; do
         -h | --help)              help="true"; shift 1;;
         -m | --machine-type)      machineType="$2"; shift 2;;
         --language-version)       export languageVersion="$2"; shift 2;;
+        --rancher)                installRancher="true"; shift 1;;
         --) shift; break;;
     esac
 done
