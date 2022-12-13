@@ -521,17 +521,19 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Uri getGCloudResourceUrl(String project, ResourceType resourceType) {
     switch (resourceType) {
       case ResourceType.ide:
-        String url = "${GCloudResourceUrl.baseSourcePath}/$project";
+        String url = "${GCloudResourceUrl.baseSourcePath.rawValue}/$project";
         return Uri.parse(url);
       case ResourceType.pipeline:
         String url =
-            "${GCloudResourceUrl.baseConsolePath}/cloud-build/dashboard?project=$project";
+            "${GCloudResourceUrl.baseConsolePath.rawValue}/cloud-build/dashboard?project=$project";
         return Uri.parse(url);
       case ResourceType.frontend:
-        String url = "${GCloudResourceUrl.baseSourcePath}/$project/frontend/";
+        String url =
+            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/frontend/";
         return Uri.parse(url);
       case ResourceType.backend:
-        String url = "${GCloudResourceUrl.baseSourcePath}/$project/backend/";
+        String url =
+            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/backend/";
         return Uri.parse(url);
     }
   }

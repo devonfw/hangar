@@ -102,7 +102,7 @@ abstract class _ProjectsController with Store {
 
   Future<bool> _launchUrl(Uri url) async {
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      launchUrl(url);
       return true;
     } else {
       throw 'Could not launch $url';
