@@ -267,31 +267,28 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
       StreamController<String>? inputStream,
       StreamController<GuiMessage>? outputStream}) async {
     DateTime now = DateTime.now();
-    //   String projectName =
-    //"wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
-    //FirebaseController firebaseController = FirebaseController();
-    //await firebaseController.authenticate(outputStream, inputStream);
+    String projectName =
+        "wayat-takeoff-${now.hour}-${now.minute}-${now.second}-${now.day}-${now.month}-${now.year.toString().substring(2)}";
+    FirebaseController firebaseController = FirebaseController();
+    await firebaseController.authenticate(outputStream, inputStream);
 
-    //if (!await createProject(
-    //projectName: projectName,
-    //billingAccount: billingAccount,
-    //backendLanguage: Language.python,
-    //backendVersion: "3.10",
-    //frontendLanguage: Language.flutter,
-    //frontendVersion: "3.3.6",
-    //googleCloudRegion: googleCloudRegion,
-    //inputStream: inputStream,
-    //outputStream: outputStream,
-    //backRepoName: "wayat-python",
-    //frontRepoName: "wayat-flutter",
-    //firebase: true,
-    //wayat: true)) {
-    //return false;
-    //}
+    if (!await createProject(
+        projectName: projectName,
+        billingAccount: billingAccount,
+        backendLanguage: Language.python,
+        backendVersion: "3.10",
+        frontendLanguage: Language.flutter,
+        frontendVersion: "3.3.6",
+        googleCloudRegion: googleCloudRegion,
+        inputStream: inputStream,
+        outputStream: outputStream,
+        backRepoName: "wayat-python",
+        frontRepoName: "wayat-flutter",
+        firebase: true,
+        wayat: true)) {
+      return false;
+    }
 
-    String projectName = "wayat-takeoff-9-53-29-13-12-22";
-
-    await Future.delayed(Duration(seconds: 3));
     if (outputStream != null) {
       File finalStepsFile = File(
           "${foldersService.getHostFolders()["workspace"]!}${Platform.pathSeparator}$projectName${Platform.pathSeparator}nextsteps.json");
