@@ -23,11 +23,12 @@ class ErrorLoadingPage extends StatelessWidget {
                 const Icon(
                   Icons.warning_amber_outlined,
                   color: Colors.red,
-                  size: 300,
+                  size: 150,
                 ),
+                const SizedBox(height: 50),
                 Text(
                   message,
-                  style: const TextStyle(fontSize: 50),
+                  style: const TextStyle(fontSize: 30),
                 ),
               ],
             ),
