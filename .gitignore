@@ -1,5 +1,17 @@
 
+#takeoff
 takeoff/takeoff_lib/coverage/lcov.info
 takeoff/takeoff_cli/takeoff_cli.exe
 takeoff/takeoff_gui/.vscode/launch.json
 takeoff/takeoff_gui/pubspec.lock
+# VSCode Config
+.vscode
+
+# Terraform files
+**/.terraform/**
+**/.terraform.lock.hcl
+**/terraform.tfstate
+**/terraform.tfstate.backup
+
+# secrets folder
+**/.secrets/**

@@ -1,0 +1,43 @@
+steps:
+- id: "Get secrets"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+        set -e
+        [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
+
+- name: gcr.io/cloud-builders/gsutil
+  args:
+    - cp
+    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build_*.tar'
+    - .
+- name: ${_DOCKER_IMAGE}
+  secretEnv: ['SONAR_TOKEN']
+  env:
+    - PROJECT_PATH=./
+    - SONAR_URL=${_SONAR_URL}
+    - TRIGGER_NAME=${TRIGGER_NAME}
+  script: |
+    #!/bin/bash
+    set -ex
+    # In case of more than 1 tar, we extract the most recent one)
+    for i in $(ls -t build_*.tar)
+    do
+        tar -xf $i
+        break
+    done
+    [[ -f .pipelines/scripts/quality-setup-environment.sh ]] && source .pipelines/scripts/quality-setup-environment.sh
+    [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
+    .pipelines/scripts/quality.sh
+# mark to insert trigger
+availableSecrets:
+  secretManager:
+  - versionName: projects/${PROJECT_ID}/secrets/sonar-token/versions/latest
+    env: 'SONAR_TOKEN'
+
+# mark to insert step for additonal artifact #
+
+# mark to insert entry in artifact for additonal artifact #```
