@@ -214,7 +214,7 @@ nextSteps() {
     # TXT output file for takeoff CLI
 cat <<EOT > $workspace/nextsteps.txt
 Next steps:
-1- Go to https://console.cloud.google.com/apis/credentials/oauthclient/$webClientId?project=$projectName and in \"JavaScript authoritative sources\" section add frontend url: $frontendUrl
+1- Go to https://console.cloud.google.com/apis/credentials/oauthclient/$webClientId?project=$projectName and in "JavaScript authoritative sources" section add frontend url: $frontendUrl
 2- Go to https://console.firebase.google.com/project/$projectName/appcheck/apps and register SafetyNet in android app
 3- Go to https://console.firebase.google.com/project/$projectName/authentication/providers, then enable Google Sign In and Phone authentication
 EOT
