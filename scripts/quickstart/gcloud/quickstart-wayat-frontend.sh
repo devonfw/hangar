@@ -189,7 +189,7 @@ setupPackageName() {
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
     packageName="${packageName//_/}"
-    mkdir -p "$directory/android/app/src/main/kotlin/com/takeof/${projectName//-/}" 
+    mkdir -p "$directory/android/app/src/main/kotlin/com/takeoff/${projectName//-/}" 
     mv "$directory/android/app/src/main/kotlin/com/takeof/project/MainActivity.kt" "$directory/android/app/src/main/kotlin/com/takeoff/${projectName//-/}/MainActivity.kt"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/main/kotlin/com/takeoff/${projectName//-/}/MainActivity.kt"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/build.gradle"
