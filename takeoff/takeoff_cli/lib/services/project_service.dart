@@ -91,4 +91,29 @@ class ProjectsService {
       Log.success("Cleaned all data from project $projectId");
     }
   }
+
+  Future<void> openResource(
+      {required String projectId,
+      required CloudProviderId cloudProviderId,
+      required ResourceType resourceType}) async {
+    CloudProvider provider = CloudProvider.fromId(cloudProviderId);
+
+    if ((await _takeOffFacade.getCurrentAccount(cloudProviderId)).isEmpty) {
+      Log.error("You have not logged in with ${provider.name}");
+      return;
+    }
+
+    List<String> projects = await _takeOffFacade.getProjects(cloudProviderId);
+
+    if (!projects.contains(projectId)) {
+      Log.error(
+          "Project $projectId does not exist in TakeOff for ${provider.name}");
+      return;
+    }
+    try {
+      _takeOffFacade.getResource(projectId, cloudProviderId, resourceType);
+    } catch (e) {
+      Log.error("You can not open $projectId resource");
+    }
+  }
 }
