@@ -5,6 +5,7 @@ export tag=$(grep -m 1 version pubspec.yaml | tr -s ' ' | tr -d ':' | cut -d' ' 
 red='\e[0;31m'
 
 if [[ -n ${ANDROID_PLATFORM} && ${ANDROID_PLATFORM} == "true" ]]; then
+    flutter clean
     flutter pub get
     flutter build apk --release
     #Install gcloud CLI
@@ -12,6 +13,7 @@ if [[ -n ${ANDROID_PLATFORM} && ${ANDROID_PLATFORM} == "true" ]]; then
     gcloud storage cp build/app/outputs/flutter-apk/app-release.apk gs://"${PROJECT_ID}"-apk/app-release-"${SHORT_SHA}".apk
 fi
 if [[ -n ${WEB_PLATFORM} && ${WEB_PLATFORM} == "true" ]]; then
+    flutter clean
     flutter pub get
     if [[ ${FLUTTER_WEB_RENDERER} == "" ]]; then
         flutter build web --release --web-renderer auto --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false
