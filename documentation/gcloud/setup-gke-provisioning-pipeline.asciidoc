@@ -56,7 +56,7 @@ In order to interact with your cluster you need to be logged in `gcloud` CLI. In
 ```
 gcloud auth login
 ```
-Then login to the cluster. After that, you can execute whatever kubectl command.
+Then login to the cluster. After that, you can execute whatever `kubectl` command.
 ```
 gcloud container clusters get-credentials <project id>-gke --region=<region> --project=<project id>
 kubectl <command>
