@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:m:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,registry-location:,flutter-web-renderer:,machine-type:,language-version:,service-name:,gcloud-region:,port:,flutter-platform:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:m:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,registry-location:,flutter-web-renderer:,machine-type:,language-version:,service-name:,gcloud-region:,port:,flutter-platform:,rancher:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -33,9 +33,13 @@ while true; do
         --aws-access-key)         awsAccessKey="$2"; shift 2;;
         --aws-secret-access-key)  awsSecretAccessKey="$2"; shift 2;;
         --aws-region)             awsRegion="$2"; shift 2;;
+        --service-name)           serviceName="$2"; shift 2;;
+        --gcloud-region)          gCloudRegion="$2"; shift 2;;
+        --port)                   port="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
         -m | --machine-type)      machineType="$2"; shift 2;;
         --language-version)       languageVersion="$2"; shift 2;;
+        --rancher)                installRancher="true"; shift 1;;
         --) shift; break;;
     esac
 done
@@ -111,7 +115,7 @@ function addTriggers {
             echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
             sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}\&alt=json\"\n      fi\n\n&/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
             ;;
-        "package-pipeline.yml")
+        "*package-pipeline.yml")
             echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
             sed -e "s/# mark to insert trigger/- name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$_BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\",\"_IMAGE_NAME\":\"'\${_IMAGE_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}\&alt=json\"\n      fi\n\n&/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
             ;;
