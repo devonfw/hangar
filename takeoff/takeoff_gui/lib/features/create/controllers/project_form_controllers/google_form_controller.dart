@@ -30,7 +30,7 @@ abstract class _GoogleFormController
     String? backendVersion,
     Language? frontendLanguage,
     String? frontendVersion,
-    StreamController<GuiMessage>? infoStream,
+    StreamController<GuiMessage>? outputStream,
     StreamController<String>? inputStream,
   }) {
     return facade.createProjectGCloud(
@@ -41,7 +41,7 @@ abstract class _GoogleFormController
         frontendLanguage: frontendLanguage,
         frontendVersion: frontendVersion,
         googleCloudRegion: region,
-        infoStream: infoStream,
+        outputStream: outputStream,
         inputStream: inputStream);
   }
 

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             if (!snapshot.data!) {
               return const ErrorLoadingPage(
                 message:
-                    'Docker daemon is not detected or the hangar docker image is not accessible. \n Launch the app again before check if daemon is running.',
+                    'A valid container runtime was not detected.\nRun either dockerd or containerd and restart TakeOff.',
               );
             }
             return MaterialApp.router(

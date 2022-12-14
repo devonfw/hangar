@@ -43,7 +43,7 @@ class FoldersService {
     "kube": "/root/.kube",
     "github": "/root/.config/gh",
     "ssh": "/root/.ssh",
-    "workspace": "/scripts/workspace",
+    "workspace": "/workspace",
     "firebase": "/root/.config/configstore",
     "git": "/root/.gitconfig",
   };
