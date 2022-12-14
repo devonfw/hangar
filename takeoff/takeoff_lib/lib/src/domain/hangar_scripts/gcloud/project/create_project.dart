@@ -17,12 +17,15 @@ class CreateProjectGCloud implements Script {
   /// ID of the organization for which the project will be configured.
   String? organizationId;
 
+  bool firebase;
+
   CreateProjectGCloud(
       {required this.projectName,
       required this.billingAccount,
       this.description,
       this.folderId,
-      this.organizationId});
+      this.organizationId,
+      this.firebase = false});
 
   @override
   Map<int, String> get errors => {
@@ -54,6 +57,9 @@ class CreateProjectGCloud implements Script {
     }
     if (organizationId != null) {
       args.addAll(["-o", organizationId!]);
+    }
+    if (firebase) {
+      args.add("--firebase");
     }
     return args;
   }

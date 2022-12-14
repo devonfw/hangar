@@ -4,6 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:takeoff_gui/domain/project.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 
 part 'projects_controller.g.dart';
 
@@ -87,6 +89,23 @@ abstract class _ProjectsController with Store {
     Project? project = selectedProject;
     if (project != null) {
       facade.cleanProject(project.cloud, project.name);
+    }
+  }
+
+  void openResource(ResourceType resourceType) async {
+    Project? project = selectedProject;
+    if (project != null) {
+      Uri url = facade.getResource(project.name, project.cloud, resourceType);
+      await _launchUrl(url);
+    }
+  }
+
+  Future<bool> _launchUrl(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      launchUrl(url);
+      return true;
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

@@ -11,7 +11,6 @@ import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controlle
 import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:desktop_window/desktop_window.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   await registerSingletons();
@@ -34,13 +33,12 @@ class MyApp extends StatelessWidget {
             if (!snapshot.data!) {
               return const ErrorLoadingPage(
                 message:
-                    'Docker daemon is not detected or the hangar docker image is not accessible. \n Launch the app again before check if daemon is running.',
+                    'A valid container runtime was not detected.\nRun either dockerd or containerd and restart TakeOff.',
               );
             }
             return MaterialApp.router(
               scrollBehavior: MyCustomScrollBehavior(),
               debugShowCheckedModeBanner: false,
-              routerConfig: AppRouter().router,
               localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
@@ -61,6 +59,7 @@ class MyApp extends StatelessWidget {
                 }
                 return const Locale("en", "US");
               },
+              routerConfig: AppRouter().router,
             );
           } else {
             return const LoadingPage();

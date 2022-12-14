@@ -36,16 +36,16 @@ class SetUpFirebase implements Script {
       args.addAll(["-r", firestoreRegion!]);
     }
     if (enableMaps != null) {
-      args.addAll(["--enable-maps", enableMaps.toString()]);
+      args.add("--enable-maps");
     }
     if (setUpIOS != null) {
-      args.addAll(["--setup-ios", setUpIOS.toString()]);
+      args.add("--setup-ios");
     }
     if (setUpAndroid != null) {
-      args.addAll(["--setup-android", setUpAndroid.toString()]);
+      args.add("--setup-android");
     }
     if (setUpWeb != null) {
-      args.addAll(["--setup-web", setUpWeb.toString()]);
+      args.add("--setup-web");
     }
 
     return args;
