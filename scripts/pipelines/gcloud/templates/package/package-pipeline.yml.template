@@ -49,6 +49,9 @@ steps:
       echo "EXECUTING package.sh"
       echo ".pipelines/scripts/package.sh  -f \"${_DOCKERFILE}\" -c . -u \"$${DOCKER_USER}\" -p \"$${DOCKER_PASSWORD}\" -r \"${_REGISTRY}\" -i \"${_IMAGE_NAME}\" -b \"${_BRANCH_NAME}\" -l \"${_REGION}\" -a \"$${AWS_ACCESS_KEY}\" -s \"$${AWS_SECRET_ACCESS_KEY}\" -l \"$${AWS_REGION}\""
       .pipelines/scripts/package.sh  -f "${_DOCKERFILE}" -c . -u "$${DOCKER_USER}" -p "$${DOCKER_PASSWORD}" -r "${_REGISTRY}" -i "${_IMAGE_NAME}" -b "${_BRANCH_NAME}" -l "${_REGION}" -a "$${AWS_ACCESS_KEY}" -s "$${AWS_SECRET_ACCESS_KEY}" -l "$${AWS_REGION}"
+
+  env:
+  - 'PROJECT_ID=$PROJECT_ID'
   secretEnv:
   - 'REGISTRY_CREDENTIALS'
 
