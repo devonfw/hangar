@@ -13,23 +13,24 @@ You need to already have an application deployed in cloud run, and an account wi
 If you access this page https://console.cloud.google.com/run/detail/<region>/<service-name>/metrics?project=<project-name>: +
 (you can also access it from the main page of cloud run: https://console.cloud.google.com/run). +
 
-You can see different metrics set by default for cloud run allowing you to know the traffic reaching your app, the amount of container created, the memory used ...
+You can see different metrics set by default for cloud run allowing you to know the traffic reaching your app, the amount of container created, the memory used, etc...
 
-The issue with that dashboard by default is that you can monitor one specific service. If you wanna be able to monitor all your services on one dashboard, you can create one in Cloud Monitoring.
+The issue with that dashboard is that you can only monitor one specific service. If you wanna be able to monitor all your services on one dashboard, you can create one in Cloud Monitoring.
 
 === Custom dashboard in Cloud Monitoring
 
 ==== Create the dashboard
 
 You can manually create your dashboard from that page: https://console.cloud.google.com/monitoring +
-You can also import the template we already created for cloud run. +
+
+Or You can also import the template we already created for cloud run. +
 To do so, execute this command `gcloud monitoring dashboards create --config-from-file Cloud-Run-dashboard.json`   (You can add `--project=<project-id>` to create on another project than the one set by default)
 
 You can now access this dashboard from the list here: https://console.cloud.google.com/monitoring/dashboards (named `Cloud Run dashboard`) +
 
 ==== Some example of Group and Filters
 
-Once you accessed your dashboard, you can `Group By` or `Add Filter`, allowing you to get more specific infos. By default the values that appears on the graph are seprated by service_name (as if a `Group By service_name` was done) +
+Once you accessed your dashboard, you can `Group By` or `Add Filter`, allowing you to get more specific infos. By default the values that appears on the graph are separated by service_name (as if a `Group By service_name` was done) +
 
 ===== Get metrics all services combined
 
