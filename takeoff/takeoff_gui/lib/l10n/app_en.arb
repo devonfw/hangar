@@ -10,5 +10,7 @@
     "openIdeButton": "Open IDE",
     "openPipelineButton": "Open Pipeline",
     "openFeRepo": "Open FE Repo",
-    "openBeRepo": "Open BE Repo"
+    "openBeRepo": "Open BE Repo",
+    "errorDockerDaemon": "Some unexpected error happened, check docker daemon or try reinstalling the app.",
+    "errorContainerNotDetected": "A valid container runtime was not detected.\nRun either dockerd or containerd and restart TakeOff."
 }

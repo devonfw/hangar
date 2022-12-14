@@ -8,11 +8,10 @@ import 'package:takeoff_gui/common/loading_page.dart';
 import 'package:takeoff_gui/features/create/controllers/project_form_controllers/project_form_controllers.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
-import 'package:takeoff_gui/l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:desktop_window/desktop_window.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 
 void main() async {
@@ -29,19 +28,18 @@ class MyApp extends StatelessWidget {
         future: GetIt.I.get<TakeOffFacade>().initialize(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const ErrorLoadingPage(
-                message:
-                    "Some unexpected error happened, check docker daemon or try reinstalling the app.");
+            return ErrorLoadingPage(
+                message: AppLocalizations.of(context)!.errorDockerDaemon);
           } else if (snapshot.hasData) {
             if (!snapshot.data!) {
-              return const ErrorLoadingPage(
+              return ErrorLoadingPage(
                 message:
-                    'A valid container runtime was not detected.\nRun either dockerd or containerd and restart TakeOff.',
+                    AppLocalizations.of(context)!.errorContainerNotDetected,
               );
             }
             return MaterialApp.router(
               onGenerateTitle: (context) =>
-      AppLocalizations.of(context).appTitle,
+      AppLocalizations.of(context)!.appTitle,
               scrollBehavior: MyCustomScrollBehavior(),
               debugShowCheckedModeBanner: false,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
