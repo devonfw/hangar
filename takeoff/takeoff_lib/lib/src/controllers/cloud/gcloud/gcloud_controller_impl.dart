@@ -643,7 +643,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   Uri getGCloudResourceUrl(String project, ResourceType resourceType) {
     switch (resourceType) {
       case ResourceType.ide:
-        String url = "${GCloudResourceUrl.baseSourcePath.rawValue}/$project";
+        String url =
+            "${GCloudResourceUrl.baseConsolePath.rawValue}/cloudshelleditor?project=$project&cloudshell=true";
         return Uri.parse(url);
       case ResourceType.pipeline:
         String url =
