@@ -4,7 +4,7 @@ services:
   wayat_web_nginx:
     image: nginx:latest
     ports:
-      - "80:80"
+      - "8080:8080"
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./build/web:/usr/share/nginx/html
