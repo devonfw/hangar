@@ -28,7 +28,7 @@ abstract class _MonitorController with Store {
         messages.contains(TypeMessage.success);
   }
 
-  void monitorProcess(Function process) {
+  Future<void> monitorProcess(Function process) async {
     outputChannel.stream.listen((event) {
       if (event.type == MessageType.success) {
         projectUrl = event.url!;
@@ -36,7 +36,7 @@ abstract class _MonitorController with Store {
       steps.add(CreateMessage.fromGuiMessage(event));
     });
     try {
-      process();
+      await process();
     } catch (e) {
       steps.add(CreateMessage(TypeMessage.error, e.toString()));
     }

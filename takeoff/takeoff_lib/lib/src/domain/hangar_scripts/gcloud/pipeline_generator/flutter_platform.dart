@@ -1,0 +1,1 @@
+enum FlutterPlatform { web, android }
