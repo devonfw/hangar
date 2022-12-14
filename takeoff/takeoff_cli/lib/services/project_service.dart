@@ -95,7 +95,7 @@ class ProjectsService {
   Future<void> openResource(
       {required String projectId,
       required CloudProviderId cloudProviderId,
-      required ResourceType resourceType}) async {
+      required Resource resource}) async {
     CloudProvider provider = CloudProvider.fromId(cloudProviderId);
 
     if ((await _takeOffFacade.getCurrentAccount(cloudProviderId)).isEmpty) {
@@ -111,7 +111,7 @@ class ProjectsService {
       return;
     }
     try {
-      _takeOffFacade.getResource(projectId, cloudProviderId, resourceType);
+      _takeOffFacade.getResource(projectId, cloudProviderId, resource);
     } catch (e) {
       Log.error("You can not open $projectId resource");
     }

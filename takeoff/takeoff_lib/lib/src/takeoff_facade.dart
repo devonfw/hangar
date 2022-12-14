@@ -164,11 +164,11 @@ class TakeOffFacade {
     }
   }
 
-  Uri getResource(String project, CloudProviderId cloudProvider,
-      ResourceType resourceType) {
+  Uri getResource(
+      String project, CloudProviderId cloudProvider, Resource resource) {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return _googleController.getGCloudResourceUrl(project, resourceType);
+        return _googleController.getGCloudResourceUrl(project, resource);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return Uri.parse("");
