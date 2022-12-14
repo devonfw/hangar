@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:takeoff_lib/src/controllers/cloud/common/auth/auth_controller.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/docker/docker_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/cloud_provider.dart';
@@ -20,9 +21,10 @@ import 'package:test/test.dart';
 
 import 'takeoff_facade_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<DockerController>(), MockSpec<AuthController<CloudProvider>>()])
+@GenerateNiceMocks([MockSpec<DockerController>(), MockSpec<AuthController<CloudProvider>>(), MockSpec<GoogleCloudController>()])
 void main() {
   MockDockerController mockDockerController = MockDockerController();
+  MockGoogleCloudController mockGoogleCloudController = MockGoogleCloudController();
   // MockAuthController mockAuthController = MockAuthController();
   late FoldersService foldersService;
   setUpAll(() {
@@ -42,6 +44,7 @@ void main() {
       "getCurrentAccount returns empty for Google Cloud if there is no logged account",
       () async {
     TakeOffFacade facade = TakeOffFacade();
+    facade.googleController = mockGoogleCloudController;
 
     expect(await facade.getCurrentAccount(CloudProviderId.gcloud), "");
   });
@@ -49,6 +52,7 @@ void main() {
   test("getCurrentAccount returns the current stored Google Cloud email",
       () async {
     TakeOffFacade facade = TakeOffFacade();
+    facade.googleController = mockGoogleCloudController;
     String email = "${Random().nextInt(100000000)}@mail.com";
     CacheRepository cacheRepository = CacheRepositoryImpl();
     await cacheRepository.saveGoogleEmail(email);
@@ -59,9 +63,10 @@ void main() {
   test(
       "getProjects returns empty for Google Cloud if there is no created projects",
       () async {
-    TakeOffFacade takeOffFacade = TakeOffFacade();
+    TakeOffFacade facade = TakeOffFacade();
+    facade.googleController = mockGoogleCloudController;
 
-    expect(await takeOffFacade.getProjects(CloudProviderId.gcloud), []);
+    expect(await facade.getProjects(CloudProviderId.gcloud), []);
   });
 
   test("getProjects returns the correct Google Cloud projects", () async {
@@ -87,6 +92,7 @@ void main() {
     await cacheRepository.saveGoogleProjectId(projectId);
 
     TakeOffFacade takeOffFacade = TakeOffFacade();
+    takeOffFacade.googleController = mockGoogleCloudController;
 
     expect(
         (await takeOffFacade.getProjects(CloudProviderId.gcloud))
@@ -111,6 +117,7 @@ void main() {
 
   test("LogOut the user", () async {
     TakeOffFacade facade = TakeOffFacade();
+    facade.googleController = mockGoogleCloudController;
     String email = "${Random().nextInt(100000000)}@mail.com";
     CacheRepository cacheRepository = CacheRepositoryImpl();
     await cacheRepository.saveGoogleEmail(email);
