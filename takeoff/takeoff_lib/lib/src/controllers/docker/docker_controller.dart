@@ -60,8 +60,7 @@ abstract class DockerController {
   }
 
   Future<bool> pullHangarImage() async {
-    ProcessResult pullResult =
-        await Process.run(command, ["pull", "devonfwforge/hangar"]);
+    ProcessResult pullResult = await Process.run(command, ["pull", imageName]);
     return pullResult.exitCode == 0;
   }
 
