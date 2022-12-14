@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
+import 'package:meta/meta.dart';
 import 'package:sembast/sembast.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller_impl.dart';
@@ -14,11 +15,11 @@ import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
-import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffFacade {
-  late GoogleCloudController _googleController;
+  @visibleForTesting
+  late GoogleCloudController googleController;
 
   /// Initializes all the singletons neeeded for the app to run and checks prerequisites.
   ///
@@ -45,7 +46,7 @@ class TakeOffFacade {
       // TODO: uncomment this when the image in Dockerhub is usable
       //await dockerController.pullHangarImage();
 
-      _googleController = GoogleCloudControllerImpl();
+      googleController = GoogleCloudControllerImpl();
     }
 
     return true;
@@ -58,7 +59,7 @@ class TakeOffFacade {
   Future<String> getCurrentAccount(CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.getAccount();
+        return await googleController.getAccount();
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return "";
@@ -68,7 +69,7 @@ class TakeOffFacade {
   Future<bool> runProject(String project, CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return _googleController.run(project);
+        return googleController.run(project);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         Log.warning("Currently not supported");
@@ -85,7 +86,7 @@ class TakeOffFacade {
       {Stream<List<int>>? stdinStream, bool useStdin = false}) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.init(email,
+        return await googleController.init(email,
             useStdin: useStdin, stdinStream: stdinStream);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
@@ -97,7 +98,7 @@ class TakeOffFacade {
       {Stream<List<int>>? stdinStream}) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.logOut();
+        return await googleController.logOut();
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
@@ -116,7 +117,7 @@ class TakeOffFacade {
     StreamController<GuiMessage>? outputStream,
     StreamController<String>? inputStream,
   }) async {
-    return await _googleController.createProject(
+    return await googleController.createProject(
       projectName: projectName,
       billingAccount: billingAccount,
       backendLanguage: backendLanguage,
@@ -135,7 +136,7 @@ class TakeOffFacade {
       required String googleCloudRegion,
       StreamController<GuiMessage>? outputStream,
       StreamController<String>? inputStream}) async {
-    return await _googleController.wayatQuickstart(
+    return await googleController.wayatQuickstart(
         billingAccount: billingAccount,
         googleCloudRegion: googleCloudRegion,
         outputStream: outputStream,
@@ -146,7 +147,7 @@ class TakeOffFacade {
       CloudProviderId cloudProvider, String projectId) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.cleanProject(projectId);
+        return await googleController.cleanProject(projectId);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
@@ -168,7 +169,7 @@ class TakeOffFacade {
       String project, CloudProviderId cloudProvider, Resource resource) {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return _googleController.getGCloudResourceUrl(project, resource);
+        return googleController.getGCloudResourceUrl(project, resource);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return Uri.parse("");

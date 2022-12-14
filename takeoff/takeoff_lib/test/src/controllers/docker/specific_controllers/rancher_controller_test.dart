@@ -24,24 +24,24 @@ void main() {
   test("Volume mappings are correct", () {
     RancherController controller = RancherController(command: "docker");
     List<String> expectedMappings = [
-      "-v",
-      "/mnt/c/Users/user/AppData/Roaming/gcloud:/root/.config/gcloud",
-      "-v",
-      "/mnt/c/Users/user/.aws:/root/.aws",
-      "-v",
-      "/mnt/c/Users/user/.azure:/root/.azure",
-      "-v",
-      "/mnt/c/Users/user/.kube:/root/.kube",
-      "-v",
-      "/mnt/c/Users/user/AppData/Roaming/GitHub CLI:/root/.config/gh",
-      "-v",
-      "/mnt/c/Users/user/.ssh:/root/.ssh",
-      "-v",
-      "/mnt/c/Users/user/hangar_workspace:/scripts/workspace",
-      "-v",
-      "/mnt/c/Users/user/AppData/Roaming/configstore:/root/.config/configstore",
-      "-v",
-      "/mnt/c/Users/user/.gitconfig:/root/.gitconfig",
+      '-v',
+      '/mnt/c/Users/user/AppData/Roaming/gcloud:/root/.config/gcloud',
+      '-v',
+      '/mnt/c/Users/user/.aws:/root/.aws',
+      '-v',
+      '/mnt/c/Users/user/.azure:/root/.azure',
+      '-v',
+      '/mnt/c/Users/user/.kube:/root/.kube',
+      '-v',
+      '/mnt/c/Users/user/AppData/Roaming/GitHub CLI:/root/.config/gh',
+      '-v',
+      '/mnt/c/Users/user/.ssh:/root/.ssh',
+      '-v',
+      '/mnt/c/Users/user/hangar_workspace:/workspace',
+      '-v',
+      '/mnt/c/Users/user/AppData/Roaming/configstore:/root/.config/configstore',
+      '-v',
+      '/mnt/c/Users/user/.gitconfig:/root/.gitconfig'
     ];
 
     expect(controller.getVolumeMappings(), expectedMappings);
