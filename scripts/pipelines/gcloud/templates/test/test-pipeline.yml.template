@@ -27,3 +27,7 @@ steps:
     .pipelines/scripts/test.sh
 
 # mark to insert trigger
+
+# mark to insert step for additonal artifact #
+
+# mark to insert entry in artifact for additonal artifact #

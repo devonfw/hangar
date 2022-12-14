@@ -58,7 +58,11 @@ steps:
 
 # mark to insert trigger
 
+# mark to insert step for additonal artifact #
+
 availableSecrets:
   secretManager:
   - versionName: projects/${PROJECT_ID}/secrets/registry-credentials/versions/latest
     env: REGISTRY_CREDENTIALS
+
+# mark to insert entry in artifact for additonal artifact #
