@@ -10,7 +10,7 @@ You need to already have an application deployed in cloud run, and an account wi
 
 === Default dashboard of cloud run
 
-If you access this page https://console.cloud.google.com/run/detail/<region>/<service-name>/metrics?project=<project-name> : +
+If you access this page https://console.cloud.google.com/run/detail/<region>/<service-name>/metrics?project=<project-name>: +
 (you can also access it from the main page of cloud run: https://console.cloud.google.com/run). +
 
 You can see different metrics set by default for cloud run allowing you to know the traffic reaching your app, the amount of container created, the memory used ...
