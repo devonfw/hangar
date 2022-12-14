@@ -36,9 +36,7 @@ class GCloudAuthController implements AuthController<GCloud> {
   }
 
   @override
-  Future<bool> authenticate(
-    String email,
-  ) async {
+  Future<bool> authenticate(String email) async {
     DockerController dockerController = GetIt.I.get<DockerController>();
 
     List<String> volumeMappings = dockerController.getVolumeMappings();

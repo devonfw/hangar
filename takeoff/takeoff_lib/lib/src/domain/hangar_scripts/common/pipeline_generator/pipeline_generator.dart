@@ -1,4 +1,4 @@
-import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
+import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/script.dart';
 
 /// Base class with common arguments for the generate pipeline scripts.
