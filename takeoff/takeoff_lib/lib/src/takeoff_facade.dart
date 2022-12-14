@@ -14,6 +14,7 @@ import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffFacade {
@@ -160,6 +161,17 @@ class TakeOffFacade {
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return [];
+    }
+  }
+
+  Uri getResource(String project, CloudProviderId cloudProvider,
+      ResourceType resourceType) {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return _googleController.getGCloudResourceUrl(project, resourceType);
+      case CloudProviderId.aws:
+      case CloudProviderId.azure:
+        return Uri.parse("");
     }
   }
 }

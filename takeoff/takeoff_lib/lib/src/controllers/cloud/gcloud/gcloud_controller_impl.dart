@@ -41,6 +41,8 @@ import 'package:takeoff_lib/src/domain/hangar_scripts/quickstart/wayat_backend.d
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/repo/create_repo.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/gcloud_url.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 /// Centralizes all the operations related with Google Cloud, such as
@@ -635,5 +637,27 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   void _logAndStream(GuiMessage message, StreamController<GuiMessage>? stream) {
     Log.info(message.message);
     stream?.add(message);
+  }
+
+  @override
+  Uri getGCloudResourceUrl(String project, ResourceType resourceType) {
+    switch (resourceType) {
+      case ResourceType.ide:
+        String url =
+            "${GCloudResourceUrl.baseConsolePath.rawValue}/cloudshelleditor?project=$project&cloudshell=true";
+        return Uri.parse(url);
+      case ResourceType.pipeline:
+        String url =
+            "${GCloudResourceUrl.baseConsolePath.rawValue}/cloud-build/dashboard?project=$project";
+        return Uri.parse(url);
+      case ResourceType.frontend:
+        String url =
+            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/frontend/";
+        return Uri.parse(url);
+      case ResourceType.backend:
+        String url =
+            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/backend/";
+        return Uri.parse(url);
+    }
   }
 }

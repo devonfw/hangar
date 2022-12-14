@@ -20,7 +20,7 @@ class CustomButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         minimumSize: const Size(150, 50),
-        maximumSize: const Size(150, 50),
+        maximumSize: const Size(170, 50),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

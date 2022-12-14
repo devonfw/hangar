@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/domain/project.dart';
+import 'package:takeoff_gui/features/details/pages/resource_details.dart';
 import 'package:takeoff_gui/features/details/widgets/side_bar.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 
@@ -25,6 +26,8 @@ class ProjectDetails extends StatelessWidget {
                   "${project.name} project resources",
                   style: const TextStyle(fontSize: 30),
                 ),
+                const SizedBox(height: 40),
+                ResourceDetails(),
               ],
             ),
           )
