@@ -4,6 +4,7 @@ import 'package:takeoff_gui/domain/project.dart';
 import 'package:takeoff_gui/features/details/pages/resource_details.dart';
 import 'package:takeoff_gui/features/details/widgets/side_bar.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
+import 'package:takeoff_gui/l10n/app_localizations.dart';
 
 class ProjectDetails extends StatelessWidget {
   final Project project = GetIt.I.get<ProjectsController>().selectedProject!;
@@ -23,7 +24,7 @@ class ProjectDetails extends StatelessWidget {
                 // TODO add dropdown to select project here
                 const SizedBox(height: 40),
                 Text(
-                  "${project.name} project resources",
+                  "${project.name} ${AppLocalizations.of(context).projectResources}",
                   style: const TextStyle(fontSize: 30),
                 ),
                 const SizedBox(height: 40),

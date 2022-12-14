@@ -5,6 +5,7 @@ import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/common/monitor/pages/monitor_dialog.dart';
 import 'package:takeoff_gui/features/create/widgets/widgets.dart';
 import 'package:takeoff_gui/common/custom_button.dart';
+import 'package:takeoff_gui/l10n/app_localizations.dart';
 
 class CreateDialog extends StatelessWidget {
   final CreateController controller = GetIt.I.get<CreateController>();
@@ -19,9 +20,9 @@ class CreateDialog extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Create a project",
-              style: TextStyle(fontSize: 30),
+            Text(
+              AppLocalizations.of(context).createProject,
+              style: const TextStyle(fontSize: 30),
             ),
             CloudSelector(),
             const SizedBox(height: 10),
@@ -38,7 +39,7 @@ class CreateDialog extends StatelessWidget {
       actions: [
         Observer(
           builder: (_) => CustomButton(
-            text: "Create",
+            text: AppLocalizations.of(context).createButton,
             icon: Icons.add,
             onPressed: !controller.isValid
                 ? null
@@ -54,7 +55,7 @@ class CreateDialog extends StatelessWidget {
           ),
         ),
         CustomButton(
-          text: "Close",
+          text: AppLocalizations.of(context).closeButton,
           icon: Icons.close,
           color: Colors.red,
           onPressed: () {

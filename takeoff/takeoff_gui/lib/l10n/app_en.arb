@@ -1,0 +1,14 @@
+{
+    "appTitle": "Take Off",
+    "gc": "Google Cloud",
+    "az": "Azure",
+    "aws": "AWS",
+    "createProject": "Create a project",
+    "createButton": "Create",
+    "closeButton": "Close",
+    "projectResources": "project resources",
+    "openIdeButton": "Open IDE",
+    "openPipelineButton": "Open Pipeline",
+    "openFeRepo": "Open FE Repo",
+    "openBeRepo": "Open BE Repo"
+}
