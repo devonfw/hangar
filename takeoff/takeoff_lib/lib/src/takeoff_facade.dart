@@ -170,7 +170,7 @@ class TakeOffFacade {
       ResourceType resourceType) {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return _googleController.getGCloudResourceUrl(project, resourceType);
+        return googleController.getGCloudResourceUrl(project, resourceType);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return Uri.parse("");
