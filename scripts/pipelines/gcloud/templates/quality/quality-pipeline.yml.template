@@ -19,7 +19,7 @@ steps:
     apk add --no-cache tar zstd
     tar -xf build_*.tar.zst
 
-- id: "Run Sonarqube"
+- id: "Execute quality script"
   name: ${_DOCKER_IMAGE}
   secretEnv: ['SONAR_TOKEN']
   env:
