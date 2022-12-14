@@ -644,7 +644,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     switch (resourceType) {
       case ResourceType.ide:
         String url =
-            "${GCloudResourceUrl.baseConsolePath.rawValue}/cloudshelleditor?referrer=search&project=$project&cloudshell=true";
+            "${GCloudResourceUrl.baseConsolePath.rawValue}/cloudshelleditor?project=$project&cloudshell=true";
         return Uri.parse(url);
       case ResourceType.pipeline:
         String url =
