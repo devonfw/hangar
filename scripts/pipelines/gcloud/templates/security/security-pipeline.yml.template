@@ -1,0 +1,7 @@
+steps:
+- name: 'python:3.7-slim'
+  script: |
+    #!/bin/bash
+    apt install -y python3-pip
+    python3.7 -m pip install -U checkov
+    checkov --directory .terraform/
