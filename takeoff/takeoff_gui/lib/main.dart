@@ -39,22 +39,6 @@ class MyApp extends StatelessWidget {
             return MaterialApp.router(
               scrollBehavior: MyCustomScrollBehavior(),
               debugShowCheckedModeBanner: false,
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              supportedLocales: const [
-                Locale('en', 'US'),
-              ],
-              localeResolutionCallback:
-                  (Locale? locale, Iterable<Locale> supportedLocales) {
-                for (Locale supportedLocale in supportedLocales) {
-                  if (supportedLocale.languageCode == locale?.languageCode) {
-                    return supportedLocale;
-                  }
-                }
-                return const Locale("en", "US");
-              },
               routerConfig: AppRouter().router,
             );
           } else {
