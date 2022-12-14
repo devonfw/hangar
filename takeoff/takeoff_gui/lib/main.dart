@@ -11,6 +11,8 @@ import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controlle
 import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:desktop_window/desktop_window.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 void main() async {
   await registerSingletons();
@@ -39,6 +41,22 @@ class MyApp extends StatelessWidget {
             return MaterialApp.router(
               scrollBehavior: MyCustomScrollBehavior(),
               debugShowCheckedModeBanner: false,
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', 'US'),
+              ],
+              localeResolutionCallback:
+                  (Locale? locale, Iterable<Locale> supportedLocales) {
+                for (Locale supportedLocale in supportedLocales) {
+                  if (supportedLocale.languageCode == locale?.languageCode) {
+                    return supportedLocale;
+                  }
+                }
+                return const Locale("en", "US");
+              },
               routerConfig: AppRouter().router,
             );
           } else {
