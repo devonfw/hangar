@@ -24,4 +24,8 @@ steps:
     [[ -f .pipelines/scripts/test-setup-environment.sh ]] && source .pipelines/scripts/test-setup-environment.sh
     .pipelines/scripts/test.sh
 
+- id: "Upload coverage to bucket"
+  name: gcr.io/cloud-builders/gsutil
+  allow_failure: true
+  args: ['cp','coverage.xml','gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/coverage.xml']
 # mark to insert trigger

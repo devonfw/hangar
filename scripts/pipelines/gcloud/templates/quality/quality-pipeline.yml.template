@@ -4,6 +4,15 @@ steps:
     - cp
     - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build_*.tar'
     - .
+
+- id: "Download coverage"
+  name: gcr.io/cloud-builders/gsutil
+  allow_failure: true
+  args:
+    - cp
+    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${testPipelineName}/commit_${SHORT_SHA}/coverage.xml'
+    - .
+
 - name: ${_DOCKER_IMAGE}
   secretEnv: ['SONAR_TOKEN']
   env:
