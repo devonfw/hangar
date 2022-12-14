@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
-import 'package:takeoff_gui/common/monitor/pages/confirm_dialog.dart';
+import 'package:takeoff_gui/common/monitor/pages/user_interaction_dialog.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';

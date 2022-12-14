@@ -17,7 +17,7 @@ import 'package:takeoff_lib/src/utils/system/system_service.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffFacade {
-  final GoogleCloudController _googleController = GoogleCloudControllerImpl();
+  late GoogleCloudController _googleController;
 
   /// Initializes all the singletons neeeded for the app to run and checks prerequisites.
   ///
@@ -41,6 +41,10 @@ class TakeOffFacade {
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
       GetIt.I.registerSingleton<Database>(await DbFactory().create());
+      // TODO: uncomment this when the image in Dockerhub is usable
+      //await dockerController.pullHangarImage();
+
+      _googleController = GoogleCloudControllerImpl();
     }
 
     return true;
@@ -108,7 +112,7 @@ class TakeOffFacade {
     Language? frontendLanguage,
     String? frontendVersion,
     required String googleCloudRegion,
-    StreamController<GuiMessage>? infoStream,
+    StreamController<GuiMessage>? outputStream,
     StreamController<String>? inputStream,
   }) async {
     return await _googleController.createProject(
@@ -119,8 +123,8 @@ class TakeOffFacade {
       frontendLanguage: frontendLanguage,
       frontendVersion: frontendVersion,
       googleCloudRegion: googleCloudRegion,
-      infoStream: infoStream,
       inputStream: inputStream,
+      outputStream: outputStream,
     );
   }
 
@@ -128,11 +132,13 @@ class TakeOffFacade {
   Future<bool> quickstartWayat(
       {required String billingAccount,
       required String googleCloudRegion,
-      StreamController<GuiMessage>? infoStream}) async {
+      StreamController<GuiMessage>? outputStream,
+      StreamController<String>? inputStream}) async {
     return await _googleController.wayatQuickstart(
         billingAccount: billingAccount,
         googleCloudRegion: googleCloudRegion,
-        infoStream: infoStream);
+        outputStream: outputStream,
+        inputStream: inputStream);
   }
 
   Future<bool> cleanProject(

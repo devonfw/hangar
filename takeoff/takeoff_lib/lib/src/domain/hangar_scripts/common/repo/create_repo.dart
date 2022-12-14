@@ -80,6 +80,9 @@ abstract class CreateRepo implements Script {
     if (subpath != null) {
       args.addAll(["--subpath", subpath!]);
     }
+    if (setUpBranchStrategy != null) {
+      args.addAll(["-s", "gitflow"]);
+    }
 
     return args;
   }
