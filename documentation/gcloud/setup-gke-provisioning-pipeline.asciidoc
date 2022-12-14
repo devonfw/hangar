@@ -1,8 +1,8 @@
 = Setting up a Google Kubernetes Engine provisioning pipeline on Google Cloud
 
-In this section we will create a pipeline which will provision a GKE cluster. This pipeline will be configured to be manually triggered by the user. As part of GKE cluster provisioning, a NGINX Ingress controller is deployed and a file named cluster_info.env is created, which contains, among others, the DNS name of the Ingress controller, that you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
+In this section we will create a pipeline which will provision a GKE cluster. This pipeline will be configured to be manually triggered by the user. As part of GKE cluster provisioning, a NGINX Ingress controller is deployed and a file named `cluster_info.env` is created on a Bucket, which contains, among others, the DNS name of the Ingress controller, that you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix for more details.
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/gke-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/gke-provisioning` will be created, the YAML file for the pipeline and the Terraform files for creating the cluster will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropiate branch (provided in `-b` flag). The PR will be automatically merged.
 
@@ -43,7 +43,7 @@ NOTE: The config file for the GKE provisioning pipeline is located at `/scripts/
 === Example
 
 ```
-./pipeline_generator.sh -c ./templates/gke/gke-pipeline.cfg -n gke-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --gcloud-region us-central1 --rancher -b develop
+./pipeline_generator.sh -c ./templates/gke/gke-pipeline.cfg -n gke-provisioning -d C:/Users/$USERNAME/Desktop/project --gcloud-region eu-west-1 --rancher -b develop
 ```
 
 NOTE: Rancher is installed on the cluster after provisioning when using the above command.
@@ -52,18 +52,17 @@ NOTE: Rancher is installed on the cluster after provisioning when using the abov
 
 NOTE: Make sure you have https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] installed.
 
-In order to interact with your cluster you need to be logged in gcloud CLI. In case you are not logged in, execute the following command:
+In order to interact with your cluster you need to be logged in `gcloud` CLI. In case you are not, execute the following command:
 ```
 gcloud auth login
 ```
-Then execute "gcloud container clusters get-credentials" to login to the cluster. After that, you can execute whatever kubectl command.
+Then login to the cluster. After that, you can execute whatever kubectl command.
 ```
-gcloud container clusters get-credentials <projectid>-gke --region=<region> --project=<projectid>
+gcloud container clusters get-credentials <project id>-gke --region=<region> --project=<project id>
 kubectl <command>
-
 ```
 
-To get the DNS name of the NGINX Ingress controller on the GKE cluster, navigate into Google Cloud Console > Buckets > gke-test-hangar_cloudbuild/pipelinesArtifacts/gke-provision and look up for the Authenticated URL field in the cluster_info.env file.
+To get the DNS name of the NGINX Ingress controller on the GKE cluster, navigate into Google Cloud Console > Buckets > `gke-test-hangar_cloudbuild/pipelinesArtifacts/gke-provision` and look up for the Authenticated URL field in the `cluster_info.env` file.
 
 Rancher, if installed, will be available on `https://<ingress controller domain>/dashboard`. You will be asked for an initial password, which can be retrieved with:
 
@@ -73,4 +72,4 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 
 === Appendix: Destroying the cluster
 
-To destroy the provisioned resources, go to Google Cloud Console > Triggers and select the gke-provisioning trigger, press run, set `operation` pipeline variable value to `destroy` and run the pipeline.
+To destroy the provisioned resources, go to Google Cloud Console > Triggers and select the `gke-provisioning` trigger, press run, set `operation` pipeline variable value to `destroy` and run the pipeline.
