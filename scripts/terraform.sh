@@ -52,7 +52,7 @@ while [[ $# -gt 0 ]]; do
         'output')                        command="$1"; silent="true"; shift ;;
         '-s' | '--state-folder')         state="$2"; shift 2 ;;
         '-k' | '--output-key')           key_out="$2"; shift 2 ;;
-        '-q' | '--quiet' )                silent="true"; shift ;;
+        '-q' | '--quiet' )               silent="true"; shift ;;
         'help' | '-h' | '--help')        helpFunction; exit ;;
         *)
             if [[ "$1" == *"="* ]]; then
@@ -68,7 +68,7 @@ done
 
 # Function to silent
 silent_cmd() {
-    if $silent; then
+    if [[ "$silent" == "true" ]]; then
         "$@" > /dev/null
     else
         "$@"
