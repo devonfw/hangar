@@ -9,6 +9,7 @@ import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/home/pages/home_page.dart';
 import 'package:takeoff_gui/features/home/widgets/cloud_projects_list.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'home_page_test.mocks.dart';
 
@@ -18,10 +19,23 @@ void main() async {
   // Avoid overflow due to test conditions
   setUpAll(() async {
     GetIt.I.registerSingleton<ProjectsController>(controller);
+    GetIt.I.registerSingleton(AppLocalizations);
   });
 
   Widget createApp(Widget body) {
     return MaterialApp(
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeResolutionCallback:
+          (Locale? locale, Iterable<Locale> supportedLocales) {
+        for (Locale supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode) {
+            return supportedLocale;
+          }
+        }
+        return const Locale("en", "US");
+      },
       home: Scaffold(
         body: body,
       ),
