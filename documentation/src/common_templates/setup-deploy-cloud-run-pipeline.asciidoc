@@ -49,7 +49,9 @@ endif::[]
 
 NOTE: The config file for the deploy {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg`.
 
+ifeval::["{provider}" == "Google Cloud"]
 NOTE: For this pipeline, the secret and environment variable will be defined as environment variable inside the containers created by Cloud Run
+endif::[]
 
 === Flags
 [subs=attributes+]
