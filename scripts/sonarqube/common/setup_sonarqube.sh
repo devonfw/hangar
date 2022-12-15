@@ -4,7 +4,7 @@ white='\e[1;37m'
 green='\e[1;32m'
 
 echo -e "${green}Updating repositories..."
-echo -e "${white}"
+echo -ne "${white}"
 sudo apt-get update
 
 echo -e "${green}Setting proper system limits for SonarQube..."
