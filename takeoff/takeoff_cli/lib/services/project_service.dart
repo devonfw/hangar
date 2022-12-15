@@ -111,7 +111,9 @@ class ProjectsService {
       return;
     }
     try {
-      _takeOffFacade.getResource(projectId, cloudProviderId, resource);
+      Uri url =
+          _takeOffFacade.getResource(projectId, cloudProviderId, resource);
+      UrlLaucher.launch(url.toString());
     } catch (e) {
       Log.error("You can not open $projectId resource");
     }

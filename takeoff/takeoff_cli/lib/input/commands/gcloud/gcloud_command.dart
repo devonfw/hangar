@@ -18,10 +18,10 @@ class GCloudCommand extends Command {
 
   GCloudCommand(this.service) {
     addSubcommand(CreateGCloudCommand(service));
-    addSubcommand(OpenGCloudCommand(service));
     addSubcommand(CleanCommand(service, CloudProviderId.gcloud));
     addSubcommand(ListCommand(service, CloudProviderId.gcloud));
     addSubcommand(InitCommand(service, CloudProviderId.gcloud));
     addSubcommand(RunCommand(service, CloudProviderId.gcloud));
+    addSubcommand(OpenGCloudCommand(service, CloudProviderId.gcloud));
   }
 }

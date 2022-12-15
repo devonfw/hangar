@@ -12,11 +12,12 @@ class OpenGCloudCommand extends Command {
 
   @override
   final String description = "Open a project resources in web";
+  final CloudProviderId cloudProvider;
 
-  OpenGCloudCommand(this.service) {
-    argParser.addOption('web', mandatory: true);
-    argParser.addOption('--resource',
-        abbr: '-r',
+  OpenGCloudCommand(this.service, this.cloudProvider) {
+    argParser.addOption('project', mandatory: true);
+    argParser.addOption('resource',
+        abbr: 'r',
         allowed: [
           Resource.ide.name,
           Resource.pipeline.name,
@@ -30,8 +31,8 @@ class OpenGCloudCommand extends Command {
   @override
   void run() {
     service.openResource(
-        projectId: argResults?["web"],
-        cloudProviderId: CloudProviderId.gcloud,
-        resource: Resource.fromString(argResults?["--resource"]));
+        projectId: argResults?["project"],
+        cloudProviderId: cloudProvider,
+        resource: Resource.fromString(argResults?["resource"]));
   }
 }
