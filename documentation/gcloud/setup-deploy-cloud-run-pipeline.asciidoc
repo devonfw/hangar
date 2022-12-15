@@ -42,7 +42,7 @@ pipeline_generator.sh \
 
 NOTE: The config file for the deploy {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg`.
 
-NOTE: For this pipeline, the secret and environment variable will be defined as environment variable inside the containers created by Cloud Run
+NOTE: For this pipeline, the secret and environment variables will used inside the containers created by Cloud Run.
 
 === Flags
 [subs=attributes+]
