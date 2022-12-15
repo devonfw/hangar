@@ -110,7 +110,7 @@ function addMachineType {
 function addTriggers {
     case "$previousPipelineyaml" in
         "")
-            Skipping=true
+            skipping=true
             ;;
         "build-pipeline.yml")
             branch="BRANCH_NAME"
@@ -126,7 +126,7 @@ function addTriggers {
             ;;
     esac
 
-    if [[ "$Skipping" == "true" ]]
+    if [[ "$skipping" == "true" ]]
     then
         echo -e "Previous pipeline is not defined. Skipping adding trigger function."
     else

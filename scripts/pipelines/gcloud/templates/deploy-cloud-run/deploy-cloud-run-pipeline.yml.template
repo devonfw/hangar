@@ -31,11 +31,11 @@ steps:
       echo "./.pipelines/scripts/deploy-cloud-run.sh -d \"$PROJECT_ID\" -b \"$_BRANCH_NAME\" -n \"$_SERVICE_NAME\" -i \"$_IMAGE_NAME\" -g \"$_GCLOUD_REGION\" -t \"$_PORT\" -r \"$$REGISTRY\" -u \"***\" -p \"****\" -a \"****\" -s \"****\" -l \"$$AWS_REGION\""
       ./.pipelines/scripts/deploy-cloud-run.sh -d "$PROJECT_ID" -b "$_BRANCH_NAME" -n "$_SERVICE_NAME" -i "$_IMAGE_NAME" -g "$_GCLOUD_REGION" -t "$_PORT" -r "$$REGISTRY" -u "$$DOCKER_USER" -p "$$DOCKER_PASSWORD" -a "$$AWS_ACCESS_KEY" -s "$$AWS_SECRET_ACCESS_KEY" -l "$$AWS_REGION"
 
-# mark to insert step for additonal artifact #
+# mark to insert step for additional artifact #
 
 availableSecrets:
   secretManager:
   - versionName: projects/${PROJECT_ID}/secrets/registry-credentials/versions/latest
     env: 'registry_credentials'
 
-# mark to insert entry in artifact for additonal artifact #
+# mark to insert entry in artifact for additional artifact #
