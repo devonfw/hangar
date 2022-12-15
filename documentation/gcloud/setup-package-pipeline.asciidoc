@@ -7,8 +7,8 @@
 :extra_args_node: --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality
 :extra_args_angular: --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality
 :extra_args_flutter: --build-pipeline-name flutter-project-build --quality-pipeline-name flutter-project-quality --language version 3.3.4 --registry-location europe
-:extra_args_flutter_web: --flutter-platform web --flutter-web-renderer auto
-:extra_args_flutter_android: --flutter-platform android
+:extra_args_flutter_web: --flutter-web-platform --flutter-web-renderer auto
+:extra_args_flutter_android: --flutter-android-platform
 :extra_args_python: --build-pipeline-name python-project-build --quality-pipeline-name python-project-quality --language-version 3.10
 :no-PR-or-MR:
 :build-pipeline:
@@ -44,7 +44,8 @@ pipeline_generator.sh \
   -i <image name> \
   [--language-version <version>] \
   [--registry-location <registry location>] \
-  [--flutter-platform <web, android>] \
+  [--flutter-web-platform] \
+  [--flutter-android-platform] \
   [--flutter-web-renderer <auto (default), canvaskit, html>] \
   [-u <registry user>] \
   [-p <registry password>] \
@@ -74,7 +75,8 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 --language-version             [Required, if Flutter or Python] Language or framework version.
 --registry-location            [Required, if Flutter] Artifact registry location.
---flutter-platform             [Required, if Flutter] Target platform to compile. Accepted values: android, web.
+--flutter-web-platform         [Required, if Flutter] Compile Web platform.
+--flutter-android-platform     [Required, if Flutter] Compile Android platform.
 -u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
 -p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."

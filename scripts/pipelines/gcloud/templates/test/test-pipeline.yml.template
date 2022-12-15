@@ -13,7 +13,7 @@ steps:
   name: gcr.io/cloud-builders/gsutil
   script: |
     #!/bin/bash
-    artifactPathAndName=$(gsutil ls gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${_BUILD_PIPELINE_NAME}/commit_${SHORT_SHA}/build_*.tar | head -1)
+    artifactPathAndName=$(gsutil ls gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${_BUILD_PIPELINE_NAME}/commit_${SHORT_SHA}/build_*.tar.zst | head -1)
     gsutil cp $artifactPathAndName .
   env:
     - 'PROJECT_ID=$PROJECT_ID'
@@ -21,12 +21,14 @@ steps:
     - 'SHORT_SHA=$SHORT_SHA'
 
 - id: "Unpack artifact"
-  name: ${_DOCKER_IMAGE}
+  name: alpine
   script: |
-    #!/bin/bash
-    tar -xf build_*.tar
+    #!/bin/sh
+    set -e
+    apk add --no-cache tar zstd
+    tar -xf build_*.tar.zst
 
-- id: "Execute test script"
+- id: "Run Test script"
   name: ${_DOCKER_IMAGE}
   env:
     - TRIGGER_NAME=$TRIGGER_NAME
@@ -38,3 +40,7 @@ steps:
     .pipelines/scripts/test.sh
 
 # mark to insert trigger
+
+# mark to insert step for additonal artifact #
+
+# mark to insert entry in artifact for additonal artifact #
