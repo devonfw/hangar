@@ -1,4 +1,4 @@
-@startuml Container_Diagram
+@startuml Diagram
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
 !define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
@@ -16,24 +16,29 @@
 !include <office/Concepts/service_application>
 !include <office/Concepts/firewall>
 AddContainerTag("db", $sprite="database_server", $legendText="database container")
+left to right direction
 
+'LAYOUT_WITH_LEGEND()
 
-' LAYOUT_WITH_LEGEND()
-
-Person(user, "Customer", "Create / Deploy on a Cloud Environment", $sprite="users")
+Person(user, "User", "Interacts with the GUI and CLI to create/deploy on Cloud environments", $sprite="users")
 System_Boundary(s_takeoff, "TakeOff") {
-    Container(flutter, "Flutter App", "Graphic User Interface", "Visual interaction with TakeOff")
-    Rel(user, flutter, "Uses")
+    Container_Boundary(takeoff_gui, "TakeOff GUI") {
+        Component(gui, "GUI", $techn="Flutter", $descr="Receives the inputs from the user and calls the appropriate logic")
+    }
+    Container_Boundary(takeoff_cli, "TakeOff CLI") {
+        Component(cli, "Input Controller", $techn="Dart", $descr="Reads the console commands to determine which scripts should be executed")
+    }
 
-    Container_Boundary(c_takeoff, "TakeOff"){
-        Container(takeoff, "TakeOff Executable", "Abstraction Layer", "Automation of Hangar scripts")
+    Container_Boundary(c_takeoff, "Shared Business logic library"){
+        Container(façade, "Logic Façade", "Abstraction Layer", "Automation of Hangar scripts")
         Component(project_manager, "Project Manager")
         Component(repository_manager, "Repository Manager")
         Component(account_manager, "Account Manager")
         Component(pipeline_manager, "Pipeline Manager")
-        ContainerDb(db, "Cache Store", "User Configuration", $tags="db")
-        Rel(takeoff, db, "Stores / Reads")
+        Component(cache_manager, "Cache Manager")
     }
+
+    ContainerDb(db, "Cache Store", "User Configuration", $tags="db")
 }
 
 System_Boundary(s_hangar, "Hangar") {
@@ -46,42 +51,53 @@ System_Boundary(s_hangar, "Hangar") {
         Component(pipeline_generator, "pipeline-generator.sh")
     }
 
-    Rel(project_manager, create_project, "Interacts")
-    Rel(project_manager, setup_sonar, "Interacts")
-    Rel(account_manager, setup_service_account, "Interacts")
-    Rel(account_manager, verify_roles, "Interacts")
-    Rel(pipeline_manager, pipeline_generator, "Interacts")
-    Rel(repository_manager, create_repo, "Interacts")
-
-    Rel(takeoff, project_manager, "Uses")
-    Rel(takeoff, repository_manager, "Uses")
-    Rel(takeoff, account_manager, "Uses")
-    Rel(takeoff, pipeline_manager, "Uses")
-
 
     Container_Boundary(hangar_clis, "Cloud CLIs") {
         Component(gcloud, "GCloud CLI")
 
     }
 
-    Rel(create_project, gcloud, "Interacts")
-    Rel(setup_sonar, gcloud, "Interacts")
-    Rel(setup_service_account, gcloud, "Interacts")
-    Rel(verify_roles, gcloud, "Interacts")
-    Rel(pipeline_generator, gcloud, "Interacts")
-    Rel(create_repo, gcloud, "Interacts")
 }
 
 System_Boundary(host, "Host OS"){
     ContainerDb(dbcli, "CLI Configs", "Self CLI Configuration", $tags="db")
 }
 
-Rel(gcloud, dbcli, "Stores / Reads")
 
 
 System_Boundary(cloud, "Cloud"){
     System(google_cloud, "Google Cloud")
 }
+
+Rel(user, gui, "uses")
+Rel(user, cli, "uses")
+
+Rel(gui, façade, "calls")
+Rel(cli, façade, "calls")
+
+Rel(project_manager, create_project, "Interacts")
+Rel(project_manager, setup_sonar, "Interacts")
+Rel(account_manager, setup_service_account, "Interacts")
+Rel(account_manager, verify_roles, "Interacts")
+Rel(pipeline_manager, pipeline_generator, "Interacts")
+Rel(repository_manager, create_repo, "Interacts")
+Rel_Up(cache_manager, db, "Stores / Reads")
+
+Rel(façade, project_manager, "Uses")
+Rel(façade, repository_manager, "Uses")
+Rel(façade, account_manager, "Uses")
+Rel(façade, pipeline_manager, "Uses")
+Rel(façade, cache_manager, "Uses")
+
+
+Rel(create_project, gcloud, "Interacts")
+Rel(setup_sonar, gcloud, "Interacts")
+Rel(setup_service_account, gcloud, "Interacts")
+Rel(verify_roles, gcloud, "Interacts")
+Rel(pipeline_generator, gcloud, "Interacts")
+Rel(create_repo, gcloud, "Interacts")
+
+Rel(gcloud, dbcli, "Stores / Reads")
 
 Rel(gcloud, google_cloud, "Communicates with", "HTTPS")
 
