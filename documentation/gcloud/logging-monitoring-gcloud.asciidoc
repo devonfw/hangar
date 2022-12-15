@@ -1,19 +1,19 @@
-= Logging and monitoring a service on cloud run
+= Logging and monitoring a service on Cloud Run
 
-In this section we will explain how to use the default dashboard of cloud run to monitor and see the logs of our service(s) in Cloud Run, and how to import templates in cloud monitoring to have a more personalized dashboard if needed.
+In this section we will explain how to use the default dashboard of Cloud Run to monitor and see the logs of our service(s) in Cloud Run, and how to import templates in Cloud Monitoring to have a more personalized dashboard if needed.
 
 == Prerequisites
 
-You need to already have an application deployed in cloud run, and an account with the role `roles/monitoring.editor`.
+You need to already have an application deployed in Cloud Run, and an account with the role `roles/monitoring.editor`.
 
 == Monitoring
 
-=== Default dashboard of cloud run
+=== Default dashboard of Cloud Run
 
 If you access this page https://console.cloud.google.com/run/detail/<region>/<service-name>/metrics?project=<project-name>: +
-(you can also access it from the main page of cloud run: https://console.cloud.google.com/run). +
+(you can also access it from the main page of Cloud Run: https://console.cloud.google.com/run). +
 
-You can see different metrics set by default for cloud run allowing you to know the traffic reaching your app, the amount of container created, the memory used, etc...
+You can see different metrics set by default for Cloud Run allowing you to know the traffic reaching your app, the amount of container created, the memory used, etc...
 
 The issue with that dashboard is that you can only monitor one specific service. If you wanna be able to monitor all your services on one dashboard, you can create one in Cloud Monitoring.
 
@@ -23,7 +23,7 @@ The issue with that dashboard is that you can only monitor one specific service.
 
 You can manually create your dashboard from that page: https://console.cloud.google.com/monitoring +
 
-Or You can also import the template we already created for cloud run. +
+Or You can also import the template we already created for Cloud Run. +
 To do so, execute this command `gcloud monitoring dashboards create --config-from-file Cloud-Run-dashboard.json`   (You can add `--project=<project-id>` to create on another project than the one set by default)
 
 You can now access this dashboard from the list here: https://console.cloud.google.com/monitoring/dashboards (named `Cloud Run dashboard`) +
