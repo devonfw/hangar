@@ -18,7 +18,7 @@ steps:
     apk add --no-cache tar zstd
     tar -xf build_*.tar.zst
 
-- id: "Run test script"
+- id: "Run Test script"
   name: ${_DOCKER_IMAGE}
   script: |
     #!/bin/bash
