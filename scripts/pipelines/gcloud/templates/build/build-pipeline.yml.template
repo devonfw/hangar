@@ -1,5 +1,5 @@
 steps:
-- id: "Execute build script"
+- id: "Run build script"
   name: ${_DOCKER_IMAGE}
   script: |
     #!/bin/bash

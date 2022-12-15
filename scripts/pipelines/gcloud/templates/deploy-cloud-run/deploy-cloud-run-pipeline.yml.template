@@ -9,7 +9,7 @@ steps:
         [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
         [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
 
-- id: "Execute deploy script for cloud run"
+- id: "Run deploy script for cloud run"
   name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   secretEnv: ['registry_credentials']

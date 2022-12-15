@@ -1,5 +1,5 @@
 steps:
-- id: "Execute terraform"
+- id: "Run terraform"
   name: gcr.io/cloud-builders/gsutil
   entrypoint: bash
   args:
