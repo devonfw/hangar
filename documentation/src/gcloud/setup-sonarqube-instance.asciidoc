@@ -5,11 +5,11 @@
 :extra_information: https://cloud.google.com/docs/terraform[Official Gcloud documentation]
 :terraform_vars_example_short: --service_account_file key.json --project hangar
 :terraform_vars_example_full: --service_account_file key.json --project hangar --region europe-southwest1 --zone europe-southwest1-a --subnet_cidr_block 10.0.1.0/24 -- instance_type e2-medium
-:terraform_vars: --service_account_file    [Required] JSON file of a service account with required roles. \
---project                 [Required] Short name (ID) of the project. \
---region                             Region where the resources will be created. Default: europe-southwest1 \
---zone                               Zone inside the region where the resources will be created. Default: europe-southwest1-a \
---subnet_cidr_block                  Range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. Default: 10.0.1.0/29 \
+:terraform_vars: --service_account_file    [Required] JSON file of a service account with required roles. + \
+--project                 [Required] Short name (ID) of the project. + \
+--region                             Region where the resources will be created. Default: europe-southwest1 + \
+--zone                               Zone inside the region where the resources will be created. Default: europe-southwest1-a + \
+--subnet_cidr_block                  Range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. Default: 10.0.1.0/29 + \
 --instance_type                      Machine Instance type. Default: e2-medium
 
 include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partBeforePrerequisites]
