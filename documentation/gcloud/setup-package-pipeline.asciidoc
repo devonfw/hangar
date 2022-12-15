@@ -73,8 +73,8 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 --language-version             [Required, if Flutter or Python] Language or framework version.
 --registry-location            [Required, if Flutter] Artifact registry location.
---flutter-web-platform         [Required, if Flutter] Web platform to compile.
---flutter-android-platform     [Required, if Flutter] Android platform to compile.
+--flutter-web-platform         [Required, if Flutter] Compile Web platform.
+--flutter-android-platform     [Required, if Flutter] Compile Android platform.
 -u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
 -p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
