@@ -5,12 +5,12 @@
 :extra_information: https://cloud.google.com/docs/terraform[Official Gcloud documentation]
 :terraform_vars_example_short: --service_account_file key.json --project hangar
 :terraform_vars_example_full: --service_account_file key.json --project hangar --region europe-southwest1 --zone europe-southwest1-a --subnet_cidr_block 10.0.1.0/24 -- instance_type e2-medium
-:terraform_vars: --service_account_file    [Required] Json file with the google credentials. + \
+:terraform_vars: --service_account_file    [Required] JSON file of a service account with required roles. + \
 --project                 [Required] Short name (ID) of the project. + \
---region                             The GCP region where the resources will be created. By default: europe-southwest1 + \
---zone                               The zone inside the region that the machine should be created in. By default: europe-southwest1-a + \
---subnet_cidr_block                  The range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. By default: 10.0.1.0/29 + \
--- instance_type                     Machine Instance type. By dafeault: e2-medium
+--region                             Region where the resources will be created. Default: europe-southwest1 + \
+--zone                               Zone inside the region where the resources will be created. Default: europe-southwest1-a + \
+--subnet_cidr_block                  Range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. Default: 10.0.1.0/29 + \
+-- instance_type                     Machine Instance type. Default: e2-medium
 
 include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partBeforePrerequisites]
 === Prerequisites
@@ -18,20 +18,18 @@ include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partBeforePre
 
 * https://cloud.google.com/sdk/docs/install-sdk[Install Google Cloud CLI].
 
-* Enable Compute Engine in your gcloud project. You can do it via webconsole or via glcoud cli using the following command:
+* Enable Compute Engine in your Google Cloud project. You can do it via Web Console or with the following command:
 
 ```
 gcloud services enable compute.googleapis.com --project "$projectName"
 ```
 
-* Have a service account that is going to be used by terraform with the next roles:
+* Have the `key.json` file of a service account with (at least) the following roles:
 
 ```
 roles/compute.instanceAdmin.v1
 roles/compute.networkAdmin
 roles/compute.securityAdmin
 ```
-
-IMPORTANT: You need the key.json file of that service account to run terraform as it.
 
 include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partAfterPrerequisites]
