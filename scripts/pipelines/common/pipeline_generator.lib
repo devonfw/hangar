@@ -43,7 +43,7 @@ function help {
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
     [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
-    echo "      --flutter-web-platform  [Required, if Flutter] Compile Web platform to ."
+    echo "      --flutter-web-platform  [Required, if Flutter] Compile Web platform."
     echo "      --flutter-android-platform  [Required, if Flutter] Compile Android platform."
     echo "      --flutter-web-renderer             Flutter web renderer. Accepted values: auto (default), canvaskit, html."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
