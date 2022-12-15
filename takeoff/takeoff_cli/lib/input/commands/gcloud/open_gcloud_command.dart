@@ -15,7 +15,11 @@ class OpenGCloudCommand extends Command {
   final CloudProviderId cloudProvider;
 
   OpenGCloudCommand(this.service, this.cloudProvider) {
-    argParser.addOption('project', mandatory: true);
+    argParser.addOption('project',
+        abbr: 'p',
+        mandatory: true,
+        help:
+            "Add project name or create it -> execute takeoff create [project name] [arguments]");
     argParser.addOption('resource',
         abbr: 'r',
         allowed: [
@@ -25,7 +29,7 @@ class OpenGCloudCommand extends Command {
           Resource.beRepo.name,
         ],
         help:
-            "Chose resource type which needs to open: ide, pipeline, fe repo, be repo.");
+            "Choose resource type which needs to open: ide, pipeline, fe repo, be repo.");
   }
 
   @override
