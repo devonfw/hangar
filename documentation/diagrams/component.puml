@@ -17,6 +17,8 @@
 !include <office/Concepts/firewall>
 AddContainerTag("db", $sprite="database_server", $legendText="database container")
 left to right direction
+skinparam linetype polyline
+
 
 'LAYOUT_WITH_LEGEND()
 
@@ -36,69 +38,140 @@ System_Boundary(s_takeoff, "TakeOff") {
         Component(account_manager, "Account Manager")
         Component(pipeline_manager, "Pipeline Manager")
         Component(cache_manager, "Cache Manager")
+        Component(quickstart_manager, "Quickstart Manager")
     }
 
     ContainerDb(db, "Cache Store", "User Configuration", $tags="db")
+
+    Rel(user, gui, "uses")
+    Rel(user, cli, "uses")
+
+    Rel(gui, façade, "calls")
+    Rel(cli, façade, "calls")
+
+    Rel(façade, project_manager, "Uses")
+    Rel(façade, repository_manager, "Uses")
+    Rel(façade, account_manager, "Uses")
+    Rel(façade, pipeline_manager, "Uses")
+    Rel(façade, cache_manager, "Uses")
+    Rel(façade, quickstart_manager, "Uses")
 }
 
 System_Boundary(s_hangar, "Hangar") {
-    Container_Boundary(hangar, "Hangar") {
-        Component(create_project, "create-project.sh")
-        Component(setup_sonar, "setup-sonar.sh")
-        Component(verify_roles, "verify-roles.sh")
-        Component(setup_service_account, "setup-principal-account.sh")
-        Component(create_repo, "create-repo.sh")
-        Component(pipeline_generator, "pipeline-generator.sh")
+    Container_Boundary(sonarqube, "SonarQube") {
+        Container(sonarqube_cont, "SonarQube Automation", "Abstraction Layer", "Automation of SonarQube Deployment")
+        Component(terraform_sonar, "Terraform CLI")
+        Component(setup_sonar_aws, "AWS Setup")
+        Component(setup_sonar_gcloud, "GCloud Setup")
+        Rel(sonarqube_cont, setup_sonar_aws, "Calls")
+        Rel(sonarqube_cont, setup_sonar_gcloud, "Calls")
+        Rel(sonarqube_cont, terraform_sonar, "Uses")
+        Container_Boundary(sonarqube_common, "SonarQube Common"){
+            Component(setup_sonar_common, "SonarQube Common Setup")
+        }
+        Rel(setup_sonar_aws, sonarqube_common, "Uses")
+        Rel(setup_sonar_gcloud, sonarqube_common, "Uses")
     }
 
+    Container_Boundary(repos, "Repositories") {
+        Container(repos_cont, "Repository Automation", "Abstraction Layer", "Automation of Repository Management")
+        Component(create_repo_gcloud, "GCloud Setup")
+        Component(create_repo_azure, "Azure Setup")
+        Component(create_repo_github, "GitHub Setup")
+        Rel(repos_cont, create_repo_gcloud, "Calls")
+        Rel(repos_cont, create_repo_azure, "Calls")
+        Rel(repos_cont, create_repo_github, "Calls")
+        
+        Container_Boundary(create_repo_common, "Repository Management Common"){
+            Component(create_repo_common_logic, "Repository Common Setup")
+            Component(create_repo_common_strategy, "Repository Common Strategy")
+        }
 
-    Container_Boundary(hangar_clis, "Cloud CLIs") {
-        Component(gcloud, "GCloud CLI")
-
+        Rel(create_repo_gcloud, create_repo_common, "Uses")
+        Rel(create_repo_azure, create_repo_common, "Uses")
+        Rel(create_repo_github, create_repo_common, "Uses")
     }
 
+    Container_Boundary(pipelines, "Pipelines") {
+        Container(pipelines_cont, "Pipeline Automation", "Abstraction Layer", "Automation of Pipeline Creation")
+        Component(create_pipelines_gcloud, "GCloud Setup")
+        Component(create_pipelines_azure, "Azure Devops Setup")
+        Component(create_pipelines_github, "GitHub Setup")
+        Rel(pipelines_cont, create_pipelines_gcloud, "Calls")
+        Rel(pipelines_cont, create_pipelines_azure, "Calls")
+        Rel(pipelines_cont, create_pipelines_github, "Calls")
+        
+        Container_Boundary(pipelines_common, "Pipeline Creation Common"){
+            Component(pipelines_common_language_def, "Language Specific Actions Templates")
+            Component(pipelines_common_lib, "Common Pipeline Manager Logic")
+            Component(pipelines_common_pipeline_def, "Cloud Specific Stages Templates")
+        }
+
+        Rel(create_pipelines_gcloud, pipelines_common, "Uses")
+        Rel(create_pipelines_azure, pipelines_common, "Uses")
+        Rel(create_pipelines_github, pipelines_common, "Uses")
+    }
+
+    Container_Boundary(kubernetes, "Kubernetes Provisioning") {
+        Container(kubernetes_cont, "Kubernetes Automation", "Abstraction Layer", "Automation of Kubernetes Provisioning")
+        Component(aws_eks, "AWS EKS Provisioning")
+        Component(azure_aks, "Azure AKS Provisioning")
+        Component(gcloud_gke, "GCloud GKE Provisioning")
+        Rel(kubernetes_cont, aws_eks, "Calls")
+        Rel(kubernetes_cont, azure_aks, "Calls")
+        Rel(kubernetes_cont, gcloud_gke, "Calls")
+        Component(terraform_kubernetes, "Terraform CLI")
+        Rel(kubernetes_cont, terraform_kubernetes, "Uses")
+    }
+
+    Container_Boundary(accounts, "Accounts Management") {
+        Container(accounts_cont, "Accounts Management Automation", "Abstraction Layer", "Automation of Accounts Management")
+        Component(aws_accounts, "AWS Accounts Management")
+        Component(azure_accounts, "Azure Devops Accounts Management")
+        Component(gcloud_accounts, "GCloud Accounts Management")
+        Rel(accounts_cont, aws_accounts, "Calls")
+        Rel(accounts_cont, azure_accounts, "Calls")
+        Rel(accounts_cont, gcloud_accounts, "Calls")
+
+        Component(aws_accounts_create_user, "Create AWS User")
+        Component(aws_accounts_verify_roles, "Verify AWS User Roles")
+        Component(aws_accounts_custom_roles, "AWS Roles Definition")
+        Rel(aws_accounts, aws_accounts_create_user, "Interacts")
+        Rel(aws_accounts, aws_accounts_verify_roles, "Interacts")
+        Rel(aws_accounts_create_user, aws_accounts_custom_roles, "Reads")
+        Rel(aws_accounts_verify_roles, aws_accounts_custom_roles, "Reads")
+
+        Component(azure_accounts_create_project, "Create Azure Devops Project")
+        Rel(azure_accounts, azure_accounts_create_project, "Interacts")
+
+        Component(gcloud_accounts_create_project, "Create GCloud Project")
+        Component(gcloud_accounts_create_principal_account, "Create GCloud Principal Account")
+        Component(gcloud_accounts_verify_roles, "Verify GCloud Account Roles")
+        Component(gcloud_accounts_custom_roles, "GCloud Roles Definition")
+        Component(gcloud_accounts_setup_firebase, "Setup Firebase & Maps Services")
+        Rel(gcloud_accounts, gcloud_accounts_create_project, "Interacts")
+        Rel(gcloud_accounts, gcloud_accounts_create_principal_account, "Interacts")
+        Rel(gcloud_accounts, gcloud_accounts_verify_roles, "Interacts")
+        Rel(gcloud_accounts, gcloud_accounts_setup_firebase, "Interacts")
+        Rel(gcloud_accounts_create_principal_account, gcloud_accounts_custom_roles, "Reads")
+        Rel(gcloud_accounts_verify_roles, gcloud_accounts_custom_roles, "Reads")
+    }
+
+    Container_Boundary(quickstart, "Quickstart") {
+        Container(quickstart_cont, "Quickstart Automation", "Abstraction Layer", "Automation of Quickstart")
+        Component(quickstart_wayat_frontend, "Wayat Frontend Quickstart")
+        Component(quickstart_wayat_backend, "Wayat Backend Quickstart")
+        Rel(quickstart_cont, quickstart_wayat_frontend, "Calls")
+        Rel(quickstart_cont, quickstart_wayat_backend, "Calls")
+    }
+
+    Rel(project_manager, sonarqube_cont, "Interacts")
+    Rel(project_manager, kubernetes_cont, "Interacts")
+    Rel(pipeline_manager, pipelines_cont, "Interacts")
+    Rel(repository_manager, repos_cont, "Interacts")
+    Rel(project_manager, accounts_cont, "Interacts")
+    Rel(quickstart_manager, quickstart_cont, "Interacts")
 }
 
-System_Boundary(host, "Host OS"){
-    ContainerDb(dbcli, "CLI Configs", "Self CLI Configuration", $tags="db")
-}
-
-
-
-System_Boundary(cloud, "Cloud"){
-    System(google_cloud, "Google Cloud")
-}
-
-Rel(user, gui, "uses")
-Rel(user, cli, "uses")
-
-Rel(gui, façade, "calls")
-Rel(cli, façade, "calls")
-
-Rel(project_manager, create_project, "Interacts")
-Rel(project_manager, setup_sonar, "Interacts")
-Rel(account_manager, setup_service_account, "Interacts")
-Rel(account_manager, verify_roles, "Interacts")
-Rel(pipeline_manager, pipeline_generator, "Interacts")
-Rel(repository_manager, create_repo, "Interacts")
-Rel_Up(cache_manager, db, "Stores / Reads")
-
-Rel(façade, project_manager, "Uses")
-Rel(façade, repository_manager, "Uses")
-Rel(façade, account_manager, "Uses")
-Rel(façade, pipeline_manager, "Uses")
-Rel(façade, cache_manager, "Uses")
-
-
-Rel(create_project, gcloud, "Interacts")
-Rel(setup_sonar, gcloud, "Interacts")
-Rel(setup_service_account, gcloud, "Interacts")
-Rel(verify_roles, gcloud, "Interacts")
-Rel(pipeline_generator, gcloud, "Interacts")
-Rel(create_repo, gcloud, "Interacts")
-
-Rel(gcloud, dbcli, "Stores / Reads")
-
-Rel(gcloud, google_cloud, "Communicates with", "HTTPS")
 
 @enduml
