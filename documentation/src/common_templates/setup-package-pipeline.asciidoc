@@ -71,8 +71,8 @@ ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} 
 ifeval::["{provider}" == "Google Cloud"]
 --language-version             [Required, if Flutter or Python] Language or framework version.
 --registry-location            [Required, if Flutter] Artifact registry location.
---flutter-web-platform         [Required, if Flutter] Web platform to compile.
---flutter-android-platform     [Required, if Flutter] Android platform to compile.
+--flutter-web-platform         [Required, if Flutter] Compile Web platform.
+--flutter-android-platform     [Required, if Flutter] Compile Android platform.
 endif::[]
 -u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
 -p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
