@@ -1,8 +1,8 @@
 enum Resource {
   ide("ide"),
   pipeline("pipeline"),
-  feRepo("fe repo"),
-  beRepo("be repo"),
+  feRepo("fe-repo"),
+  beRepo("be-repo"),
   none("");
 
   final String name;
