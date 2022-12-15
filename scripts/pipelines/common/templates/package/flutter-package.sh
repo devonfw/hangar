@@ -8,8 +8,6 @@ red='\e[0;31m'
 if [[ -n ${ANDROID_PLATFORM} && ${ANDROID_PLATFORM} == "true" ]]; then
     flutter pub get
     flutter build apk --release
-    #Install gcloud CLI
-    apt-get install apt-transport-https ca-certificates gnupg -y | echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
     gcloud storage cp build/app/outputs/flutter-apk/app-release.apk gs://"${PROJECT_ID}"-apk/app-release-"${SHORT_SHA}".apk
 fi
 if [[ -n ${WEB_PLATFORM} && ${WEB_PLATFORM} == "true" ]]; then
