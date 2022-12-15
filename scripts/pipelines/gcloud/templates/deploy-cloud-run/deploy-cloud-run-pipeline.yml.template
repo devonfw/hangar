@@ -7,7 +7,6 @@ steps:
     - |
         set -e
         [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
-        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
 
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
@@ -19,8 +18,7 @@ steps:
       echo -e "\n\n"
       echo "SETTING UP ENVIRONMENT"
       echo ""
-      [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
-      . ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_IMAGE_NAME"
+      . ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_IMAGE_NAME" "${TRIGGER_NAME}"
       echo -e "\n\n"
       echo "LOADING CREDENTIALS AND GETTING REGISTRY"
       echo $$registry_credentials > credentials.env

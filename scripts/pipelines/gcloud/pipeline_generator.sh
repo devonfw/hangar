@@ -197,7 +197,7 @@ function addSecretVars {
     do
         secretName=$(echo "$i" | cut -d= -f1)
         secretValue=$(echo "$i" | cut -d= -f2)
-        [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
+        [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name ($secretName) is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
 
         # Creating the secret if it does not exist yet
         if [[ $(gcloud secrets list --project "${gCloudProject}" 2> /dev/null | awk -v secretName="$secretName" '$1==secretName {print $1}') == "" ]]
@@ -282,10 +282,6 @@ type addPipelineVariables &> /dev/null && addPipelineVariables
 
 type addCommonPipelineVariables &> /dev/null && addCommonPipelineVariables
 
-[[ "$secretVars" != "" ]] && addSecretVars
-
-[[ "$envVars" != "" ]] && addEnvVars
-
 copyYAMLFile
 
 [[ "$machineType" != "" ]] && addMachineType
@@ -302,8 +298,14 @@ type commitFiles &> /dev/null && commitFiles
 
 createTrigger
 
+[[ "$secretVars" != "" ]] && addSecretVars
+
+[[ "$envVars" != "" ]] && addEnvVars
+
 merge_branch
 
 [[ "$roles" == "" ]] || addRoles
+
+type addAdditionalRoles &> /dev/null && addAdditionalRoles
 
 echo -e "${green}\nPipeline generated succesfully${white}"
