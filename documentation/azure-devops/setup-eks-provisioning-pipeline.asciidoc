@@ -7,7 +7,7 @@ toc::[]
 
 In this section we will create a pipeline which will provision an AWS EKS cluster. This pipeline will be configured to be manually triggered by the user. As part of EKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `eks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently. 
 
-The creation of the pipeline will follow the project workflow, so a new branch named `feature/eks-provisioning` will be created, the YAML file for the pipeline and the terraform files for creating the cluster will be pushed to it.
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/eks-provisioning` will be created, the YAML file for the pipeline and the Terraform files for creating the cluster will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropiate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
