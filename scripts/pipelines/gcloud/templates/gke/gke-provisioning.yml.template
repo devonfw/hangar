@@ -39,5 +39,5 @@ steps:
     elif [ "${_OPERATION}" == "destroy" ]; then
       terraform apply -destroy -auto-approve
     else
-      exit 201
+      exit 1
     fi
