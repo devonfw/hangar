@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CloudSelector extends StatelessWidget {
   final BoxBorder border = Border.all(color: Colors.grey, width: 3);
@@ -17,7 +18,7 @@ class CloudSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Select a cloud provider"),
+        Text(AppLocalizations.of(context)!.selectProvider),
         const SizedBox(height: 15),
         Row(
           children: [

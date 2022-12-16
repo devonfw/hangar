@@ -5,6 +5,7 @@ import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/features/create/utils/languages_versions.dart';
 import 'package:takeoff_gui/features/create/widgets/dropdown_field.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FrontendForm extends StatelessWidget {
   final CreateController controller = GetIt.I.get<CreateController>();
@@ -17,7 +18,7 @@ class FrontendForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Frontend technology"),
+        Text(AppLocalizations.of(context)!.frontendTechnology),
         const SizedBox(height: 15),
         Row(
           children: [
