@@ -22,6 +22,7 @@ class OpenGCloudCommand extends Command {
             "Add project name or create it -> execute takeoff create [project name] [arguments]");
     argParser.addOption('resource',
         abbr: 'r',
+        mandatory: true,
         allowed: [
           Resource.ide.name,
           Resource.pipeline.name,
