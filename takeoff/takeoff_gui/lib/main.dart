@@ -9,6 +9,7 @@ import 'package:takeoff_gui/features/create/controllers/project_form_controllers
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:takeoff_gui/l10n/locale_constants.dart';
 import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:desktop_window/desktop_window.dart';
@@ -27,14 +28,15 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
         future: GetIt.I.get<TakeOffFacade>().initialize(),
         builder: (context, snapshot) {
+          final localedef = lookupAppLocalizations(LocaleConstants.locale(LocaleConstants.getLocale()));
           if (snapshot.hasError) {
             return ErrorLoadingPage(
-                message: AppLocalizations.of(context)!.errorDockerDaemon);
+                message: localedef.errorDockerDaemon);
           } else if (snapshot.hasData) {
             if (!snapshot.data!) {
               return ErrorLoadingPage(
                 message:
-                    AppLocalizations.of(context)!.errorContainerNotDetected,
+                    localedef.errorContainerNotDetected,
               );
             }
             return MaterialApp.router(
