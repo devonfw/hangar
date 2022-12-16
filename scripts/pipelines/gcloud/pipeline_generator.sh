@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,registry-location:,flutter-web-renderer:,machine-type:,language-version:,service-name:,gcloud-region:,port:,flutter-platform:,secret-vars:,env-vars:,rancher:,package-pipeline-name:,env-provision-pipeline-name:,k8s-provider:,k8s-namespace:,k8s-deploy-files-path:,k8s-image-pull-secret-name:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:hm: --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,registry-location:,flutter-web-renderer:,machine-type:,language-version:,service-name:,gcloud-region:,port:,flutter-android-platform,flutter-web-platform,secret-vars:,env-vars:,rancher:,package-pipeline-name:,env-provision-pipeline-name:,k8s-provider:,k8s-namespace:,k8s-deploy-files-path:,k8s-image-pull-secret-name:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -13,7 +13,8 @@ while true; do
         -l | --language)          language=$2; shift 2;;
         --build-pipeline-name)    export buildPipelineName=$2; shift 2;;
         --registry-location)      export registryLocation=$2; shift 2;;
-        --flutter-platform)       export flutterPlatform=$2; shift 2;;
+        --flutter-android-platform) export androidPlatform=true; shift 1;;
+        --flutter-web-platform)   export webPlatform=true; shift 1;;
         --flutter-web-renderer)   export flutterWebRenderer=$2; shift 2;;
         --sonar-url)              sonarUrl=$2; shift 2;;
         --sonar-token)            sonarToken=$2; shift 2;;
@@ -222,7 +223,7 @@ function addSecretVars {
 
     # Adding script to get secret and commiting changes
     mkdir -p "${localDirectory}/${scriptFilePath}"
-    cp "$hangarPath/scripts/pipelines/common/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    cp "$hangarPath/${commonTemplatesPath}/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
     # Commiting the conf file
     echo -e "${green}Commiting and pushing into Git remote...${white}"
     git add -f "${localDirectory}/${configFilePath}/SecretVars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"

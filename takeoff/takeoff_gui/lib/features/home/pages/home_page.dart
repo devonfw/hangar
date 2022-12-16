@@ -6,6 +6,7 @@ import 'package:takeoff_gui/features/home/widgets/cloud_projects_list.dart';
 import 'package:takeoff_gui/features/home/widgets/floating_action_menu.dart';
 import 'package:takeoff_gui/features/home/widgets/google_login_dialog.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionMenu(),
       appBar: AppBar(
-        title: const Text("Take Off"),
+        title: Text(AppLocalizations.of(context)!.appTitle),
       ),
       body: SingleChildScrollView(
         controller: scrollController,
@@ -28,7 +29,7 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Observer(builder: (context) {
               return CloudProjectsList(
-                name: "Google Cloud",
+                name: AppLocalizations.of(context)!.gc,
                 projects:
                     projectsController.projects[CloudProviderId.gcloud] ?? [],
                 authenticateCallback: () {
@@ -44,7 +45,7 @@ class HomePage extends StatelessWidget {
               );
             }),
             CloudProjectsList(
-              name: "Azure",
+              name: AppLocalizations.of(context)!.az,
               projects:
                   projectsController.projects[CloudProviderId.azure] ?? [],
               // TODO Add loggin method
@@ -53,7 +54,7 @@ class HomePage extends StatelessWidget {
               authAccount: projectsController.accounts[CloudProviderId.azure]!,
             ),
             CloudProjectsList(
-              name: 'AWS',
+              name: AppLocalizations.of(context)!.aws,
               projects: projectsController.projects[CloudProviderId.aws] ?? [],
               // TODO Add loggin method
               authenticateCallback: () => print("Authenticating on AWS"),

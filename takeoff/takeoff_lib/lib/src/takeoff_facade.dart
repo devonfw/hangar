@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
+import 'package:meta/meta.dart';
 import 'package:sembast/sembast.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller_impl.dart';
@@ -14,10 +15,12 @@ import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
+import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffFacade {
-  final GoogleCloudController _googleController = GoogleCloudControllerImpl();
+  @visibleForTesting
+  late GoogleCloudController googleController;
 
   /// Initializes all the singletons neeeded for the app to run and checks prerequisites.
   ///
@@ -41,6 +44,10 @@ class TakeOffFacade {
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
       GetIt.I.registerSingleton<Database>(await DbFactory().create());
+      // TODO: uncomment this when the image in Dockerhub is usable
+      //await dockerController.pullHangarImage();
+
+      googleController = GoogleCloudControllerImpl();
     }
 
     return true;
@@ -53,7 +60,7 @@ class TakeOffFacade {
   Future<String> getCurrentAccount(CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.getAccount();
+        return await googleController.getAccount();
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return "";
@@ -63,7 +70,7 @@ class TakeOffFacade {
   Future<bool> runProject(String project, CloudProviderId cloudProvider) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return _googleController.run(project);
+        return googleController.run(project);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         Log.warning("Currently not supported");
@@ -80,7 +87,7 @@ class TakeOffFacade {
       {Stream<List<int>>? stdinStream, bool useStdin = false}) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.init(email,
+        return await googleController.init(email,
             useStdin: useStdin, stdinStream: stdinStream);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
@@ -92,7 +99,7 @@ class TakeOffFacade {
       {Stream<List<int>>? stdinStream}) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.logOut();
+        return await googleController.logOut();
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
@@ -108,10 +115,10 @@ class TakeOffFacade {
     Language? frontendLanguage,
     String? frontendVersion,
     required String googleCloudRegion,
-    StreamController<GuiMessage>? infoStream,
+    StreamController<GuiMessage>? outputStream,
     StreamController<String>? inputStream,
   }) async {
-    return await _googleController.createProject(
+    return await googleController.createProject(
       projectName: projectName,
       billingAccount: billingAccount,
       backendLanguage: backendLanguage,
@@ -119,8 +126,8 @@ class TakeOffFacade {
       frontendLanguage: frontendLanguage,
       frontendVersion: frontendVersion,
       googleCloudRegion: googleCloudRegion,
-      infoStream: infoStream,
       inputStream: inputStream,
+      outputStream: outputStream,
     );
   }
 
@@ -128,18 +135,20 @@ class TakeOffFacade {
   Future<bool> quickstartWayat(
       {required String billingAccount,
       required String googleCloudRegion,
-      StreamController<GuiMessage>? infoStream}) async {
-    return await _googleController.wayatQuickstart(
+      StreamController<GuiMessage>? outputStream,
+      StreamController<String>? inputStream}) async {
+    return await googleController.wayatQuickstart(
         billingAccount: billingAccount,
         googleCloudRegion: googleCloudRegion,
-        infoStream: infoStream);
+        outputStream: outputStream,
+        inputStream: inputStream);
   }
 
   Future<bool> cleanProject(
       CloudProviderId cloudProvider, String projectId) async {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return await _googleController.cleanProject(projectId);
+        return await googleController.cleanProject(projectId);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return false;
@@ -154,6 +163,17 @@ class TakeOffFacade {
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return [];
+    }
+  }
+
+  Uri getResource(String project, CloudProviderId cloudProvider,
+      ResourceType resourceType) {
+    switch (cloudProvider) {
+      case CloudProviderId.gcloud:
+        return googleController.getGCloudResourceUrl(project, resourceType);
+      case CloudProviderId.aws:
+      case CloudProviderId.azure:
+        return Uri.parse("");
     }
   }
 }

@@ -8,9 +8,12 @@ import 'package:takeoff_gui/common/loading_page.dart';
 import 'package:takeoff_gui/features/create/controllers/project_form_controllers/project_form_controllers.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:takeoff_gui/l10n/locale_constants.dart';
 import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:desktop_window/desktop_window.dart';
+
 
 void main() async {
   await registerSingletons();
@@ -25,20 +28,24 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
         future: GetIt.I.get<TakeOffFacade>().initialize(),
         builder: (context, snapshot) {
+          final localization = lookupAppLocalizations(LocaleConstants.getLocale());
           if (snapshot.hasError) {
-            return const ErrorLoadingPage(
-                message:
-                    "Some unexpected error happened, check docker daemon or try reinstalling the app.");
+            return ErrorLoadingPage(
+                message: localization.errorDockerDaemon);
           } else if (snapshot.hasData) {
             if (!snapshot.data!) {
-              return const ErrorLoadingPage(
+              return ErrorLoadingPage(
                 message:
-                    'Docker daemon is not detected or the hangar docker image is not accessible. \n Launch the app again before check if daemon is running.',
+                    localization.errorContainerNotDetected,
               );
             }
             return MaterialApp.router(
+              onGenerateTitle: (context) =>
+      AppLocalizations.of(context)!.appTitle,
               scrollBehavior: MyCustomScrollBehavior(),
               debugShowCheckedModeBanner: false,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
               routerConfig: AppRouter().router,
             );
           } else {

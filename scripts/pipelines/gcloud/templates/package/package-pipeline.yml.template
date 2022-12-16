@@ -1,5 +1,5 @@
 steps:
-- id: "Get secret"
+- id: "Get secrets"
   name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   args:
@@ -7,7 +7,8 @@ steps:
     - |
         set -e
         [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
-        
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
+
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
 
@@ -36,6 +37,7 @@ steps:
       then
         source ./.pipelines/scripts/package-setup-environment.sh ${_REGISTRY}
       fi
+      [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
       echo -e "\n\n"
       echo "LOADING CREDENTIALS AND GETTING REGISTRY"
       echo $$REGISTRY_CREDENTIALS > credentials.env
@@ -48,6 +50,7 @@ steps:
 
   env:
   - 'PROJECT_ID=$PROJECT_ID'
+  - 'SHORT_SHA=$SHORT_SHA'
   secretEnv:
   - 'REGISTRY_CREDENTIALS'
 

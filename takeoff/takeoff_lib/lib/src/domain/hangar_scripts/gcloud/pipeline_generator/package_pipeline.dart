@@ -1,5 +1,7 @@
-import 'package:takeoff_lib/src/domain/hangar_scripts/common/language/language.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/common/machine_type.dart';
+import 'package:takeoff_lib/src/domain/language.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/pipeline_generator/pipeline_generator.dart';
+import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_web_renderer.dart';
 
 /// Script to create a Package Pipeline in Google Cloud
 class PackagePipelineGCloud extends PipelineGenerator {
@@ -12,14 +14,13 @@ class PackagePipelineGCloud extends PipelineGenerator {
   /// Name (excluding tag) for the generated container image.
   String imageName;
 
-  ///// Container registry login user.
-  //String registryUser;
-
-  ///// Container registry login password.
-  //String registryPassword;
-
   /// Open the Pull Request on the web browser if it cannot be automatically merged. Requires [targetBranch].
   bool openPRinBrowser;
+
+  bool? androidFlutterPlatform;
+  bool? webFlutterPlatform;
+
+  FlutterWebRenderer? flutterWebRenderer;
 
   /// [Required, if language not set] Path from the root of the project to its Dockerfile.
   /// Takes precedence over the language/framework default one.
@@ -29,6 +30,8 @@ class PackagePipelineGCloud extends PipelineGenerator {
 
   String? registryLocation;
 
+  MachineType? machineType;
+
   PackagePipelineGCloud(
       {required super.configFile,
       required super.pipelineName,
@@ -37,13 +40,15 @@ class PackagePipelineGCloud extends PipelineGenerator {
       required this.buildPipelineName,
       required this.qualityPipelineName,
       required this.imageName,
-      //required this.registryUser,
-      //required this.registryPassword,
       super.languageVersion,
       this.openPRinBrowser = false,
       super.targetBranch,
       this.registryLocation,
-      this.dockerfile});
+      this.dockerfile,
+      this.androidFlutterPlatform,
+      this.webFlutterPlatform,
+      this.flutterWebRenderer,
+      this.machineType});
 
   @override
   List<String> toCommand() {
@@ -72,6 +77,18 @@ class PackagePipelineGCloud extends PipelineGenerator {
     }
     if (registryLocation != null) {
       args.addAll(["--registry-location", registryLocation!]);
+    }
+    if (androidFlutterPlatform != null) {
+      args.add("--flutter-android-platform");
+    }
+    if (machineType != null) {
+      args.addAll(["-m", machineType!.name]);
+    }
+    if (webFlutterPlatform != null) {
+      args.add("--flutter-web-platform");
+    }
+    if (flutterWebRenderer != null) {
+      args.addAll(["--flutter-web-renderer", flutterWebRenderer!.name]);
     }
 
     return args;
