@@ -28,15 +28,15 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
         future: GetIt.I.get<TakeOffFacade>().initialize(),
         builder: (context, snapshot) {
-          final localedef = lookupAppLocalizations(LocaleConstants.getLocale());
+          final localization = lookupAppLocalizations(LocaleConstants.getLocale());
           if (snapshot.hasError) {
             return ErrorLoadingPage(
-                message: localedef.errorDockerDaemon);
+                message: localization.errorDockerDaemon);
           } else if (snapshot.hasData) {
             if (!snapshot.data!) {
               return ErrorLoadingPage(
                 message:
-                    localedef.errorContainerNotDetected,
+                    localization.errorContainerNotDetected,
               );
             }
             return MaterialApp.router(
