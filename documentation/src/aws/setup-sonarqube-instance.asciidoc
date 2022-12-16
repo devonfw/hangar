@@ -1,0 +1,29 @@
+:provider_name: AWS
+:container_instance_type: an AWS EC2 instance
+:provider_path: aws
+:terraform_vars: --region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
+:terraform_tutorials: https://developer.hashicorp.com/terraform/tutorials/aws
+:terraform_vars_example_short: --region eu-west-1 --keypair_name sonarqube
+:terraform_vars_example_full: --region eu-west-1 --vpc_cidr_block 10.0.0.0/16 --subnet_cidr_block 10.0.1.0/24 --nic_private_ip 10.0.1.50 --instance_type t3a.small --keypair_name sonarqube
+:terraform_vars: --region               Region where the resources will be created. Default: eu-west-1 + \
+--vpc_cidr_block       Virtual private network IP range (CIDR). Default: 10.0.0.0/16 + \
+--subnet_cidr_block    Range of internal addresses that are owned by this subnetwork. Ranges must be unique and non-overlapping within a network. Default: 10.0.1.0/24 + \
+--nic_private_ip       Instance private IP within subnet range.  Default: 10.0.1.50 + \
+--instance_type        Machine Instance type. Default: t3a.small + \
+--keypair_name         Keypair name to connect with SSH as defined in AWS. Default: sonarqube
+
+include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partBeforePrerequisites]
+=== Prerequisites
+* https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli[Install Terraform].
+
+* https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI].
+
+* Have a SSH keypair for the SonarQube instance. You can use an existing one or create a new one with the following command:
+
+```
+aws ec2 create-key-pair --key-name sonarqube --query 'KeyMaterial' --output text > sonarqube.pem
+```
+
+IMPORTANT: This will create a public key, directly stored in AWS (current region only), and a private key stored in the `sonarqube.pem` file, that will be necessary if you ever need to access the instance, so be sure you store it securely.
+
+include::../common_templates/setup-sonarqube-instance.asciidoc[tag=partAfterPrerequisites]
