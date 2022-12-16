@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
         future: GetIt.I.get<TakeOffFacade>().initialize(),
         builder: (context, snapshot) {
-          final localedef = lookupAppLocalizations(LocaleConstants.locale(LocaleConstants.getLocale()));
+          final localedef = lookupAppLocalizations(LocaleConstants.getLocale());
           if (snapshot.hasError) {
             return ErrorLoadingPage(
                 message: localedef.errorDockerDaemon);
@@ -46,15 +46,6 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              localeResolutionCallback:
-                  (Locale? locale, Iterable<Locale> supportedLocales) {
-                for (Locale supportedLocale in supportedLocales) {
-                  if (supportedLocale.languageCode == locale?.languageCode) {
-                    return supportedLocale;
-                  }
-                }
-                return const Locale("en", "US");
-              },
               routerConfig: AppRouter().router,
             );
           } else {

@@ -6,10 +6,11 @@ class LocaleConstants {
   static String defaultLanguage = Platform.localeName.substring(0, 2);
 
   /// Return saved locale
-  static String getLocale() {
-    return defaultLanguage;
+  static Locale getLocale() {
+    return locale(defaultLanguage);
   }
 
+  @visibleForTesting
   static Locale locale(String languageCode) {
     switch (languageCode) {
       case 'en':

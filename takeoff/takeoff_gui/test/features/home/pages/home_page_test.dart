@@ -19,7 +19,6 @@ void main() async {
   // Avoid overflow due to test conditions
   setUpAll(() async {
     GetIt.I.registerSingleton<ProjectsController>(controller);
-    GetIt.I.registerSingleton(AppLocalizations);
   });
 
   Widget createApp(Widget body) {
