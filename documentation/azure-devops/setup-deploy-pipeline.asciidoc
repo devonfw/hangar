@@ -65,7 +65,7 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
 
 === Appendix: accessing the application
 
-Once the {pipeline_type} is executed and your application is deployed, you can list the hostname to access it with:
+Once the {pipeline_type} is executed and your application is deployed, you can list the hostname to access it with: (from your local machine)
 
 ```
 kubectl get ingress -n <namespace>
