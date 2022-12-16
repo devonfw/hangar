@@ -37,7 +37,9 @@ pipeline_generator.sh \
   [--k8s-image-pull-secret-name <secret name>] \
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
-ifdef::machineType[  [-m <machine type for {pipeline_type} runner>]]
+ifeval::["{provider}" == "Google Cloud"]
+machineType[  [-m <machine type for {pipeline_type} runner>]]
+endif::[]
 ```
 NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines/{path_provider}/templates/deploy/deploy-pipeline.cfg`.
 
@@ -55,7 +57,9 @@ NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines
     --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images.
 -b  --target-branch                            Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                             Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
-ifdef::machineType[-m, --machine-type                             Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
+ifeval::["{provider}" == "Google Cloud"]
+machineType[-m, --machine-type                             Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
+endif::[]
 ```
 
 === Examples

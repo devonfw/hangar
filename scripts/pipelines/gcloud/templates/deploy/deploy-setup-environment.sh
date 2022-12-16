@@ -13,7 +13,7 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 # We get the name of the registry from the full image name
-firstPartImage=$(echo $_IMAGE_NAME | cut -d'/' -f1)
+firstPartImage=$(echo "$_IMAGE_NAME" | cut -d'/' -f1)
 echo "$firstPartImage" | grep "\." > /dev/null && REGISTRY="$firstPartImage" || REGISTRY="docker.io"
 echo -e "\n\n"
 echo "LOADING CREDENTIALS AND GETTING REGISTRY"
