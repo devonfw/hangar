@@ -1,4 +1,13 @@
 steps:
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+        set -e
+        [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
+
 - id: "Download artifact"
   name: gcr.io/cloud-builders/gsutil
   script: |
@@ -24,9 +33,11 @@ steps:
   env:
     - PROJECT_PATH=./
     - SONAR_URL=${_SONAR_URL}
+    - TRIGGER_NAME=${TRIGGER_NAME}
   script: |
     #!/bin/bash
     set -e
+    [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
     .pipelines/scripts/quality.sh
 
 # mark to insert trigger

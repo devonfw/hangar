@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:m:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,registry-location:,flutter-web-renderer:,machine-type:,language-version:,service-name:,gcloud-region:,port:,flutter-android-platform,flutter-web-platform,rancher:,--gcloud-region:" -- "$@")
+FLAGS=$(getopt -a --options c:n:d:a:b:l:i:u:p:m:h --long "config-file:,pipeline-name:,local-directory:,artifact-path:,target-branch:,language:,build-pipeline-name:,sonar-url:,sonar-token:,image-name:,registry-user:,registry-password:,resource-group:,storage-account:,storage-container:,cluster-name:,s3-bucket:,s3-key-path:,quality-pipeline-name:,dockerfile:,test-pipeline-name:,aws-access-key:,aws-secret-access-key:,aws-region:,ci-pipeline-name:,help,registry-location:,flutter-web-renderer:,machine-type:,language-version:,service-name:,gcloud-region:,port:,flutter-android-platform,flutter-web-platform,rancher:,secret-vars:,env-vars:,--gcloud-region:" -- "$@")
 
 eval set -- "$FLAGS"
 while true; do
@@ -39,6 +39,8 @@ while true; do
         --port)                   port="$2"; shift 2;;
         -h | --help)              help="true"; shift 1;;
         -m | --machine-type)      machineType="$2"; shift 2;;
+        --secret-vars)            secretVars="$2"; shift 2;;
+        --env-vars)               envVars="$2"; shift 2;;
         --language-version)       export languageVersion="$2"; shift 2;;
         --rancher)                installRancher="true"; shift 1;;
         --) shift; break;;
@@ -57,6 +59,8 @@ pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="gcloud"
 pipeline_type="pipeline"
+configFilePath=".pipelines/config" # Path to config files.
+
 
 function obtainHangarPath {
 
@@ -187,6 +191,58 @@ function checkOrUploadFlutterImage {
     fi
 }
 
+function addSecretVars {
+
+    echo -e "${green}Adding secret vars to Secret Manager...${white}"
+    for i in $secretVars
+    do
+        secretName=$(echo "$i" | cut -d= -f1)
+        secretValue=$(echo "$i" | cut -d= -f2)
+        [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name ($secretName) is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters, number and '_' are accepted)" >&2; echo -ne "${white}" >&2; exit 2; }
+
+        # Creating the secret if it does not exist yet
+        if [[ $(gcloud secrets list --project "${gCloudProject}" 2> /dev/null | awk -v secretName="$secretName" '$1==secretName {print $1}') == "" ]]
+        then
+            echo "gcloud secrets create $secretName"
+            gcloud secrets create "$secretName" --replication-policy="automatic"
+        fi
+
+        # Adding a version to the secret previously created
+        echo "gcloud secrets versions add \"$secretName\" --data-file=-"
+        echo "${secretValue}" | gcloud secrets versions add "$secretName" --data-file=- --project "${gCloudProject}"
+        mkdir -p "${localDirectory}/${configFilePath}"
+        [[ -f "${localDirectory}/${configFilePath}/secret-vars.conf" ]] || echo "# secretName #pipelineList" >> "${localDirectory}/${configFilePath}/secret-vars.conf"
+        echo "$secretName $pipelineName" >> "${localDirectory}/${configFilePath}/secret-vars.conf"
+    done
+
+    # Adding script to get secret and commiting changes
+    mkdir -p "${localDirectory}/${scriptFilePath}"
+    cp "$hangarPath/${commonTemplatesPath}/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    # Commiting the conf file
+    echo -e "${green}Commiting and pushing into Git remote...${white}"
+    git add -f "${localDirectory}/${configFilePath}/secret-vars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
+    git commit -m "[skip ci] Adding secret vars conf file"
+    echo ""
+}
+
+function addEnvVars {
+
+    echo -e "${green}Adding environment vars for this trigger...${white}"
+    echo $envVars
+    for i in $envVars
+    do
+        variableName=$(echo "$i" | cut -d= -f1)
+        variableValue=$(echo "$i" | cut -d= -f2)
+        mkdir -p "${localDirectory}/${configFilePath}"
+        [[ -f "${localDirectory}/${configFilePath}/${pipelineName}.env" ]] || echo "# Environment variables of the trigger ${pipelineName}" >> "${localDirectory}/${configFilePath}/${pipelineName}.env"
+        echo "export $variableName=\"$variableValue\"" >> "${localDirectory}/${configFilePath}/${pipelineName}.env"
+    done
+    git add "${localDirectory}/${configFilePath}/${pipelineName}.env"
+    git commit -m "[skip ci] Adding Environment variables"
+    echo ""
+}
+
 function addRoles {
   echo -e "${green}Giving the necessary roles for this pipeline to the Cloud Build service account...${white}"
   gCloudProjectNumber="$(gcloud projects list | grep "$gCloudProject" | awk '{ print $NF }')"
@@ -243,8 +299,14 @@ type commitFiles &> /dev/null && commitFiles
 
 createTrigger
 
+[[ "$secretVars" != "" ]] && addSecretVars
+
+[[ "$envVars" != "" ]] && addEnvVars
+
 merge_branch
 
 [[ "$roles" == "" ]] || addRoles
+
+type addAdditionalRoles &> /dev/null && addAdditionalRoles
 
 echo -e "${green}\nPipeline generated succesfully${white}"
