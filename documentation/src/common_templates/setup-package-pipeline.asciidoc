@@ -36,7 +36,8 @@ ifdef::ci-pipeline[  --ci-pipeline-name <ci {pipeline_type} name> \]
 ifeval::["{provider}" == "Google Cloud"]
   [--language-version <version>] \
   [--registry-location <registry location>] \
-  [--flutter-platform <web, android>] \
+  [--flutter-web-platform] \
+  [--flutter-android-platform] \
   [--flutter-web-renderer <auto (default), canvaskit, html>] \
 endif::[]
   [-u <registry user>] \
@@ -49,6 +50,8 @@ ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]
   [-m <machine type for {pipeline_type} runner>] \
   [--flutter-web-renderer <auto (default), canvaskit, html>]
+  [--env-vars <env vars list>]
+  [--secret-vars <secret vars list>]
 endif::[]
 ```
 
@@ -70,7 +73,8 @@ ifdef::ci-pipeline[    --ci-pipeline-name         [Required] CI {pipeline_type} 
 ifeval::["{provider}" == "Google Cloud"]
 --language-version             [Required, if Flutter or Python] Language or framework version.
 --registry-location            [Required, if Flutter] Artifact registry location.
---flutter-platform             [Required, if Flutter] Target platform to compile. Accepted values: android, web.
+--flutter-web-platform         [Required, if Flutter] Compile Web platform.
+--flutter-android-platform     [Required, if Flutter] Compile Android platform.
 endif::[]
 -u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
 -p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
@@ -82,6 +86,8 @@ ifndef::no-PR-or-MR[-w                                        Open the Pull Requ
 ifeval::["{provider}" == "Google Cloud"]
 -m, --machine-type                        Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
     --flutter-web-renderer                Flutter web renderer. Accepted values: auto (default), canvaskit, html.
+    --env-vars                            List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
+    --secret-vars                         List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
 endif::[]
 ```
 
@@ -134,7 +140,7 @@ ifeval::["{provider}" == "Google Cloud"]
 ===== Generic container registry
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project -u username -p password -b develop -w 
+./pipeline_generator.sh -c ./templates/package/package-pipeline.cfg -n python-project-package -l python -d C:/Users/$USERNAME/Desktop/python-project {extra_args_python} -i username/python-project -u username -p password -b develop -w
 ```
 
 ===== AWS ECR

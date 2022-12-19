@@ -1,9 +1,19 @@
 steps:
+- id: "Get secrets"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+        set -e
+        [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
+
 - id: "Download artifact"
   name: gcr.io/cloud-builders/gsutil
   script: |
     #!/bin/bash
-    artifactPathAndName=$(gsutil ls gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${_BUILD_PIPELINE_NAME}/commit_${SHORT_SHA}/build_*.tar | head -1)
+    artifactPathAndName=$(gsutil ls gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${_BUILD_PIPELINE_NAME}/commit_${SHORT_SHA}/build_*.tar.zst | head -1)
     gsutil cp $artifactPathAndName .
   env:
     - 'PROJECT_ID=$PROJECT_ID'
@@ -11,21 +21,31 @@ steps:
     - 'SHORT_SHA=$SHORT_SHA'
 
 - id: "Unpack artifact"
-  name: ${_DOCKER_IMAGE}
+  name: alpine
   script: |
-    #!/bin/bash
-    tar -xf build_*.tar
+    #!/bin/sh
+    set -e
+    apk add --no-cache tar zstd
+    tar -xf build_*.tar.zst
 
-- id: "Execute test script"
+- id: "Run Test script"
   name: ${_DOCKER_IMAGE}
+  env:
+    - TRIGGER_NAME=$TRIGGER_NAME
   script: |
     #!/bin/bash
     set -e
     [[ -f .pipelines/scripts/test-setup-environment.sh ]] && source .pipelines/scripts/test-setup-environment.sh
+    [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
     .pipelines/scripts/test.sh
 
 - id: "Upload coverage to bucket"
   name: gcr.io/cloud-builders/gsutil
   allow_failure: true
   args: ['cp','coverage.xml','gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/coverage.xml']
+  
 # mark to insert trigger
+
+# mark to insert step for additonal artifact #
+
+# mark to insert entry in artifact for additonal artifact #

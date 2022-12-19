@@ -7,8 +7,8 @@
 :extra_args_node: --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality
 :extra_args_angular: --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality
 :extra_args_flutter: --build-pipeline-name flutter-project-build --quality-pipeline-name flutter-project-quality --language version 3.3.4 --registry-location europe
-:extra_args_flutter_web: --flutter-platform web --flutter-web-renderer auto
-:extra_args_flutter_android: --flutter-platform android
+:extra_args_flutter_web: --flutter-web-platform --flutter-web-renderer auto
+:extra_args_flutter_android: --flutter-android-platform
 :extra_args_python: --build-pipeline-name python-project-build --quality-pipeline-name python-project-quality --language-version 3.10
 :no-PR-or-MR:
 :build-pipeline:
@@ -44,7 +44,8 @@ pipeline_generator.sh \
   -i <image name> \
   [--language-version <version>] \
   [--registry-location <registry location>] \
-  [--flutter-platform <web, android>] \
+  [--flutter-web-platform] \
+  [--flutter-android-platform] \
   [--flutter-web-renderer <auto (default), canvaskit, html>] \
   [-u <registry user>] \
   [-p <registry password>] \
@@ -54,6 +55,8 @@ pipeline_generator.sh \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>] \
   [--flutter-web-renderer <auto (default), canvaskit, html>]
+  [--env-vars <env vars list>]
+  [--secret-vars <secret vars list>]
 ```
 
 NOTE: The config file for the package {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/package/package-pipeline.cfg`.
@@ -72,7 +75,8 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 -i, --image-name               [Required] Name (excluding tag) for the generated container image.
 --language-version             [Required, if Flutter or Python] Language or framework version.
 --registry-location            [Required, if Flutter] Artifact registry location.
---flutter-platform             [Required, if Flutter] Target platform to compile. Accepted values: android, web.
+--flutter-web-platform         [Required, if Flutter] Compile Web platform.
+--flutter-android-platform     [Required, if Flutter] Compile Android platform.
 -u, --registry-user            [Required, unless AWS or GCP] Container registry login user.
 -p, --registry-password        [Required, unless AWS or GCP] Container registry login password.
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
@@ -81,6 +85,8 @@ NOTE: The config file for the package {pipeline_type} is located at `/scripts/pi
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                        Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
     --flutter-web-renderer                Flutter web renderer. Accepted values: auto (default), canvaskit, html.
+    --env-vars                            List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
+    --secret-vars                         List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
 ```
 
 === Examples

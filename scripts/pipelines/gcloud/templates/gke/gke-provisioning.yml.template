@@ -1,9 +1,11 @@
 steps:
-- name: gcr.io/cloud-builders/gsutil
+- id: "Run Terraform"
+  name: gcr.io/cloud-builders/gsutil
   entrypoint: bash
   args:
   - -c
   - |
+    set -e
     #Install terraform
     apt-get update
     apt-get install -y gnupg software-properties-common wget dnsutils
@@ -36,6 +38,8 @@ steps:
       echo "export DNS_NAME=${clusterhostname}" >> cluster_info.env
       echo "export CLUSTER_REGION=$(terraform output -raw region)" >> cluster_info.env
       gsutil cp cluster_info.env gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/cluster_info.env
-    else
+    elif [ "${_OPERATION}" == "destroy" ]; then
       terraform apply -destroy -auto-approve
+    else
+      exit 1
     fi

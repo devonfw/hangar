@@ -130,7 +130,7 @@ then
         fi
         echo -e "${white}Creating service-account keys for service account $service_account..."
         key_path="${key_path:-./key.json}"
-        if ! gcloud iam service-accounts keys create "${key_path}" --iam-account="$service_account" &> /dev/null;
+        if ! gcloud iam service-accounts keys create "${key_path}" --iam-account="$service_account_email" &> /dev/null;
         then
             echo -e "${white}Error: Service account key could not be created." >&2
             echo -ne "${white}"
