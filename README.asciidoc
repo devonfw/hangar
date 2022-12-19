@@ -28,7 +28,63 @@ Hangar consists on a series of Scripts & Templates that can be used in different
 
 ## Features
 
-TODO
+### Accounts & Projects Management
+
+image::documentation/diagrams/Hangar-Accounts-Projects.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Create a GCloud Project
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-project.asciidoc[Docs]
+
+|GCloud
+|Create a Principal Account
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc[Docs]
+
+|GCloud
+|Verify Account Roles
+|TODO
+
+|GCloud
+|Setup Firebase & Maps
+|https://github.com/devonfw/hangar/blob/master/documentation/firebase/setup-firebase.asciidoc[Docs]
+
+|Azure DevOps
+|Create a DevOps Project
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/azure-devops/setup-project.asciidoc[Docs]
+
+|AWS
+|Create an AWS Project User
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Docs]
+
+|AWS
+|Verify User Roles
+|TODO
+
+|===
+
+### Kubernetes Clusters Provisioning
+
+image::documentation/diagrams/Hangar-Kubernetes.png[]
+
+### Repository Management
+
+image::documentation/diagrams/Hangar-Repository.png[]
+
+### SonarQube Provisioning
+
+image::documentation/diagrams/Hangar-SonarQube.png[]
+
+### CI/CD Pipelines Provisioning
+
+image::documentation/diagrams/Hangar-PipelinesCI_CD.png[]
+
+### Quickstarts
+
+image::documentation/diagrams/Hangar-Quickstart.png[]
 
 ## Practical Use Cases
 
