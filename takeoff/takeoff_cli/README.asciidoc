@@ -19,43 +19,53 @@ takeoff <command> <subcommand> [arguments]
 
 == Commands
 ```
-  aws         (using AWS Cloud Services)
-  azure       (using Azure Cloud Services)
-  gc          (using Google Cloud Services)
+  aws             Using AWS Cloud Services.
+  azure           Using Azure Cloud Services.
+  gc              Using Google Cloud Services.
   quickstart
 ```
 
 == Subcommands
 ```
-  init --account [account]
-  create [arguments]
-  run --project [projectId]
-  list
-  web --project [projectId] [arguments]
-  clean --id [projectId]
+  init --account [account]                  Initialize the account which will use the selected cloud provider.
+  create [arguments]                        Creates a new project in the specified cloud provider and sets up the environment.
+  run --project [projectId]                 Creates a shell with the selected project and the TakeOff service account.
+  list                                      List all the projects created from TakeOff with the selected Cloud Provider.
+  web --project [projectId] [arguments]     Open in web browser project resource.
+  clean --id [projectId]                    Removes all the local data of the provided project. 
+                                            This will not delete the project in the cloud provider.
 ```
 
 == Create arguments
 ```
   -h, --help 
-  -n, --name [projectName]             
-  -a, --billing-account [billingAccount]   
-  -b, --backend-language  [node, python, quarkus, quarkus-jvm]
-      --backend-version
-  -f, --frontend-language [angular, flutter]
-      --frontend-version
-  -r, --region [region]
+  -n, --name                    Project name / ProjectId
+  -a, --billing-account         Billing account
+  -b, --backend-language        The technology for the BackEnd. Required if no frontend-language is specified.
+                                [node, python, quarkus, quarkus-jvm]
+      --backend-version         The version for the backend-language. This will have no effect unless backend-language is specified.
+  -f, --frontend-language       The technology for the FrontEnd. Required if no backend-language is specified.
+                                [angular, flutter]
+      --frontend-version        The version for the frontend-language. This will have no effect unless frontend-language is specified.
+  -r, --region                  Cloud region in which the project will be created.
 ```
 
 == Web arguments
 ```
   -h, --help 
-  -p, --project [projectId]
-  -r, --resource [ide, pipeline, fe-repo, be-repo]
+  -p, --project           [Required] ProjectId which resource need open.
+  -r, --resource          [Required] Resource type [ide, pipeline, frontend repository, backend repository].
 ```
 
 == QuickStart commands
 ```
   viplane   Automatically creates and deploys all the necessary services and resources to have VipLane on the cloud
   wayat     Automatically creates and deploys all the necessary services and resources to have Wayat on the cloud.
+```
+
+== Example
+```
+  takeoff_cli gc init --account user@email.com
+  takeoff_cli gc create -n takeoff-test-project -a [billing-account] -b python 3.10 -f flutter 3.3.7 -r europe-west1
+  takeoff_cli gc web -p takeoff-test-project -r pipeline
 ```
