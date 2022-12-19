@@ -11,6 +11,8 @@ For using TakeOff need to be installed:
 * Docker       (just follow the docker official docs {url-get-docker}[Get Docker])
 * Hangar image (just follow the hangar docs {url-hangar-setup}[How to setup and use the image])
 
+image::documentation/diagrams/takeoff_diagram.png[]
+
 == How to use TakeOff CLI
 
 ```
