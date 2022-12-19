@@ -1,4 +1,5 @@
 #!/bin/false
+set +e
 (( i = 0 ))
 while test -z "$clusterip"
 do
@@ -19,3 +20,4 @@ do
   (( i++ ))
 done
 clusterhostname=$(nslookup "${clusterip}" | awk '/name = / {print $4}' | sed 's/.$//')
+set -e
