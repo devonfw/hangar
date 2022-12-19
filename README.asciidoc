@@ -70,6 +70,24 @@ image::documentation/diagrams/Hangar-Accounts-Projects.png[]
 
 image::documentation/diagrams/Hangar-Kubernetes.png[]
 
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Provision Kubernetes Cluster on GCloud (GKE)
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-gke-provisioning-pipeline.asciidoc[Docs]
+
+|AWS
+|Provision Kubernetes Cluster on Azure (EKS)
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Docs]
+
+|Azure
+|Provision Kubernetes Cluster on AWS (AKS)
+|TODO
+
+|===
+
 ### Repository Management
 
 image::documentation/diagrams/Hangar-Repository.png[]
