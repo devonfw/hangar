@@ -37,6 +37,7 @@ steps:
   script: |
     #!/bin/bash
     set -e
+    [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
     .pipelines/scripts/quality.sh
 
 # mark to insert trigger
