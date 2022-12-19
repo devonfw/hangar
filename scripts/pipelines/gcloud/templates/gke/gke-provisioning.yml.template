@@ -5,6 +5,7 @@ steps:
   args:
   - -c
   - |
+    set -e
     #Install terraform
     apt-get update
     apt-get install -y gnupg software-properties-common wget dnsutils

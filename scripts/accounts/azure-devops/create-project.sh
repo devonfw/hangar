@@ -34,7 +34,7 @@ red='\e[0;31m'
 if [ -z "$projectName" ] || [ -z "$description" ] || [ -z "$organization" ] || [ -z "$visibility" ] || [ -z "$pat_token" ] 
 then
    echo -e "${red}Error: Some required parameters are missing." >&2
-   echo -e ${white} >&2
+   echo -ne "${white}" >&2
    helpFunction
    exit 2
 fi
