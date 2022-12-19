@@ -26,7 +26,15 @@ steps:
     set -e
     apk add --no-cache tar zstd
     tar -xf build_*.tar.zst
-
+    
+- id: "Download coverage"
+  name: gcr.io/cloud-builders/gsutil
+  allow_failure: true
+  args:
+    - cp
+    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${testPipelineName}/commit_${SHORT_SHA}/coverage.xml'
+    - .
+    
 - id: "Run Quality script"
   name: ${_DOCKER_IMAGE}
   secretEnv: ['SONAR_TOKEN']
