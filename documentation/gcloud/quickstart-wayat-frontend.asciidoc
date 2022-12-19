@@ -1,0 +1,61 @@
+:example_required_flags: -w /workspace/demoproject -d /workspace/demoproject/backend -p projectID --keystore /keystore.jks --backend-url https://www.backend.com --frontend-url https://www.frontend.com --maps-static-secret SECRET
+:provider_path: gcloud
+= Setting up the Wayat Frontend in a new project
+
+The scope of this section is to initialize a project with the code of Wayat Frontend in Flutter configured to be used with other Gcloud and Firebase services. 
+
+This script will automatically add the code (from a template) of the Wayat Frontend, replace the necessary variables, commit the new files to your repo and upload the secret files to the Secret Manager.
+
+== Prerequisites
+
+* Have a Google Cloud project already setup and Google Cloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
+
+* Have an empty repository with GitFlow branch strategy
+
+* Have all necessary Firebase and Gcloud services active
+
+* Have a keystore file
+
+* Have a Map Static API Secret
+
+== Initializing Wayat Frontend using provided script
+
+
+
+The script located at `/scripts/quickstart/{provider_path}/quickstart-wayat-backend.sh` allows you to:
+
+. Add all the backend code (from a template) of Wayat
+. Replace the necessary variables
+. Commit the new files to your repository
+. Upload the secret files to the Secret Manager.
+
+=== Usage
+```
+quickstart-wayat-frontend.sh \
+    -w <workspace for the project> \
+    -d <directory of the backend repository> \
+    -p <project ID> \
+    --keystore <keystore file> \
+    --backend-url <backend url> \
+    --frontend-url <frontend url> \
+    --maps-static-secret <SECRET>
+```
+
+=== Flags
+[subs=attributes+]
+```
+-w, --workspace                [Required] Workspace of the project containing firebase keys.
+-d, --directory                [Required] Directory for the repository of the backend.
+-p, --project                  [Required] Project shortname (ID)
+--keystore                     [Required] Keystore file path.
+--backend-url                  [Required] Backend service url.
+--frontend-url                 [Required] Frontend service url.
+--maps-static-secret           [Required] Maps static API secret.
+```
+
+=== Example
+
+[subs=attributes+]
+```
+./scripts/quickstart/{provider_path}/quickstart-wayat-backend.sh {example_required_flags} 
+```
