@@ -19,7 +19,7 @@ image::documentation/diagrams/takeoff_diagram.png[]
 takeoff <command> <subcommand> [arguments]
 ```
 
-image::documentation/diagrams/takeoff_diagram.png[]
+image::documentation/diagrams/takeoff_cli.png[]
 
 == Commands
 ```
