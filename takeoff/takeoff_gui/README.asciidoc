@@ -1,3 +1,25 @@
-# Take Off GUI
+== devonfw Takeoff GUI
 
-This is a GUI to ease use of take off quickly create a cloud environment ready for production and development
+This is a simpler and user-friendly interface for creating and managing projects using desktop GUI interface.
+
+== Requirements
+:url-get-docker:  https://docs.docker.com/get-docker/
+:url-hangar-setup:  https://github.com/devonfw/hangar/blob/master/setup/README.asciidoc
+
+For using TakeOff need to be installed:
+
+* Docker       (just follow the docker official docs {url-get-docker}[Get Docker])
+* Hangar image (just follow the hangar docs {url-hangar-setup}[How to setup and use the image])
+
+image::documentation/assets/takeoff_diagram.jpeg[]
+
+== How to use TakeOff GUI
+
+. Open takeoff desktop application.
+image::documentation/assets/takeoff_main.jpeg[]
+
+. Create project using "Create" or "QuickStart" buttons.
+image::documentation/assets/takeoff_create.jpeg[]
+
+. Manage created projects using resource screen to open IDE, Pipeline, Frontend repository or Backend repository in Web browser.
+image::documentation/assets/takeoff_resources.jpeg[]
