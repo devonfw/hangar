@@ -8,6 +8,8 @@ Capgemini offers a simple, Open Source, solution with which the teams and client
 
 We define a “Cloud based Dev & Run environment” as a subscription at a public cloud provider (Google Cloud, AWS, Microsoft Azure) to develop, deploy, run and manage software applications on a sophisticated infrastructure that is owned and provided by the cloud provider and managed as a single entity by the client or Capgemini. 
 
+image::documentation/assets/Takeoff2.png[]
+
 The environment contains everything which is needed for the development, continuous integration and deployment, provisioning, orchestration and monitoring of the application and dependent resources. It also includes all services needed for (financial) management and administration of the subscription/environment itself. 
 
 The resulting environment has a fully working full-stack example application in source code form which is automatically compiled and build in the same environment. 
@@ -16,7 +18,13 @@ This asset can be used to accelerate and industrialize to a large extent Cloud b
 
 ## How to use Hangar?
 
-TODO
+Hangar consists on a series of Scripts & Templates that can be used in different ways:
+
+- Directly calling the scripts. You can find more information of each of the functionalities and example uses cases in their corresponding documentation.
+
+- Calling the scripts inside the All-in-one Docker image, which includes the installation of all the necessary toolkits. You can find more information on https://github.com/devonfw/hangar/blob/master/setup/README.asciidoc[how to setup and use the image].
+
+- Using the Takeoff CLI or GUI which provides a simpler and user-friendly interface for creating and managing projects. TODO
 
 ## Features
 
@@ -24,7 +32,7 @@ TODO
 
 ## Practical Use Cases
 
-### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
+### Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
 
 * https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
@@ -46,7 +54,7 @@ TODO
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy Pipeline]
 ** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
 
-### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
+### Quarkus/Node.js/Angular-based project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
 
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
 * https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Setting up a repository on GitHub]
@@ -89,7 +97,7 @@ The important thing here is that once you accept the terms and conditions for th
 
 Copyright 2022 Capgemini 
 
-The source code on this site is licensed under the Apache Public License 2.0. See [LICENSE](LICENSE) for details.
+The source code on this site is licensed under the Apache Public License 2.0. See LICENSE for details.
 
 ++++
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />The documentation (not the source code) available on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
