@@ -27,7 +27,7 @@ steps:
       ../../.pipelines/scripts/setup-helm.sh
       ../../.pipelines/scripts/install-nginx-ingress.sh
       #Get hostname
-      . .pipelines/scripts/obtain-dns.sh
+      . ../../.pipelines/scripts/obtain-dns.sh
       if [ "${_INSTALL_RANCHER}" == "true" ]; then
         ../../.pipelines/scripts/install-rancher.sh ${clusterhostname}
       fi
