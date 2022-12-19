@@ -1,3 +1,3 @@
 #!/bin/bash
-ARGS="$*"
-../../../set-config.sh "$ARGS"
+file="./terraform.tfvars"
+../../../set-config.sh --file_set_vars $file "${@}"
