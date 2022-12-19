@@ -11,6 +11,8 @@ function help {
     echo "  -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided."
     [ "$provider" != "gcloud" ] && echo "  -w                                     Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag."
     [ "$provider" == "gcloud" ] && echo "  -m, --machine-type                     Machine type for pipeline runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32."
+    [ "$provider" == "gcloud" ] && echo "      --env-vars                         List of environment variables to be made available in pipeline. Syntax: \"var1=val1 var2=val2 ...\"."
+    [ "$provider" == "gcloud" ] && echo "      --secret-vars                      List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: \"var1=val1 var2=val2 ...\"."
     echo ""
     echo "Build $pipeline_type flags:"
     echo "  -l, --language              [Required] Language or framework of the project."
@@ -43,7 +45,8 @@ function help {
     echo "  -l, --language              [Required, if dockerfile not set] Language or framework of the project."
     echo "      --language-version      [Required, if Flutter or Python] Language or framework version."
     [ "$provider" == "gcloud" ] && echo "      --registry-location     [Required, if Flutter] Artifact registry location."
-    echo "      --flutter-platform      [Required, if Flutter] Target platform to compile. Accepted values: android, web."
+    echo "      --flutter-web-platform  [Required, if Flutter] Compile Web platform."
+    echo "      --flutter-android-platform  [Required, if Flutter] Compile Android platform."
     echo "      --flutter-web-renderer             Flutter web renderer. Accepted values: auto (default), canvaskit, html."
     echo "      --dockerfile            [Required, if language not set] Path from the root of the project to its Dockerfile. Takes precedence over the language/framework default one."
     [ "$provider" == "azure-devops" ] || [ "$provider" == "gcloud" ] && echo "      --build-pipeline-name   [Required] Build $pipeline_type name."
@@ -225,7 +228,7 @@ function copyYAMLFile {
             # Then we add a step to the pipeline to create a tar of the additional artiact, we create a tar for 2 reasons:
             # - Keep the permissions of the files as they are
             # - In Gcloud, if you try to upload a folder and not a file, it fails
-            stepCreateTarArtifact="- name: \${_DOCKER_IMAGE_STEPS}\n  args: ['tar', '-cf', 'additional_output_\${BUILD_ID}.tar', '\${_ARTIFACT_PATH}']"
+            stepCreateTarArtifact="- id: \"Create additional artifact\"\n  name: \${_DOCKER_IMAGE_STEPS}\n  args: ['tar', '-cf', 'additional_output_\${BUILD_ID}.tar', '\${_ARTIFACT_PATH}']"
             sed -i "s/# mark to insert step for additonal artifact #/$stepCreateTarArtifact\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         fi
     else

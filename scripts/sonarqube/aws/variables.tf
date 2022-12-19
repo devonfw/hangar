@@ -1,4 +1,4 @@
-variable "aws_region" {
+variable "region" {
   type = string
   description = "AWS region code of the location where the resources will be created"
 }
