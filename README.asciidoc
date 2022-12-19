@@ -57,15 +57,6 @@ TODO
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
 
-<<<<<<< HEAD
-## License(s)
-
-Copyright 2022 Capgemini 
-
-The source code on this site is licensed under the Apache Public License 2.0. See [LICENSE](LICENSE) for details.
-
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />The documentation (not the source code) available on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
-=======
 ### QuickStart Wayat with Firebase on GCloud
 
 CAUTION: If this is your first time using Firebase you need to MANUALLY accept the terms and conditions of usage.
@@ -83,4 +74,12 @@ image::documentation/assets/Firebase3.png[]
 It is not necessary to use Google Analytics on this project, as you will be able to delete it later. 
 
 The important thing here is that once you accept the terms and conditions for the first time you will be able to create new Firebase Projects using Hangar scripts without issues.
->>>>>>> feature/quickstart-firebase-warning
+
+## License(s)
+
+Copyright 2022 Capgemini 
+
+The source code on this site is licensed under the Apache Public License 2.0. See [LICENSE](LICENSE) for details.
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />The documentation (not the source code) available on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
