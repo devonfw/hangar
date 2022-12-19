@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/features/create/utils/provider_ci_cd.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RepoSelector extends StatelessWidget {
   final BoxBorder border = Border.all(color: Colors.grey, width: 3);
@@ -17,7 +18,7 @@ class RepoSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Select a repo & CI/CD provider"),
+        Text(AppLocalizations.of(context)!.selectRepoCiCdProvider),
         const SizedBox(height: 15),
         Row(
           children: [

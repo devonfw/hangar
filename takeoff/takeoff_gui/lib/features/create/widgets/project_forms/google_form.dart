@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:takeoff_gui/features/create/controllers/project_form_controllers/google_form_controller.dart';
 
 class GoogleForm extends StatelessWidget {
@@ -14,7 +15,7 @@ class GoogleForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Project data"),
+        Text(AppLocalizations.of(context)!.projectData),
         const SizedBox(height: 15),
         Row(
           children: [
@@ -23,9 +24,9 @@ class GoogleForm extends StatelessWidget {
                 builder: (_) => TextField(
                   decoration: InputDecoration(
                       border: const OutlineInputBorder(),
-                      labelText: "Project name",
+                      labelText: AppLocalizations.of(context)!.projectName,
                       errorText: controller.projectName.isEmpty
-                          ? "This field is required"
+                          ? AppLocalizations.of(context)!.fieldRequired
                           : null),
                   onChanged: (value) => controller.projectName = value,
                 ),
@@ -37,9 +38,9 @@ class GoogleForm extends StatelessWidget {
                 builder: (_) => TextField(
                   decoration: InputDecoration(
                       border: const OutlineInputBorder(),
-                      labelText: "Billing Account",
+                      labelText: AppLocalizations.of(context)!.billingAccount,
                       errorText: controller.billingAccount.isEmpty
-                          ? "This field is required"
+                          ? AppLocalizations.of(context)!.fieldRequired
                           : null),
                   onChanged: (value) => controller.billingAccount = value,
                 ),
@@ -55,9 +56,9 @@ class GoogleForm extends StatelessWidget {
                 builder: (_) => TextField(
                   decoration: InputDecoration(
                       border: const OutlineInputBorder(),
-                      labelText: "Region",
+                      labelText: AppLocalizations.of(context)!.region,
                       errorText: controller.region.isEmpty
-                          ? "This field is required"
+                          ? AppLocalizations.of(context)!.fieldRequired
                           : null),
                   onChanged: (value) => controller.region = value,
                 ),

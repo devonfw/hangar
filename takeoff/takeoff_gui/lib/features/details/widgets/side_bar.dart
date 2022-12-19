@@ -8,6 +8,7 @@ import 'package:takeoff_gui/features/details/widgets/clean_dialog.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
 import 'package:takeoff_gui/features/quickstart/pages/quickstart_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SideBar extends StatelessWidget {
   final ProjectsController controller = GetIt.I.get<ProjectsController>();
@@ -30,7 +31,7 @@ class SideBar extends StatelessWidget {
                 Column(
                   children: [
                     IconTextButton(
-                      text: "Quickstart",
+                      text: AppLocalizations.of(context)!.quickstartButton,
                       icon: Icons.rocket_launch,
                       onPressed: () => showDialog(
                         context: context,
@@ -41,7 +42,7 @@ class SideBar extends StatelessWidget {
                       ),
                     ),
                     IconTextButton(
-                      text: "Create",
+                      text: AppLocalizations.of(context)!.createButton,
                       icon: Icons.add_box,
                       onPressed: () => showDialog(
                         context: context,
@@ -56,12 +57,12 @@ class SideBar extends StatelessWidget {
                 Column(
                   children: [
                     IconTextButton(
-                      text: "CLI",
+                      text: AppLocalizations.of(context)!.cliButton,
                       icon: Icons.terminal,
                       onPressed: () => controller.openCLI(),
                     ),
                     IconTextButton(
-                      text: "Clean",
+                      text: AppLocalizations.of(context)!.cleanButton,
                       icon: Icons.cleaning_services,
                       onPressed: () => showDialog(
                         context: context,
@@ -69,7 +70,7 @@ class SideBar extends StatelessWidget {
                       ),
                     ),
                     IconTextButton(
-                      text: "Home",
+                      text: AppLocalizations.of(context)!.homeButton,
                       icon: Icons.home,
                       onPressed: () => context.go("/"),
                     ),

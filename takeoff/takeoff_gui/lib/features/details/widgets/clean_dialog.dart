@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CleanDialog extends StatelessWidget {
   final ProjectsController controller = GetIt.I.get<ProjectsController>();
@@ -12,8 +13,8 @@ class CleanDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.red.shade200,
-      title: const Text(
-        "Remove project",
+      title: Text(
+        AppLocalizations.of(context)!.removeProject,
         style: TextStyle(fontSize: 30),
       ),
       content: SingleChildScrollView(
@@ -21,22 +22,22 @@ class CleanDialog extends StatelessWidget {
         padding: const EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
-              "The project will be deleted from local cache, but not remove from cloud.",
+              AppLocalizations.of(context)!.projectWillBeDeleted,
             ),
             Text(
-              "Once removed, you won't be able to add it again.",
+              AppLocalizations.of(context)!.onceRemovedProject,
             ),
             Text(
-              "Do you want to continue removing it?",
+              AppLocalizations.of(context)!.confirmationDeleteProject,
             ),
           ],
         ),
       )),
       actions: [
         CustomButton(
-          text: "Remove",
+          text: AppLocalizations.of(context)!.removeButton,
           icon: Icons.remove,
           color: Colors.red.shade600,
           onPressed: () {
@@ -45,7 +46,7 @@ class CleanDialog extends StatelessWidget {
           },
         ),
         CustomButton(
-          text: "Close",
+          text: AppLocalizations.of(context)!.closeButton,
           icon: Icons.close,
           color: Colors.grey,
           onPressed: () {
