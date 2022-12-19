@@ -11,15 +11,15 @@ For using TakeOff need to be installed:
 * Docker       (just follow the docker official docs {url-get-docker}[Get Docker])
 * Hangar image (just follow the hangar docs {url-hangar-setup}[How to setup and use the image])
 
-image::documentation/assets/takeoff_diagram.jpeg[]
+image::documentation/diagrams/takeoff_diagram.png[]
 
 == How to use TakeOff GUI
 
 . Open takeoff desktop application.
-image::documentation/assets/takeoff_main.jpeg[]
+image::documentation/assets/takeoff_main.png[]
 
 . Create project using "Create" or "QuickStart" buttons.
-image::documentation/assets/takeoff_create.jpeg[]
+image::documentation/assets/takeoff_create.png[]
 
 . Manage created projects using resource screen to open IDE, Pipeline, Frontend repository or Backend repository in Web browser.
-image::documentation/assets/takeoff_resources.jpeg[]
+image::documentation/assets/takeoff_resources.png[]
