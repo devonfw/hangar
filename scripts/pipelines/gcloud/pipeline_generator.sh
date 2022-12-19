@@ -59,7 +59,7 @@ pipelinePath=".pipelines" # Path to the pipelines.
 scriptFilePath=".pipelines/scripts" # Path to the scripts.
 export provider="gcloud"
 pipeline_type="pipeline"
-configFilePath=".pipelines/config" # Path to the scripts.
+configFilePath=".pipelines/config" # Path to config files.
 
 
 function obtainHangarPath {
@@ -193,12 +193,12 @@ function checkOrUploadFlutterImage {
 
 function addSecretVars {
 
-    echo -e "${green}Adding secret vars to secret manager...${white}"
+    echo -e "${green}Adding secret vars to Secret Manager...${white}"
     for i in $secretVars
     do
         secretName=$(echo "$i" | cut -d= -f1)
         secretValue=$(echo "$i" | cut -d= -f2)
-        [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name ($secretName) is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
+        [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name ($secretName) is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters, number and '_' are accepted)" >&2; echo -ne "${white}" >&2; exit 2; }
 
         # Creating the secret if it does not exist yet
         if [[ $(gcloud secrets list --project "${gCloudProject}" 2> /dev/null | awk -v secretName="$secretName" '$1==secretName {print $1}') == "" ]]
@@ -211,8 +211,8 @@ function addSecretVars {
         echo "gcloud secrets versions add \"$secretName\" --data-file=-"
         echo "${secretValue}" | gcloud secrets versions add "$secretName" --data-file=- --project "${gCloudProject}"
         mkdir -p "${localDirectory}/${configFilePath}"
-        [[ -f "${localDirectory}/${configFilePath}/SecretVars.conf" ]] || echo "# secretName #pipelineList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
-        echo "$secretName $pipelineName" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+        [[ -f "${localDirectory}/${configFilePath}/secret-vars.conf" ]] || echo "# secretName #pipelineList" >> "${localDirectory}/${configFilePath}/secret-vars.conf"
+        echo "$secretName $pipelineName" >> "${localDirectory}/${configFilePath}/secret-vars.conf"
     done
 
     # Adding script to get secret and commiting changes
@@ -220,7 +220,7 @@ function addSecretVars {
     cp "$hangarPath/${commonTemplatesPath}/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
     # Commiting the conf file
     echo -e "${green}Commiting and pushing into Git remote...${white}"
-    git add -f "${localDirectory}/${configFilePath}/SecretVars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    git add -f "${localDirectory}/${configFilePath}/secret-vars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
     find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
     git commit -m "[skip ci] Adding secret vars conf file"
     echo ""
