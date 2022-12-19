@@ -1,5 +1,19 @@
 # devonfw Hangar
 
+## What is Hangar?
+
+TODO
+
+## How to use Hangar?
+
+TODO
+
+## Features
+
+TODO
+
+## Practical Use Cases
+
 ### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
 
 * https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
@@ -42,3 +56,11 @@
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
+
+## License(s)
+
+Copyright 2022 Capgemini 
+
+The source code on this site is licensed under the Apache Public License 2.0. See [LICENSE](LICENSE) for details.
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />The documentation (not the source code) available on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
