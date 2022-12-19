@@ -23,8 +23,8 @@ abstract class DockerController {
   DockerController({required this.command, SystemService? systemService})
       : systemService = systemService ?? SystemService();
 
-  // TODO: Change to devonfwforge/hangar
-  static String imageName = "hangar";
+  // devonfwforge/hangar image
+  static String imageName = "devonfwforge/hangar:2022.51.1";
 
   /// Launches a Hangar container with [dockerArgs] and mounted volumes executing
   /// the orders passed in [commands].
