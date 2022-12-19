@@ -19,6 +19,8 @@ image::documentation/diagrams/takeoff_diagram.png[]
 takeoff <command> <subcommand> [arguments]
 ```
 
+image::documentation/diagrams/takeoff_diagram.png[]
+
 == Commands
 ```
   aws             Using AWS Cloud Services.
