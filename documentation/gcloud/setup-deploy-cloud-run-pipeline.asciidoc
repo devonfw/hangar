@@ -42,7 +42,7 @@ pipeline_generator.sh \
 
 NOTE: The config file for the deploy {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/deploy-cloud-run/deploy-cloud-run-pipeline.cfg`.
 
-NOTE: For this pipeline, the secret and environment variables will used inside the containers created by Cloud Run.
+NOTE: For this pipeline, the environment and secret variables will be made available on the containers created in Cloud Run.
 
 === Flags
 [subs=attributes+]
@@ -55,8 +55,8 @@ NOTE: For this pipeline, the secret and environment variables will used inside t
     --port                          Listening port of the service. Default: 8080.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
---env-vars                          Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
---secret-vars                       Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+    --env-vars                      List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
+    --secret-vars                   List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
 ```
 
 === Examples
