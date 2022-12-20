@@ -23,7 +23,6 @@ import 'package:takeoff_lib/src/controllers/cloud/gcloud/hangar/quickstart/wayat
 import 'package:takeoff_lib/src/controllers/cloud/common/hangar/repository/repository_controller.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/common/repo/branch_strategy.dart';
-import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_platform.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/pipeline_generator/flutter_web_renderer.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/quickstart/steps_output/quickstart_step.dart';
 import 'package:takeoff_lib/src/domain/hangar_scripts/quickstart/steps_output/quickstart_steps_output.dart';
@@ -42,7 +41,6 @@ import 'package:takeoff_lib/src/domain/hangar_scripts/gcloud/repo/create_repo.da
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/url_launcher/gcloud_url.dart';
-import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 /// Centralizes all the operations related with Google Cloud, such as
@@ -640,23 +638,26 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   }
 
   @override
-  Uri getGCloudResourceUrl(String project, ResourceType resourceType) {
+  Uri getGCloudResourceUrl(String project, Resource resourceType) {
     switch (resourceType) {
-      case ResourceType.ide:
+      case Resource.ide:
         String url =
             "${GCloudResourceUrl.baseConsolePath.rawValue}/cloudshelleditor?project=$project&cloudshell=true";
         return Uri.parse(url);
-      case ResourceType.pipeline:
+      case Resource.pipeline:
         String url =
             "${GCloudResourceUrl.baseConsolePath.rawValue}/cloud-build/dashboard?project=$project";
         return Uri.parse(url);
-      case ResourceType.frontend:
+      case Resource.feRepo:
         String url =
             "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/frontend/";
         return Uri.parse(url);
-      case ResourceType.backend:
+      case Resource.beRepo:
         String url =
             "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/backend/";
+        return Uri.parse(url);
+      case Resource.none:
+        String url = "";
         return Uri.parse(url);
     }
   }

@@ -15,7 +15,6 @@ import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
 import 'package:takeoff_lib/src/utils/system/system_service.dart';
-import 'package:takeoff_lib/src/utils/url_launcher/resource_type.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
 class TakeOffFacade {
@@ -44,8 +43,6 @@ class TakeOffFacade {
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
       GetIt.I.registerSingleton<Database>(await DbFactory().create());
-      // TODO: uncomment this when the image in Dockerhub is usable
-      //await dockerController.pullHangarImage();
 
       googleController = GoogleCloudControllerImpl();
     }
@@ -166,11 +163,11 @@ class TakeOffFacade {
     }
   }
 
-  Uri getResource(String project, CloudProviderId cloudProvider,
-      ResourceType resourceType) {
+  Uri getResource(
+      String project, CloudProviderId cloudProvider, Resource resource) {
     switch (cloudProvider) {
       case CloudProviderId.gcloud:
-        return googleController.getGCloudResourceUrl(project, resourceType);
+        return googleController.getGCloudResourceUrl(project, resource);
       case CloudProviderId.aws:
       case CloudProviderId.azure:
         return Uri.parse("");
