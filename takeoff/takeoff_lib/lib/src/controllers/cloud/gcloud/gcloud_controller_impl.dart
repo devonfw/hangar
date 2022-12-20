@@ -650,11 +650,11 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         return Uri.parse(url);
       case Resource.feRepo:
         String url =
-            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/frontend/";
+            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/Frontend/";
         return Uri.parse(url);
       case Resource.beRepo:
         String url =
-            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/backend/";
+            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/Backend/";
         return Uri.parse(url);
       case Resource.none:
         String url = "";
