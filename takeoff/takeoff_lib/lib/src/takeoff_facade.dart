@@ -44,7 +44,7 @@ class TakeOffFacade {
           await DockerControllerFactory().create();
       GetIt.I.registerLazySingleton<DockerController>(() => dockerController);
       GetIt.I.registerSingleton<Database>(await DbFactory().create());
-      await dockerController.pullHangarImage();
+      //await dockerController.pullHangarImage();
 
       googleController = GoogleCloudControllerImpl();
     }
