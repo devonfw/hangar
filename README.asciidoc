@@ -46,7 +46,7 @@ image::documentation/diagrams/Hangar-Accounts-Projects.png[]
 
 |GCloud
 |Verify Account Roles
-|TODO
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc#check-roles-and-permissions-of-a-principal[Docs]
 
 |GCloud
 |Setup Firebase & Maps
@@ -62,7 +62,7 @@ image::documentation/diagrams/Hangar-Accounts-Projects.png[]
 
 |AWS
 |Verify User Roles
-|TODO
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
 
 |===
 
