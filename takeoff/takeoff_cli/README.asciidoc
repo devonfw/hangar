@@ -1,7 +1,7 @@
 == How to use TakeOff CLI
 
 ```
-takeoff <command> <subcommand> [arguments]
+takeoff_cli <command> <subcommand> [arguments]
 ```
 
 image::documentation/assets/takeoff_cli.png[]
@@ -54,6 +54,12 @@ image::documentation/assets/takeoff_cli.png[]
 
 == Example
 ```
+Windows:
+  .\takeoff_cli gc init --account user@email.com
+  .\takeoff_cli gc create -n takeoff-test-project -a [billing-account] -b python 3.10 -f flutter 3.3.7 -r europe-west1
+  .\takeoff_cli gc web -p takeoff-test-project -r pipeline
+  
+Mac:
   takeoff_cli gc init --account user@email.com
   takeoff_cli gc create -n takeoff-test-project -a [billing-account] -b python 3.10 -f flutter 3.3.7 -r europe-west1
   takeoff_cli gc web -p takeoff-test-project -r pipeline
