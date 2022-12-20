@@ -1,0 +1,104 @@
+@startuml Dynamic_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+AddContainerTag("db", $sprite="database_server", $legendText="database container")
+left to right direction
+
+' LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Interacts with the GUI and CLI to create/deploy on Cloud environments", $sprite="users")
+System_Boundary(s_takeoff, "TakeOff") {
+    Container_Boundary(takeoff_gui, "TakeOff GUI") {
+        Component(gui, "GUI", $techn="Flutter", $descr="Receives the inputs from the user and calls the appropriate logic")
+    }
+    Container_Boundary(takeoff_cli, "TakeOff CLI") {
+        Component(cli, "Input Controller", $techn="Dart", $descr="Reads the console commands to determine which scripts should be executed")
+    }
+
+    Container_Boundary(c_takeoff, "Shared Business logic library"){
+        Component(façade, "Logic Façade", "Abstraction Layer", "Automation of Hangar scripts")
+        Component(project_controller, "Project Controller")
+        Component(repository_controller, "Repository Controller")
+        Component(account_controller, "Account Controller")
+        Component(pipeline_controller, "Pipeline Controller")
+        Component(cache_controller, "Cache Controller")
+    }
+
+    ContainerDb(db, "Cache Store", "User Configuration", $tags="db")
+}
+
+System_Boundary(s_hangar, "Hangar") {
+    Container_Boundary(hangar, "Hangar") {
+        Component(create_project, "create-project.sh")
+        Component(setup_sonar, "setup-sonar.sh")
+        Component(verify_roles, "verify-roles.sh")
+        Component(setup_service_account, "setup-principal-account.sh")
+        Component(create_repo, "create-repo.sh")
+        Component(pipeline_generator, "pipeline-generator.sh")
+    }
+
+
+    Container_Boundary(hangar_clis, "Cloud CLIs") {
+        Component_Ext(gcloud, "GCloud CLI")
+
+    }
+
+}
+
+System_Boundary(host, "Host OS"){
+    ContainerDb(dbcli, "CLI Configs", "Self CLI Configuration", $tags="db")
+}
+
+
+
+System_Boundary(cloud, "Cloud"){
+    System_Ext(google_cloud, "Google Cloud")
+}
+
+Rel(user, gui, "uses")
+Rel(user, cli, "uses")
+
+Rel(gui, façade, "calls")
+Rel(cli, façade, "calls")
+
+Rel(project_controller, create_project, "Interacts")
+Rel(project_controller, setup_sonar, "Interacts")
+Rel(account_controller, setup_service_account, "Interacts")
+Rel(account_controller, verify_roles, "Interacts")
+Rel(pipeline_controller, pipeline_generator, "Interacts")
+Rel(repository_controller, create_repo, "Interacts")
+Rel_Up(cache_controller, db, "Stores / Reads")
+
+Rel(façade, project_controller, "Uses")
+Rel(façade, repository_controller, "Uses")
+Rel(façade, account_controller, "Uses")
+Rel(façade, pipeline_controller, "Uses")
+Rel(façade, cache_controller, "Uses")
+
+
+Rel(create_project, gcloud, "Interacts")
+Rel(setup_sonar, gcloud, "Interacts")
+Rel(setup_service_account, gcloud, "Interacts")
+Rel(verify_roles, gcloud, "Interacts")
+Rel(pipeline_generator, gcloud, "Interacts")
+Rel(create_repo, gcloud, "Interacts")
+
+Rel(gcloud, dbcli, "Stores / Reads")
+
+Rel(gcloud, google_cloud, "Communicates with", "HTTPS")
+
+@enduml

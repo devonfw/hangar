@@ -1,0 +1,36 @@
+@startuml QuickstartFlowDiagram
+<style>
+    notDone {
+        BackgroundColor #FF7276
+    }
+</style>
+start
+#red:Firebase Login;
+:Google login;
+#orange:Create project GCloud Flag Firebase;
+:Create service account;
+:Set up account & add roles;
+:Verify roles;
+:Activate service account;
+:Create repos;
+:Set Up Sonarqube;
+' Creates a file with the backend cloud run url
+#orange: Init Cloud Run Back;
+' Creates a file with the frontend cloud run url
+#orange: Init Cloud Run Front;
+' Generates files for quickstart back & front
+' Generates message that tells you to copy a secret from a URL (manual)
+' Generates keystore file
+#FF7276: Set Up Firebase;
+#orange: Quickstart Backend;
+' Needs the frontend url
+' Needs the secret from the user in set up firebase (manual)
+' Needs the keystore file
+#red: Quickstart Frontend;
+:Set Up backend pipelines;
+#orange: Set up frontent pipelines web;
+#orange: Set up frontent pipelines android;
+#orange: trigger pipelines;
+
+end
+@enduml

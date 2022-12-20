@@ -1,0 +1,25 @@
+@startuml Context_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+
+' LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Interacts with the GUI and CLI to create/deploy on Cloud environments", $sprite="users")
+System(take_off, "TakeOff", "GUI & CLI program to Create / Manage Cloud Projects")
+Container_Ext(hangar_cont, "Hangar Container", "Docker","Contains all the hangar scripts and the tools to interact with the Cloud services")
+
+System_Ext(google, "Google Cloud", "Cloud provider")
+System_Ext(azure, "Azure", "Cloud provider")
+System_Ext(aws, "AWS", "Cloud Provider")
+
+Rel(user, take_off, "Uses", "CLI / GUI")
+Rel(take_off, hangar_cont, "Executes commands", "Docker CLI")
+Rel(hangar_cont, google, "uses", "HTTPS")
+Rel(hangar_cont, aws, "uses", "HTTPS")
+Rel(hangar_cont, azure, "uses", "HTTPS")
+@endum
