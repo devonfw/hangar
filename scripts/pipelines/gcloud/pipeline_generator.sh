@@ -120,21 +120,30 @@ function addMachineType {
 function addTriggers {
     case "$previousPipelineyaml" in
         "")
-            echo -e "Previous pipeline is not defined. Skipping adding trigger function."
+            skipping=true
             ;;
         "build-pipeline.yml")
-            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
-            sed -e "s/# mark to insert trigger/- id: \"trigger $pipelineName\"\n  name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}\&alt=json\"\n      fi\n\n&/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            branch="BRANCH_NAME"
+            substitutions="'{\"substitutions\":{\"_BRANCH_NAME\":\"'\${BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\'"
             ;;
         "package-pipeline.yml")
-            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
-            sed -e "s/# mark to insert trigger/- id: \"trigger $pipelineName\"\n  name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$_BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\",\"_IMAGE_NAME\":\"'\${_IMAGE_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}\&alt=json\"\n      fi\n\n&/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            branch="_BRANCH_NAME"
+            substitutions="'{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\",\"_IMAGE_NAME\":\"'\${_IMAGE_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\'"
             ;;
         *)
-            echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
-            sed -e "s/# mark to insert trigger/- id: \"trigger $pipelineName\"\n  name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$_BRANCH_NAME" =~ $branchTrigger ]] || exit 0; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data '{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\' \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}\&alt=json\"\n      fi\n\n&/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+            branch="_BRANCH_NAME"
+            substitutions="'{\"substitutions\":{\"_BRANCH_NAME\":\"'\${_BRANCH_NAME}'\"},\"commitSha\":\"'\${COMMIT_SHA}'\"}\'"
             ;;
     esac
+
+    if [[ "$skipping" == "true" ]]
+    then
+        echo -e "Previous pipeline is not defined. Skipping adding trigger function."
+    else
+        echo -e "${green}Previous pipeline defined. Adding trigger inside: ${localDirectory}/${pipelinePath}/${previousPipelineyaml}.${white}."
+        sed -e "s/# mark to insert trigger/- id: \"trigger $pipelineName\"\n  name: gcr.io\/cloud-builders\/gsutil\n  entrypoint: bash\n  args:\n  - -c\n  - |\n    if [[ "\$$branch" =~ $branchTrigger ]]; then\n      token=\$(gcloud auth print-access-token)\n      curl -H \"Content-Type: application\/json; charset=utf-8\" -X POST --data $substitutions \"https:\/\/cloudbuild.googleapis.com\/v1\/projects\/\${PROJECT_ID}\/triggers\/$pipelineName:run?access_token=\${token}\&alt=json\"\n    else\n      exit 0\n    fi\n\n&/g" $localDirectory/$pipelinePath/$previousPipelineyaml -i
+    fi
+
 }
 
 function merge_branch {
