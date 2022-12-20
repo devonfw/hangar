@@ -78,6 +78,13 @@ function help {
 
     echo "      --rancher                          Install Rancher to manage the cluster."
     echo ""
+    if [ "$provider" == "gcloud" ]
+    then
+        echo "GKE provisioning $pipeline_type flags:"
+        echo "      --gcloud-region         [Required] Google Cloud region for provisioning resources."
+        echo "      --rancher                          Install Rancher to manage the cluster."
+        echo ""
+    fi
     echo "Deploy to Kubernetes $pipeline_type flags:"
     echo ""
     echo "      --package-pipeline-name         [Required] Package $pipeline_type name."
