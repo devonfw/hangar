@@ -223,7 +223,7 @@ function copyYAMLFile {
         then
             # (in case of -a flag set) Here we replace a comment inside the template file by a step in Github Actions to upload an artifact
             storeExtraPathContent="\n      - name: Publish Additional Output Artifact\n        uses: actions\/upload-artifact@v3\n        with:\n          name: additional-pipeline-output\n          path: \"\${{ env.artifactPath }}\""
-            sed -i "s/# mark to insert step for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+            sed -i "s/# mark to insert step for additional artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         elif [ "$provider" == "gcloud" ]
         then
             # (in case of -a flag set) We first check if an artifact is already uploaded in this template,
@@ -231,19 +231,19 @@ function copyYAMLFile {
             # or if we need to add the artifact section because there is not artifact uploaded yet
             grep -e "^artifacts:" "${localDirectory}/${pipelinePath}/${yamlFile}" > /dev/null && storeExtraPathContent="      - additional_output_\${BUILD_ID}.tar" || storeExtraPathContent="\nartifacts:\n  objects:\n    location: gs:\/\/\${PROJECT_ID}_cloudbuild\/pipelinesArtifacts\/${pipelineName}\/commit_\${SHORT_SHA}\n    paths:\n      - additional_output_\${BUILD_ID}.tar"
             # We replace the comment used to know where to add the lines defined is the line above
-            sed -i "s/# mark to insert entry in artifact for additonal artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+            sed -i "s/# mark to insert entry in artifact for additional artifact #/$storeExtraPathContent\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
             # Then we add a step to the pipeline to create a tar of the additional artiact, we create a tar for 2 reasons:
             # - Keep the permissions of the files as they are
             # - In Gcloud, if you try to upload a folder and not a file, it fails
             stepCreateTarArtifact="- id: \"Create additional artifact\"\n  name: \${_DOCKER_IMAGE_STEPS}\n  args: ['tar', '-cf', 'additional_output_\${BUILD_ID}.tar', '\${_ARTIFACT_PATH}']"
-            sed -i "s/# mark to insert step for additonal artifact #/$stepCreateTarArtifact\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
+            sed -i "s/# mark to insert step for additional artifact #/$stepCreateTarArtifact\n/" "${localDirectory}/${pipelinePath}/${yamlFile}"
         fi
     else
         if [ "$provider" == "github" ] || [ "$provider" == "gcloud" ]
         then
             # If no -a flag set, we just remove the mark used to place the additional entries and step in the yaml
-            sed -i '/# mark to insert step for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
-            sed -i '/# mark to insert entry in artifact for additonal artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+            sed -i '/# mark to insert step for additional artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
+            sed -i '/# mark to insert entry in artifact for additional artifact #/d' "${localDirectory}/${pipelinePath}/${yamlFile}"
         fi
     fi
 }
