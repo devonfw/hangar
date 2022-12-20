@@ -1,15 +1,17 @@
 #!/bin/bash
-export tag=$(grep -m 1 version pubspec.yaml | tr -s ' ' | tr -d ':' | cut -d' ' -f2 | cut -d'+' -f1)
+export tag=$(grep -m 1 version pubspec.yaml | tr -s ' ' | tr -d ':' | cut -d' ' -f2 | cut -d'+' -f1 | tr -d '\n' | tr -d '\r')
 
 # Colours for the messages.
 red='\e[0;31m'
 
-flutter pub get
-
-if [[ ${FLUTTER_PLATFORM} == "android" ]]; then
+# This script is executed also by deploy, so we need flutter commands inside each if sentence
+if [[ -n ${ANDROID_PLATFORM} && ${ANDROID_PLATFORM} == "true" ]]; then
+    flutter pub get
     flutter build apk --release
     gcloud storage cp build/app/outputs/flutter-apk/app-release.apk gs://"${PROJECT_ID}"-apk/app-release-"${SHORT_SHA}".apk
-elif [[ ${FLUTTER_PLATFORM} == "web" ]]; then
+fi
+if [[ -n ${WEB_PLATFORM} && ${WEB_PLATFORM} == "true" ]]; then
+    flutter pub get
     if [[ ${FLUTTER_WEB_RENDERER} == "" ]]; then
         flutter build web --release --web-renderer auto --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false
         # Check if the web renderer is supported

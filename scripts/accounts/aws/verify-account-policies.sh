@@ -112,7 +112,7 @@ then
             echo -e "${red}FAILED        $policy_to_check"
             exit 1;
         fi
-        echo -e ${white}
+        echo -e "${white}"
     done
 fi
 

@@ -1,9 +1,11 @@
 steps:
-- name: gcr.io/cloud-builders/gsutil
+- id: "Run Terraform"
+  name: gcr.io/cloud-builders/gsutil
   entrypoint: bash
   args:
   - -c
   - |
+    set -e
     #Install terraform
     apt-get update
     apt-get install -y gnupg software-properties-common wget dnsutils
@@ -25,8 +27,7 @@ steps:
       ../../.pipelines/scripts/setup-helm.sh
       ../../.pipelines/scripts/install-nginx-ingress.sh
       #Get hostname
-      clusterip="$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
-      clusterhostname=$(nslookup "${clusterip}" | awk '/name = / {print $4}' | sed 's/.$//')
+      . ../../.pipelines/scripts/obtain-dns.sh
       if [ "${_INSTALL_RANCHER}" == "true" ]; then
         ../../.pipelines/scripts/install-rancher.sh ${clusterhostname}
       fi
@@ -36,6 +37,8 @@ steps:
       echo "export DNS_NAME=${clusterhostname}" >> cluster_info.env
       echo "export CLUSTER_REGION=$(terraform output -raw region)" >> cluster_info.env
       gsutil cp cluster_info.env gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/cluster_info.env
-    else
+    elif [ "${_OPERATION}" == "destroy" ]; then
       terraform apply -destroy -auto-approve
+    else
+      exit 1
     fi
