@@ -1,0 +1,14 @@
+== devonfw Takeoff CLI
+
+This is a simpler and user-friendly interface for creating and managing projects using CLI command line.
+
+== Requirements
+:url-get-docker:  https://docs.docker.com/get-docker/
+:url-get-rancher:  https://rancherdesktop.io
+
+For using TakeOff need to be installed Container Manager Docker or Rancher:
+
+* Docker    for Mac, Windows, Linux      (just follow the docker official docs {url-get-docker}[Get Docker])
+* Rancher   for Mac and Windows          (just follow the docker official docs {url-get-docker}[Get Rancher])
+
+image::takeoff_cli/documentation/diagrams/takeoff_diagram.png[]
