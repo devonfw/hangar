@@ -1,6 +1,6 @@
-== devonfw Takeoff CLI
+== devonfw Takeoff
 
-This is a simpler and user-friendly interface for creating and managing projects using CLI command line.
+This is a simpler and user-friendly interface for creating and managing projects.
 
 == Requirements
 :url-get-docker:  https://docs.docker.com/get-docker/
@@ -8,7 +8,23 @@ This is a simpler and user-friendly interface for creating and managing projects
 
 For using TakeOff need to be installed Container Manager Docker or Rancher:
 
-* Docker    for Mac, Windows, Linux      (just follow the docker official docs {url-get-docker}[Get Docker])
-* Rancher   for Mac and Windows          (just follow the docker official docs {url-get-docker}[Get Rancher])
+* Docker        (for Mac, Windows, Linux)
+* Rancher       (for Mac and Windows)
+
+== Install
+* Just follow the docker official docs {url-get-docker}[Get Docker]
+* Just follow the rancher official docs {url-get-docker}[Get Rancher]
+
+== What is TakeOff
+This is a simpler and user-friendly interface for creating, deploying and managing projects with Cloud Services.
+TakeOff support AWS, Azure and Google Cloud Services.
 
 image::takeoff_cli/documentation/diagrams/takeoff_diagram.png[]
+
+== How to use TakeOff
+
+:url-use-cli:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_cli/README.asciidoc
+:url-use-gui:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_gui/README.asciidoc
+
+* {url-use-cli}[TakeOff CLI]
+* {url-use-gui}[TakeOff GUI]
