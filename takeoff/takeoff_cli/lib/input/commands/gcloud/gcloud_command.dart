@@ -4,6 +4,7 @@ import 'package:takeoff_cli/input/commands/common/init_command.dart';
 import 'package:takeoff_cli/input/commands/common/list_command.dart';
 import 'package:takeoff_cli/input/commands/common/run_command.dart';
 import 'package:takeoff_cli/input/commands/gcloud/create_gcloud_command.dart';
+import 'package:takeoff_cli/input/commands/gcloud/open_gcloud_command.dart';
 import 'package:takeoff_cli/services/project_service.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
@@ -21,5 +22,6 @@ class GCloudCommand extends Command {
     addSubcommand(ListCommand(service, CloudProviderId.gcloud));
     addSubcommand(InitCommand(service, CloudProviderId.gcloud));
     addSubcommand(RunCommand(service, CloudProviderId.gcloud));
+    addSubcommand(OpenGCloudCommand(service, CloudProviderId.gcloud));
   }
 }

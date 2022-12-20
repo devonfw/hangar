@@ -16,3 +16,4 @@ takeoff/takeoff_cli/bin/takeoff_cli.exe
 
 # secrets folder
 **/.secrets/**
+takeoff/takeoff_lib/test/test.dart
