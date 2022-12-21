@@ -637,8 +637,15 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     stream?.add(message);
   }
 
+  bool _isQuickStartProject(String project) {
+    RegExp rule =
+        RegExp(r'wayat-takeoff-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})');
+    return rule.hasMatch(project) ? true : false;
+  }
+
   @override
   Uri getGCloudResourceUrl(String project, Resource resourceType) {
+    String url = "";
     switch (resourceType) {
       case Resource.ide:
         String url =
@@ -649,12 +656,22 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
             "${GCloudResourceUrl.baseConsolePath.rawValue}/cloud-build/dashboard?project=$project";
         return Uri.parse(url);
       case Resource.feRepo:
-        String url =
-            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/Frontend/";
+        if (_isQuickStartProject(project)) {
+          url =
+              "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/wayat-flutter/";
+        } else {
+          url =
+              "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/Frontend/";
+        }
         return Uri.parse(url);
       case Resource.beRepo:
-        String url =
-            "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/Backend/";
+        if (_isQuickStartProject(project)) {
+          url =
+              "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/wayat-python/";
+        } else {
+          url =
+              "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/Backend/";
+        }
         return Uri.parse(url);
       case Resource.none:
         String url = "";
