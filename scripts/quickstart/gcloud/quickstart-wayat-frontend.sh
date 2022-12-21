@@ -199,7 +199,7 @@ setupPackageName() {
     sed -i "s/com.takeof.project/$packageName/g" "$directory/ios/Runner.xcodeproj/project.pbxproj"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/lib/features/map/widgets/platform_map_widget/web_desktop_map_widget.dart"
 }
-
+ 
 corsCloudStorage() {
 # shellcheck disable=SC2016
     export frontendUrl

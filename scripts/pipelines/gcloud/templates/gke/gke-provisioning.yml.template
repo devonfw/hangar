@@ -27,8 +27,7 @@ steps:
       ../../.pipelines/scripts/setup-helm.sh
       ../../.pipelines/scripts/install-nginx-ingress.sh
       #Get hostname
-      clusterip="$(kubectl get svc nginx-ingress-nginx-ingress-controller --namespace nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
-      clusterhostname=$(nslookup "${clusterip}" | awk '/name = / {print $4}' | sed 's/.$//')
+      . ../../.pipelines/scripts/obtain-dns.sh
       if [ "${_INSTALL_RANCHER}" == "true" ]; then
         ../../.pipelines/scripts/install-rancher.sh ${clusterhostname}
       fi
