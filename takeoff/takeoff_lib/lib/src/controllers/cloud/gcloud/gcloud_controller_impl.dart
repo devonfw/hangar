@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
+import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/auth/gcloud_auth_controller.dart';
 import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller.dart';
@@ -637,7 +638,8 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
     stream?.add(message);
   }
 
-  bool _isQuickStartProject(String project) {
+  @visibleForTesting
+  bool isQuickStartProject(String project) {
     RegExp rule = RegExp(
         r'wayat-takeoff-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,4})');
     return rule.hasMatch(project);
@@ -656,7 +658,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
             "${GCloudResourceUrl.baseConsolePath.rawValue}/cloud-build/dashboard?project=$project";
         return Uri.parse(url);
       case Resource.feRepo:
-        if (_isQuickStartProject(project)) {
+        if (isQuickStartProject(project)) {
           url =
               "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/wayat-flutter/";
         } else {
@@ -665,7 +667,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         }
         return Uri.parse(url);
       case Resource.beRepo:
-        if (_isQuickStartProject(project)) {
+        if (isQuickStartProject(project)) {
           url =
               "${GCloudResourceUrl.baseSourcePath.rawValue}/$project/wayat-python/";
         } else {
