@@ -1,4 +1,7 @@
-== devonfw Takeoff
+= Takeoff
+
+image:https://img.shields.io/badge/os-Windows-GREEN.svg[]
+image:https://img.shields.io/badge/os-Linux-GREEN.svg[]
 
 image::_docs/rocket_logo.png[]
 
