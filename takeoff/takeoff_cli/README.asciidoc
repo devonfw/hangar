@@ -4,7 +4,7 @@
 takeoff_cli <command> <subcommand> [arguments]
 ```
 
-image::documentation/assets/takeoff_cli.png[]
+image::documentation/assets/takeoff_cli.png[800,800]
 
 == Commands
 ```
