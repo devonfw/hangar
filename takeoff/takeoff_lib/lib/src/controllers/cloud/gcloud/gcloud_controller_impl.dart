@@ -674,7 +674,6 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
         }
         return Uri.parse(url);
       case Resource.none:
-        String url = "";
         return Uri.parse(url);
     }
   }
