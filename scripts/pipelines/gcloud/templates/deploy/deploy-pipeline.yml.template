@@ -1,7 +1,7 @@
 steps:
 
-- name: ubuntu
-  id: Get Credentials
+- name: gcr.io/cloud-builders/gcloud
+  id: Get credentials
   entrypoint: bash
   secretEnv: ['registry_credentials']
   args:
@@ -19,7 +19,7 @@ steps:
     - '_ENV_PROVISIONING_PIPELINE_NAME=${_ENV_PROVISIONING_PIPELINE_NAME}'
 
 - name: gcr.io/cloud-builders/gcloud
-  id: get kubeconfig
+  id: Get Kubeconfig
   entrypoint: bash
   args:
     - -c
@@ -29,7 +29,7 @@ steps:
 
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
-  id: deploy
+  id: Deploy
   args:
     - -c
     - |

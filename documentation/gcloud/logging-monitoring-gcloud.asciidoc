@@ -1,0 +1,45 @@
+= Logging and monitoring a service on Cloud Run
+
+In this section we will explain how to use the default dashboard of Cloud Run to monitor and see the logs of our service(s) in Cloud Run, and how to import templates in Cloud Monitoring to have a more personalized dashboard if needed.
+
+== Prerequisites
+
+You need to already have an application deployed in Cloud Run, and an account with the role `roles/monitoring.editor`.
+
+== Monitoring
+
+=== Default dashboard of Cloud Run
+
+If you access this page https://console.cloud.google.com/run/detail/<region>/<service-name>/metrics?project=<project-name>: +
+(you can also access it from the main page of Cloud Run: https://console.cloud.google.com/run). +
+
+You can see different metrics set by default for Cloud Run allowing you to know the traffic reaching your app, the amount of container created, the memory used, etc...
+
+The issue with that dashboard is that you can only monitor one specific service. If you wanna be able to monitor all your services on one dashboard, you can create one in Cloud Monitoring.
+
+=== Custom dashboard in Cloud Monitoring
+
+==== Create the dashboard
+
+You can manually create your dashboard from that page: https://console.cloud.google.com/monitoring +
+
+Or You can also import the template we already created for Cloud Run. +
+To do so, execute this command `gcloud monitoring dashboards create --config-from-file Cloud-Run-dashboard.json`   (You can add `--project=<project-id>` to create on another project than the one set by default)
+
+You can now access this dashboard from the list here: https://console.cloud.google.com/monitoring/dashboards (named `Cloud Run dashboard`) +
+
+==== Some example of Group and Filters
+
+Once you accessed your dashboard, you can `Group By` or `Add Filter`, allowing you to get more specific infos. By default the values that appears on the graph are separated by service_name (as if a `Group By service_name` was done) +
+
+===== Get metrics all services combined
+
+If you want to display the values on the graph independently of the service, you can `Group By project_id`.
+
+===== Get metrics for one specific revision
+
+If you want to display the values on the graph for one specific revision, can add a filter on `revision_name`
+
+== Logging
+
+To access the log of the service you can go to this link https://console.cloud.google.com/run/detail/<region>/<service-name>/logs

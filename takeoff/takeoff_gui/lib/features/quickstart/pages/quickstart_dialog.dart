@@ -28,11 +28,11 @@ class QuickstartDialog extends StatelessWidget {
                     appTypeSelect: Apps.wayat,
                   ),
                   QuickstartCard(
-                    appImage: const AssetImage("assets/images/wayat_logo.png"),
+                    appImage: const AssetImage("assets/images/viplane_logo.png"),
                     technologiesImages: const [
-                      AssetImage("assets/images/google_logo.png"),
-                      AssetImage("assets/images/flutter_logo.png"),
-                      AssetImage("assets/images/python_logo.png")
+                      AssetImage("assets/images/azure_logo.png"),
+                      AssetImage("assets/images/angular_logo.png"),
+                      AssetImage("assets/images/java_logo.png")
                     ],
                     appTypeSelect: Apps.viplane,
                   ),

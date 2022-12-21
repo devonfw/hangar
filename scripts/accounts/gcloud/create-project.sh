@@ -29,7 +29,7 @@ helpFunction()
    echo -e "\t-d            Description for the new project. If not specified, name will be used as description"
    echo -e "\t-f            Numeric ID of the folder for which the project will be configured."
    echo -e "\t-o            Numeric ID of the organization for which the project will be configured."
-   echo -e "\t--firebase    Create the new project as a Firebase Project."
+   echo -e "\t--firebase    Creates the project as a Firebase project."
 }
 
 white='\e[1;37m'
@@ -54,7 +54,7 @@ if ! [ -x "$(command -v gcloud)" ]; then
   exit 127
 fi
 
-# Check if GCloud CLI is installed
+# Check if Firebase CLI is installed
 if [ "$firebase" == "true" ] && ! [ -x "$(command -v firebase)" ]; then
   echo -e "${red}Error: Firebase CLI is not installed." >&2
   echo -ne "${white}" >&2
@@ -137,19 +137,13 @@ if ! gcloud services enable secretmanager.googleapis.com --project "$projectName
    exit 224
 fi
 
-echo "Enabling Compute Engine..."
-if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable Compute Engine API" >&2
+echo "Enabling Kubernetes Engine..."
+if ! gcloud services enable container.googleapis.com --project "$projectName"; then
+   echo -e "${red}Error: Cannot enable Kubernetes Engine API" >&2
    echo -ne "${white}" >&2
    exit 225
 fi
 
-echo "Enabling Kubernetes Engine..."
-if ! gcloud services enable container.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable Kubernetes Engine API"
-   echo -ne "${white}"
-   exit 225
-fi
 echo "Enabling Cloud Resource Manager..."
 if ! gcloud services enable cloudresourcemanager.googleapis.com --project "$projectName"; then
    echo -e "${red}Error: Cannot enable Cloud Resource Manager API"  >&2
@@ -164,16 +158,9 @@ if ! gcloud services enable iam.googleapis.com --project "$projectName"; then
    exit 227
 fi
 
-echo "Enabling Compute API..."
+echo "Enabling Compute Engine..."
 if ! gcloud services enable compute.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable Compute API" >&2
+   echo -e "${red}Error: Cannot enable Compute Engine API" >&2
    echo -ne "${white}" >&2
    exit 228
-fi
-
-echo "Enabling Cloud billing..."
-if ! gcloud services enable cloudbilling.googleapis.com --project "$projectName"; then
-   echo -e "${red}Error: Cannot enable Cloud billing API" >&2
-   echo -ne "${white}" >&2
-   exit 229
 fi
