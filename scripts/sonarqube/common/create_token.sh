@@ -7,12 +7,12 @@ function helpFunction() {
     echo "Create a token in Sonarqube."
     echo "By default the name of the token is hangarToken and is created in the admin account using the default admin password."
     echo ""
-    echo "Common flags:"
-    echo "  -s, --sonar-url    [Required] The url of your sonarqube, including protocol and port. Example: http://mysonar.com:9000."
-    echo "  -u, --user                    The user that is going to generate the token. By default admin."
-    echo "  -p, --password                The password of the user that is going to generate the token. By default admin."
-    echo "  -t, --token-name              The name under which the secret is stored. By default hangarToken."
-    echo "  -h, --help                    Get help for commands."
+    echo "Flags:"
+    echo "  -s, --sonar-url    [Required] URL of the SonarQube instance, including protocol and port. Example: http://mysonar.com:9000."
+    echo "  -u, --user                    User that will own the token. Default: admin."
+    echo "  -p, --password                Password for authenticating user. Default: admin."
+    echo "  -t, --token-name              Name for identifying the token. Default: hangarToken."
+    echo "  -h, --help                    Displays help message."
 }
 
 # If terraform output has the token created, read the token from the output instead of creating it.

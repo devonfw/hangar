@@ -11,7 +11,5 @@
 :no-PR-or-MR:
 :build-pipeline:
 :openBrowserFlag:
-:secretVar:
-:envVar:
 include::../common_templates/setup-quality-pipeline.asciidoc[]
 

@@ -41,7 +41,7 @@ checkMandatoryArguments() {
     # Project name check
     if [ -z "$projectName" ];
     then
-        echo -e "${red}Error: Missing paramenters, -n is mandatory." >&2
+        echo -e "${red}Error: Missing parameters, -n is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
@@ -49,7 +49,7 @@ checkMandatoryArguments() {
     # Firestore region
     if [ -z "$firestoreRegion" ];
     then
-        echo -e "${red}Error: Missing paramenters, -r is mandatory." >&2
+        echo -e "${red}Error: Missing parameters, -r is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
@@ -57,7 +57,7 @@ checkMandatoryArguments() {
     # Output path check
     if [ -z "$outputPath" ];
     then
-        echo -e "${red}Error: Missing paramenters, -o is mandatory." >&2
+        echo -e "${red}Error: Missing parameters, -o is mandatory." >&2
         echo -e "${red}Use -h flag to display help." >&2
         echo -ne "${white}" >&2
         exit 2
@@ -301,8 +301,8 @@ createPlatformApps() {
 
 nextSteps() {
     echo "Next steps:"
-    echo "1- Accept consent screen: https://console.cloud.google.com/apis/credentials/consent?project=$projectName"
-    echo "2- Go to https://console.cloud.google.com/google/maps-apis/api-list?project=$projectName, choose Maps Static API, then go to Credentials and copy the current secret"
+    echo "1. Accept consent screen: https://console.cloud.google.com/apis/credentials/consent?project=$projectName"
+    echo "2. If you want to execute quickstart frontend's script, go to https://console.cloud.google.com/google/maps-apis/api-list?project=$projectName, choose Maps Static API, then go to Credentials and copy the current secret because it will be required for next steps."
 }
 
 #==============================================================

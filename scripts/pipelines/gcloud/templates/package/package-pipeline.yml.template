@@ -8,23 +8,28 @@ steps:
         set -e
         [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
         [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
+        
+- id: "Download artifact"
+  name: gcr.io/cloud-builders/gsutil
+  script: |
+    #!/bin/bash
+    artifactPathAndName=$(gsutil ls gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${_BUILD_PIPELINE_NAME}/commit_${SHORT_SHA}/build_*.tar.zst | head -1)
+    gsutil cp $artifactPathAndName .
+  env:
+    - 'PROJECT_ID=$PROJECT_ID'
+    - '_BUILD_PIPELINE_NAME=${_BUILD_PIPELINE_NAME}'
+    - 'SHORT_SHA=$SHORT_SHA'
 
-- name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${buildPipelineName}/commit_${SHORT_SHA}/build*.tar', '.']
+- id: "Unpack artifact"
+  name: alpine
+  script: |
+    #!/bin/sh
+    set -e
+    apk add --no-cache tar zstd
+    tar -xf build_*.tar.zst
 
-- name: ${_DOCKER_IMAGE}
-  entrypoint: bash
-  args:
-  - -c
-  - |
-    # In case of more than 1 tar, we extract the most recent one)
-    for i in $(ls -t build_*.tar)
-    do
-        tar -xvf $i
-        break
-    done
-
-- name: ${_DOCKER_IMAGE}
+- id: "Run Package script"
+  name: ${_DOCKER_IMAGE}
   entrypoint: bash
   args:
     - -c
@@ -56,7 +61,11 @@ steps:
 
 # mark to insert trigger
 
+# mark to insert step for additional artifact #
+
 availableSecrets:
   secretManager:
   - versionName: projects/${PROJECT_ID}/secrets/registry-credentials/versions/latest
     env: REGISTRY_CREDENTIALS
+
+# mark to insert entry in artifact for additional artifact #

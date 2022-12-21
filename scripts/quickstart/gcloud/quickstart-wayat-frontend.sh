@@ -189,7 +189,9 @@ setupPackageName() {
     packageName="com.takeoff.${projectName//-/}"
     # Remove '_' character
     packageName="${packageName//_/}"
-    
+    mkdir -p "$directory/android/app/src/main/kotlin/com/takeoff/${projectName//-/}" 
+    mv "$directory/android/app/src/main/kotlin/com/takeof/project/MainActivity.kt" "$directory/android/app/src/main/kotlin/com/takeoff/${projectName//-/}/MainActivity.kt"
+    sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/main/kotlin/com/takeoff/${projectName//-/}/MainActivity.kt"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/build.gradle"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/debug/AndroidManifest.xml"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/android/app/src/main/AndroidManifest.xml"
@@ -197,7 +199,7 @@ setupPackageName() {
     sed -i "s/com.takeof.project/$packageName/g" "$directory/ios/Runner.xcodeproj/project.pbxproj"
     sed -i "s/com.takeof.project/$packageName/g" "$directory/lib/features/map/widgets/platform_map_widget/web_desktop_map_widget.dart"
 }
-
+ 
 corsCloudStorage() {
 # shellcheck disable=SC2016
     export frontendUrl
