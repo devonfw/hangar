@@ -52,15 +52,17 @@ image::documentation/assets/takeoff_cli.png[]
   wayat     Automatically creates and deploys all the necessary services and resources to have Wayat on the cloud.
 ```
 
-== Example
+== Examples
+* Windows:
 ```
-Windows:
   .\takeoff_cli gc init --account user@email.com
   .\takeoff_cli gc create -n takeoff-test-project -a [billing-account] -b python 3.10 -f flutter 3.3.7 -r europe-west1
   .\takeoff_cli gc web -p takeoff-test-project -r pipeline
+```
   
-Mac:
-  takeoff_cli gc init --account user@email.com
-  takeoff_cli gc create -n takeoff-test-project -a [billing-account] -b python 3.10 -f flutter 3.3.7 -r europe-west1
-  takeoff_cli gc web -p takeoff-test-project -r pipeline
+* Linux:
+```
+  ./takeoff_cli gc init --account user@email.com
+  ./takeoff_cli gc create -n takeoff-test-project -a [billing-account] -b python 3.10 -f flutter 3.3.7 -r europe-west1
+  ./takeoff_cli gc web -p takeoff-test-project -r pipeline
 ```
