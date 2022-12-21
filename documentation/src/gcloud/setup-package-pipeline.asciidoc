@@ -7,13 +7,11 @@
 :extra_args_node: --build-pipeline-name node-project-build --quality-pipeline-name node-project-quality
 :extra_args_angular: --build-pipeline-name angular-project-build --quality-pipeline-name angular-project-quality
 :extra_args_flutter: --build-pipeline-name flutter-project-build --quality-pipeline-name flutter-project-quality --language version 3.3.4 --registry-location europe
-:extra_args_flutter_web: --flutter-platform web --flutter-web-renderer auto
-:extra_args_flutter_android: --flutter-platform android
+:extra_args_flutter_web: --flutter-web-platform --flutter-web-renderer auto
+:extra_args_flutter_android: --flutter-android-platform
 :extra_args_python: --build-pipeline-name python-project-build --quality-pipeline-name python-project-quality --language-version 3.10
 :no-PR-or-MR:
 :build-pipeline:
 :quality-pipeline:
 :openBrowserFlag:
-:secretVar:
-:envVar:
 include::../common_templates/setup-package-pipeline.asciidoc[]

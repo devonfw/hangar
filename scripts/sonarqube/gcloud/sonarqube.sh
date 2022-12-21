@@ -1,2 +1,2 @@
 #!/bin/bash
-../../tf.sh "${@}"
+../../terraform.sh "${@}"
