@@ -41,6 +41,8 @@ pipeline_generator.sh \
   --build-pipeline-name <build {pipeline_type} name> \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
+  [--env-vars <env vars list>]
+  [--secret-vars <secret vars list>]
 ```
 
 NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/quality/quality-pipeline.cfg`.
@@ -57,6 +59,8 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
     --build-pipeline-name    [Required] Build {pipeline_type} name.
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                      Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
+    --env-vars                          List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
+    --secret-vars                       List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
 ```
 
 === Examples

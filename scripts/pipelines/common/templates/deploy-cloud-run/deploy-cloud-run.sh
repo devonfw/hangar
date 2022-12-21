@@ -30,6 +30,10 @@ branch_short=$(echo "$branch" | awk -F '/' '{ print $NF }')
 echo "$branch" | grep release && tag_completed="${tag}"
 echo "$branch" | grep release || tag_completed="${tag}_${branch_short}"
 
+# adding extra args if needed for secret and env var
+[[ "$env_vars" == "" ]] || extra_args="--update-env-vars=\"${env_vars}\""
+[[ "$secret_vars" == "" ]] || extra_args="${extra_args} --update-secrets=\"${secret_vars}\""
+
 # If the registry is not the Google Cloud Artifact Registry, we need to push it to a temporary one
 if ! { [[ "$registry" =~ .*docker.pkg.dev.* ]] || [[ "$registry" =~ .*gcr.io.* ]] ; }
 then
@@ -48,8 +52,8 @@ then
   docker pull "$imageName:${tag_completed}"
   docker tag "$imageName:${tag_completed}" "${gCloudRegion}-docker.pkg.dev/${projectId}/temporaryrepo/temporaryimage:latest"
   docker push "${gCloudRegion}-docker.pkg.dev/${projectId}/temporaryrepo/temporaryimage:latest"
-  gcloud run deploy "$serviceName" --image="${gCloudRegion}-docker.pkg.dev/${projectId}/temporaryrepo/temporaryimage:latest" --region="$gCloudRegion" --port="$port" --allow-unauthenticated --revision-suffix="${branch_short}-$(date +%Y%m%d-%H%M)"
+  eval gcloud run deploy "$serviceName" --image="${gCloudRegion}-docker.pkg.dev/${projectId}/temporaryrepo/temporaryimage:latest" --region="$gCloudRegion" --port="$port" --allow-unauthenticated --revision-suffix="${branch_short}-$(date +%Y%m%d-%H%M)" ${extra_args}
   gcloud artifacts docker tags delete "${gCloudRegion}-docker.pkg.dev/${projectId}/temporaryrepo/temporaryimage:latest" --quiet
 else
-  gcloud run deploy "$serviceName" --image="${imageName}:${tag_completed}" --region="$gCloudRegion" --port="$port" --allow-unauthenticated --revision-suffix="${branch_short}-$(date +%Y%m%d-%H%M)"
+  eval gcloud run deploy "$serviceName" --image="${imageName}:${tag_completed}" --region="$gCloudRegion" --port="$port" --allow-unauthenticated --revision-suffix="${branch_short}-$(date +%Y%m%d-%H%M)" ${extra_args}
 fi
