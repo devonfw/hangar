@@ -10,7 +10,7 @@ steps:
   allow_failure: true
   args:
     - cp
-    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${testPipelineName}/commit_${SHORT_SHA}/coverage.xml'
+    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${testPipelineName}/commit_${SHORT_SHA}/${_COVERAGE_FILE_NAME}'
     - .
 
 - name: ${_DOCKER_IMAGE}
@@ -27,6 +27,7 @@ steps:
         tar -xf $i
         break
     done
+    [[ -f .pipelines/scripts/quality-setup-environment.sh ]] && source .pipelines/scripts/quality-setup-environment.sh
     .pipelines/scripts/quality.sh
 # mark to insert trigger
 availableSecrets:
