@@ -1,20 +1,18 @@
-:provider: Azure DevOps
-
-:pipeline_type: pipeline
-:trigger_sentence: This pipeline will be configured in order to be triggered every time package pipeline is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that package pipeline has passed
+:provider: Azure Devops
+:pipeline_type: Pipeline
+:trigger_sentence: This pipeline will be configured to be triggered after the package pipeline
 :pipeline_type2: pipeline
 :path_provider: azure-devops
 :openBrowserFlag: -w
-= Setting up a Deploy {pipeline_type} on {provider}
+= Setting up a Deploy Pipeline on {provider}
 
-In this section we will create a deploy {pipeline_type} on {provider} to deploy the project application on an already provisioned Kubernetes cluster. {trigger_sentence}. By default, it depends on the environment provisioning {pipeline_type} being successfully run on beforehand and, depending on the Kubernetes provider, it consumes the artifact produced by that. It also consumes variable groups created by package and environment provisioning {pipeline_type}.
+In this section we will create a deploy {pipeline_type} on {provider} to deploy the project application on an already provisioned Kubernetes cluster. This pipeline will be configured in order to be triggered every time package {pipeline_type} is executed successfully on a commit for `release/*` and `develop` branches, requiring manual launch for other branches but still enforcing that package {pipeline_type} has passed. By default, it depends on the environment provisioning {pipeline_type} being successfully run on beforehand and, depending on the Kubernetes provider, it consumes the artifact produced by that. It also consumes variable groups created by package and environment provisioning {pipeline_type}.
 
-The creation of the {pipeline_type2} will follow the project workflow, so a new branch named `feature/deploy-pipeline` will be created and the YAML file for the {pipeline_type} will be pushed to it.
+The creation of the pipeline will follow the project workflow, so a new branch named `feature/deploy-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
 Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
 
-The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create the new branch, create a deploy {pipeline_type} based on a YAML template appropriate for the project manifests files, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
-
+The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create the new branch, create a deploy pipeline based on a YAML template appropriate for the project manifests files, create the Pull Request, and if it is possible, merge this new branch into the specified branch.
 
 == Prerequisites
 
@@ -29,10 +27,10 @@ The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh`
 ```
 pipeline_generator.sh \
   -c <config file path> \
-  -n <{pipeline_type} name> \
+  -n <pipeline name> \
   -d <project local path> \
-  --package-pipeline-name <{pipeline_type} name> \
-  --env-provision-pipeline-name <{pipeline_type} name> \
+  --package-pipeline-name <pipeline name> \
+  --env-provision-pipeline-name <pipeline name> \
   --k8s-provider <provider name> \
   --k8s-namespace <namespace> \
   --k8s-deploy-files-path <manifests path> \
@@ -40,21 +38,20 @@ pipeline_generator.sh \
   [-b <branch>] \
   [-w]
 ```
-NOTE:  The config file for the deploy {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/deploy/deploy-pipeline.cfg`.
+NOTE:  The config file for the deploy pipeline is located at `/scripts/pipelines/{path_provider}/templates/deploy/deploy-pipeline.cfg`.
 
 === Flags
 [subs=attributes+]
 ```
--c  --config-file                   [Required] Configuration file containing {pipeline_type} definition.
--n  --pipeline-name                 [Required] Name that will be set to the {pipeline_type}.
+-c  --config-file                   [Required] Configuration file containing pipeline definition.
+-n  --pipeline-name                 [Required] Name that will be set to the pipeline.
 -d  --local-directory               [Required] Local directory of your project.
-    --package-pipeline-name         [Required] Package {pipeline_type} name.
-    --env-provision-pipeline-name   [Required] Environment provisioning {pipeline_type} name.
+    --package-pipeline-name         [Required] Package pipeline name.
+    --env-provision-pipeline-name   [Required] Environment provisioning pipeline name.
     --k8s-provider                  [Required] Kubernetes cluster provider name. Accepted values: EKS, AKS.
     --k8s-namespace                 [Required] Kubernetes namespace where the application will be deployed.
     --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory.
-    --k8s-image-pull-secret-name               Name for the generated secret containing registry credentials. Required when using a private registry to host images.
-
+    --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images.
 -b  --target-branch                            Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                             Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -68,7 +65,7 @@ NOTE:  The config file for the deploy {pipeline_type} is located at `/scripts/pi
 
 === Appendix: accessing the application
 
-Once the {pipeline_type} is executed and your application is deployed, you can list the hostname to access it by running locally:
+Once the {pipeline_type} is executed and your application is deployed, you can list the hostname to access it with:
 
 ```
 kubectl get ingress -n <namespace>

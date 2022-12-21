@@ -1,17 +1,16 @@
-= Automate security analysis of IaC assets and application
+= Automate security policy management of generated assets
 
-Securing your web application and the environment where it is deployed is fundamental to avoid sensitive data leaks. Checkov is a powerful tool that scans IaC configurations to find misconfigurations that may lead to security or compliance problems before they're deployed. In addition, Google Cloud offers the Web Security Scanner service to actively scan your web application.
+Securing your web application is fundamental to avoid sensitive data leaks. Checkov is a powerful tool that scans IaC configurations to find misconfigurations that may lead to security or compliance problems before they're deployed. In addition, Google Cloud offers the Web Security Scanner service to actively scan your web application.
 
 == Setting up a Checkov pipeline on Google Cloud
 
-In this section we will create a Checkov pipeline on Google Cloud for analyzing the security of the IaC files (Terraform files in this case). This pipeline will be triggered manually.
+In this section we will create a Checkov pipeline on Google Cloud for testing the security of the IaC files (terraform files in this case). This pipeline will be triggered manually.
 
 The creation of this pipeline will follow the project workflow, so a new branch named `feature/security-pipeline` will be created and the YAML file for the pipeline will be pushed to it.
 
 Then, the new branch will be merged into the appropriate branch (provided in `-b` flag).
 
 The script located at `/scripts/pipelines/gcloud/pipeline_generator.sh` will automatically create new branch, create a checkov security pipeline based on a YAML template, and if it is possible, merge this new branch into the specified branch.
-The script located at `/scripts/pipelines/gcloud/pipeline_generator.sh` will automatically create new branch, create a Checkov security pipeline based on a YAML template, and if it is possible, merge this new branch into the specified branch.
 
 === Prerequisites
 
@@ -44,12 +43,12 @@ NOTE:  The config file for the Checkov pipeline is located at `/scripts/pipeline
 
 [subs=attributes+]
 ```
-./pipeline_generator.sh -c ./templates/security/security-pipeline.cfg -n security-pipeline -d C:/Users/$USERNAME/Desktop/project -b develop
+./pipeline_generator.sh -c ./templates/security/security-pipeline.cfg -n security-pipeline -d C:/Users/$USERNAME/Desktop/project  -b develop
 ```
 
 == Google Cloud Web Security Scanner
 
 Google Cloud offers Web Security Scanner service to scan App Engine, Google Kubernetes Engine (GKE), and Compute Engine web applications. There are two types of scanning your web application:
 
-* Managed scans: Periodic scans at organization level. See https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview#managed_scans[Managed scans official guide]
-* Custom scans: More granular scans at project level. See https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview#custom_scans[Custom scans official guide]
+* Managed scans: Periodic scans at organization level. https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview#managed_scans[Managed scans official guide]
+* Custom scans: More granular scans at project level. https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview#custom_scans[Custom scans official guide]

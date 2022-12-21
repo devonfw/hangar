@@ -1,4 +1,4 @@
-#Service account credentials file
+#service account credentials file
 service_account_file = "key.json"
 #The ID of the project in which the resource belongs
 project = "hangar"

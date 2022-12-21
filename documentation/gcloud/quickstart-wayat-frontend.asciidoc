@@ -18,8 +18,7 @@ This script will automatically add the code (from a template) of the Wayat Front
 
 * Have a Map Static API Secret
 
-== Initializing Wayat Frontend using provided script
-
+== Initializing a Cloud Run service using provided script
 
 
 The script located at `/scripts/quickstart/{provider_path}/quickstart-wayat-backend.sh` allows you to:

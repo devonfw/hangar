@@ -37,12 +37,12 @@ pipeline_generator.sh \
   -d <project local path> \
 ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
 ifdef::test-pipeline[  --test-pipeline-name <test {pipeline_type} name> \]
+ifdef::secretVar[  [--secret-vars <secret vars list>]]
+ifdef::envVar[  [--env-vars <env vars list>]]
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]
   [-m <machine type for {pipeline_type} runner>]
-  [--env-vars <env vars list>]
-  [--secret-vars <secret vars list>]
 endif::[]
 ```
 
@@ -59,12 +59,12 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
 -d, --local-directory        [Required] Local directory of your project.
 ifdef::build-pipeline[    --build-pipeline-name    [Required] Build {pipeline_type} name.]
 ifdef::test-pipeline[    --test-pipeline-name     [Required] Test {pipeline_type} name.]
+ifdef::secretVar[    --secret-vars                       Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
+ifdef::envVar[    --env-vars                          Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")]
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
 ifeval::["{provider}" == "Google Cloud"]
 -m, --machine-type                      Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
-    --env-vars                          List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
-    --secret-vars                       List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
 endif::[]
 ```
 

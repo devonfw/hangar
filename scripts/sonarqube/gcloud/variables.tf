@@ -1,6 +1,6 @@
 variable "service_account_file" {
   type = string
-  description = "JSON file of a service account that can manage VMs"
+  description = "file with a service account that have access to manage the project"
 }
 
 variable "project" {

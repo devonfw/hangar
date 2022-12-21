@@ -7,9 +7,9 @@ steps:
     - |
         set -e
         [[ -f .pipelines/scripts/get-secrets.sh ]] || exit 0 && .pipelines/scripts/get-secrets.sh ${TRIGGER_NAME}
+        [[ -f .pipelines/scripts/get-secret-vars.sh ]] || exit 0 && .pipelines/scripts/get-secret-vars.sh ${TRIGGER_NAME}
 
-- id: "Run Deploy to Cloud Run script"
-  name: gcr.io/cloud-builders/gcloud
+- name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   secretEnv: ['registry_credentials']
   args:
@@ -19,7 +19,8 @@ steps:
       echo -e "\n\n"
       echo "SETTING UP ENVIRONMENT"
       echo ""
-      . ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_IMAGE_NAME" "${TRIGGER_NAME}"
+      . ./.pipelines/scripts/deploy-cloud-run-setup-environment.sh "$_IMAGE_NAME"
+      [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
       echo -e "\n\n"
       echo "LOADING CREDENTIALS AND GETTING REGISTRY"
       echo $$registry_credentials > credentials.env
@@ -30,11 +31,11 @@ steps:
       echo "./.pipelines/scripts/deploy-cloud-run.sh -d \"$PROJECT_ID\" -b \"$_BRANCH_NAME\" -n \"$_SERVICE_NAME\" -i \"$_IMAGE_NAME\" -g \"$_GCLOUD_REGION\" -t \"$_PORT\" -r \"$$REGISTRY\" -u \"***\" -p \"****\" -a \"****\" -s \"****\" -l \"$$AWS_REGION\""
       ./.pipelines/scripts/deploy-cloud-run.sh -d "$PROJECT_ID" -b "$_BRANCH_NAME" -n "$_SERVICE_NAME" -i "$_IMAGE_NAME" -g "$_GCLOUD_REGION" -t "$_PORT" -r "$$REGISTRY" -u "$$DOCKER_USER" -p "$$DOCKER_PASSWORD" -a "$$AWS_ACCESS_KEY" -s "$$AWS_SECRET_ACCESS_KEY" -l "$$AWS_REGION"
 
-# mark to insert step for additional artifact #
+# mark to insert step for additonal artifact #
 
 availableSecrets:
   secretManager:
   - versionName: projects/${PROJECT_ID}/secrets/registry-credentials/versions/latest
     env: 'registry_credentials'
 
-# mark to insert entry in artifact for additional artifact #
+# mark to insert entry in artifact for additonal artifact #

@@ -11,6 +11,8 @@
 :extra_args_flutter:  --build-pipeline-name flutter-project-build --language-version 3.3.4
 :no-PR-or-MR:
 :openBrowserFlag:
+:secretVar:
+:envVar:
 = Setting up a Test {pipeline_type} on {provider}
 
 In this section we will create a test {pipeline_type} on {provider} for running project test cases. {trigger_sentence}, and consumes the artifact produced by the build {pipeline_type}.
@@ -40,10 +42,10 @@ pipeline_generator.sh \
   --build-pipeline-name <build {pipeline_type} name> \
   [--language-version <version>] \
   [-a <artifact source path>] \
+  [--secret-vars <secret vars list>]
+  [--env-vars <env vars list>]
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
-  [--env-vars <env vars list>]
-  [--secret-vars <secret vars list>]
 ```
 
 NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipelines/{path_provider}/templates/test/test-pipeline.cfg`.
@@ -58,11 +60,11 @@ NOTE:  The config file for the test {pipeline_type} is located at `/scripts/pipe
 -d, --local-directory       [Required] Local directory of your project.
     --build-pipeline-name   [Required] Build {pipeline_type} name.
     --language-version      [Required, if Flutter or Python] Language or framework version.
+    --secret-vars                      Environment variable that needs to be set as secret needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
+    --env-vars                         Environment variable needed for this pipeline. (list in the format of "var1=val1 var2=val2 ...")
 -a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                     Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.
-    --env-vars                         List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
-    --secret-vars                      List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
 ```
 
 === Examples

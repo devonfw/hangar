@@ -2,12 +2,11 @@
 
 echo "Getting secret vars from Secret Manager..."
 triggerName=$1
-confFile=".pipelines/config/secret-vars.conf"
+confFile=".pipelines/config/SecretVars.conf"
 envSecretFile=".pipelines/config/${triggerName}.env"
 [[ -f "$confFile" ]] || { echo "No conf file found. Nothing to do."; exit 0; }
 grep "$triggerName" "$confFile" >> tmpConfFileSecretVar
 grep "AllPipelines" "$confFile" >> tmpConfFileSecretVar
-echo "" >> tmpConfFileSecretVar
 echo ""
 set -e
 while read -r line

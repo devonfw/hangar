@@ -2,6 +2,9 @@
 # shellcheck source=/dev/null
 mv venv /venv
 . /venv/bin/activate
+coverage run -m unittest
+coverage report
+coverage xml
 
 # Installation of sonar scanner
 apt-get update

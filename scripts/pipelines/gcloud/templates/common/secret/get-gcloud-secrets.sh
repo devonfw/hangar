@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Getting secret files from Secret Manager..."
+echo "Getting secrets from Secret Manager..."
 triggerName=$1
 confFile=".pipelines/config/pathsSecretFiles.conf"
 [[ -f "$confFile" ]] || { echo "No conf file found. Nothing to do."; exit 0; }
