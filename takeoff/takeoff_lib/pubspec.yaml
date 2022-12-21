@@ -1,0 +1,20 @@
+name: takeoff_lib
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+# homepage: https://www.example.com
+
+environment:
+  sdk: '>=2.18.2 <3.0.0'
+
+dependencies:
+  path: ^1.8.0
+  logger: ^1.1.0
+  get_it: ^7.2.0
+  sembast: ^3.3.1
+  meta: ^1.8.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.16.0
+  mockito: ^5.3.2
+  build_runner: ^2.3.2

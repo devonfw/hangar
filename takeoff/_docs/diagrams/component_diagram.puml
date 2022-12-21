@@ -1,0 +1,51 @@
+@startuml Component_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+left to right direction
+
+AddContainerTag("db", $sprite="database_server", $legendText="database container")
+
+
+Person(user, "User", "Interacts with the GUI and CLI to create/deploy on Cloud environments", $sprite="users")
+Container_Ext(hangar_cont, "Hangar Container", "Docker","Contains all the hangar scripts and the tools to interact with the Cloud services")
+
+System_Boundary(c1, "TakeOff") {
+    Container_Boundary(takeoff_gui, "TakeOff GUI") {
+          Component(gui, "GUI", $techn="Flutter", $descr="Receives the inputs from the user and calls the appropriate logic")
+          Component(shared_libary_gui, "Shared business logic library", $techn="Dart package", $descr="Shared package with logic library for both the CLI and GUI")
+
+    } 
+    Container_Boundary(takeoff_cli, "TakeOff CLI") {
+          Component(cli, "Input Controller", $techn="dart", $descr="Reads the console commands to determine which scripts should be executed")
+          Component(shared_libary_cli, "Shared business logic library", $techn="Dart package", $descr="Shared package with logic library for both the CLI and GUI")
+
+    } 
+
+    ContainerDb(cache, "Cache Store", "Stores user configuration", $tags="db")
+}
+
+Rel(cli, gui, "can launch")
+Rel(user, gui, "Uses", "GUI")
+Rel_Right(user, cli, "Uses", "CLI")
+Rel(gui, shared_libary_gui, "calls")
+Rel(cli, shared_libary_cli, "calls")
+Rel(shared_libary_cli, hangar_cont, "Executes commands", "Docker CLI")
+Rel(shared_libary_gui, hangar_cont, "Executes commands", "Docker CLI")
+Rel_Right(shared_libary_cli, cache, "stores/writes")
+Rel_Right(shared_libary_gui, cache, "stores/writes")
+@enduml

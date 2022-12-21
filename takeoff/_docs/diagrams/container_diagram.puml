@@ -1,0 +1,44 @@
+@startuml Container_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+AddContainerTag("db", $sprite="database_server", $legendText="mounted volume")
+
+
+Person(user, "User", "Interacts with the GUI and CLI to create/deploy on Cloud environments", $sprite="users")
+Container_Ext(hangar_cont, "Hangar Container", "Docker","Contains all the hangar scripts and the tools to interact with the Cloud services")
+
+System_Boundary(c1, "TakeOff") {
+    Container(flutter_gui, "TakeOff GUI", "Flutter GUI","Simplifies the interaction with TakeOff logic wrapping everything in a UI")
+    Container(dart_cli, "TakeOff CLI", "Dart CLI","Gets command-line arguments and executes the appropiate scripts against the Hangar container")
+    ContainerDb(file_cache, "Cache Store", "Stores user configuration", $tags="db")
+}
+
+System_Ext(google, "Google Cloud", "Cloud provider")
+System_Ext(azure, "Azure", "Cloud provider")
+System_Ext(aws, "AWS", "Cloud Provider")
+
+Rel(user, flutter_gui, "Uses", "GUI")
+Rel(user, dart_cli, "Uses", "CLI")
+Rel(dart_cli, hangar_cont, "Executes commands", "Docker CLI")
+Rel(flutter_gui, hangar_cont, "Executes commands", "Docker CLI")
+Rel(dart_cli, file_cache, "stores/writes")
+Rel(flutter_gui, file_cache, "stores/writes")
+
+Rel(hangar_cont, google, "uses", "HTTPS")
+Rel(hangar_cont, aws, "uses", "HTTPS")
+Rel(hangar_cont, azure, "uses", "HTTPS")
+@enduml
