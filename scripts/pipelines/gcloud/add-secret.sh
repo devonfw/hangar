@@ -42,16 +42,15 @@ fi
 
 function help_secret {
   echo ""
-  echo "Upload a file or a variable as a secret in the secret manager of Google Cloud to be used inside the chosen pipelines."
+  echo "Uploads a file or a variable as a secret in Google Cloud Secret Manager to make it available in chosen pipelines."
   echo ""
   echo "  -d, --local-directory       [Required] Local directory of your project."
-  echo "  -f, --local-file-path       [Required] Local path of the file you want to upload. (mutually exclusive with -v)"
-  echo "  -v, --value                 [Required] Value of the secret. (mutually exclusive with -f)"
-  echo "  -r, --remote-file-path      [Required if -f flag set] Path where the secret will be dowloaded inside the pipeline (with the file name)."
+  echo "  -f, --local-file-path       [Required, unless -v] Local path of the file to be uploaded. Takes precedence over -v."
+  echo "  -r, --remote-file-path      [Required, if -f] File path (in pipeline context) where the secret will be downloaded."
+  echo "  -n, --secret-name           [Required, if -v] Name for the secret in Secret Manager. If not specified (when optional), file name is used as default. The name must comply with the regex [a-zA-Z0-9_]."
+  echo "  -v, --value                 [Required, unless -f] Value of the secret."
   echo "  -b, --target-branch         [Required] Name of the branch to which the merge will target."
-  echo "  -n, --secret-name           [Required if -v flag set] Name of the secret as it will appear in the secret manager. For the file case, we use the name of the file given with '-f'. NOTE: the name has to be compliant with the regex [a-zA-Z0-9_]."
-  echo ""
-  echo "NOTE: If '-v' and '-f' are both set, '-f' is choosen."
+  echo "  -p, --pipelines                        List of pipelines where the secret will be made available. By default, all pipelines."
 
 
   exit
@@ -78,7 +77,7 @@ function checkArgs {
   done
 
   # If secret name given we check that is compliant with the regex \w
-  [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters number and '_' are accepted in the name)" >&2; echo -ne "${white}" >&2; exit 2; }
+  [[ "$secretName" =~ ^[a-zA-Z0-9_]*$ ]] || { echo -e "${red}Error: The secret name is not compliant with the regex ^[a-zA-Z0-9_]\$*. (only letters, number and '_' are accepted)" >&2; echo -ne "${white}" >&2; exit 2; }
 
   # Checking if the file given with the -f exists
   cd "$currentDirectory"
@@ -88,7 +87,7 @@ function checkArgs {
   then
       localFilePath=${localFilePath//'\'/"/"}
       localFilePath=${localFilePath//'C:'/"/c"}
-      cd "$(dirname "${localFilePath}")" && [ -f "$(basename "${localFilePath}")" ] && localFilePath="$(pwd)/$(basename "${localFilePath}")"  || { echo -e "${red}Error: The file given with the flag '-f' cannot be found." >&2; echo -ne "${white}" >&2; exit 2; }
+      cd "$(dirname "${localFilePath}")" && [ -f "$(basename "${localFilePath}")" ] && localFilePath="$(pwd)/$(basename "${localFilePath}")"  || { echo -e "${red}Error: The file specified in '-f' flag does not exist." >&2; echo -ne "${white}" >&2; exit 2; }
   fi
 }
 
@@ -106,9 +105,9 @@ function addSecretFiles {
   echo -e "${green}Uploading secret files...${white}"
   if [ "$secretName" == "" ]
   then
-    echo "No secret name given with the '-n' flag, using the file name to determine it."
+    echo "No secret name provided, using the file name as a basis."
     fileName=$(basename "$localFilePath")
-    # Here we changed all the non alphanumeric+_ charachter to _ (Because Google does not accept those character as name of secret)
+    # Here we changed all the non alphanumeric+_ character to _ (to comply with regex)
     secretName=$(echo "${fileName}" | sed 's/\W/_/g')
     echo "Secret name: '$secretName'"
   fi
@@ -150,15 +149,15 @@ function addSecretVars {
     echo "gcloud secrets versions add \"$secretName\" --data-file=-"
     echo "${secretValue}" | gcloud secrets versions add "$secretName" --data-file=- --project "${gCloudProject}"
     mkdir -p "${localDirectory}/${configFilePath}"
-    [[ -f "${localDirectory}/${configFilePath}/SecretVars.conf" ]] || echo "# secretName #pipelinesList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
-    echo "$secretName $pipelinesList" >> "${localDirectory}/${configFilePath}/SecretVars.conf"
+    [[ -f "${localDirectory}/${configFilePath}/secret-vars.conf" ]] || echo "# secretName #pipelinesList" >> "${localDirectory}/${configFilePath}/secret-vars.conf"
+    echo "$secretName $pipelinesList" >> "${localDirectory}/${configFilePath}/secret-vars.conf"
 
     # Adding script to get secret and commiting changes
     mkdir -p "${localDirectory}/${scriptFilePath}"
     cp "$hangarPath/${commonTemplatesPath}/secret/get-${provider}-secret-vars.sh" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
     # Commiting the conf file
     echo -e "${green}Commiting and pushing into Git remote...${white}"
-    git add -f "${localDirectory}/${configFilePath}/SecretVars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
+    git add -f "${localDirectory}/${configFilePath}/secret-vars.conf" "${localDirectory}/${scriptFilePath}/get-secret-vars.sh"
     find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
     git commit -m "[skip ci] Adding secret vars conf file"
     git push -u origin "$sourceBranch"

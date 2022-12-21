@@ -15,22 +15,21 @@ class CloudProjectItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: SizedBox(
-        height: 200,
-        width: 200,
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            child: Card(
-              child: Center(child: Text(project.name)),
-            ),
-            onTap: () {
-              controller.selectedProject = project;
-              context.go("/project/${project.cloud}/${project.name}");
-            },
+    return SizedBox(
+      height: 200,
+      width: 200,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Center(child: Text(project.name))),
           ),
+          onTap: () {
+            controller.selectedProject = project;
+            context.go("/project/${project.cloud}/${project.name}");
+          },
         ),
       ),
     );

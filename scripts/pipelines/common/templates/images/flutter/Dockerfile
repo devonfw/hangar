@@ -48,6 +48,9 @@ ENV FLUTTER_ROOT="/opt/flutter"
 RUN if [ "${FLUTTER_VERSION}" = "latest" ] ; then git clone https://github.com/flutter/flutter "${FLUTTER_ROOT}" ; else git clone -b "${FLUTTER_VERSION}" https://github.com/flutter/flutter "${FLUTTER_ROOT}" ; fi
 ENV PATH="${FLUTTER_ROOT}/bin:${PATH}"
 
+# Install gcloud CLI
+RUN apt-get install apt-transport-https ca-certificates gnupg -y | echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
+
 # Disable analytics and crash reporting on the builder.
 RUN flutter config --no-analytics
 

@@ -38,15 +38,19 @@ class CloudProjectsList extends StatelessWidget {
           if (authAccount.isNotEmpty && projects.isNotEmpty)
             SizedBox(
               height: 200,
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: projects.length,
-                itemBuilder: (context, index) {
-                  return CloudProjectItem(
-                    project: projects[index],
-                  );
-                },
+              child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: projects.length,
+                  itemBuilder: (context, index) {
+                    return CloudProjectItem(
+                      project: projects[index],
+                    );
+                  },
+                  scrollDirection: Axis.horizontal,
+                ),
               ),
             ),
         ],

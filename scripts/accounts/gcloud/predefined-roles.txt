@@ -12,4 +12,4 @@ roles/iam.serviceAccountUser
 roles/firebase.managementServiceAgent
 roles/iam.serviceAccountAdmin
 roles/iam.serviceAccountKeyAdmin
-roles/billing.projectManager
+roles/monitoring.editor

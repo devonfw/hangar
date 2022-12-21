@@ -19,6 +19,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
+  flutter_launcher_icons: ^0.11.0
 
 
 dev_dependencies:
@@ -35,3 +36,9 @@ flutter:
   assets:
     - assets/images/
     - assets/gifs/
+
+flutter_icons:
+  windows:
+    generate: true
+    image_path: "assets/images/rocket_logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
