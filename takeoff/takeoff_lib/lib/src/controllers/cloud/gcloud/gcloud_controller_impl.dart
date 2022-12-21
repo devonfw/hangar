@@ -638,9 +638,9 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
   }
 
   bool _isQuickStartProject(String project) {
-    RegExp rule =
-        RegExp(r'wayat-takeoff-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})');
-    return rule.hasMatch(project) ? true : false;
+    RegExp rule = RegExp(
+        r'wayat-takeoff-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1-4})');
+    return rule.hasMatch(project);
   }
 
   @override
