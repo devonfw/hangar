@@ -639,7 +639,7 @@ class GoogleCloudControllerImpl implements GoogleCloudController {
 
   bool _isQuickStartProject(String project) {
     RegExp rule = RegExp(
-        r'wayat-takeoff-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1-4})');
+        r'wayat-takeoff-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,4})');
     return rule.hasMatch(project);
   }
 
