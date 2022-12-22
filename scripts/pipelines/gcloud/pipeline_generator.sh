@@ -118,6 +118,18 @@ function addMachineType {
 }
 
 function addTriggers {
+
+    if [ -n "$packagePipelineName" ]; then
+        previousPipelineyaml="package-pipeline.yml"
+    elif [ -n "$qualityPipelineName" ]; then
+        previousPipelineyaml="quality-pipeline.yml"
+    elif [ -n "$testPipelineName" ]; then
+        previousPipelineyaml="test-pipeline.yml"
+    elif [ -n "$buildPipelineName" ]; then
+        previousPipelineyaml="build-pipeline.yml"
+    fi
+
+
     case "$previousPipelineyaml" in
         "")
             skipping=true
