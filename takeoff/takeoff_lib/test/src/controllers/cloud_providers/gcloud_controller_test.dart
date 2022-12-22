@@ -11,6 +11,7 @@ import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/utils/platform/platform_service.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
@@ -52,5 +53,92 @@ void main() {
   tearDown(() async {
     await databaseFactoryIo.deleteDatabase("gcloud_controller_test.db");
     GetIt.I.unregister<Database>();
+  });
+
+  test("RegExp match projectId", () {
+    GoogleCloudControllerImpl googleCloudController =
+        GoogleCloudControllerImpl();
+
+    String projectId_01 = "wayat-takeoff-1-1-1-2-2000";
+    String projectId_02 = "wayat-takeoff-1-12-1-12-2000";
+    String projectId_03 = "wayat-takeoff-11-12-11-22-2000";
+    String projectId_04 = "wayat-takeoff";
+    String projectId_05 = "test-wayat";
+
+    expect(googleCloudController.isQuickStartProject(projectId_01), true);
+    expect(googleCloudController.isQuickStartProject(projectId_02), true);
+    expect(googleCloudController.isQuickStartProject(projectId_03), true);
+    expect(googleCloudController.isQuickStartProject(projectId_04), false);
+    expect(googleCloudController.isQuickStartProject(projectId_05), false);
+  });
+
+  test("Get resource Url for quickstart projects", () {
+    GoogleCloudControllerImpl googleCloudController =
+        GoogleCloudControllerImpl();
+
+    String projectId = "wayat-takeoff-11-12-11-22-2000";
+
+    Uri ideUrl =
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.ide);
+    Uri expectIdeUrl = Uri.parse(
+        "https://console.cloud.google.com/cloudshelleditor?project=$projectId&cloudshell=true");
+    expect(ideUrl, expectIdeUrl);
+
+    Uri pipelineUrl = googleCloudController.getGCloudResourceUrl(
+        projectId, Resource.pipeline);
+    Uri expectPipelineUrl = Uri.parse(
+        "https://console.cloud.google.com/cloud-build/dashboard?project=$projectId");
+    expect(pipelineUrl, expectPipelineUrl);
+
+    Uri feRepoUrl = googleCloudController.getGCloudResourceUrl(
+        projectId, Resource.feRepo);
+    Uri expectFeRepoUrl = Uri.parse(
+        "https://source.cloud.google.com/$projectId/wayat-flutter/");
+    expect(feRepoUrl, expectFeRepoUrl);
+
+    Uri beRepoUrl = googleCloudController.getGCloudResourceUrl(
+        projectId, Resource.beRepo);
+    Uri expectBeRepoUrl = Uri.parse(
+        "https://source.cloud.google.com/$projectId/wayat-python/");
+    expect(beRepoUrl, expectBeRepoUrl);
+
+    Uri resourceNone =
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.none);
+    expect(resourceNone, Uri.parse(""));
+  });
+
+  test("Get resource Url for created projects", () {
+    GoogleCloudControllerImpl googleCloudController =
+        GoogleCloudControllerImpl();
+
+    String projectId = "wayat-takeoff";
+
+    Uri ideUrl =
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.ide);
+    Uri expectIdeUrl = Uri.parse(
+        "https://console.cloud.google.com/cloudshelleditor?project=$projectId&cloudshell=true");
+    expect(ideUrl, expectIdeUrl);
+
+    Uri pipelineUrl = googleCloudController.getGCloudResourceUrl(
+        projectId, Resource.pipeline);
+    Uri expectPipelineUrl = Uri.parse(
+        "https://console.cloud.google.com/cloud-build/dashboard?project=$projectId");
+    expect(pipelineUrl, expectPipelineUrl);
+
+    Uri feRepoUrl = googleCloudController.getGCloudResourceUrl(
+        projectId, Resource.feRepo);
+    Uri expectFeRepoUrl =
+        Uri.parse("https://source.cloud.google.com/$projectId/Frontend/");
+    expect(feRepoUrl, expectFeRepoUrl);
+
+    Uri beRepoUrl = googleCloudController.getGCloudResourceUrl(
+        projectId, Resource.beRepo);
+    Uri expectBeRepoUrl =
+        Uri.parse("https://source.cloud.google.com/$projectId/Backend/");
+    expect(beRepoUrl, expectBeRepoUrl);
+
+    Uri resourceNone =
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.none);
+    expect(resourceNone, Uri.parse(""));
   });
 }

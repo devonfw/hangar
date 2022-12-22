@@ -47,7 +47,7 @@ void main() {
       "/folder/github:/root/.config/gh",
       "-v",
       "/folder/ssh:/root/.ssh",
-      "hangar",
+      "devonfwforge/hangar:2022.51.1",
       "bash"
     ]);
   });

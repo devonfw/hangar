@@ -1,4 +1,4 @@
-== How to use TakeOff CLI
+= TakeOff CLI
 
 ```
 takeoff_cli <command> <subcommand> [arguments]
