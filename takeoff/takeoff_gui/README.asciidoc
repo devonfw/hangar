@@ -1,0 +1,19 @@
+= TakeOff GUI
+
+Desktop GUI application
+
+image::documentation/assets/takeoff_main.png[700,700]
+
+== Usage
+
+* Create project and repos using `Create` option
+
+image::documentation/assets/takeoff_create.png[700,700]
+
+* Manage created projects using resource screen to open IDE, Pipeline, Frontend repository or Backend repository in Web browser
+
+image::documentation/assets/takeoff_resources.png[700,700]
+
+* Build Quickstart application from scratch 
+
+image::documentation/assets/takeoff_quickstart.png[700,700]

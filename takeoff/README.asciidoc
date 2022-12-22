@@ -1,0 +1,31 @@
+= Takeoff
+
+image:https://img.shields.io/badge/os-Windows-GREEN.svg[]
+image:https://img.shields.io/badge/os-Linux-GREEN.svg[]
+
+image::_docs/rocket_logo.png[]
+
+This is a simpler and user-friendly interface for creating and managing projects in the cloud.
+
+== Requirements
+:url-get-docker:  https://docs.docker.com/get-docker/
+:url-get-rancher:  https://rancherdesktop.io
+
+For using TakeOff need to be installed Container Manager Docker or Rancher:
+
+* {url-get-docker}[Docker] (Linux)
+* {url-get-docker}[Rancher Desktop] (MacOS and Windows)
+
+== What is TakeOff?
+This is a simpler and user-friendly interface for creating, deploying and managing projects with Cloud Services.
+TakeOff support AWS, Azure and Google Cloud Services.
+
+image::takeoff_cli/documentation/diagrams/takeoff_diagram.png[600,600]
+
+== How to use TakeOff
+
+:url-use-cli:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_cli/README.asciidoc
+:url-use-gui:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_gui/README.asciidoc
+
+* {url-use-cli}[TakeOff CLI]
+* {url-use-gui}[TakeOff GUI]
