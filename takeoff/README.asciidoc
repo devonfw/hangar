@@ -26,6 +26,9 @@ image::takeoff_cli/documentation/diagrams/takeoff_diagram.png[600,600]
 
 :url-use-cli:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_cli/README.asciidoc
 :url-use-gui:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_gui/README.asciidoc
+:url-use-lib:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_lib/README.asciidoc
+
 
 * {url-use-cli}[TakeOff CLI]
 * {url-use-gui}[TakeOff GUI]
+* {url-use-lib}[TakeOff LIB]
