@@ -33,7 +33,7 @@ steps:
   allow_failure: true
   args:
     - cp
-    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${testPipelineName}/commit_${SHORT_SHA}/coverage.xml'
+    - 'gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${testPipelineName}/commit_${SHORT_SHA}/${_COVERAGE_FILE_NAME}'
     - .
     
 - id: "Run Quality script"
@@ -46,6 +46,7 @@ steps:
   script: |
     #!/bin/bash
     set -e
+    [[ -f .pipelines/scripts/quality-setup-environment.sh ]] && source .pipelines/scripts/quality-setup-environment.sh
     [[ -f .pipelines/config/${TRIGGER_NAME}.env ]] && source .pipelines/config/${TRIGGER_NAME}.env
     .pipelines/scripts/quality.sh
 

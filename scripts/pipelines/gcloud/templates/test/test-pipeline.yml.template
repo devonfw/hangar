@@ -42,8 +42,8 @@ steps:
 - id: "Upload coverage to bucket"
   name: gcr.io/cloud-builders/gsutil
   allow_failure: true
-  args: ['cp','coverage.xml','gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/coverage.xml']
-
+  args: ['cp','${_COVERAGE_FILE_NAME}','gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/commit_${SHORT_SHA}/${_COVERAGE_FILE_NAME}']
+  
 # mark to insert trigger
 
 # mark to insert step for additional artifact #
