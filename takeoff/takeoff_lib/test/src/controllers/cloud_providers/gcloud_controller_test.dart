@@ -56,12 +56,16 @@ void main() {
   });
 
   test("RegExp match projectId", () {
-    int random = Random().nextInt(99);
-    String projectId = "wayat-takeoff-$random-$random-$random-$random-$random";
-    RegExp rule = RegExp(
-        r'wayat-takeoff-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,2})-(\d{1,4})');
+    GoogleCloudControllerImpl googleCloudController =
+        GoogleCloudControllerImpl();
 
-    expect(rule.hasMatch(projectId), true);
+    String projectId_01 = "wayat-takeoff-1-1-1-2-2000";
+    String projectId_02 = "wayat-takeoff-1-12-1-12-2000";
+    String projectId_03 = "wayat-takeoff-11-12-11-22-2000";
+
+    expect(googleCloudController.isQuickStartProject(projectId_01), true);
+    expect(googleCloudController.isQuickStartProject(projectId_02), true);
+    expect(googleCloudController.isQuickStartProject(projectId_03), true);
   });
 
   test("Get resource Url for quickstart projects", () {
