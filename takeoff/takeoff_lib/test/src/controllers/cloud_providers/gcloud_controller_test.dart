@@ -76,37 +76,34 @@ void main() {
     GoogleCloudControllerImpl googleCloudController =
         GoogleCloudControllerImpl();
 
-    String projectId_01 = "wayat-takeoff-1-1-1-2-2000";
-    String projectId_02 = "wayat-takeoff-1-12-1-12-2000";
-    String projectId_03 = "wayat-takeoff-11-12-11-22-2000";
-    String projectId_04 = "wayat-takeoff-31-72-21-55-2022";
+    String projectId = "wayat-takeoff-11-12-11-22-2000";
 
     Uri ideUrl =
-        googleCloudController.getGCloudResourceUrl(projectId_01, Resource.ide);
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.ide);
     Uri expectIdeUrl = Uri.parse(
-        "https://console.cloud.google.com/cloudshelleditor?project=$projectId_01&cloudshell=true");
+        "https://console.cloud.google.com/cloudshelleditor?project=$projectId&cloudshell=true");
     expect(ideUrl, expectIdeUrl);
 
     Uri pipelineUrl = googleCloudController.getGCloudResourceUrl(
-        projectId_02, Resource.pipeline);
+        projectId, Resource.pipeline);
     Uri expectPipelineUrl = Uri.parse(
-        "https://console.cloud.google.com/cloud-build/dashboard?project=$projectId_02");
+        "https://console.cloud.google.com/cloud-build/dashboard?project=$projectId");
     expect(pipelineUrl, expectPipelineUrl);
 
     Uri feRepoUrl = googleCloudController.getGCloudResourceUrl(
-        projectId_03, Resource.feRepo);
+        projectId, Resource.feRepo);
     Uri expectFeRepoUrl = Uri.parse(
-        "https://source.cloud.google.com/$projectId_03/wayat-flutter/");
+        "https://source.cloud.google.com/$projectId/wayat-flutter/");
     expect(feRepoUrl, expectFeRepoUrl);
 
     Uri beRepoUrl = googleCloudController.getGCloudResourceUrl(
-        projectId_04, Resource.beRepo);
+        projectId, Resource.beRepo);
     Uri expectBeRepoUrl = Uri.parse(
-        "https://source.cloud.google.com/$projectId_04/wayat-python/");
+        "https://source.cloud.google.com/$projectId/wayat-python/");
     expect(beRepoUrl, expectBeRepoUrl);
 
     Uri resourceNone =
-        googleCloudController.getGCloudResourceUrl(projectId_01, Resource.none);
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.none);
     expect(resourceNone, Uri.parse(""));
   });
 
@@ -114,37 +111,34 @@ void main() {
     GoogleCloudControllerImpl googleCloudController =
         GoogleCloudControllerImpl();
 
-    String projectId_01 = "wayat-takeoff-12--11-23-2000";
-    String projectId_02 = "wayat-takeoff-1-12-1---";
-    String projectId_03 = "wayat-takeoff----";
-    String projectId_04 = "wayat-takeoff";
+    String projectId = "wayat-takeoff";
 
     Uri ideUrl =
-        googleCloudController.getGCloudResourceUrl(projectId_01, Resource.ide);
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.ide);
     Uri expectIdeUrl = Uri.parse(
-        "https://console.cloud.google.com/cloudshelleditor?project=$projectId_01&cloudshell=true");
+        "https://console.cloud.google.com/cloudshelleditor?project=$projectId&cloudshell=true");
     expect(ideUrl, expectIdeUrl);
 
     Uri pipelineUrl = googleCloudController.getGCloudResourceUrl(
-        projectId_02, Resource.pipeline);
+        projectId, Resource.pipeline);
     Uri expectPipelineUrl = Uri.parse(
-        "https://console.cloud.google.com/cloud-build/dashboard?project=$projectId_02");
+        "https://console.cloud.google.com/cloud-build/dashboard?project=$projectId");
     expect(pipelineUrl, expectPipelineUrl);
 
     Uri feRepoUrl = googleCloudController.getGCloudResourceUrl(
-        projectId_03, Resource.feRepo);
+        projectId, Resource.feRepo);
     Uri expectFeRepoUrl =
-        Uri.parse("https://source.cloud.google.com/$projectId_03/Frontend/");
+        Uri.parse("https://source.cloud.google.com/$projectId/Frontend/");
     expect(feRepoUrl, expectFeRepoUrl);
 
     Uri beRepoUrl = googleCloudController.getGCloudResourceUrl(
-        projectId_04, Resource.beRepo);
+        projectId, Resource.beRepo);
     Uri expectBeRepoUrl =
-        Uri.parse("https://source.cloud.google.com/$projectId_04/Backend/");
+        Uri.parse("https://source.cloud.google.com/$projectId/Backend/");
     expect(beRepoUrl, expectBeRepoUrl);
 
     Uri resourceNone =
-        googleCloudController.getGCloudResourceUrl(projectId_01, Resource.none);
+        googleCloudController.getGCloudResourceUrl(projectId, Resource.none);
     expect(resourceNone, Uri.parse(""));
   });
 }
