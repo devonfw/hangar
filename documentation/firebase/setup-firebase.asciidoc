@@ -5,7 +5,7 @@ By the end of this guide, an environment on Firebase will be created on an exist
 == Prerequisites
 * Have a Google Cloud project already setup and GCloud CLI installed and configured. If it is not the case, please go back to corresponding guide.
 
-* If this is your first time using Firebase you need to *manually* accept the Firebase terms and conditions. To do so, please access https://console.firebase.google.com[the console] and create your first project, marking both checkboxes regarding Firebase conditions (Google Analytics is not necessary). After that you can delete it, and create new ones using the script.
+* If this is your first time using Firebase you need to *manually* accept the Firebase terms and conditions. To do so, please access https://console.firebase.google.com[the console] and create your first project, marking both checkboxes regarding Firebase conditions (Google Analytics is not necessary). After that you can delete it, and proceed to use the script.
 
 == Setting up Firebase services using the provided script
 
