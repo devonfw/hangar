@@ -120,15 +120,16 @@ function addMachineType {
 function addTriggers {
 
     if [ -n "$packagePipelineName" ]; then
-        previousPipelineyaml="package-pipeline.yml"
+        previousPipelineName="$packagePipelineName"
     elif [ -n "$qualityPipelineName" ]; then
-        previousPipelineyaml="quality-pipeline.yml"
+        previousPipelineName="$qualityPipelineName"
     elif [ -n "$testPipelineName" ]; then
-        previousPipelineyaml="test-pipeline.yml"
+        previousPipelineName="$testPipelineName"
     elif [ -n "$buildPipelineName" ]; then
-        previousPipelineyaml="build-pipeline.yml"
+        previousPipelineName="$buildPipelineName"
     fi
 
+    previousPipelineyaml=$(gcloud beta builds triggers describe "$previousPipelineName" | sed -n '3 p' | awk '{print $2}' | xargs basename)
 
     case "$previousPipelineyaml" in
         "")
