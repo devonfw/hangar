@@ -1,4 +1,4 @@
-# devonfw Hangar and Take-off
+# devonfw Hangar and Takeoff
 
 ## What is Hangar?
 
@@ -8,7 +8,7 @@ The created environment will cover from the code management, which then will be 
 
 The goal is that anyone could setup this environment with a few steps, push his application code, sit back, and relax.
 
-## What is Take-off?
+## What is Takeoff?
 
 image::documentation/assets/Takeoff.png[]
 
@@ -22,19 +22,19 @@ The environment contains everything which is needed for the development, continu
 
 The resulting environment has a fully working full-stack example application in source code form which is automatically compiled and build in the same environment. 
 
-In summary, devonfw Take-off can be used to accelerate and industrialize to a large extent Cloud based development.
+In summary, devonfw Takeoff can be used to accelerate and industrialize to a large extent Cloud based development.
 
 ## What is the difference?
 
 devonfw Hangar is a guide with automated toolchain for the creation of “Cloud based Dev & Run environments”. It is not a 100%, fully automatic, monolithic tool, but rather a pragmatic bundling of documentation and tools to facilitate and automate (where possible) the creation of Cloud environments.
 
-devonfw Take-off can be seen as a wrapper on top of Hangar to simplify even further the setup, in a fully automatic way, providing full-featured quickstart use cases.
+devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even further the setup, in a fully automatic way, providing full-featured quickstart use cases.
 
-## How to use Hangar/Take-off?
+## How to use Hangar/Takeoff?
 
 - Directly calling the scripts. You can find more information of each of the modules and example uses cases in their corresponding documentation.
 - Calling the scripts inside the all-in-one Docker image, which bundles all the necessary toolkits. You can find more information on https://github.com/devonfw/hangar/blob/master/setup/README.asciidoc[how to setup and use the image].
-- Using the Take-off CLI or GUI which provides a simpler and user-friendly interface for creating and managing projects. 
+- Using the Takeoff CLI or GUI which provides a simpler and user-friendly interface for creating and managing projects. 
 
 ## Hangar use cases
 
