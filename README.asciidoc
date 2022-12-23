@@ -1,6 +1,231 @@
 # devonfw Hangar
 
-### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
+## What is Hangar?
+
+image::documentation/assets/Takeoff.png[]
+
+Capgemini offers a simple, Open Source, solution with which the teams and clients can create a complete Cloud based Dev & Run environment with a single command or executable.
+
+We define a “Cloud based Dev & Run environment” as a subscription at a public cloud provider (Google Cloud, AWS, Microsoft Azure) to develop, deploy, run and manage software applications on a sophisticated infrastructure that is owned and provided by the cloud provider and managed as a single entity by the client or Capgemini. 
+
+image::documentation/assets/Takeoff2.png[]
+
+The environment contains everything which is needed for the development, continuous integration and deployment, provisioning, orchestration and monitoring of the application and dependent resources. It also includes all services needed for (financial) management and administration of the subscription/environment itself. 
+
+The resulting environment has a fully working full-stack example application in source code form which is automatically compiled and build in the same environment. 
+
+This asset can be used to accelerate and industrialize to a large extent Cloud based development
+
+## How to use Hangar?
+
+Hangar consists on a series of Scripts & Templates that can be used in different ways:
+
+- Directly calling the scripts. You can find more information of each of the functionalities and example uses cases in their corresponding documentation.
+
+- Calling the scripts inside the All-in-one Docker image, which includes the installation of all the necessary toolkits. You can find more information on https://github.com/devonfw/hangar/blob/master/setup/README.asciidoc[how to setup and use the image].
+
+- Using the Takeoff CLI or GUI which provides a simpler and user-friendly interface for creating and managing projects. TODO
+
+## Features
+
+### Accounts & Projects Management
+
+image::documentation/diagrams/Hangar-Accounts-Projects.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Create a GCloud Project
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-project.asciidoc[Docs]
+
+|GCloud
+|Create a Principal Account
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc[Docs]
+
+|GCloud
+|Verify Account Roles
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc#check-roles-and-permissions-of-a-principal[Docs]
+
+|GCloud
+|Setup Firebase & Maps
+|https://github.com/devonfw/hangar/blob/master/documentation/firebase/setup-firebase.asciidoc[Docs]
+
+|Azure DevOps
+|Create a DevOps Project
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/azure-devops/setup-project.asciidoc[Docs]
+
+|AWS
+|Create an AWS Project User
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Docs]
+
+|AWS
+|Verify User Roles
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
+
+|===
+
+### Kubernetes Clusters Provisioning
+
+image::documentation/diagrams/Hangar-Kubernetes.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Provision Kubernetes Cluster on GCloud (GKE)
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-gke-provisioning-pipeline.asciidoc[Docs]
+
+|AWS
+|Provision Kubernetes Cluster on Azure (EKS)
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Docs]
+
+|Azure
+|Provision Kubernetes Cluster on AWS (AKS)
+|TODO
+
+|===
+
+### Repository Management
+
+image::documentation/diagrams/Hangar-Repository.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Repository Management on GCloud
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-repository-script.asciidoc[Docs]
+
+|Azure DevOps
+|Repository Management on Azure DevOps
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-repository-script.asciidoc[Docs]
+
+|GitHub
+|Repository Management on GitHub
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Docs]
+
+|===
+
+
+### SonarQube Provisioning
+
+image::documentation/diagrams/Hangar-SonarQube.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|SonarQube Deployment on GCloud
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-sonarqube-instance.asciidoc[Docs]
+
+|AWS
+|SonarQube Deployment on AWS
+|https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Docs]
+
+|===
+
+
+### CI/CD Pipelines Provisioning
+
+image::documentation/diagrams/Hangar-PipelinesCI_CD.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-build-pipeline.asciidoc[Docs]
+
+|GCloud
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-test-pipeline.asciidoc[Docs]
+
+|GCloud
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-quality-pipeline.asciidoc[Docs]
+
+|GCloud
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-package-pipeline.asciidoc[Docs]
+
+|GCloud
+|Cloud Run Deploy Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-cloud-run-pipeline.asciidoc[Docs]
+
+|GCloud
+|Kubernetes (GKE) Deploy Pipeline
+|TODO
+
+|Azure DevOps
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Kubernetes Deploy Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Docs]
+
+|GitHub
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-build-pipeline.asciidoc[Docs]
+
+|GitHub
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-test-pipeline.asciidoc[Docs]
+
+|GitHub
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-quality-pipeline.asciidoc[Docs]
+
+|GitHub
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-package-pipeline.asciidoc[Docs]
+
+|GitHub
+|Kubernetes Deploy Pipeline
+|TODO
+
+|===
+
+### Quickstarts
+
+image::documentation/diagrams/Hangar-Quickstart.png[]
+
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Wayat Backend Quickstart
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-backend.asciidoc[Docs]
+
+|GCloud
+|Wayat Frontend Quickstart
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-frontend.asciidoc[Docs]
+
+|===
+
+## Practical Use Cases
+
+### Quarkus/Node.js/Angular-based project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
 
 * https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
@@ -22,7 +247,7 @@
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy Pipeline]
 ** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
 
-### Use case: Quarkus/Node.js/Angular-based project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
+### Quarkus/Node.js/Angular-based project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
 
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
 * https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Setting up a repository on GitHub]
@@ -42,3 +267,31 @@
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
+
+### QuickStart Wayat with Firebase on GCloud
+
+CAUTION: If this is your first time using Firebase you need to MANUALLY accept the terms and conditions of usage.
+
+image::documentation/assets/Firebase1.png[]
+
+In order to do so, you need to visit https://console.firebase.google.com[this page] and create your first project.
+
+image::documentation/assets/Firebase2.png[]
+
+Please make sure that you mark both checkboxes accepting Firebase Conditions.
+
+image::documentation/assets/Firebase3.png[]
+
+It is not necessary to use Google Analytics on this project, as you will be able to delete it later. 
+
+The important thing here is that once you accept the terms and conditions for the first time you will be able to create new Firebase Projects using Hangar scripts without issues.
+
+## License(s)
+
+Copyright 2022 Capgemini 
+
+The source code on this site is licensed under the Apache Public License 2.0. See LICENSE for details.
+
+++++
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />The documentation (not the source code) available on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+++++

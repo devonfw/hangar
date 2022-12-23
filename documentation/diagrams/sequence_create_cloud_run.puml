@@ -1,0 +1,13 @@
+@startuml sequence
+
+participant "Take Off"          as TakeOff
+participant "Hangar"            as Hangar
+participant "GCloud CLI"        as Gcloud
+
+TakeOff -> Hangar : init-cloud-run.sh -n $serviceName -r $region
+Hangar -> Gcloud :  gcloud run deploy $serviceName -image=us-docker.pkg.dev/cloudrun/container/hello" -region=$region
+Gcloud --> Hangar : Deployment Success
+Hangar -> Gcloud : gcloud run services describe $serviceName --format 'value(status.url)'
+Gcloud --> Hangar : Cloud Run URL
+Hangar --> TakeOff : Service Init Success + Service URL
+@enduml
