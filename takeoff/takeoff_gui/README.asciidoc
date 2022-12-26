@@ -1,0 +1,17 @@
+= TakeOff GUI
+
+image::documentation/assets/takeoff_main.png[700,700]
+
+== Usage
+
+* Create a new project that will import and deploy a real application in your account almost automatically with Quickstart
+
+image::documentation/assets/takeoff_quickstart.png[700,700]
+
+* Create a new empty project (no preexisting code imported) using the `Create` option
+
+image::documentation/assets/takeoff_create.png[700,700]
+
+* Manage projects created with TakeOff with the resource screen to open the cloud IDE, pipelines, Frontend repository or Backend repository in your browser
+
+image::documentation/assets/takeoff_resources.png[700,700]
