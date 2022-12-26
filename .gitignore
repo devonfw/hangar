@@ -1,3 +1,10 @@
+
+#takeoff
+takeoff/takeoff_lib/coverage/lcov.info
+takeoff/takeoff_cli/takeoff_cli.exe
+takeoff/takeoff_gui/.vscode/launch.json
+takeoff/takeoff_gui/pubspec.lock
+takeoff/takeoff_cli/bin/takeoff_cli.exe
 # VSCode Config
 .vscode/*
 
@@ -9,3 +16,4 @@
 
 # secrets folder
 **/.secrets/**
+takeoff/takeoff_lib/test/test.dart
