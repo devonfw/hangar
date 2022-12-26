@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:takeoff_gui/common/tooltip.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/common/monitor/pages/monitor_dialog.dart';
 import 'package:takeoff_gui/features/create/widgets/widgets.dart';
@@ -38,30 +39,36 @@ class CreateDialog extends StatelessWidget {
       )),
       actions: [
         Observer(
-          builder: (_) => CustomButton(
-            text: AppLocalizations.of(context)!.createButton,
-            icon: Icons.add,
-            onPressed: !controller.isValid
-                ? null
-                : () {
-                    Navigator.of(context).pop();
-                    controller.createProject();
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) => MonitorDialog(),
-                    );
-                  },
+          builder: (_) => TooltipMessage(
+            message: AppLocalizations.of(context)!.createButtonTooltip,
+            child: CustomButton(
+              text: AppLocalizations.of(context)!.createButton,
+              icon: Icons.add,
+              onPressed: !controller.isValid
+                  ? null
+                  : () {
+                      Navigator.of(context).pop();
+                      controller.createProject();
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) => MonitorDialog(),
+                      );
+                    },
+            ),
           ),
         ),
-        CustomButton(
-          text: AppLocalizations.of(context)!.closeButton,
-          icon: Icons.close,
-          color: Colors.red,
-          onPressed: () {
-            Navigator.of(context).pop();
-            controller.resetForm();
-          },
+        TooltipMessage(
+          message: AppLocalizations.of(context)!.closeButtonTooltip,
+          child: CustomButton(
+            text: AppLocalizations.of(context)!.closeButton,
+            icon: Icons.close,
+            color: Colors.red,
+            onPressed: () {
+              Navigator.of(context).pop();
+              controller.resetForm();
+            },
+          ),
         )
       ],
     );
