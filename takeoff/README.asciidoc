@@ -1,0 +1,41 @@
+:url-wayat: https://github.com/devonfw-forge/wayat-flutter-python-mvp
+
+= Takeoff
+
+image:https://img.shields.io/badge/os-Windows-GREEN.svg[]
+image:https://img.shields.io/badge/os-Linux-GREEN.svg[]
+
+image:https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white[]
+image:https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white[]
+
+image::_docs/rocket_logo.png[]
+
+A CLI and graphical application for creating new projects in the cloud.
+
+== What is TakeOff?
+TakeOff is a simple and user-friendly graphical and command line interface and to create and projects in the Cloud.
+
+The main use case  is to be able to have a real application created and deployed in the most automated way possible (for Google Cloud, we have chosen {url-wayat}[Wayat]), so any team can take it as a base and start working on the Cloud. We call this "Quickstart".
+
+It currently only supports Google Cloud, with support for AWS and Azure still being worked on.
+
+== Requirements
+:url-get-docker:  https://docs.docker.com/get-docker/
+:url-get-rancher:  https://rancherdesktop.io
+:url-get-docker-desktop: https://www.docker.com/products/docker-desktop/
+
+To use TakeOff, Docker must be previously installed in one of the following ways:
+
+* {url-get-docker}[Docker] (Linux)
+* {url-get-rancher}[Rancher Desktop] (MacOS and Windows)
+* {url-get-docker-desktop}[Docker Desktop] (MacOS and Windows)
+
+image::_docs/diagrams/context_diagram/Context_Diagram.png[600,600]
+
+== How to use TakeOff
+
+:url-use-cli:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_cli/README.asciidoc
+:url-use-gui:  https://github.com/devonfw/hangar/blob/516-takeoff-gui-and-cli-documentation/takeoff/takeoff_gui/README.asciidoc
+
+* {url-use-cli}[TakeOff CLI]
+* {url-use-gui}[TakeOff GUI]

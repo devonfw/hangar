@@ -4,4 +4,6 @@ set -e
 mv venv /venv
 # shellcheck source=/dev/null
 . /venv/bin/activate
-python -m unittest
+coverage run -m unittest
+coverage report
+coverage xml
