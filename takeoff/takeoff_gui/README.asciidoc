@@ -1,14 +1,12 @@
 = TakeOff GUI
 
-* Create a new project that will import and deploy a real application in your account almost automatically with Quickstart
-
-image::documentation/assets/takeoff_quickstart.png[700,700]
-
-Desktop GUI application
-
 image::documentation/assets/takeoff_main.png[700,700]
 
 == Usage
+
+* Create a new project that will import and deploy a real application in your account almost automatically with Quickstart
+
+image::documentation/assets/takeoff_quickstart.png[700,700]
 
 * Create a new empty project (no preexisting code imported) using the `Create` option
 
