@@ -41,7 +41,7 @@
     "openPipelineButtonTooltip": "Open the project's pipelines in the browser",
     "openFeRepoTooltip": "Open the FrontEnd repository in the browser",
     "openBeRepoTooltip": "Open the BackEnd repository in the browser",
-    "logInCloudProviderTooltip": "Log in Cloud Provider account",
-    "logOutCloudProviderTooltip": "Log out Cloud Provider account",
+    "logInCloudProviderTooltip": "Log in PROVIDER account",
+    "logOutCloudProviderTooltip": "Log out PROVIDER account",
     "closeButtonTooltip": "Close the creation dialog"
 }

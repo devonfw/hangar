@@ -27,7 +27,8 @@ class CloudProviderHeader extends StatelessWidget {
             authAccount.isNotEmpty
                 ? TooltipMessage(
                     message: AppLocalizations.of(context)!
-                        .logOutCloudProviderTooltip,
+                        .logOutCloudProviderTooltip
+                        .replaceAll("PROVIDER", name),
                     child: IconButton(
                       icon: const Icon(Icons.logout_outlined),
                       splashRadius: 16,
@@ -35,8 +36,9 @@ class CloudProviderHeader extends StatelessWidget {
                     ),
                   )
                 : TooltipMessage(
-                    message:
-                        AppLocalizations.of(context)!.logInCloudProviderTooltip,
+                    message: AppLocalizations.of(context)!
+                        .logInCloudProviderTooltip
+                        .replaceAll("PROVIDER", name),
                     child: IconButton(
                       icon: const Icon(Icons.login_outlined),
                       splashRadius: 16,
