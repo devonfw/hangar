@@ -40,5 +40,8 @@
     "openIdeButtonTooltip" : "On press this button you open in Web browser Cloud provider IDE of the project",
     "openPipelineButtonTooltip": "On press this button you open in web browser Cloud provider pipeline of the project",
     "openFeRepoTooltip": "On press this button you open in web browser Cloud provider Frontend repository of the project",
-    "openBeRepoTooltip": "On press this button you open in web browser Cloud provider Backend repository of the project"
+    "openBeRepoTooltip": "On press this button you open in web browser Cloud provider Backend repository of the project",
+    "logInCloudProviderTooltip": "Log in Cloud Provider account",
+    "logOutCloudProviderTooltip": "Log out Cloud Provider account"
+
 }
