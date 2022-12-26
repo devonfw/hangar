@@ -30,5 +30,15 @@
     "removeProject": "Remove project",
     "projectWillBeDeleted": "The project will be deleted from local cache, but not remove from cloud.",
     "onceRemovedProject": "Once removed, you won't be able to add it again.",
-    "confirmationDeleteProject": "Do you want to continue removing it?"
+    "confirmationDeleteProject": "Do you want to continue removing it?",
+
+    "createButtonTooltip": "On press Create button you start create a new project which will be deployed in Cloud Services",
+    "quickStartButtonTooltip": "On press QuickStart button you automaticaly create a Wayat project which will be deployed in Cloud Services",
+    "cliButtonTooltip": "On press CLI button you open a CLI of the project",
+    "cleanButtonTooltip": "On press Clean button you will remove all the local data of the project.\nThis will not delete the project in the cloud provider",
+    "homeButtonTooltip": "Return to main screen of the TakeOff",
+    "openIdeButtonTooltip" : "On press this button you open in Web browser Cloud provider IDE of the project",
+    "openPipelineButtonTooltip": "On press this button you open in web browser Cloud provider pipeline of the project",
+    "openFeRepoTooltip": "On press this button you open in web browser Cloud provider Frontend repository of the project",
+    "openBeRepoTooltip": "On press this button you open in web browser Cloud provider Backend repository of the project"
 }
