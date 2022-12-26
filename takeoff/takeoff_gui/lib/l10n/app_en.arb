@@ -42,6 +42,6 @@
     "openFeRepoTooltip": "On press this button you open in web browser Cloud provider Frontend repository of the project",
     "openBeRepoTooltip": "On press this button you open in web browser Cloud provider Backend repository of the project",
     "logInCloudProviderTooltip": "Log in Cloud Provider account",
-    "logOutCloudProviderTooltip": "Log out Cloud Provider account"
-
+    "logOutCloudProviderTooltip": "Log out Cloud Provider account",
+    "closeButtonTooltip": "On press this button window will be closed with unsafe project data.\nAre you sure?"
 }
