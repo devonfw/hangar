@@ -20,7 +20,7 @@ For using TakeOff need to be installed Container Manager Docker or Rancher:
 This is a simpler and user-friendly interface for creating, deploying and managing projects with Cloud Services.
 TakeOff support AWS, Azure and Google Cloud Services.
 
-image::takeoff_cli/documentation/diagrams/takeoff_diagram.png[600,600]
+image::_docs/diagrams/context_diagram/Context_Diagram.png[600,600]
 
 == How to use TakeOff
 
