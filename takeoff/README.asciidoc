@@ -15,7 +15,7 @@ A CLI and graphical application for creating new projects in the cloud.
 == What is TakeOff?
 TakeOff is a simple and user-friendly graphical and command line interface and to create and projects in the Cloud.
 
-The main use case  is to be able to have a real application created and deployed in the most automated way possible (for Google Cloud, we have chosen {url-wayat}[Wayat]), so any team can take it as a base and start working on the Cloud.
+The main use case  is to be able to have a real application created and deployed in the most automated way possible (for Google Cloud, we have chosen {url-wayat}[Wayat]), so any team can take it as a base and start working on the Cloud. We call this "Quickstart".
 
 It currently only supports Google Cloud, with support for AWS and Azure still being worked on.
 
