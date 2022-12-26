@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:takeoff_gui/common/tooltip.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CloudProviderHeader extends StatelessWidget {
   const CloudProviderHeader({
@@ -23,15 +25,25 @@ class CloudProviderHeader extends StatelessWidget {
           children: [
             Text(name),
             authAccount.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.logout_outlined),
-                    splashRadius: 16,
-                    onPressed: () => logOutCallback(),
+                ? TooltipMessage(
+                    message: AppLocalizations.of(context)!
+                        .logOutCloudProviderTooltip
+                        .replaceAll("PROVIDER", name),
+                    child: IconButton(
+                      icon: const Icon(Icons.logout_outlined),
+                      splashRadius: 16,
+                      onPressed: () => logOutCallback(),
+                    ),
                   )
-                : IconButton(
-                    icon: const Icon(Icons.login_outlined),
-                    splashRadius: 16,
-                    onPressed: () => authenticateCallback(),
+                : TooltipMessage(
+                    message: AppLocalizations.of(context)!
+                        .logInCloudProviderTooltip
+                        .replaceAll("PROVIDER", name),
+                    child: IconButton(
+                      icon: const Icon(Icons.login_outlined),
+                      splashRadius: 16,
+                      onPressed: () => authenticateCallback(),
+                    ),
                   )
           ],
         ),
