@@ -7,6 +7,7 @@ import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MonitorDialog extends StatelessWidget {
   final MonitorController controller = GetIt.I.get<MonitorController>();
@@ -34,8 +35,10 @@ class MonitorDialog extends StatelessWidget {
                         children: [
                           Text(
                               controller.hasFinished
-                                  ? "Project creation finished"
-                                  : "Creating project...",
+                                  ? AppLocalizations.of(context)!
+                                      .projectCreationIsFinishMessage
+                                  : AppLocalizations.of(context)!
+                                      .creatingProjectMessage,
                               style: const TextStyle(fontSize: 30)),
                           if (!controller.hasFinished)
                             const CircularProgressIndicator(),
@@ -84,7 +87,9 @@ class MonitorDialog extends StatelessWidget {
                         Navigator.of(context).pop();
                       },
                       icon: Icons.browser_updated_outlined,
-                      text: controller.isSuccess ? "Open project" : "Close");
+                      text: controller.isSuccess
+                          ? AppLocalizations.of(context)!.openProjectButton
+                          : AppLocalizations.of(context)!.closeButton);
                 }
                 return Container();
               })

@@ -5,6 +5,7 @@ import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/home/utils/type_dialog.dart';
 import 'package:takeoff_gui/features/home/widgets/auto_closing_dialog.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GoogleLoginDialog extends StatelessWidget {
   final TextEditingController controller = TextEditingController();
@@ -16,13 +17,13 @@ class GoogleLoginDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) => AlertDialog(
-        title: const Text('Login on Google'),
+        title: Text(AppLocalizations.of(context)!.loginGoogleMessage),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: !projectsController.waitForToken
               ? <Widget>[
-                  const Text("Enter your google account:"),
+                  Text(AppLocalizations.of(context)!.enterGoogleAccountMessage),
                   const SizedBox(height: 10),
                   TextField(
                     controller: controller,
@@ -33,9 +34,8 @@ class GoogleLoginDialog extends StatelessWidget {
                   ),
                 ]
               : <Widget>[
-                  const Text(
-                      "A tab will open in your browser. Please follow the steps."),
-                  const Text("Enter your token:"),
+                  Text(AppLocalizations.of(context)!.openTabMessage),
+                  Text(AppLocalizations.of(context)!.enterTokenMessage),
                   const SizedBox(height: 10),
                   TextField(
                     controller: controller,
@@ -52,13 +52,13 @@ class GoogleLoginDialog extends StatelessWidget {
                   onPressed: () {
                     _doLogin(context);
                   },
-                  child: const Text('Login'),
+                  child: Text(AppLocalizations.of(context)!.loginButton),
                 )
               : ElevatedButton(
                   onPressed: () {
                     projectsController.channel.add(controller.text.codeUnits);
                   },
-                  child: const Text('Confirm token'),
+                  child: Text(AppLocalizations.of(context)!.confirmTokenButton),
                 ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -68,7 +68,7 @@ class GoogleLoginDialog extends StatelessWidget {
               projectsController.resetChannel();
               Navigator.of(context).pop();
             },
-            child: const Text('Close'),
+            child: Text(AppLocalizations.of(context)!.closeButton),
           ),
         ],
       ),
@@ -88,10 +88,10 @@ class GoogleLoginDialog extends StatelessWidget {
           context: context,
           builder: (BuildContext context) => AutoClosingDialog(
             typeDialog: value ? TypeDialog.success : TypeDialog.error,
-            title: "Login",
+            title: AppLocalizations.of(context)!.loginButton,
             message: value
-                ? "You're logged in Google"
-                : "Something happened! Check your credentialss",
+                ? AppLocalizations.of(context)!.logedInMessage
+                : AppLocalizations.of(context)!.loginFailedMessage,
           ),
         );
       },

@@ -78,7 +78,7 @@ class WayatForm extends StatelessWidget {
                           }
                         : null,
                     icon: Icons.add_box_outlined,
-                    text: "Quickstart"),
+                    text: AppLocalizations.of(context)!.quickstartButton),
               ),
             )
           ],

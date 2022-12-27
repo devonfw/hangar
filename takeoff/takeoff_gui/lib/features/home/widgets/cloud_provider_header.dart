@@ -49,7 +49,9 @@ class CloudProviderHeader extends StatelessWidget {
         ),
         Row(
           children: [
-            Text(authAccount.isNotEmpty ? authAccount : "Not authenticated"),
+            Text(authAccount.isNotEmpty
+                ? authAccount
+                : AppLocalizations.of(context)!.notAuthentificatied),
           ],
         ),
       ],
