@@ -4,7 +4,7 @@
 
 devonfw Hangar is the means –a packaging of documentation and tools– needed to create a top-down DevOps (pre-made) environment to be used as a functional starting point for developing, running and managing new projects in the Cloud.
 
-The created environment will cover from the code management, which then will be integrated with CI/CD strategies, up to the deployment (would it be Kubernetes -AWS EKS, Azure AKS, Google Cloud GKE; or Google Cloud Run) and monitoring of the software solution on the different deployment environments.
+The created environment will cover from the code management, which then will be integrated with CI/CD strategies, up to the deployment (would it be Kubernetes –AWS EKS, Azure AKS, Google Cloud GKE– or Google Cloud Run) and monitoring of the software solution on the different deployment environments.
 
 The goal is that anyone could setup this environment with a few steps, push his application code, sit back, and relax.
 
@@ -26,41 +26,41 @@ In summary, devonfw Takeoff can be used to accelerate and industrialize to a lar
 
 ## What is the difference?
 
-devonfw Hangar is a guide with automated toolchain for the creation of “Cloud based Dev & Run environments”. It is not a 100%, fully automatic, monolithic tool, but rather a pragmatic bundling of documentation and tools to facilitate and automate (where possible) the creation of Cloud environments.
+devonfw Hangar is a guide with automated toolchain for the creation of Cloud based Dev & Run environments. It is not a 100%, fully automatic, monolithic tool, but rather a pragmatic bundling of documentation and tools to facilitate and automate (where possible) the creation of Cloud environments.
 
 devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even further the setup, in a fully automatic way, providing full-featured quickstart use cases.
 
 ## How to use Hangar/Takeoff?
 
 - Directly calling the scripts. You can find more information of each of the modules and example uses cases in their corresponding documentation.
-- Calling the scripts inside the all-in-one Docker image, which bundles all the necessary toolkits. You can find more information on https://github.com/devonfw/hangar/blob/master/setup/README.asciidoc[how to setup and use the image].
+- Calling the scripts inside the all-in-one Docker image, which bundles all the necessary toolkits. You can find more information on https://github.com/devonfw/hangar/blob/master/setup[how to setup and use the image].
 - Using the Takeoff CLI or GUI which provides a simpler and user-friendly interface for creating and managing projects. See https://github.com/devonfw/hangar/tree/takeoff_develop/takeoff[Takeoff documentation].
 
 ## Hangar use cases
 
-### Project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS.
+### Project hosted and with CI/CD on Azure DevOps, and deployed on either AWS EKS or Azure AKS
 
 * https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Setup Azure DevOps project]
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
 * https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-repository-script.asciidoc[Setting up a repository on Azure DevOps]
 * Setup Azure DevOps Pipelines:
-** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Setting up a Build Pipeline]
-** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Setting up a Test Pipeline]
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Setting up a Build pipeline]
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Setting up a Test pipeline]
 ** Quality
 *** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in AWS]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Setting up a Quality Pipeline]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Setting up a Quality pipeline]
 ** Package
 *** App
 **** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
-**** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package Pipeline]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package Pipeline]
-** Setup Kubernetes deploying environment pipeline
+**** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Setting up a Package pipeline]
+*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package pipeline]
+** Setup Kubernetes deploying environment pipeline:
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning pipeline]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning pipeline]
-** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy Pipeline]
+** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy pipeline]
 ** Setup Basic Monitoring and Logging [TBD, https://github.com/devonfw/hangar/issues/14[#14]]
 
-### Project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS.
+### Project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS
 
 * https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Setup AWS account IAM for deployment in EKS]
 * https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Setting up a repository on GitHub]
@@ -75,8 +75,37 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 *** App
 **** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
 **** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-package-pipeline.asciidoc[Setting up a Package workflow]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-library-package-pipeline.asciidoc[Setting up a library Package workflow]
-** Setup Kubernetes deploying environment workflow
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
-** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
+*** Setting up a library Package workflow [TBD]
+** Setup Kubernetes deploying environment workflow:
+*** https://github.com/devonfw/hangar/blob/fc50959270064796aaf6f815241f81207719f983/documentation/github/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
+*** https://github.com/devonfw/hangar/blob/1f8e2e00ec8763e1a7a649eabddbcff02c30c9c4/documentation/github/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
+** https://github.com/devonfw/hangar/blob/584b15c4ec72653c537e2e5865464342af609253/documentation/github/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
+
+### Project hosted and with CI/CD on Google Cloud, and deployed on either Google Cloud Run or GKE
+
+* https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-project.asciidoc[Setup Google Cloud project]
+* https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc[Setup Google Cloud account IAM]
+* https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-repository-script.asciidoc[Setting up a repository on Google Cloud]
+* [Optional] https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-cloud-run-service.asciidoc[Setting up a Google Cloud Run service]
+* [Optional] https://github.com/devonfw/hangar/blob/master/documentation/firebase/setup-firebase.asciidoc[Setting up an environment on Firebase]
+* [Optional] Quickstarts:
+** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-backend.asciidoc[Setting up the Wayat Backend in a new project]
+** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-frontend.asciidoc[Setting up the Wayat Frontend in a new project]
+* Setup Google Cloud Build pipelines:
+** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-build-pipeline.asciidoc[Setting up a Build pipeline]
+** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-test-pipeline.asciidoc[Setting up a Test pipeline]
+** Quality
+*** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-sonarqube-instance.asciidoc[Setting up a SonarQube instance in Google Cloud]
+*** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-quality-pipeline.asciidoc[Setting up a Quality pipeline]
+** Package
+*** App
+**** Prerequisite: https://github.com/devonfw/hangar/blob/master/documentation/setup-container-image-registry.asciidoc[Setup Container Image Registry]
+**** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-package-pipeline.asciidoc[Setting up a Package pipeline]
+*** Setting up a library Package pipeline [TBD]
+** [Optional] https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-gke-provisioning-pipeline.asciidoc[Setting up a GKE provisioning pipeline]
+** Setup a Deploy pipeline:
+*** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-cloud-run-pipeline.asciidoc[Setting up a Deploy in Cloud Run pipeline]
+*** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-pipeline.asciidoc[Setting up a Deploy pipeline] (requires GKE environment)
+** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-security.asciidoc[Automate security analysis of IaC assets and application]
+** Appendix: https://github.com/devonfw/hangar/blob/master/documentation/gcloud/upload-secret-manager.asciidoc[Upload files or variables as secrets in Google Cloud Secret Manager]
+* https://github.com/devonfw/hangar/blob/master/documentation/gcloud/logging-monitoring-cloud-run.asciidoc[Logging and monitoring a service on Cloud Run]
