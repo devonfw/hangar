@@ -29,9 +29,6 @@ jobs:
         run: git clone https://github.com/${ORG}/${REPO_DEST}.git ${REPO_DEST}
       - name: Copy docs and consolidate links
         run: |
-          cd ${REPO_SOURCE}
-          git checkout feature/bug-wiki
-          cd ..
           cp -rf ${REPO_SOURCE}/documentation/* ${REPO_DEST}/
           cd ${REPO_DEST}
           chmod +x ../${REPO_SOURCE}/.github/workflows/scripts/rename-documentation-for-wiki.sh

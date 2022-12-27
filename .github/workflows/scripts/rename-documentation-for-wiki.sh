@@ -7,7 +7,7 @@ oldPath=()
 function renameFiles {
   for input in $basePath/*
   do
-    echo "readin... $input"
+    echo "reading... $input"
     # When folder, call rename again with new base
     if [[ -d "$input" ]]; then
       basePath="$input"
