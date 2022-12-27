@@ -1,4 +1,4 @@
-= Docs by provider
+= Guides per provider
 
 == Common
 
