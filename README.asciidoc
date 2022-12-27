@@ -33,7 +33,7 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 ## How to use Hangar/Takeoff?
 
 - Directly calling the scripts. You can find more information of each of the modules and example uses cases in their corresponding documentation.
-- Calling the scripts inside the all-in-one Docker image, which bundles all the necessary toolkits. You can find more information on https://github.com/devonfw/hangar/blob/master/setup/README.asciidoc[how to setup and use the image].
+- Calling the scripts inside the all-in-one Docker image, which bundles all the necessary toolkits. You can find more information on https://github.com/devonfw/hangar/blob/master/setup[how to setup and use the image].
 - Using the Takeoff CLI or GUI which provides a simpler and user-friendly interface for creating and managing projects. See https://github.com/devonfw/hangar/tree/takeoff_develop/takeoff[Takeoff documentation].
 
 ## Hangar use cases
