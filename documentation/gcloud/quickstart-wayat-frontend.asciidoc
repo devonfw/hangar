@@ -44,7 +44,7 @@ quickstart-wayat-frontend.sh \
 === Flags
 [subs=attributes+]
 ```
--w, --workspace                [Required] Workspace of the project containing firebase keys.
+-w, --workspace                [Required] Workspace of the project containing Firebase keys.
 -d, --directory                [Required] Directory for the repository of the backend.
 -p, --project                  [Required] Project shortname (ID)
 --keystore                     [Required] Keystore file path.
