@@ -26,7 +26,7 @@ function renameFiles {
       ## Remove .asciidoc for links
       # sed -i "s/.asciidoc//g" $input
       ## Move and rename file
-      mv $input $docBase/$name
+      mv -f $input $docBase/$name
     fi
   done
 }
