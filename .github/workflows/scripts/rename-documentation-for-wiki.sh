@@ -1,8 +1,6 @@
 #!/bin/bash
 docBase="."
 docType=".asciidoc"
-res="test-wiki"
-oldPath=()
 
 function renameFiles {
   for input in $basePath/*
