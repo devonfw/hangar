@@ -91,7 +91,7 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 * [Optional] Quickstarts:
 ** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-backend.asciidoc[Setting up the Wayat Backend in a new project]
 ** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-frontend.asciidoc[Setting up the Wayat Frontend in a new project]
-* Setup Google Cloud Build Pipelines:
+* Setup Google Cloud Build pipelines:
 ** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-build-pipeline.asciidoc[Setting up a Build pipeline]
 ** https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-test-pipeline.asciidoc[Setting up a Test pipeline]
 ** Quality
