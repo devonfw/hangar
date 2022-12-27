@@ -31,7 +31,6 @@ jobs:
         run: |
           cp -rf ${REPO_SOURCE}/documentation/* ${REPO_DEST}/
           cd ${REPO_DEST}
-          chmod +x ../${REPO_SOURCE}/.github/workflows/scripts/rename-documentation-for-wiki.sh
           ../${REPO_SOURCE}/.github/workflows/scripts/rename-documentation-for-wiki.sh
           grep -lr "link:[a-zA-Z0-9_.-]*.asciidoc.*" .| xargs -r sed -i "s/.asciidoc//g"
           echo ">"
