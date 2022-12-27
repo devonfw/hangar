@@ -7,7 +7,7 @@ oldPath=()
 function renameFiles {
   for input in $basePath/*
   do
-    echo "reading... $input"
+    echo "reading $input"
     # When folder, call rename again with new base
     if [[ -d "$input" ]]; then
       basePath="$input"
@@ -24,7 +24,7 @@ function renameFiles {
       ## Change internal links to new base path
       sed -i "s/xref:/xref:$base-/g" $input
       ## Move and rename file
-      if [[ "$input" -ne "$docBase/$name" ]]; then
+      if [[ "$input" != "$docBase/$name" ]]; then
         cp -f $input $docBase/$name
         rm -rf $input
       fi
