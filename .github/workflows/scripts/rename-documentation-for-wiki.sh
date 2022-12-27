@@ -24,8 +24,10 @@ function renameFiles {
       ## Change internal links to new base path
       sed -i "s/xref:/xref:$base-/g" $input
       ## Move and rename file
-      cp -f $input $docBase/$name
-      rm -rf $input
+      if [[ "$input" -ne "$docBase/$name" ]]; then
+        cp -f $input $docBase/$name
+        rm -rf $input
+      fi
     fi
   done
 }
