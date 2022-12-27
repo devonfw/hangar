@@ -4,7 +4,7 @@
 
 devonfw Hangar is the means –a packaging of documentation and tools– needed to create a top-down DevOps (pre-made) environment to be used as a functional starting point for developing, running and managing new projects in the Cloud.
 
-The created environment will cover from the code management, which then will be integrated with CI/CD strategies, up to the deployment (would it be Kubernetes -AWS EKS, Azure AKS, Google Cloud GKE- or Google Cloud Run) and monitoring of the software solution on the different deployment environments.
+The created environment will cover from the code management, which then will be integrated with CI/CD strategies, up to the deployment (would it be Kubernetes –AWS EKS, Azure AKS, Google Cloud GKE– or Google Cloud Run) and monitoring of the software solution on the different deployment environments.
 
 The goal is that anyone could setup this environment with a few steps, push his application code, sit back, and relax.
 
