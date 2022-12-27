@@ -14,7 +14,6 @@ import 'package:takeoff_gui/navigation/app_router.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:desktop_window/desktop_window.dart';
 
-
 void main() async {
   await registerSingletons();
   runApp(const MyApp());
@@ -28,20 +27,19 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
         future: GetIt.I.get<TakeOffFacade>().initialize(),
         builder: (context, snapshot) {
-          final localization = lookupAppLocalizations(LocaleConstants.getLocale());
+          final localization =
+              lookupAppLocalizations(LocaleConstants.getLocale());
           if (snapshot.hasError) {
-            return ErrorLoadingPage(
-                message: localization.errorDockerDaemon);
+            return ErrorLoadingPage(message: localization.errorDockerDaemon);
           } else if (snapshot.hasData) {
             if (!snapshot.data!) {
               return ErrorLoadingPage(
-                message:
-                    localization.errorContainerNotDetected,
+                message: localization.errorContainerNotDetected,
               );
             }
             return MaterialApp.router(
               onGenerateTitle: (context) =>
-      AppLocalizations.of(context)!.appTitle,
+                  AppLocalizations.of(context)!.appTitle,
               scrollBehavior: MyCustomScrollBehavior(),
               debugShowCheckedModeBanner: false,
               localizationsDelegates: AppLocalizations.localizationsDelegates,

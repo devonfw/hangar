@@ -3,7 +3,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/common/monitor/pages/monitor_dialog.dart';
 import 'package:takeoff_gui/common/custom_button.dart';
+import 'package:takeoff_gui/common/tooltip.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WayatForm extends StatelessWidget {
   final QuickstartController controller = GetIt.I.get<QuickstartController>();
@@ -50,20 +52,24 @@ class WayatForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Observer(
-              builder: (_) => CustomButton(
-                  onPressed: controller.isValidForm
-                      ? () {
-                          Navigator.of(context).pop();
-                          controller.createWayat();
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) => MonitorDialog(),
-                          );
-                        }
-                      : null,
-                  icon: Icons.add_box_outlined,
-                  text: "Quickstart"),
+              builder: (_) => TooltipMessage(
+                message: AppLocalizations.of(context)!.quickStartButtonTooltip,
+                child: CustomButton(
+                    onPressed: controller.isValidForm
+                        ? () {
+                            Navigator.of(context).pop();
+                            controller.createWayat();
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) =>
+                                  MonitorDialog(),
+                            );
+                          }
+                        : null,
+                    icon: Icons.add_box_outlined,
+                    text: "Quickstart"),
+              ),
             )
           ],
         )
