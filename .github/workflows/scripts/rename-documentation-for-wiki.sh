@@ -23,8 +23,6 @@ function renameFiles {
       fi
       ## Change internal links to new base path
       sed -i "s/xref:/xref:$base-/g" $input
-      ## Remove .asciidoc for links
-      # sed -i "s/.asciidoc//g" $input
       ## Move and rename file
       cp -f $input $docBase/$name
       rm -rf $input
