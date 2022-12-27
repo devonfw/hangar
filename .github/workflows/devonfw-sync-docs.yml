@@ -33,14 +33,7 @@ jobs:
           git checkout feature/bug-wiki
           cd ..
           cp -rf ${REPO_SOURCE}/documentation/* ${REPO_DEST}/
-          echo "#####################################"
-          ls
-          pwd
-          cd ${REPO_DEST}
-          echo "#####################################"
-          ls
-          pwd
-          ../.github/workflows/scripts/rename-documentation-for-wiki.sh
+          ../${REPO_SOURCE}/.github/workflows/scripts/rename-documentation-for-wiki.sh
           grep -lr "link:[a-zA-Z0-9_.-]*.asciidoc.*" .| xargs -r sed -i "s/.asciidoc//g"
           echo ">"
           git diff-index --quiet HEAD & git status -s
