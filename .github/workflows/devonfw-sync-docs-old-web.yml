@@ -1,4 +1,5 @@
 env:
+  REPO_CONSOLIDATE: "devonfw-guide"
   BUILD_USER: ${{ secrets.BUILD_USER }}
   BUILD_USER_PASSWD: ${{ secrets.BUILD_USER_PASSWD }}
   BUILD_USER_EMAIL: ${{ secrets.BUILD_USER_EMAIL }}
@@ -6,8 +7,7 @@ on:
   push:
     branches:
       - master
-      - feature/bug-wiki
-name: Sync Wiki Docs
+name: Sync Docs
 jobs:
   update-wiki:
     if: ${{ startsWith(github.repository, 'devonfw/') }}
@@ -27,14 +27,12 @@ jobs:
         run: git clone https://github.com/${ORG}/${REPO_SOURCE}.git ${REPO_SOURCE}
       - name: Checkout ${REPO_DEST} Repository
         run: git clone https://github.com/${ORG}/${REPO_DEST}.git ${REPO_DEST}
+      - name: Checkout ${REPO_CONSOLIDATE} Repository
+        run: git clone https://github.com/${ORG}/${REPO_CONSOLIDATE}.git ${REPO_CONSOLIDATE}
       - name: Copy docs and consolidate links
         run: |
-          cd ${REPO_SOURCE}
-          git checkout feature/bug-wiki
-          cd ..
           cp -rf ${REPO_SOURCE}/documentation/* ${REPO_DEST}/
           cd ${REPO_DEST}
-          ../.github/workflows/scripts/rename-documentation-for-wiki.sh
           grep -lr "link:[a-zA-Z0-9_.-]*.asciidoc.*" .| xargs -r sed -i "s/.asciidoc//g"
           echo ">"
           git diff-index --quiet HEAD & git status -s
@@ -59,3 +57,24 @@ jobs:
           git commit -m "${REPO_SOURCE} documentation | GitHub Actions build number $BUILD_NUMBER"
           git remote add origin-wiki "https://${BUILD_USER}:${BUILD_USER_PASSWD}@github.com/${ORG}/${REPO_DEST}.git"
           git push origin-wiki master
+      - name: Sync devonfw guide
+        if: ${{ env.TO_BE_CANCELLED == 'false' }}
+        run: |
+          cd ${REPO_CONSOLIDATE}
+          if [ ! -d ${REPO_DEST} ]; then git submodule add https://github.com/${ORG}/${REPO_DEST}.git; fi;
+          git submodule init
+          git submodule update --recursive --remote
+          cd ${REPO_DEST}
+          git checkout master
+          git pull
+          cd ..
+          git add .
+          git commit -m "${REPO_SOURCE} documentation | GitHub Actions build number $BUILD_NUMBER"
+          git remote add origin-wiki "https://${BUILD_USER}:${BUILD_USER_PASSWD}@github.com/${ORG}/${REPO_CONSOLIDATE}.git"
+          git push origin-wiki master
+      - name: Trigger Update devonfw-guide on success
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GHA_TOKEN }}
+          repository: devonfw/devonfw-guide
+          event-type: dispatch-update-guide
