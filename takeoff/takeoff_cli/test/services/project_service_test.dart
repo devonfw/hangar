@@ -11,6 +11,7 @@ import 'package:takeoff_lib/src/utils/folders/folders_service.dart';
 import 'package:takeoff_lib/src/persistence/database/database_factory.dart';
 import 'package:takeoff_lib/src/persistence/cache_repository_impl.dart';
 import 'package:takeoff_lib/src/controllers/persistence/cache_repository.dart';
+import 'package:takeoff_lib/src/controllers/cloud/gcloud/gcloud_controller_impl.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:test/test.dart';
 import 'package:path/path.dart';
@@ -19,11 +20,13 @@ List<String> log = [];
 
 void main() {
   late FoldersService foldersService;
+  TakeOffFacade facade = TakeOffFacade();
 
   setUpAll(() {
     GetIt.I.registerSingleton(PlatformService());
     foldersService = FoldersService();
     GetIt.I.registerSingleton(foldersService);
+    facade.googleController = GoogleCloudControllerImpl();
   });
 
   setUp(() async {
@@ -35,7 +38,7 @@ void main() {
   test(
       "listProjects prints the correct message if not logged with Google Cloud",
       overridePrint(() async {
-    ProjectsService projectsService = ProjectsService(TakeOffFacade());
+    ProjectsService projectsService = ProjectsService(facade);
     await projectsService.listProjects(CloudProviderId.gcloud);
 
     expect(log.length, 1);
@@ -49,7 +52,7 @@ void main() {
     CacheRepository cacheRepository = CacheRepositoryImpl();
     String email = "test${Random().nextInt(10000)}@mail.com}";
     await cacheRepository.saveGoogleEmail(email);
-    ProjectsService projectsService = ProjectsService(TakeOffFacade());
+    ProjectsService projectsService = ProjectsService(facade);
     await projectsService.listProjects(CloudProviderId.gcloud);
 
     expect(log.length, 1);
@@ -69,7 +72,7 @@ void main() {
       await cacheRepository.saveGoogleProjectId(elem);
     }
 
-    ProjectsService projectsService = ProjectsService(TakeOffFacade());
+    ProjectsService projectsService = ProjectsService(facade);
 
     await projectsService.listProjects(CloudProviderId.gcloud);
 
@@ -85,7 +88,7 @@ void main() {
     String email = "test${Random().nextInt(10000)}@mail.com}";
     await cacheRepository.saveGoogleEmail(email);
 
-    ProjectsService projectsService = ProjectsService(TakeOffFacade());
+    ProjectsService projectsService = ProjectsService(facade);
     await projectsService.cleanProject(CloudProviderId.gcloud, "projectId");
 
     expect(log.length, 1);
@@ -108,7 +111,7 @@ void main() {
       await cacheRepository.saveGoogleProjectId(elem);
     }
 
-    ProjectsService projectsService = ProjectsService(TakeOffFacade());
+    ProjectsService projectsService = ProjectsService(facade);
     await projectsService.cleanProject(CloudProviderId.gcloud, "projectId");
 
     expect(log.length, 1);
@@ -132,7 +135,7 @@ void main() {
     }
     await cacheRepository.saveGoogleProjectId("projectId");
 
-    ProjectsService projectsService = ProjectsService(TakeOffFacade());
+    ProjectsService projectsService = ProjectsService(facade);
     await projectsService.cleanProject(CloudProviderId.gcloud, "projectId");
 
     expect(log.length, 1);
@@ -160,7 +163,7 @@ void main() {
     }
     await cacheRepository.saveGoogleProjectId(project);
 
-    ProjectsService projectsService = ProjectsService(TakeOffFacade());
+    ProjectsService projectsService = ProjectsService(facade);
     await projectsService.cleanProject(CloudProviderId.gcloud, project);
 
     expect(log.length, 1);

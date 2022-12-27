@@ -6,6 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_gui/features/home/widgets/floating_action_menu.dart';
+import '../../../common/test_widget.dart';
 import 'floating_action_menu_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<ProjectsController>()])
@@ -27,7 +28,7 @@ void main() async {
   testWidgets('Two action buttons for create and quickstart', (tester) async {
     // Avoid overflow due to test conditions
     FlutterError.onError = null;
-    await tester.pumpWidget(createApp(FloatingActionMenu()));
+    await tester.pumpWidget(TestWidget(child: FloatingActionMenu()));
     expect(find.byType(CustomButton), findsNWidgets(2));
     expect(find.text("Create"), findsOneWidget);
     expect(find.text("QuickStart"), findsOneWidget);
