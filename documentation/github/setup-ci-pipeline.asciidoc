@@ -12,11 +12,11 @@ The script located at `/scripts/pipelines/github/pipeline_generator.sh` will aut
 
 * This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled latest changes with `git pull`).
 
-* An existing xref:setup-build-pipeline.asciidoc[build workflow].
+* An existing xref:./setup-build-pipeline.asciidoc[build workflow].
 
-* [Optional] An existing xref:setup-test-pipeline.asciidoc[test workflow].
+* [Optional] An existing xref:./setup-test-pipeline.asciidoc[test workflow].
 
-* [Optional] An existing xref:setup-quality-pipeline.asciidoc[quality workflow].
+* [Optional] An existing xref:./setup-quality-pipeline.asciidoc[quality workflow].
 
 == Creating the workflow using provided script
 
