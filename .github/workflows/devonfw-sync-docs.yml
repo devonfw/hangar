@@ -32,12 +32,9 @@ jobs:
         run: git clone https://github.com/${ORG}/${REPO_CONSOLIDATE}.git ${REPO_CONSOLIDATE}
       - name: Copy docs and consolidate links
         run: |
+          git checkout feature/bug-wiki
           cp -rf ${REPO_SOURCE}/documentation/* ${REPO_DEST}/
           cd ${REPO_DEST}
-          echo "###################################"
-          echo "# ls ../.github/workflows/scripts #"
-          echo "###################################"
-          ls ../.github/workflows/scripts
           ../.github/workflows/scripts/rename-documentation-for-wiki.sh
           grep -lr "link:[a-zA-Z0-9_.-]*.asciidoc.*" .| xargs -r sed -i "s/.asciidoc//g"
           echo ">"
