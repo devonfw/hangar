@@ -8,11 +8,11 @@ function renameFiles {
   for input in $basePath/*
   do
     echo "readin... $input"
-    # When folder call rename again with new base
+    # When folder, call rename again with new base
     if [[ -d "$input" ]]; then
       basePath="$input"
       renameFiles
-    # When doctype do things
+    # When doctype, do things
     elif [[ "$input" == *"$docType" ]]; then
       name=${input//"./"/}
       base="${name%/*$docType}"
@@ -26,7 +26,8 @@ function renameFiles {
       ## Remove .asciidoc for links
       # sed -i "s/.asciidoc//g" $input
       ## Move and rename file
-      mv -f $input $docBase/$name
+      cp -f $input $docBase/$name
+      rm -rf $input
     fi
   done
 }
