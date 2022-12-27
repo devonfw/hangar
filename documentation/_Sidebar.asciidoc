@@ -1,4 +1,4 @@
-= Docs by provider
+= Docs per provider
 
 == Common
 
