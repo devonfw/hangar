@@ -1,0 +1,64 @@
+= Guides per provider
+
+== Common
+
+* link:setup-container-image-registry[Setup Container Image Registry]
+
+== AWS
+
+* link:aws-setup-aws-account-iam-for-eks[Setup AWS account IAM for deployment in EKS]
+* link:aws-setup-sonarqube-instance[Setting up a SonarQube instance in AWS]
+
+== Azure DevOps
+
+* link:azure-devops-setup-project[Setup Azure DevOps project]
+* link:azure-devops-setup-repository-script[Setting up a repository on Azure DevOps]
+
+=== Setup Azure DevOps Pipelines
+* link:azure-devops-setup-build-pipeline[Setting up a Build pipeline]
+* link:azure-devops-setup-test-pipeline[Setting up a Test pipeline]
+* link:azure-devops-setup-quality-pipeline[Setting up a Quality pipeline]
+* link:azure-devops-setup-package-pipeline[Setting up a Package pipeline]
+* link:azure-devops-setup-library-package-pipeline[Setting up a library Package pipeline]
+* link:azure-devops-setup-eks-provisioning-pipeline[Setting up a EKS provisioning pipeline]
+* link:azure-devops-setup-aks-provisioning-pipeline[Setting up a AKS provisioning pipeline]
+* link:azure-devops-setup-deploy-pipeline[Setting up a Deploy pipeline]
+
+== GitHub
+
+* link:github-setup-repository-script[Setting up a repository on GitHub]
+
+=== Setup GitHub workflows
+* link:github-setup-build-pipeline[Setting up a Build workflow]
+* link:github-setup-test-pipeline[Setting up a Test workflow]
+* link:github-setup-quality-pipeline[Setting up a Quality workflow]
+* link:github-setup-ci-pipeline[Setting up a CI workflow]
+* link:github-setup-package-pipeline[Setting up a Package workflow]
+* https://github.com/devonfw/hangar/blob/fc50959270064796aaf6f815241f81207719f983/documentation/github-setup-eks-provisioning-pipeline[Setting up a EKS provisioning workflow]
+* https://github.com/devonfw/hangar/blob/1f8e2e00ec8763e1a7a649eabddbcff02c30c9c4/documentation/github-setup-aks-provisioning-pipeline[Setting up a AKS provisioning workflow]
+* https://github.com/devonfw/hangar/blob/584b15c4ec72653c537e2e5865464342af609253/documentation/github-setup-deploy-pipeline[Setting up a Deploy workflow]
+
+== Google Cloud
+
+* link:gcloud-setup-project[Setup Google Cloud project]
+* link:gcloud-setup-account-iam[Setup Google Cloud account IAM]
+* link:gcloud-setup-repository-script[Setting up a repository on Google Cloud]
+* link:gcloud-setup-sonarqube-instance[Setting up a SonarQube instance in Google Cloud]
+* link:firebase/setup-firebase[Setting up an environment on Firebase]
+* link:gcloud-setup-cloud-run-service[Setting up a Google Cloud Run service]
+* link:gcloud-logging-monitoring-cloud-run[Logging and monitoring a service on Cloud Run]
+
+=== Quickstarts
+* link:gcloud-quickstart-wayat-backend[Setting up the Wayat Backend in a new project]
+* link:gcloud-quickstart-wayat-frontend[Setting up the Wayat Frontend in a new project]
+
+=== Setup Google Cloud Build pipelines
+* link:gcloud-setup-build-pipeline[Setting up a Build pipeline]
+* link:gcloud-setup-test-pipeline[Setting up a Test pipeline]
+* link:gcloud-setup-quality-pipeline[Setting up a Quality pipeline]
+* link:gcloud-setup-package-pipeline[Setting up a Package pipeline]
+* link:gcloud-setup-gke-provisioning-pipeline[Setting up a GKE provisioning pipeline]
+* link:gcloud-setup-deploy-cloud-run-pipeline[Setting up a Deploy in Cloud Run pipeline]
+* link:gcloud-setup-deploy-pipeline[Setting up a Deploy in GKE pipeline]
+* link:gcloud-setup-security[Automate security analysis of IaC assets and application]
+* link:gcloud-upload-secret-manager[Upload files or variables as secrets in Google Cloud Secret Manager]
