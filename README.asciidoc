@@ -77,9 +77,9 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 **** https://github.com/devonfw/hangar/blob/master/documentation/github/setup-package-pipeline.asciidoc[Setting up a Package workflow]
 *** Setting up a library Package workflow [TBD]
 ** Setup Kubernetes deploying environment workflow:
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
-*** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
-** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
+*** https://github.com/devonfw/hangar/blob/fc50959270064796aaf6f815241f81207719f983/documentation/github/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning workflow]
+*** https://github.com/devonfw/hangar/blob/1f8e2e00ec8763e1a7a649eabddbcff02c30c9c4/documentation/github/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning workflow]
+** https://github.com/devonfw/hangar/blob/584b15c4ec72653c537e2e5865464342af609253/documentation/github/setup-deploy-pipeline.asciidoc[Setting up a Deploy workflow]
 
 ### Project hosted and with CI/CD on Google Cloud, and deployed on either Google Cloud Run or GKE
 
