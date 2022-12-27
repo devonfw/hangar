@@ -26,7 +26,7 @@ In summary, devonfw Takeoff can be used to accelerate and industrialize to a lar
 
 ## What is the difference?
 
-devonfw Hangar is a guide with automated toolchain for the creation of “Cloud based Dev & Run environments”. It is not a 100%, fully automatic, monolithic tool, but rather a pragmatic bundling of documentation and tools to facilitate and automate (where possible) the creation of Cloud environments.
+devonfw Hangar is a guide with automated toolchain for the creation of Cloud based Dev & Run environments. It is not a 100%, fully automatic, monolithic tool, but rather a pragmatic bundling of documentation and tools to facilitate and automate (where possible) the creation of Cloud environments.
 
 devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even further the setup, in a fully automatic way, providing full-featured quickstart use cases.
 
