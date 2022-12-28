@@ -59,21 +59,21 @@ endif::[]
 === Flags
 [subs=attributes+]
 ```
--c, --config-file        [Required] Configuration file containing {pipeline_type} definition.
--n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.
--d, --local-directory    [Required] Local directory of your project.
-    --service-name       [Required] Name for the Cloud Run service.
-    --gcloud-region      [Required] Region where the service will be deployed.
+-c, --config-file            [Required] Configuration file containing {pipeline_type} definition.
+-n, --pipeline-name          [Required] Name that will be set to the {pipeline_type}.
+-d, --local-directory        [Required] Local directory of your project.
+    --service-name           [Required] Name for the Cloud Run service.
+    --gcloud-region          [Required] Region where the service will be deployed.
 ifeval::["{provider}" == "Google Cloud"]
-    --package-pipeline-name                    Package {pipeline_type} name.
+    --package-pipeline-name             Package {pipeline_type} name.
 endif::[]
-    --port                          Listening port of the service. Default: 8080.
--b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
-ifndef::no-PR-or-MR[-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
+    --port                              Listening port of the service. Default: 8080.
+-b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+ifndef::no-PR-or-MR[-w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
 ifeval::["{provider}" == "Google Cloud"]
--m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
-    --env-vars                      List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
-    --secret-vars                   List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
+-m, --machine-type                      Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
+    --env-vars                          List of environment variables to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
+    --secret-vars                       List of environment variables (saved as secrets in Secret Manager) to be made available in pipeline. Syntax: "var1=val1 var2=val2 ...".
 endif::[]
 ```
 
