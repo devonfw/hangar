@@ -50,33 +50,25 @@ class GoogleForm extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 15),
-        Row(
-          children: [
-            Expanded(
-              child: Observer(builder: (_) {
-                if (controller.region.isEmpty) {
-                  controller.region = googleCloudRegions.first;
-                }
+        Observer(builder: (_) {
+          if (controller.region.isEmpty) {
+            controller.region = googleCloudRegions.first;
+          }
 
-                return DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      label: Text(AppLocalizations.of(context)!.region),
-                      border: const OutlineInputBorder(),
-                    ),
-                    items: googleCloudRegions
-                        .map((e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            ))
-                        .toList(),
-                    value: controller.region,
-                    onChanged: (value) => controller.region = value!);
-              }),
-            ),
-            const SizedBox(width: 20),
-            Expanded(child: Container()),
-          ],
-        ),
+          return DropdownButtonFormField(
+              decoration: InputDecoration(
+                label: Text(AppLocalizations.of(context)!.region),
+                border: const OutlineInputBorder(),
+              ),
+              items: googleCloudRegions
+                  .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e),
+                      ))
+                  .toList(),
+              value: controller.region,
+              onChanged: (value) => controller.region = value!);
+        }),
       ],
     );
   }

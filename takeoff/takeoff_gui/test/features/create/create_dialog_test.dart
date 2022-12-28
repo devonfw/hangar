@@ -41,12 +41,12 @@ void main() async {
     when(mockGoogleFormController.region).thenReturn("europe-west2");
 
     when(mockProjectsController.backendLanguage).thenReturn(Language.python);
-    when(mockProjectsController.backendVersion)
-        .thenReturn(LanguagesVersions.backendLanguages.first.name);
+    when(mockProjectsController.backendVersion).thenReturn(LanguagesVersions
+        .versionsLanguages[LanguagesVersions.backendLanguages.first]!.first);
 
     when(mockProjectsController.frontendLanguage).thenReturn(Language.flutter);
-    when(mockProjectsController.frontendVersion)
-        .thenReturn(LanguagesVersions.frontendLanguages.first.name);
+    when(mockProjectsController.frontendVersion).thenReturn(LanguagesVersions
+        .versionsLanguages[LanguagesVersions.frontendLanguages.first]!.first);
 
     await tester.pumpWidget(TestWidget(child: CreateDialog()));
     expect(find.text("Create a project"), findsOneWidget);
