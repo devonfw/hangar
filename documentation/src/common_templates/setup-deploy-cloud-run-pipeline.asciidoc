@@ -37,6 +37,9 @@ pipeline_generator.sh \
   -d <project local path> \
   --service-name  <service name> \
   --gcloud-region <gcloud region> \
+ifeval::["{provider}" == "Google Cloud"]
+  [--package-pipeline-name <{pipeline_type} name>] \
+endif::[]
   [--port <listening port>] \
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
@@ -61,6 +64,9 @@ endif::[]
 -d, --local-directory    [Required] Local directory of your project.
     --service-name       [Required] Name for the Cloud Run service.
     --gcloud-region      [Required] Region where the service will be deployed.
+ifeval::["{provider}" == "Google Cloud"]
+    --package-pipeline-name                    Package {pipeline_type} name.
+endif::[]
     --port                          Listening port of the service. Default: 8080.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
