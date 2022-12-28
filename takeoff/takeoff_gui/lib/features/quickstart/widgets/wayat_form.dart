@@ -6,6 +6,7 @@ import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_gui/common/tooltip.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 class WayatForm extends StatelessWidget {
   final QuickstartController controller = GetIt.I.get<QuickstartController>();
@@ -23,9 +24,9 @@ class WayatForm extends StatelessWidget {
                 builder: (_) => TextField(
                   decoration: InputDecoration(
                       border: const OutlineInputBorder(),
-                      labelText: "Billing Account",
+                      labelText: AppLocalizations.of(context)!.billingAccount,
                       errorText: controller.billingAccount.isEmpty
-                          ? "This field is required"
+                          ? AppLocalizations.of(context)!.fieldRequired
                           : null),
                   onChanged: (value) => controller.billingAccount = value,
                 ),
@@ -33,17 +34,26 @@ class WayatForm extends StatelessWidget {
             ),
             const SizedBox(width: 20),
             Expanded(
-              child: Observer(
-                builder: (_) => TextField(
-                  decoration: InputDecoration(
+              child: Observer(builder: (_) {
+                if (controller.region.isEmpty) {
+                  controller.region = firebaseRegions.first;
+                }
+
+                return DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context)!.region),
                       border: const OutlineInputBorder(),
-                      labelText: "Region",
-                      errorText: controller.region.isEmpty
-                          ? "This field is required"
-                          : null),
-                  onChanged: (value) => controller.region = value,
-                ),
-              ),
+                    ),
+                    hint: Text(AppLocalizations.of(context)!.region),
+                    items: firebaseRegions
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    value: controller.region,
+                    onChanged: (value) => controller.region = value!);
+              }),
             ),
           ],
         ),
@@ -68,7 +78,7 @@ class WayatForm extends StatelessWidget {
                           }
                         : null,
                     icon: Icons.add_box_outlined,
-                    text: "Quickstart"),
+                    text: AppLocalizations.of(context)!.quickstartButton),
               ),
             )
           ],

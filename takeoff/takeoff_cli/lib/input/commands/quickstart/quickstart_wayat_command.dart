@@ -1,5 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:takeoff_cli/services/project_service.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 class QuickstartWayatCommand extends Command {
   final ProjectsService service;
@@ -12,7 +13,8 @@ class QuickstartWayatCommand extends Command {
 
   QuickstartWayatCommand(this.service) {
     argParser.addOption("billing-account", abbr: "b", mandatory: true);
-    argParser.addOption("google-cloud-region", abbr: "r", mandatory: true);
+    argParser.addOption("google-cloud-region",
+        abbr: "r", mandatory: true, allowed: firebaseRegions);
   }
 
   @override

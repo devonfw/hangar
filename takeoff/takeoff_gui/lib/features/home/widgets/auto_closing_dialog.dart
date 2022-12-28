@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:takeoff_gui/features/home/utils/type_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AutoClosingDialog extends StatefulWidget {
   final TypeDialog typeDialog;
@@ -62,7 +63,7 @@ class _AutoClosingDialogState extends State<AutoClosingDialog> {
             timer.cancel();
             Navigator.of(context).pop();
           },
-          child: const Text('Close'),
+          child: Text(AppLocalizations.of(context)!.closeButton),
         ),
       ],
     );
