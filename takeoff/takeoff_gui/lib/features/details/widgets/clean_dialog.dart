@@ -15,7 +15,7 @@ class CleanDialog extends StatelessWidget {
       backgroundColor: Colors.red.shade200,
       title: Text(
         AppLocalizations.of(context)!.removeProject,
-        style: TextStyle(fontSize: 30),
+        style: const TextStyle(fontSize: 30),
       ),
       content: SingleChildScrollView(
           child: Padding(
