@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoadingPage extends StatelessWidget {
-  const LoadingPage({super.key});
+  final String message;
+  const LoadingPage({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -12,16 +14,16 @@ class LoadingPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              SizedBox(
+            children: [
+              const SizedBox(
                 height: 300,
                 width: 300,
                 child: Image(image: AssetImage("assets/gifs/rocket.gif")),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
-                "Launching the app, please while checking the requirements...",
-                style: TextStyle(fontSize: 20),
+                message,
+                style: const TextStyle(fontSize: 20),
               )
             ],
           ),

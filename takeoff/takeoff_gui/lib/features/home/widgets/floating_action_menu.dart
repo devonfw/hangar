@@ -25,19 +25,18 @@ class FloatingActionMenu extends StatelessWidget {
           builder: (_) => TooltipMessage(
             message: AppLocalizations.of(context)!.createButtonTooltip,
             child: CustomButton(
-              icon: Icons.add_box_outlined,
-              onPressed: controller.isLogged
-                  ? () => showDialog(
-                        context: context,
-                        builder: ((context) {
-                          GetIt.I.get<CreateController>().resetForm();
-                          return CreateDialog();
-                        }),
-                        barrierDismissible: false,
-                      )
-                  : null,
-              text: "Create",
-            ),
+                icon: Icons.add_box_outlined,
+                onPressed: controller.isLogged
+                    ? () => showDialog(
+                          context: context,
+                          builder: ((context) {
+                            GetIt.I.get<CreateController>().resetForm();
+                            return CreateDialog();
+                          }),
+                          barrierDismissible: false,
+                        )
+                    : null,
+                text: AppLocalizations.of(context)!.createButton),
           ),
         ),
         const SizedBox(width: 10),
@@ -55,7 +54,7 @@ class FloatingActionMenu extends StatelessWidget {
                         }),
                       )
                   : null,
-              text: "QuickStart",
+              text: AppLocalizations.of(context)!.quickstartButton,
             ),
           ),
         ),

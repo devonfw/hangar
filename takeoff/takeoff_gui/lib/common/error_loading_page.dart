@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ErrorLoadingPage extends StatelessWidget {
   final String message;
@@ -8,10 +9,10 @@ class ErrorLoadingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Error",
+      title: AppLocalizations.of(context)!.errorTitle,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Some error happened"),
+          title: Text(AppLocalizations.of(context)!.errorMessage),
           backgroundColor: Colors.red,
         ),
         body: Center(

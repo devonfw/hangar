@@ -5,6 +5,7 @@ import 'package:takeoff_gui/common/custom_button.dart';
 import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserInteractionDialog extends StatefulWidget {
   final GuiMessage message;
@@ -37,10 +38,10 @@ class _UserInteractionDialogState extends State<UserInteractionDialog> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
+                children: [
                   Text(
-                    "Please, follow these steps",
-                    style: TextStyle(fontSize: 30),
+                    AppLocalizations.of(context)!.followStepsMessage,
+                    style: const TextStyle(fontSize: 30),
                   ),
                 ],
               ),
@@ -74,7 +75,7 @@ class _UserInteractionDialogState extends State<UserInteractionDialog> {
       actions: [
         if (widget.message.url != null)
           CustomButton(
-            text: "Open link",
+            text: AppLocalizations.of(context)!.openLink,
             icon: Icons.check_box,
             onPressed: () {
               launchUrl(Uri.parse(widget.message.url!));
@@ -84,7 +85,7 @@ class _UserInteractionDialogState extends State<UserInteractionDialog> {
             },
           ),
         CustomButton(
-          text: "Confirm",
+          text: AppLocalizations.of(context)!.confirm,
           icon: Icons.check_box,
           onPressed: (linkTapped)
               ? () {

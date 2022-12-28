@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:takeoff_gui/features/create/controllers/project_form_controllers/google_form_controller.dart';
+import 'package:takeoff_lib/takeoff_lib.dart';
 
 class GoogleForm extends StatelessWidget {
   final GoogleFormController controller = GetIt.I.get<GoogleFormController>();
@@ -52,17 +53,25 @@ class GoogleForm extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Observer(
-                builder: (_) => TextField(
-                  decoration: InputDecoration(
+              child: Observer(builder: (_) {
+                if (controller.region.isEmpty) {
+                  controller.region = googleCloudRegions.first;
+                }
+
+                return DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context)!.region),
                       border: const OutlineInputBorder(),
-                      labelText: AppLocalizations.of(context)!.region,
-                      errorText: controller.region.isEmpty
-                          ? AppLocalizations.of(context)!.fieldRequired
-                          : null),
-                  onChanged: (value) => controller.region = value,
-                ),
-              ),
+                    ),
+                    items: googleCloudRegions
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    value: controller.region,
+                    onChanged: (value) => controller.region = value!);
+              }),
             ),
             const SizedBox(width: 20),
             Expanded(child: Container()),

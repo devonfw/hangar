@@ -40,6 +40,7 @@ class CreateGCloudCommand extends Command {
     argParser.addOption('region',
         abbr: 'r',
         mandatory: true,
+        allowed: googleCloudRegions,
         help: "Google Cloud region in which the project will be created.");
   }
 
