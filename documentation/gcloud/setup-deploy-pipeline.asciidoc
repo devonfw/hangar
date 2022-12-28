@@ -33,7 +33,6 @@ pipeline_generator.sh \
   -d <project local path> \
   --package-pipeline-name <{pipeline_type} name> \
   --env-provision-pipeline-name <{pipeline_type} name> \
-  --k8s-provider <provider name> \
   --k8s-namespace <namespace> \
   --k8s-deploy-files-path <manifests path> \
   [--k8s-image-pull-secret-name <secret name>] \
@@ -50,7 +49,6 @@ NOTE:  The config file for the deploy {pipeline_type} is located at `/scripts/pi
 -d  --local-directory               [Required] Local directory of your project.
     --package-pipeline-name         [Required] Package {pipeline_type} name.
     --env-provision-pipeline-name   [Required] Environment provisioning {pipeline_type} name.
-    --k8s-provider                  [Required] Kubernetes cluster provider name. Accepted values: EKS, AKS.
     --k8s-namespace                 [Required] Kubernetes namespace where the application will be deployed.
     --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory.
     --k8s-image-pull-secret-name               Name for the generated secret containing registry credentials. Required when using a private registry to host images.
