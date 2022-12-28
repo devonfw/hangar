@@ -32,7 +32,9 @@ void main() async {
     String text =
         "Launching the app, please while checking the requirements...";
     ImageProvider image = const AssetImage("assets/gifs/rocket.gif");
-    await tester.pumpWidget(createApp(const LoadingPage()));
+    await tester.pumpWidget(createApp(LoadingPage(
+      message: text,
+    )));
     expect(find.text(text), findsOneWidget);
     expect(find.byType(Image), findsOneWidget);
     expect(find.widgetWithImage(Image, image), findsNothing);
