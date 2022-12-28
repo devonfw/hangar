@@ -33,6 +33,7 @@ pipeline_generator.sh \
   -d <project local path> \
   --service-name  <service name> \
   --gcloud-region <gcloud region> \
+  [--package-pipeline-name <{pipeline_type} name>] \
   [--port <listening port>] \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]]
@@ -52,6 +53,7 @@ NOTE: For this pipeline, the environment and secret variables will be made avail
 -d, --local-directory    [Required] Local directory of your project.
     --service-name       [Required] Name for the Cloud Run service.
     --gcloud-region      [Required] Region where the service will be deployed.
+    --package-pipeline-name                    Package {pipeline_type} name.
     --port                          Listening port of the service. Default: 8080.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -m, --machine-type                  Machine type for {pipeline_type} runner. Accepted values: E2_HIGHCPU_8, E2_HIGHCPU_32, N1_HIGHCPU_8, N1_HIGHCPU_32.]
