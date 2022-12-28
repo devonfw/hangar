@@ -37,6 +37,7 @@ pipeline_generator.sh \
 ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
 ifeval::["{provider}" == "Google Cloud"]
   [--language-version <version>] \
+  [--build-pipeline-name <build {pipeline_type} name>] \
 endif::[]
   [-a <artifact source path>] \
   [-b <branch>] \
