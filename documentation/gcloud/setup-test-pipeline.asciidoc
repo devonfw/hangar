@@ -39,6 +39,7 @@ pipeline_generator.sh \
   -d <project local path> \
   --build-pipeline-name <build {pipeline_type} name> \
   [--language-version <version>] \
+  [--build-pipeline-name <build {pipeline_type} name>] \
   [-a <artifact source path>] \
   [-b <branch>] \
   [-m <machine type for {pipeline_type} runner>]
