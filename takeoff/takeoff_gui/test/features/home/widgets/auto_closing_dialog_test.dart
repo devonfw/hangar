@@ -6,6 +6,7 @@ import 'package:takeoff_gui/features/home/controllers/projects_controller.dart';
 import 'package:takeoff_gui/features/home/utils/type_dialog.dart';
 import 'package:takeoff_gui/features/home/widgets/auto_closing_dialog.dart';
 
+import '../../../common/test_widget.dart';
 import 'auto_closing_dialog_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<ProjectsController>()])
@@ -15,19 +16,12 @@ void main() async {
     GetIt.I.registerSingleton<ProjectsController>(controller);
   });
 
-  Widget createApp(Widget body) {
-    return MaterialApp(
-      home: Scaffold(
-        body: body,
-      ),
-    );
-  }
-
   testWidgets('Dialog has data', (tester) async {
     String title = "Test Title";
     String message = "Test message";
-    await tester.pumpWidget(createApp(AutoClosingDialog(
-        typeDialog: TypeDialog.info, title: title, message: message)));
+    await tester.pumpWidget(TestWidget(
+        child: AutoClosingDialog(
+            typeDialog: TypeDialog.info, title: title, message: message)));
 
     expect(find.text(title), findsOneWidget);
     expect(find.text(message), findsOneWidget);
@@ -38,8 +32,9 @@ void main() async {
   testWidgets('Dialog info shows blue color', (tester) async {
     String title = "Test Title";
     String message = "Test message";
-    await tester.pumpWidget(createApp(AutoClosingDialog(
-        typeDialog: TypeDialog.info, title: title, message: message)));
+    await tester.pumpWidget(TestWidget(
+        child: AutoClosingDialog(
+            typeDialog: TypeDialog.info, title: title, message: message)));
 
     ElevatedButton button = tester.widget(find.byType(ElevatedButton));
     AlertDialog dialog = tester.widget(find.byType(AlertDialog));
@@ -51,8 +46,9 @@ void main() async {
   testWidgets('Dialog error shows red color', (tester) async {
     String title = "Test Title";
     String message = "Test message";
-    await tester.pumpWidget(createApp(AutoClosingDialog(
-        typeDialog: TypeDialog.error, title: title, message: message)));
+    await tester.pumpWidget(TestWidget(
+        child: AutoClosingDialog(
+            typeDialog: TypeDialog.error, title: title, message: message)));
 
     ElevatedButton button = tester.widget(find.byType(ElevatedButton));
     AlertDialog dialog = tester.widget(find.byType(AlertDialog));
@@ -64,8 +60,9 @@ void main() async {
   testWidgets('Dialog success shows green color', (tester) async {
     String title = "Test Title";
     String message = "Test message";
-    await tester.pumpWidget(createApp(AutoClosingDialog(
-        typeDialog: TypeDialog.success, title: title, message: message)));
+    await tester.pumpWidget(TestWidget(
+        child: AutoClosingDialog(
+            typeDialog: TypeDialog.success, title: title, message: message)));
 
     ElevatedButton button = tester.widget(find.byType(ElevatedButton));
     AlertDialog dialog = tester.widget(find.byType(AlertDialog));
@@ -77,10 +74,22 @@ void main() async {
   testWidgets('Checks closes dialog', (tester) async {
     String title = "Test Title";
     String message = "Test message";
-    await tester.pumpWidget(createApp(AutoClosingDialog(
-        typeDialog: TypeDialog.success, title: title, message: message)));
+    await tester.pumpWidget(TestWidget(child: Builder(builder: (context) {
+      return ElevatedButton(
+        child: const Text("openDialog"),
+        onPressed: () => showDialog(
+            context: context,
+            builder: (context) => AutoClosingDialog(
+                typeDialog: TypeDialog.success,
+                title: title,
+                message: message)),
+      );
+    })));
 
-    await tester.tap(find.byType(ElevatedButton));
+    await tester.tap(find.widgetWithText(ElevatedButton, "openDialog"));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(ElevatedButton, "Close"));
     await tester.pumpAndSettle();
     expect(find.byType(AutoClosingDialog), findsNothing);
   });

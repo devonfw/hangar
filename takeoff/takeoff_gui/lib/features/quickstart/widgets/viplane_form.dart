@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:takeoff_gui/features/quickstart/controllers/quickstart_controller.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VipLaneForm extends StatelessWidget {
   final QuickstartController controller = GetIt.I.get<QuickstartController>();
@@ -10,10 +11,10 @@ class VipLaneForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
         child: Text(
-      "Coming soon!",
-      style: TextStyle(fontSize: 20),
+      AppLocalizations.of(context)!.comingSoonButton,
+      style: const TextStyle(fontSize: 20),
     ));
   }
 }
