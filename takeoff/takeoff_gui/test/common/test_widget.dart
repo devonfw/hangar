@@ -5,7 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TestWidget extends StatelessWidget {
   final Widget child;
-  const TestWidget({super.key, required this.child});
+  final Widget? floatingButton;
+  const TestWidget({super.key, required this.child, this.floatingButton});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,12 @@ class TestWidget extends StatelessWidget {
       initialLocation: "/",
       debugLogDiagnostics: true,
       routes: [
-        GoRoute(path: "/", builder: (context, state) => Scaffold(body: child)),
+        GoRoute(
+            path: "/",
+            builder: (context, state) => Scaffold(
+                  body: child,
+                  floatingActionButton: floatingButton,
+                )),
       ],
     );
 

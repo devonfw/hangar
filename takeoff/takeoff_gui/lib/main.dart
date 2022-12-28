@@ -47,7 +47,9 @@ class MyApp extends StatelessWidget {
               routerConfig: AppRouter().router,
             );
           } else {
-            return const LoadingPage();
+            return LoadingPage(
+              message: localization.loadingPageMessage,
+            );
           }
         });
   }

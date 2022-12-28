@@ -90,7 +90,7 @@ class GoogleLoginDialog extends StatelessWidget {
             typeDialog: value ? TypeDialog.success : TypeDialog.error,
             title: AppLocalizations.of(context)!.loginButton,
             message: value
-                ? AppLocalizations.of(context)!.logedInMessage
+                ? AppLocalizations.of(context)!.loggedInMessage
                 : AppLocalizations.of(context)!.loginFailedMessage,
           ),
         );

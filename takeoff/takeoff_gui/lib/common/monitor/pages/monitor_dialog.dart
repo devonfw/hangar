@@ -36,7 +36,7 @@ class MonitorDialog extends StatelessWidget {
                           Text(
                               controller.hasFinished
                                   ? AppLocalizations.of(context)!
-                                      .projectCreationIsFinishMessage
+                                      .projectCreationFinishedMessage
                                   : AppLocalizations.of(context)!
                                       .creatingProjectMessage,
                               style: const TextStyle(fontSize: 30)),
