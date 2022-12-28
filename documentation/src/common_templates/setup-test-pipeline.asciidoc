@@ -64,6 +64,7 @@ endif::[]
 ifdef::build-pipeline[    --build-pipeline-name   [Required] Build {pipeline_type} name.]
 ifeval::["{provider}" == "Google Cloud"]
     --language-version      [Required, if Flutter or Python] Language or framework version.
+    --build-pipeline-name              Build {pipeline_type} name.
 endif::[]
 -a, --artifact-path                    Path to be persisted as an artifact after {pipeline_type} execution, e.g. where the application stores logs or any other blob on runtime.
 -b, --target-branch                    Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
