@@ -16,20 +16,22 @@ class ProjectDetails extends StatelessWidget {
       body: Row(
         children: [
           SideBar(),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // TODO add dropdown to select project here
-                const SizedBox(height: 40),
-                Text(
-                  "${project.name} ${AppLocalizations.of(context)!.projectResources}",
-                  style: const TextStyle(fontSize: 30),
-                ),
-                const SizedBox(height: 40),
-                ResourceDetails(),
-              ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // TODO add dropdown to select project here
+                  const SizedBox(height: 40),
+                  Text(
+                    "${project.name} ${AppLocalizations.of(context)!.projectResources}",
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                  const SizedBox(height: 40),
+                  ResourceDetails(),
+                ],
+              ),
             ),
           )
         ],

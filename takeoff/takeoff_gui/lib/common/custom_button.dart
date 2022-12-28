@@ -15,21 +15,15 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: onPressed == null ? null : () => onPressed!(),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         minimumSize: const Size(150, 50),
         maximumSize: const Size(170, 50),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon),
-          const SizedBox(width: 10),
-          Text(text),
-        ],
-      ),
+      icon: Icon(icon),
+      label: Text(text),
     );
   }
 }
