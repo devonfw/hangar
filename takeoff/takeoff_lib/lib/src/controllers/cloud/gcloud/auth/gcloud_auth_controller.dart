@@ -60,7 +60,7 @@ class GCloudAuthController implements AuthController<GCloud> {
         String url = message.split("\n").last.trim();
         if (Uri.tryParse(url) != null) {
           Log.info("Opening Google Authentication in the browser");
-          await UrlLaucher.launch(url);
+          await UrlLaucher().launch(url);
           if (useStdin) {
             String? line = stdin.readLineSync();
             gCloudProcess.stdin.writeln(line?.trim());

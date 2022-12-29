@@ -2,7 +2,7 @@ import 'dart:io';
 
 class UrlLaucher {
   /// Opens a given URL in the browser
-  static Future<ProcessResult> launch(String url) {
+  Future<ProcessResult> launch(String url) {
     if (Platform.isWindows) {
       return Process.run("powershell", ["-command", 'Start-Process "$url"']);
     } else if (Platform.isLinux) {

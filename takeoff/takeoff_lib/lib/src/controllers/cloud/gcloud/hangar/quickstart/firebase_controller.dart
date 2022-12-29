@@ -56,7 +56,7 @@ class FirebaseController {
           Log.info(
               "Your session ID is: $sessionId\nFollow the instructions in your browser and "
               "enter your authorization code:");
-          await UrlLaucher.launch(url);
+          await UrlLaucher().launch(url);
           late String code;
           if (outputStream == null) {
             code = stdin.readLineSync() ?? "";
