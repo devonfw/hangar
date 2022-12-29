@@ -35,15 +35,11 @@ class _UserInteractionDialogState extends State<UserInteractionDialog> {
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.followStepsMessage,
-                    style: const TextStyle(fontSize: 30),
-                  ),
-                ],
+              Text(
+                AppLocalizations.of(context)!.followStepsMessage,
+                style: const TextStyle(fontSize: 30),
               ),
               const SizedBox(height: 50),
               SelectableText(
