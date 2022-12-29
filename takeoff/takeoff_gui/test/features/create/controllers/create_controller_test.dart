@@ -4,6 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:takeoff_gui/common/monitor/controllers/monitor_controller.dart';
 import 'package:takeoff_gui/features/create/controllers/create_controller.dart';
 import 'package:takeoff_gui/features/create/controllers/project_form_controllers/create_form_controller.dart';
+import 'package:takeoff_gui/features/create/controllers/project_form_controllers/project_form_controllers.dart';
 import 'package:takeoff_gui/features/create/utils/provider_ci_cd.dart';
 import 'package:takeoff_lib/takeoff_lib.dart';
 
@@ -12,16 +13,21 @@ import 'create_controller_test.mocks.dart';
 @GenerateNiceMocks([
   MockSpec<MonitorController>(),
   MockSpec<CreateFormController>(),
+  MockSpec<GoogleFormController>(),
 ])
 void main() async {
   final MockCreateFormController mockCreateFormController =
       MockCreateFormController();
+  final MockGoogleFormController mockGoogleFormController =
+      MockGoogleFormController();
   final MockMonitorController mockMonitorController = MockMonitorController();
   late CreateController createController;
 
   setUpAll(() async {
     GetIt.I.registerSingleton<MonitorController>(mockMonitorController);
     GetIt.I.registerSingleton<CreateFormController>(mockCreateFormController);
+    GetIt.I.registerSingleton<GoogleFormController>(mockGoogleFormController);
+
     createController = CreateController();
   });
 
