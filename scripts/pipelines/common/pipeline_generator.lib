@@ -83,6 +83,7 @@ function help {
         echo "GKE provisioning $pipeline_type flags:"
         echo "      --gcloud-region         [Required] Google Cloud region for provisioning resources."
         echo "      --rancher                          Install Rancher to manage the cluster."
+        echo "      --activate-monitoring              Install automatically monitoring tools. (<true/false>. default: true)"
         echo ""
     fi
     echo "Deploy to Kubernetes $pipeline_type flags:"
@@ -92,7 +93,7 @@ function help {
     echo "      --k8s-provider                  [Required] Kubernetes cluster provider name. Accepted values: EKS, AKS."
     echo "      --k8s-namespace                 [Required] Kubernetes namespace where the application will be deployed."
     echo "      --k8s-deploy-files-path         [Required] Path from the root of the project to the YAML manifests directory."
-    echo "      --k8s-image-pull-secret-name    Name for the generated secret containing registry credentials. Required when using a private registry to host images."
+    echo "      --k8s-image-pull-secret-name               Name for the generated secret containing registry credentials. Required when using a private registry to host images."
     echo ""
     if [[ "$provider" == "gcloud" ]]
     then
