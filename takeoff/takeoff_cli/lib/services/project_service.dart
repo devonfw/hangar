@@ -95,17 +95,19 @@ class ProjectsService {
   Future<void> openResource(
       {required String projectId,
       required CloudProviderId cloudProviderId,
-      required Resource resource}) async {
+      required Resource resource,
+      UrlLaucher? urlLaucher}) async {
     CloudProvider provider = CloudProvider.fromId(cloudProviderId);
+
+    String account = await _takeOffFacade.getCurrentAccount(cloudProviderId);
 
     if ((await _takeOffFacade.getCurrentAccount(cloudProviderId)).isEmpty) {
       Log.error("You have not logged in with ${provider.name}");
       return;
     }
 
-    if (projectId.isEmpty || projectId == "") {
-      Log.error(
-          "Add project name or create it -> execute takeoff create [project name] [arguments]");
+    if (projectId.isEmpty) {
+      Log.error("Project ID cannot be empty");
       return;
     }
 
@@ -117,18 +119,14 @@ class ProjectsService {
       return;
     }
 
-    if (resource.name.isEmpty || resource.name == "") {
-      Log.error(
-          "Choose resource type which needs to open: ide, pipeline, fe repo, be repo.");
-      return;
-    }
-
     try {
       Uri url =
           _takeOffFacade.getResource(projectId, cloudProviderId, resource);
-      UrlLaucher.launch(url.toString());
+      UrlLaucher launcher = urlLaucher ?? UrlLaucher();
+      launcher.launch(url.toString());
     } catch (e) {
-      Log.error("You can not open $projectId resource");
+      Log.error(
+          "Error opening resource ${resource.name} of project $projectId");
     }
   }
 }
