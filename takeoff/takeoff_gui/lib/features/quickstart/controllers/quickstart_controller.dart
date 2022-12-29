@@ -26,12 +26,13 @@ abstract class _QuickstartController with Store {
   @computed
   bool get isValidForm => billingAccount.isNotEmpty && region.isNotEmpty;
 
-  void createWayat() {
-    monitorController.monitorProcess(() async => await facade.quickstartWayat(
-        billingAccount: billingAccount,
-        googleCloudRegion: region,
-        outputStream: monitorController.outputChannel,
-        inputStream: monitorController.inputChannel));
+  Future<void> createWayat() async {
+    await monitorController.monitorProcess(() async =>
+        await facade.quickstartWayat(
+            billingAccount: billingAccount,
+            googleCloudRegion: region,
+            outputStream: monitorController.outputChannel,
+            inputStream: monitorController.inputChannel));
   }
 
   @action
