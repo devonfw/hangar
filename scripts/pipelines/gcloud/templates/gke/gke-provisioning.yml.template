@@ -45,7 +45,7 @@ steps:
       echo "export CLUSTER_REGION=$(terraform output -raw region)" >> cluster_info.env
       gsutil cp cluster_info.env gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/cluster_info.env
 
-      # Configure Prometheus to monitor
+      # Setup monitoring
       [[ -f "../../.prometheus/setup-k8s-monitoring.sh" ]] && ../../.prometheus/setup-k8s-monitoring.sh -h "${clusterhostname}"
 
     elif [ "${_OPERATION}" == "destroy" ]; then
@@ -54,7 +54,7 @@ steps:
       exit 1
     fi
 
-    echo "Tools for monitoring deployed."
-    echo "Acces to prometheus: http://${clusterhostname}/monitoring/prometheus/graph"
-    echo "Access to grafana: http://${clusterhostname}/monitoring/grafana/"
-    echo "Access to alertmanager: http://${clusterhostname}/monitoring/alertmanager/"
+    echo "Monitoring tools deployed."
+    echo "Prometheus: http://${clusterhostname}/monitoring/prometheus/graph"
+    echo "Grafana: http://${clusterhostname}/monitoring/grafana/"
+    echo "Alertmanager: http://${clusterhostname}/monitoring/alertmanager/"

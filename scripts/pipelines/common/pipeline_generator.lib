@@ -83,7 +83,7 @@ function help {
         echo "GKE provisioning $pipeline_type flags:"
         echo "      --gcloud-region         [Required] Google Cloud region for provisioning resources."
         echo "      --rancher                          Install Rancher to manage the cluster."
-        echo "      --activate-monitoring              Install automatically monitoring tools. (<true/false>. default: true)"
+        echo "      --setup-monitoring                 Install logging and monitoring stack (Prometheus, Grafana, Alertmanager, Loki). Default: true."
         echo ""
     fi
     echo "Deploy to Kubernetes $pipeline_type flags:"
