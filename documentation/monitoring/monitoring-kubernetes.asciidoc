@@ -14,7 +14,7 @@ More info: https://prometheus.io/docs/introduction/overview/
 
 (No direct access through an URL)
 
-Loki is a solution to retrieve logs and aggregates and allows query on them. We combined thios solution with `Grafana`.
+Loki is a solution to retrieve logs and aggregates and allows query on them. We combined this solution with `Grafana`.
 
 More info: https://grafana.com/oss/loki/#:~:text=Loki%20is%20a%20log%20aggregation,our%20fully%20composable%20observability%20stack.
 
@@ -22,7 +22,7 @@ More info: https://grafana.com/oss/loki/#:~:text=Loki%20is%20a%20log%20aggregati
 
 You can access it with that URL: http://<hostname>/monitoring/grafana/
 
-Grafana is an open-source data-visualisation software allowing you to visualize different source of data on a same dashboard. In our cases the two data sources are `Prometheus` and `Loki`.
+Grafana is an open-source data visualization software allowing you to visualize different source of data on a same dashboard. In our cases the two data sources are `Prometheus` and `Loki`.
 
 More info: https://grafana.com/docs/grafana/latest/introduction/
 
