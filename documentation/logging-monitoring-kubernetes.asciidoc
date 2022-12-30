@@ -1,4 +1,4 @@
-= Monitoring tools for Kubernetes
+= Logging and monitoring a Kubernetes cluster
 
 In this section we will explain the different tools we installed to monitor Kubernetes cluster and how to access them.
 
