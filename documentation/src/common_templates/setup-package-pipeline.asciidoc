@@ -38,13 +38,15 @@ ifeval::["{provider}" == "Google Cloud"]
   [--registry-location <registry location>] \
   [--flutter-web-platform] \
   [--flutter-android-platform] \
-  [--flutter-web-renderer <auto (default), canvaskit, html>] \
 endif::[]
   [-u <registry user>] \
   [-p <registry password>] \
   [--aws-access-key <aws access key>] \
   [--aws-secret-access-key <aws secret access key>] \
   [--aws-region <aws region>] \
+ifeval::["{provider}" == "Google Cloud"]
+  [--quality-pipeline-name <quality {pipeline_type} name>] \
+endif::[]
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]
@@ -81,6 +83,9 @@ endif::[]
     --aws-access-key           [Required, if AWS] AWS account access key ID. Takes precedence over registry credentials."
     --aws-secret-access-key    [Required, if AWS] AWS account secret access key."
     --aws-region               [Required, if AWS] AWS region for ECR."
+ifeval::["{provider}" == "Google Cloud"]
+    --quality-pipeline-name               Quality {pipeline_type} name.
+endif::[]
 -b, --target-branch                       Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                        Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
 ifeval::["{provider}" == "Google Cloud"]
