@@ -1,0 +1,35 @@
+= Monitoring tools for Kubernetes
+
+In this section we will explain the different tools we installed to monitor Kubernetes cluster and how to access them.
+
+== Prometheus
+
+You can access it with that URL: http://<hostname>/monitoring/graph
+
+Prometheus is an open-source monitoring solution. it collects metrics as time-series data.
+
+More info: https://prometheus.io/docs/introduction/overview/
+
+== Loki
+
+(No direct access through an URL)
+
+Loki is a solution to retrieve logs and aggregates and allows query on them. We combined thios solution with `Grafana`.
+
+More info: https://grafana.com/oss/loki/#:~:text=Loki%20is%20a%20log%20aggregation,our%20fully%20composable%20observability%20stack.
+
+== Grafana
+
+You can access it with that URL: http://<hostname>/grafana/
+
+Grafana is an open-source data-visualisation software allowing you to visualize different source of data on a same dashboard. In our cases the two data sources are `Prometheus` and `Loki`.
+
+More info: https://grafana.com/docs/grafana/latest/introduction/
+
+== Alertmanager
+
+You can access it with that URL: http://<hostname>/alertmanager/
+
+Alertmanager handles alert received from Prometheus.
+
+More info: https://prometheus.io/docs/alerting/latest/alertmanager/
