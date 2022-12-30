@@ -14,12 +14,12 @@ import 'create_dialog_test.mocks.dart';
 @GenerateNiceMocks(
     [MockSpec<CreateController>(), MockSpec<GoogleFormController>()])
 void main() async {
-  MockCreateController mockProjectsController = MockCreateController();
+  MockCreateController mockCreateController = MockCreateController();
   MockGoogleFormController mockGoogleFormController =
       MockGoogleFormController();
 
   setUpAll(() async {
-    GetIt.I.registerSingleton<CreateController>(mockProjectsController);
+    GetIt.I.registerSingleton<CreateController>(mockCreateController);
     GetIt.I.registerSingleton<GoogleFormController>(mockGoogleFormController);
   });
 
@@ -29,12 +29,12 @@ void main() async {
         .thenReturn("0000-0000-0000-0000");
     when(mockGoogleFormController.region).thenReturn("europe-west2");
 
-    when(mockProjectsController.backendLanguage).thenReturn(Language.python);
-    when(mockProjectsController.backendVersion).thenReturn(LanguagesVersions
+    when(mockCreateController.backendLanguage).thenReturn(Language.python);
+    when(mockCreateController.backendVersion).thenReturn(LanguagesVersions
         .versionsLanguages[LanguagesVersions.backendLanguages.first]!.first);
 
-    when(mockProjectsController.frontendLanguage).thenReturn(Language.flutter);
-    when(mockProjectsController.frontendVersion).thenReturn(LanguagesVersions
+    when(mockCreateController.frontendLanguage).thenReturn(Language.flutter);
+    when(mockCreateController.frontendVersion).thenReturn(LanguagesVersions
         .versionsLanguages[LanguagesVersions.frontendLanguages.first]!.first);
 
     await tester.pumpWidget(TestWidget(child: CreateDialog()));
