@@ -3,6 +3,7 @@
 == Common
 
 * link:setup-container-image-registry[Setup Container Image Registry]
+* link:logging-monitoring-kubernetes[Logging and monitoring on Kubernetes]
 
 == AWS
 
