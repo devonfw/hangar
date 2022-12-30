@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:takeoff_gui/features/create/utils/create_message.dart';
 import 'package:takeoff_gui/features/create/utils/type_message.dart';
