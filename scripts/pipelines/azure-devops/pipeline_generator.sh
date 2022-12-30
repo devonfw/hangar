@@ -144,13 +144,13 @@ obtainHangarPath
 
 if [[ "$help" == "true" ]]; then help; fi
 
-ensurePathFormat
-
 checkInstallations
 
 validateRegistryLoginCredentials
 
 importConfigFile
+
+ensurePathFormat
 
 createNewBranch
 

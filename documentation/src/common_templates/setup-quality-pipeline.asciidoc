@@ -37,6 +37,9 @@ pipeline_generator.sh \
   -d <project local path> \
 ifdef::build-pipeline[  --build-pipeline-name <build {pipeline_type} name> \]
 ifdef::test-pipeline[  --test-pipeline-name <test {pipeline_type} name> \]
+ifeval::["{provider}" == "Google Cloud"]
+  [--test-pipeline-name <test {pipeline_type} name>] \
+endif::[]
   [-b <branch>] \
 ifndef::no-PR-or-MR[  [-w]]
 ifeval::["{provider}" == "Google Cloud"]
@@ -59,6 +62,9 @@ NOTE: The config file for the quality {pipeline_type} is located at `/scripts/pi
 -d, --local-directory        [Required] Local directory of your project.
 ifdef::build-pipeline[    --build-pipeline-name    [Required] Build {pipeline_type} name.]
 ifdef::test-pipeline[    --test-pipeline-name     [Required] Test {pipeline_type} name.]
+ifeval::["{provider}" == "Google Cloud"]
+    --test-pipeline-name                Test {pipeline_type} name.
+endif::[]
 -b, --target-branch                     Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 ifndef::no-PR-or-MR[-w                                      Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.]
 ifeval::["{provider}" == "Google Cloud"]
