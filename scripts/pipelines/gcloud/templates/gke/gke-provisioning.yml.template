@@ -15,6 +15,13 @@ steps:
     apt-get update
     apt-get install terraform
 
+    # Install yq
+    wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+    chmod 755 /usr/local/bin/yq
+
+    # Install helm
+    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
     #Terraform init
     cd .terraform/gke/
     terraform init -input=false
@@ -37,8 +44,17 @@ steps:
       echo "export DNS_NAME=${clusterhostname}" >> cluster_info.env
       echo "export CLUSTER_REGION=$(terraform output -raw region)" >> cluster_info.env
       gsutil cp cluster_info.env gs://${PROJECT_ID}_cloudbuild/pipelinesArtifacts/${pipelineName}/cluster_info.env
+
+      # Setup monitoring
+      [[ -f "../../.prometheus/setup-k8s-monitoring.sh" ]] && ../../.prometheus/setup-k8s-monitoring.sh -h "${clusterhostname}"
+
     elif [ "${_OPERATION}" == "destroy" ]; then
       terraform apply -destroy -auto-approve
     else
       exit 1
     fi
+
+    echo "Monitoring tools deployed."
+    echo "Prometheus: http://${clusterhostname}/monitoring/prometheus/graph"
+    echo "Grafana: http://${clusterhostname}/monitoring/grafana/"
+    echo "Alertmanager: http://${clusterhostname}/monitoring/alertmanager/"
