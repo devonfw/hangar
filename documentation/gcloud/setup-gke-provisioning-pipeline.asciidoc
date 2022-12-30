@@ -72,7 +72,7 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 ```
 === Monitoring
 
-To know more about the monitoring tools set up, please refer to that documentation: link:../monitoring/monitoring-kubernetes.asciidoc
+To know more about the monitoring tools set up, please refer to that documentation: link:../monitoring-kubernetes.asciidoc
 
 === Appendix: Destroying the cluster
 
