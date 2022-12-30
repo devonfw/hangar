@@ -16,7 +16,7 @@ spec:
   - host: example.com
     http:
       paths:
-      - path: "/grafana/(.*)"
+      - path: "/monitoring/grafana/(.*)"
         backend:
           service:
             name: grafana

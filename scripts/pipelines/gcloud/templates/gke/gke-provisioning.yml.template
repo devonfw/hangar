@@ -55,6 +55,6 @@ steps:
     fi
 
     echo "Tools for monitoring deployed."
-    echo "Acces to prometheus: http://${clusterhostname}/monitoring/graph"
-    echo "Access to grafana: http://${clusterhostname}/grafana/"
-    echo "Access to alertmanager: http://${clusterhostname}/alertmanager/"
+    echo "Acces to prometheus: http://${clusterhostname}/monitoring/prometheus/graph"
+    echo "Access to grafana: http://${clusterhostname}/monitoring/grafana/"
+    echo "Access to alertmanager: http://${clusterhostname}/monitoring/alertmanager/"

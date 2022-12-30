@@ -4,7 +4,7 @@ In this section we will explain the different tools we installed to monitor Kube
 
 == Prometheus
 
-You can access it with that URL: http://<hostname>/monitoring/graph
+You can access it with that URL: http://<hostname>/monitoring/prometheus/graph
 
 Prometheus is an open-source monitoring solution. it collects metrics as time-series data.
 
@@ -20,7 +20,7 @@ More info: https://grafana.com/oss/loki/#:~:text=Loki%20is%20a%20log%20aggregati
 
 == Grafana
 
-You can access it with that URL: http://<hostname>/grafana/
+You can access it with that URL: http://<hostname>/monitoring/grafana/
 
 Grafana is an open-source data-visualisation software allowing you to visualize different source of data on a same dashboard. In our cases the two data sources are `Prometheus` and `Loki`.
 
@@ -28,7 +28,7 @@ More info: https://grafana.com/docs/grafana/latest/introduction/
 
 == Alertmanager
 
-You can access it with that URL: http://<hostname>/alertmanager/
+You can access it with that URL: http://<hostname>/monitoring/alertmanager/
 
 Alertmanager handles alert received from Prometheus.
 
