@@ -64,7 +64,7 @@ abstract class _CreateController with Store {
     repoProvider = CloudProvidersComb.cicd[cloudProvider]![0];
   }
 
-  void createProject() async {
+  void createProject() {
     monitorController.monitorProcess(() async => formController.create(
         backendLanguage: backendLanguage,
         backendVersion: backendVersion,

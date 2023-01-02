@@ -30,20 +30,22 @@ class MonitorDialog extends StatelessWidget {
                 child: Column(
                   children: [
                     Observer(
-                      builder: (_) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                              controller.hasFinished
-                                  ? AppLocalizations.of(context)!
-                                      .projectCreationFinishedMessage
-                                  : AppLocalizations.of(context)!
-                                      .creatingProjectMessage,
-                              style: const TextStyle(fontSize: 30)),
-                          if (!controller.hasFinished)
-                            const CircularProgressIndicator(),
-                        ],
-                      ),
+                      builder: (_) => SizedBox(
+                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          child: controller.hasFinished
+                              ? Text(
+                                  AppLocalizations.of(context)!
+                                      .projectCreationFinishedMessage,
+                                  style: const TextStyle(fontSize: 30))
+                              : Row(
+                                  children: [
+                                    Text(
+                                        AppLocalizations.of(context)!
+                                            .creatingProjectMessage,
+                                        style: const TextStyle(fontSize: 30)),
+                                    const CircularProgressIndicator(),
+                                  ],
+                                )),
                     ),
                     const SizedBox(height: 50),
                     SizedBox(
@@ -98,6 +100,7 @@ class MonitorDialog extends StatelessWidget {
         });
   }
 
+  @visibleForTesting
   _generateDialog(GuiMessage message, BuildContext context) {
     switch (message.type) {
       case MessageType.info:
