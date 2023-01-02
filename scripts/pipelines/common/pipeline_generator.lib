@@ -68,6 +68,7 @@ function help {
     echo "      --storage-account       [Required] Name of the storage account for the cluster."
     echo "      --storage-container     [Required] Name of the storage container where the Terraform state of the cluster will be stored."
     echo "      --rancher                          Install Rancher to manage the cluster."
+    echo "      --setup-monitoring                 Install logging and monitoring stack (Prometheus, Grafana, Alertmanager, Loki). Default: true."
     echo ""
     echo "AWS EKS provisioning $pipeline_type flags:"
     echo "      --cluster-name          [Required] Name for the cluster."
@@ -76,7 +77,7 @@ function help {
     echo "      --aws-access-key        [Required, on first run] AWS account access key ID."
     echo "      --aws-secret-access-key [Required, on first run] AWS account secret access key."
     echo "      --aws-region            [Required, on first run] AWS region for provisioning resources."
-
+    echo "      --setup-monitoring                 Install logging and monitoring stack (Prometheus, Grafana, Alertmanager, Loki). Default: true."
     echo "      --rancher                          Install Rancher to manage the cluster."
     echo ""
     if [ "$provider" == "gcloud" ]
