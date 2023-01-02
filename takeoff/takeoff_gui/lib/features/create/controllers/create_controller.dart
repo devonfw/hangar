@@ -64,15 +64,14 @@ abstract class _CreateController with Store {
     repoProvider = CloudProvidersComb.cicd[cloudProvider]![0];
   }
 
-  Future<void> createProject() async {
-    await monitorController.monitorProcess(() async =>
-        await formController.create(
-            backendLanguage: backendLanguage,
-            backendVersion: backendVersion,
-            frontendLanguage: frontendLanguage,
-            frontendVersion: frontendVersion,
-            outputStream: monitorController.outputChannel,
-            inputStream: monitorController.inputChannel));
+  void createProject() {
+    monitorController.monitorProcess(() async => formController.create(
+        backendLanguage: backendLanguage,
+        backendVersion: backendVersion,
+        frontendLanguage: frontendLanguage,
+        frontendVersion: frontendVersion,
+        outputStream: monitorController.outputChannel,
+        inputStream: monitorController.inputChannel));
   }
 
   @action
