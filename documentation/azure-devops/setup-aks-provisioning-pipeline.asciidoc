@@ -102,6 +102,10 @@ Rancher, if installed, will be available on `https://<ingress controller domain>
 kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
 ```
 
+=== Appendix: Monitoring
+
+In case of having chosen to install the logging and monitoring stack, refer to the link:../monitoring-kubernetes.asciidoc[corresponding documentation].
+
 === Appendix: Destroying the cluster
 
 To destroy the provisioned resources, set `operation` pipeline variable value to `destroy` and run the pipeline.
