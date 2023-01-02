@@ -72,7 +72,7 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 ```
 === Appendix: Monitoring
 
-In case of having chosen to install the logging and monitoring stack, refer to the link:../monitoring-kubernetes.asciidoc[corresponding documentation].
+In case of having chosen to install the logging and monitoring stack, refer to the link:../logging-monitoring-kubernetes.asciidoc[corresponding documentation].
 
 === Appendix: Destroying the cluster
 
