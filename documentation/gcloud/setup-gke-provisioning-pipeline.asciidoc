@@ -38,7 +38,7 @@ NOTE: The config file for the GKE provisioning pipeline is located at `/scripts/
     --gcloud-region      [Required] Google Cloud region for provisioning resources.
     --rancher                       Install Rancher to manage the cluster.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
-    --activate-monitoring           Install automatically monitoring tools. (<true/false>. default: true)
+    --setup-monitoring              Install logging and monitoring stack (Prometheus, Grafana, Alertmanager, Loki). Default: true.
 ```
 
 === Example
@@ -70,9 +70,9 @@ Rancher, if installed, will be available on `https://<ingress controller domain>
 ```
 kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
 ```
-=== Monitoring
+=== Appendix: Monitoring
 
-To know more about the monitoring tools set up, please refer to that documentation: link:../monitoring-kubernetes.asciidoc
+In case of having chosen to install the logging and monitoring stack, refer to the link:../monitoring-kubernetes.asciidoc[corresponding documentation].
 
 === Appendix: Destroying the cluster
 
