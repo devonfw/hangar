@@ -73,6 +73,7 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
     --aws-secret-access-key     [Required, on first run] AWS account secret access key.
     --aws-region                [Required, on first run] AWS region for provisioning resources.
     --rancher                              Install Rancher to manage the cluster.
+    --setup-monitoring                     Install logging and monitoring stack (Prometheus, Grafana, Alertmanager, Loki). Default: true.
 -b, --target-branch                        Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                         Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
