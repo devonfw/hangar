@@ -58,7 +58,7 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Setting up a EKS provisioning pipeline]
 *** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Setting up a AKS provisioning pipeline]
 ** https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Setting up a Deploy pipeline]
-* https://github.com/devonfw/hangar/blob/master/documentation/logging-monitoring-kubernetes.asciidoc[Logging and monitoring on Kubernetes] [TBD]
+* https://github.com/devonfw/hangar/blob/master/documentation/logging-monitoring-kubernetes.asciidoc[Logging and monitoring on Kubernetes]
 
 ### Project hosted and with CI/CD on GitHub, and deployed on either AWS EKS or Azure AKS
 

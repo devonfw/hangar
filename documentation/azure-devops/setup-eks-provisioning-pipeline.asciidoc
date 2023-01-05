@@ -5,7 +5,7 @@ toc::[]
 
 = Setting up a AWS EKS provisioning pipeline on Azure DevOps
 
-In this section we will create a pipeline which will provision an AWS EKS cluster. This pipeline will be configured to be manually triggered by the user. As part of EKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `eks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently. 
+In this section we will create a pipeline which will provision an AWS EKS cluster. This pipeline will be configured to be manually triggered by the user. As part of EKS cluster provisioning, a NGINX Ingress controller is deployed and a variable group with the name `eks-variables` is created, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently.
 
 The creation of the pipeline will follow the project workflow, so a new branch named `feature/eks-provisioning` will be created, the YAML file for the pipeline and the Terraform files for creating the cluster will be pushed to it.
 
@@ -48,7 +48,7 @@ pipeline_generator.sh \
   -c <config file path> \
   -n <pipeline name> \
   -d <project local path> \
-  --cluster-name <cluster name> \  
+  --cluster-name <cluster name> \
   --s3-bucket <s3 bucket name> \
   --s3-key-path <s3 key path> \
   [--aws-access-key <aws access key>] \
@@ -69,10 +69,11 @@ NOTE: The config file for the EKS provisioning pipeline is located at `/scripts/
     --cluster-name              [Required] Name for the cluster."
     --s3-bucket                 [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.
     --s3-key-path               [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.
-    --aws-access-key            [Required, on first run] AWS account access key ID. 
+    --aws-access-key            [Required, on first run] AWS account access key ID.
     --aws-secret-access-key     [Required, on first run] AWS account secret access key.
     --aws-region                [Required, on first run] AWS region for provisioning resources.
     --rancher                              Install Rancher to manage the cluster.
+    --setup-monitoring                     Install logging and monitoring stack (Prometheus, Grafana, Alertmanager, Loki). Default: true.
 -b, --target-branch                        Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                         Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
@@ -106,6 +107,10 @@ Rancher, if installed, will be available on `https://<ingress controller domain>
 ```
 kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
 ```
+
+=== Appendix: Monitoring
+
+In case of having chosen to install the logging and monitoring stack, refer to the link:../logging-monitoring-kubernetes.asciidoc[corresponding documentation].
 
 == Appendix: Destroying the cluster
 

@@ -85,6 +85,15 @@ steps:
     filePath: '$(System.DefaultWorkingDirectory)/.pipelines/scripts/install-rancher.sh'
     arguments: '$(dns)'
 
+- task: Bash@3
+  displayName: 'Setup logging and monitoring'
+  condition: and(eq(variables.setupMonitoring, 'true'), eq(variables.operation, 'create'))
+  env:
+    KUBECONFIG: $(terraformWorkingDirectory)/kubeconfig
+  inputs:
+    targetType: 'inline'
+    script: '$(System.DefaultWorkingDirectory)/.prometheus/setup-k8s-monitoring.sh -h "$(dns)" || { echo "Your cluster has been created without error, but the logging and monitoring tools setup has failed."; exit 1; }'
+
 - task: TerraformTaskV2@2
   displayName: 'Terraform - destroy'
   condition: eq(variables.operation, 'destroy')
