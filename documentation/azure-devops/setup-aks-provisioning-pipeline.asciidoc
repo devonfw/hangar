@@ -67,6 +67,7 @@ NOTE: The config file for the AKS provisioning pipeline is located at `/scripts/
     --storage--account   [Required] Name of the storage account for the cluster.
     --storage-container  [Required] Name of the storage container where the Terraform state of the cluster will be stored.
     --rancher                       Install Rancher to manage the cluster.
+    --setup-monitoring              Install logging and monitoring stack (Prometheus, Grafana, Alertmanager, Loki). Default: true.
 -b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
 -w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
 ```
