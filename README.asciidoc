@@ -251,33 +251,45 @@ image::documentation/diagrams/Hangar-SonarQube.png[]
 
 image::documentation/diagrams/Hangar-PipelinesCI_CD.png[]
 
-[cols="1,2,1"]
+[cols="1,2,1,1,1"]
 |===
-|Provider|Feature|Documentation
+|Provider|Feature|Documentation|Script|Assets
 
 |GCloud
 |Build Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-build-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/build[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/build[Steps]
 
 |GCloud
 |Test Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-test-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/test[Steps]
 
 |GCloud
 |Quality Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-quality-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/quality[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/quality[Steps]
 
 |GCloud
 |Package Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-package-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/package[Steps]
 
 |GCloud
 |Cloud Run Deploy Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-cloud-run-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/deploy-cloud-run[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/templates/deploy-cloud-run/deploy-cloud-run.sh[Steps]
 
 |GCloud
 |Kubernetes (GKE) Deploy Pipeline
-|TODO
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/deploy[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/deploy[Steps]
 
 |Azure DevOps
 |Build Pipeline
