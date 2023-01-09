@@ -171,21 +171,27 @@ image::documentation/diagrams/Hangar-Accounts-Projects.png[]
 
 image::documentation/diagrams/Hangar-Kubernetes.png[]
 
-[cols="1,2,1"]
+[cols="1,2,1,1,1"]
 |===
-|Provider|Feature|Documentation
+|Provider|Feature|Documentation|Script|Assets
 
 |GCloud
 |Provision Kubernetes Cluster on GCloud (GKE)
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-gke-provisioning-pipeline.asciidoc[Docs]
-
-|AWS
-|Provision Kubernetes Cluster on Azure (EKS)
-|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/gke[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/environment-provisioning/gcloud/gke[Terraform]
 
 |Azure
-|Provision Kubernetes Cluster on AWS (AKS)
-|TODO
+|Provision Kubernetes Cluster on Azure (AKS)
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/aks[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/environment-provisioning/azure/aks[Terraform]
+
+|AWS
+|Provision Kubernetes Cluster on AWS (EKS)
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/eks[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/environment-provisioning/aws/eks[Terraform]
 
 |===
 
