@@ -313,26 +313,39 @@ image::documentation/diagrams/Hangar-PipelinesCI_CD.png[]
 |Azure DevOps
 |Package Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/package[Steps]
 
 |Azure DevOps
 |Kubernetes Deploy Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/deploy[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/deploy[Steps]
+
 
 |GitHub
 |Build Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/github/setup-build-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/build[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/build[Steps]
 
 |GitHub
 |Test Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/github/setup-test-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/test[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/test[Steps]
 
 |GitHub
 |Quality Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/github/setup-quality-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/quality[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/quality[Steps]
 
 |GitHub
 |Package Pipeline
 |https://github.com/devonfw/hangar/blob/master/documentation/github/setup-package-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/package[Steps]
 
 |GitHub
 |Kubernetes Deploy Pipeline
@@ -345,16 +358,18 @@ image::documentation/diagrams/Hangar-PipelinesCI_CD.png[]
 image::documentation/diagrams/Hangar-Quickstart.png[]
 
 
-[cols="1,2,1"]
+[cols="1,2,1,1"]
 |===
-|Provider|Feature|Documentation
+|Provider|Feature|Documentation|Script
 
 |GCloud
 |Wayat Backend Quickstart
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-backend.asciidoc[Docs]
+|https://github.com/devonfw/hangar/tree/master/scripts/quickstart/gcloud[Path]
 
 |GCloud
 |Wayat Frontend Quickstart
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-frontend.asciidoc[Docs]
+|https://github.com/devonfw/hangar/tree/master/scripts/quickstart/gcloud[Path]
 
 |===
