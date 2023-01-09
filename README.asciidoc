@@ -119,37 +119,51 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 
 image::documentation/diagrams/Hangar-Accounts-Projects.png[]
 
-[cols="1,2,1"]
+[cols="1,2,1,1,3"]
 |===
-|Provider|Feature|Documentation
+|Provider|Feature|Documentation|Script|Assets
 
 |GCloud
 |Create a GCloud Project
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-project.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/create-project.sh[Path]
+|
 
 |GCloud
 |Create a Principal Account
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/setup-principal-account.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/predefined-roles.txt[predefined-roles.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/custom-role-example.yaml[custom-role.yaml]
 
 |GCloud
 |Verify Account Roles
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc#check-roles-and-permissions-of-a-principal[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/setup-principal-account.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/predefined-roles.txt[predefined-roles.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/custom-role-example.yaml[custom-role.yaml]
 
 |GCloud
 |Setup Firebase & Maps
 |https://github.com/devonfw/hangar/blob/master/documentation/firebase/setup-firebase.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/setup-firebase.sh[Path]
+|
 
 |Azure DevOps
 |Create a DevOps Project
 |https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/azure-devops/setup-project.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/azure-devops/create-project.sh[Path]
+|
 
 |AWS
 |Create an AWS Project User
 |https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/create-user.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-managed-policies.txt[managed-policies.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-custom-policies.json[custom-policies.json]
 
 |AWS
 |Verify User Roles
 |https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/verify-account-policies.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-managed-policies.txt[managed-policies.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-custom-policies.json[custom-policies.json]
 
 |===
 
