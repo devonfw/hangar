@@ -199,21 +199,27 @@ image::documentation/diagrams/Hangar-Kubernetes.png[]
 
 image::documentation/diagrams/Hangar-Repository.png[]
 
-[cols="1,2,1"]
+[cols="1,2,1,1,1"]
 |===
-|Provider|Feature|Documentation
+|Provider|Feature|Documentation|Script|Assets
 
 |GCloud
 |Repository Management on GCloud
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-repository-script.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/gcloud/create-repo.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/create-repo.sh[Common] https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/config/strategy.cfg[strategy.cfg]
 
 |Azure DevOps
 |Repository Management on Azure DevOps
 |https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-repository-script.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/azure-devops/create-repo.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/create-repo.sh[Common] https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/config/strategy.cfg[strategy.cfg]
 
 |GitHub
 |Repository Management on GitHub
 |https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/github/create-repo.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/create-repo.sh[Common] https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/config/strategy.cfg[strategy.cfg]
 
 |===
 
@@ -222,17 +228,21 @@ image::documentation/diagrams/Hangar-Repository.png[]
 
 image::documentation/diagrams/Hangar-SonarQube.png[]
 
-[cols="1,2,1"]
+[cols="1,2,1,1,1"]
 |===
-|Provider|Feature|Documentation
+|Provider|Feature|Documentation|Script|Assets
 
 |GCloud
 |SonarQube Deployment on GCloud
 |https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-sonarqube-instance.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/sonarqube/gcloud/sonarqube.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/gcloud[Terraform] https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/common[Common]
 
 |AWS
 |SonarQube Deployment on AWS
 |https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/sonarqube/aws/sonarqube.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/aws[Terraform] https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/common[Common]
 
 |===
 
