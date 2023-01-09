@@ -1,0 +1,207 @@
+@startuml sequence
+
+actor       User                as User
+participant "Take Off"          as TakeOff
+database    "Take Off Volume"    as Cache
+participant "Hangar"            as Hangar
+participant "GCloud CLI"        as Gcloud
+database    "Google CLI Volume"         as Clicache
+participant "Web Browser"       as Web
+
+
+User -> TakeOff : Init (login)
+TakeOff -> Gcloud: gcloud auth login
+Gcloud -> Web: Account Login
+Web -> Web : Copy Token
+Web --> Gcloud: Login token
+Gcloud -> Clicache: Store credentials
+Gcloud --> TakeOff: User Loggin Success
+TakeOff -> Cache: User Email
+TakeOff --> User : Init Success
+
+
+User -> TakeOff : Create Project
+
+TakeOff -> Hangar : create-project.sh
+Hangar -> Gcloud : gcloud projects create
+Gcloud -> Clicache : Set Current Project
+Gcloud --> Hangar : Create Project Success
+Hangar -> Gcloud : gcloud billing projects link
+Gcloud --> Hangar : Link Billing Success
+Hangar -> Gcloud : gcloud services enable (API)
+Gcloud --> Hangar : Enable Services Success
+Hangar --> TakeOff : Project Creation Success
+TakeOff -> Cache : Store Project ID
+
+TakeOff -> Hangar : setup-principal-account.sh
+Hangar -> Gcloud : gcloud iam service-account create / check
+Gcloud --> Hangar : Service Account Creation Success
+Hangar -> Gcloud : gcloud iam service-accounts keys create
+Gcloud --> Hangar : Service Account Key Success
+Hangar -> Gcloud : gcloud add-iam-policy-binding
+Gcloud --> Hangar : Roles Attached Success
+Hangar --> Cache : Service Account Key
+Hangar --> TakeOff : Service Account Key Success
+
+
+TakeOff -> Hangar : validate-roles.sh
+' Opcional
+Hangar -> Gcloud : gcloud get-iam-policy
+Gcloud --> Hangar : Roles Attached to Account (list)
+Hangar --> TakeOff : Roles Validation Success
+' Revisar Como gestionar esta key
+TakeOff -> Gcloud : gcloud auth activate-service-account Key
+Gcloud --> TakeOff : Auth Service Account Success
+
+
+TakeOff -> Hangar : create-repo.sh Frontend
+Hangar -> Gcloud : gcloud repo create
+Gcloud --> Hangar : Repository Creation Success
+Hangar -> Gcloud : Import Code
+Gcloud --> Hangar : Import Code Success
+Hangar --> Cache : Project Code
+Hangar --> TakeOff : Repo URL Success
+
+TakeOff -> Hangar : create-repo.sh Backend
+Hangar -> Gcloud : gcloud repo create
+Gcloud --> Hangar : Repository Creation Success
+Hangar -> Gcloud : Import Code
+Gcloud --> Hangar : Import Code Success
+Hangar --> Cache : Project Code
+Hangar --> TakeOff : Repo URL Success
+
+TakeOff -> Hangar : setup-sonar.sh
+Hangar -> Hangar : terraform init
+Hangar -> Hangar : set-terraform-variables.sh
+Hangar -> Gcloud : terraform apply
+Gcloud --> Hangar : Terraform Success
+Hangar --> Cache : Sonar Token + Tfstate
+Hangar --> TakeOff : Sonar Creation Success
+
+TakeOff -> Hangar : init-cloud-run.sh BE
+Hangar -> Gcloud :  gcloud run deploy hello
+Gcloud --> Hangar : Deployment Success
+Hangar -> Gcloud : gcloud run services describe status.url
+Gcloud --> Hangar : Cloud Run URL
+Hangar --> TakeOff : Service BE Init Success + URL
+
+TakeOff -> Hangar : init-cloud-run.sh FE
+Hangar -> Gcloud :  gcloud run deploy hello
+Gcloud --> Hangar : Deployment Success
+Hangar -> Gcloud : gcloud run services describe status.url
+Gcloud --> Hangar : Cloud Run URL
+Hangar --> TakeOff : Service FE Init Success + URL
+
+TakeOff -> Hangar : setup-firebase.sh
+Hangar -> Gcloud : gcloud services enable
+Gcloud --> Hangar : Services Enabled Success
+Hangar -> Gcloud : firebase projects:addfirebase
+Gcloud --> Hangar : Firebase Added Success
+Hangar -> Gcloud : gcloud firestore databases create
+Gcloud --> Hangar : Firestore Created Success
+Hangar -> Gcloud : gcloud iam service-account keys create
+Hangar --> Cache : Firebase Service Account
+Gcloud --> Hangar : Service Account Creation Success
+Hangar -> Gcloud : firebase apps:create ANDROID
+Gcloud --> Hangar : App creation Success
+Hangar -> Gcloud : firebase apps:sdkconfig ANDROID
+Gcloud --> Hangar : SDK Config Creation Success
+Hangar --> Cache : Android SDK Config
+Hangar -> Gcloud : firebase apps:create WEB
+Gcloud --> Hangar : App creation Success
+Hangar -> Gcloud : firebase apps:sdkconfig WEB
+Gcloud --> Hangar : SDK Config Creation Success
+Hangar --> Cache : WEB SDK Config
+
+Hangar --> TakeOff : Firebase Success
+
+TakeOff -> Hangar : quickstart-wayat-backend.sh
+Cache -> Hangar : Firebase Secrets
+Hangar -> Hangar : Update Project Config
+Hangar --> Cache : Updated BE config
+Hangar -> Gcloud : Update BE Code Repo
+Gcloud --> Hangar : Code Update Success
+Hangar -> Gcloud : Apply Firebase Rules
+Gcloud --> Hangar : Firebase Rules Applied Success
+Hangar --> TakeOff : Quickstart Success
+
+TakeOff -> Hangar : quickstart-wayat-frontend.sh
+Cache -> Hangar : Firebase Secrets
+Hangar -> Hangar : Update Project Config
+Hangar --> Cache : Updated FE config
+Hangar -> Gcloud : Update FE Code Repo
+Gcloud --> Hangar : Code Update Success
+Hangar -> Gcloud : Apply Firebase Rules
+Gcloud --> Hangar : Firebase Rules Applied Success
+Hangar --> TakeOff : Quickstart Success
+
+TakeOff -> Hangar : pipeline-generator.sh Build BE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh Test BE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Build
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh QA BE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Test
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh Package BE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Test
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh Deploy Cloud Run BE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Package 
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+
+TakeOff -> Hangar : pipeline-generator.sh Build FE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh Test FE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Build
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh QA FE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Test
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh Package FE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Test
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+TakeOff -> Hangar : pipeline-generator.sh Deploy Cloud Run FE
+Hangar -> Gcloud : cloud build create pipeline
+Gcloud --> Hangar : Pipeline Creation Success
+Hangar -> Gcloud : cloud build modify pipeline Package
+Gcloud --> Hangar : Pipeline Modification Success
+Hangar --> Cache : Pipeline code
+Hangar --> TakeOff : Pipeline Creation Success
+
+TakeOff --> User : Project Creation Success
+@enduml

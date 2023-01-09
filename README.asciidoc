@@ -111,3 +111,201 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 ** Appendix: https://github.com/devonfw/hangar/blob/master/documentation/gcloud/upload-secret-manager.asciidoc[Upload files or variables as secrets in Google Cloud Secret Manager]
 * https://github.com/devonfw/hangar/blob/master/documentation/gcloud/logging-monitoring-cloud-run.asciidoc[Logging and monitoring a service on Cloud Run]
 * https://github.com/devonfw/hangar/blob/master/documentation/logging-monitoring-kubernetes.asciidoc[Logging and monitoring on Kubernetes]
+
+
+## Features
+
+### Accounts & Projects Management
+
+image::documentation/diagrams/Hangar-Accounts-Projects.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Create a GCloud Project
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-project.asciidoc[Docs]
+
+|GCloud
+|Create a Principal Account
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc[Docs]
+
+|GCloud
+|Verify Account Roles
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc#check-roles-and-permissions-of-a-principal[Docs]
+
+|GCloud
+|Setup Firebase & Maps
+|https://github.com/devonfw/hangar/blob/master/documentation/firebase/setup-firebase.asciidoc[Docs]
+
+|Azure DevOps
+|Create a DevOps Project
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/azure-devops/setup-project.asciidoc[Docs]
+
+|AWS
+|Create an AWS Project User
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Docs]
+
+|AWS
+|Verify User Roles
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
+
+|===
+
+### Kubernetes Clusters Provisioning
+
+image::documentation/diagrams/Hangar-Kubernetes.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Provision Kubernetes Cluster on GCloud (GKE)
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-gke-provisioning-pipeline.asciidoc[Docs]
+
+|AWS
+|Provision Kubernetes Cluster on Azure (EKS)
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Docs]
+
+|Azure
+|Provision Kubernetes Cluster on AWS (AKS)
+|TODO
+
+|===
+
+### Repository Management
+
+image::documentation/diagrams/Hangar-Repository.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Repository Management on GCloud
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-repository-script.asciidoc[Docs]
+
+|Azure DevOps
+|Repository Management on Azure DevOps
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-repository-script.asciidoc[Docs]
+
+|GitHub
+|Repository Management on GitHub
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Docs]
+
+|===
+
+
+### SonarQube Provisioning
+
+image::documentation/diagrams/Hangar-SonarQube.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|SonarQube Deployment on GCloud
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-sonarqube-instance.asciidoc[Docs]
+
+|AWS
+|SonarQube Deployment on AWS
+|https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Docs]
+
+|===
+
+
+### CI/CD Pipelines Provisioning
+
+image::documentation/diagrams/Hangar-PipelinesCI_CD.png[]
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-build-pipeline.asciidoc[Docs]
+
+|GCloud
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-test-pipeline.asciidoc[Docs]
+
+|GCloud
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-quality-pipeline.asciidoc[Docs]
+
+|GCloud
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-package-pipeline.asciidoc[Docs]
+
+|GCloud
+|Cloud Run Deploy Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-cloud-run-pipeline.asciidoc[Docs]
+
+|GCloud
+|Kubernetes (GKE) Deploy Pipeline
+|TODO
+
+|Azure DevOps
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Docs]
+
+|Azure DevOps
+|Kubernetes Deploy Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Docs]
+
+|GitHub
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-build-pipeline.asciidoc[Docs]
+
+|GitHub
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-test-pipeline.asciidoc[Docs]
+
+|GitHub
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-quality-pipeline.asciidoc[Docs]
+
+|GitHub
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-package-pipeline.asciidoc[Docs]
+
+|GitHub
+|Kubernetes Deploy Pipeline
+|TODO
+
+|===
+
+### Quickstarts
+
+image::documentation/diagrams/Hangar-Quickstart.png[]
+
+
+[cols="1,2,1"]
+|===
+|Provider|Feature|Documentation
+
+|GCloud
+|Wayat Backend Quickstart
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-backend.asciidoc[Docs]
+
+|GCloud
+|Wayat Frontend Quickstart
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-frontend.asciidoc[Docs]
+
+|===
