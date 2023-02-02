@@ -1,0 +1,262 @@
+# Hangar Developer Documentation
+
+## Features
+
+### Accounts & Projects Management
+
+image::assets/diagrams/Hangar-Accounts-Projects.png[]
+
+[cols="1,2,1,1,3"]
+|===
+|Provider|Feature|Documentation|Script|Assets
+
+|GCloud
+|Create a GCloud Project
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-project.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/create-project.sh[Path]
+|
+
+|GCloud
+|Create a Principal Account
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/setup-principal-account.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/predefined-roles.txt[predefined-roles.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/custom-role-example.yaml[custom-role.yaml]
+
+|GCloud
+|Verify Account Roles
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-account-iam.asciidoc#check-roles-and-permissions-of-a-principal[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/setup-principal-account.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/predefined-roles.txt[predefined-roles.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/custom-role-example.yaml[custom-role.yaml]
+
+|GCloud
+|Setup Firebase & Maps
+|https://github.com/devonfw/hangar/blob/master/documentation/firebase/setup-firebase.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/gcloud/setup-firebase.sh[Path]
+|
+
+|Azure DevOps
+|Create a DevOps Project
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/azure-devops/setup-project.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/azure-devops/create-project.sh[Path]
+|
+
+|AWS
+|Create an AWS Project User
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/create-user.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-managed-policies.txt[managed-policies.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-custom-policies.json[custom-policies.json]
+
+|AWS
+|Verify User Roles
+|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/verify-account-policies.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-managed-policies.txt[managed-policies.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-custom-policies.json[custom-policies.json]
+
+|===
+
+### Kubernetes Clusters Provisioning
+
+image::assets/diagrams/Hangar-Kubernetes.png[]
+
+[cols="1,2,1,1,1"]
+|===
+|Provider|Feature|Documentation|Script|Assets
+
+|GCloud
+|Provision Kubernetes Cluster on GCloud (GKE)
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-gke-provisioning-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/gke[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/environment-provisioning/gcloud/gke[Terraform]
+
+|Azure
+|Provision Kubernetes Cluster on Azure (AKS)
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-aks-provisioning-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/aks[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/environment-provisioning/azure/aks[Terraform]
+
+|AWS
+|Provision Kubernetes Cluster on AWS (EKS)
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-eks-provisioning-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/eks[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/environment-provisioning/aws/eks[Terraform]
+
+|===
+
+### Repository Management
+
+image::assets/diagrams/Hangar-Repository.png[]
+
+[cols="1,2,1,1,1"]
+|===
+|Provider|Feature|Documentation|Script|Assets
+
+|GCloud
+|Repository Management on GCloud
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-repository-script.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/gcloud/create-repo.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/create-repo.sh[Common] https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/config/strategy.cfg[strategy.cfg]
+
+|Azure DevOps
+|Repository Management on Azure DevOps
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-repository-script.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/azure-devops/create-repo.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/create-repo.sh[Common] https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/config/strategy.cfg[strategy.cfg]
+
+|GitHub
+|Repository Management on GitHub
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-repository-script.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/github/create-repo.sh[Path]
+|https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/create-repo.sh[Common] https://github.com/devonfw/hangar/blob/master/scripts/repositories/common/config/strategy.cfg[strategy.cfg]
+
+|===
+
+
+### SonarQube Provisioning
+
+image::assets/diagrams/Hangar-SonarQube.png[]
+
+[cols="1,2,1,1,1"]
+|===
+|Provider|Feature|Documentation|Script|Assets
+
+|GCloud
+|SonarQube Deployment on GCloud
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-sonarqube-instance.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/sonarqube/gcloud/sonarqube.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/gcloud[Terraform] https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/common[Common]
+
+|AWS
+|SonarQube Deployment on AWS
+|https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-sonarqube-instance.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/sonarqube/aws/sonarqube.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/aws[Terraform] https://github.com/devonfw/hangar/tree/master/scripts/sonarqube/common[Common]
+
+|===
+
+
+### CI/CD Pipelines Provisioning
+
+image::assets/diagrams/Hangar-PipelinesCI_CD.png[]
+
+[cols="1,2,1,1,1"]
+|===
+|Provider|Feature|Documentation|Script|Assets
+
+|GCloud
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-build-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/build[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/build[Steps]
+
+|GCloud
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-test-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/test[Steps]
+
+|GCloud
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-quality-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/quality[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/quality[Steps]
+
+|GCloud
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-package-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/package[Steps]
+
+|GCloud
+|Cloud Run Deploy Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-cloud-run-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/deploy-cloud-run[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/common[Common] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/templates/deploy-cloud-run/deploy-cloud-run.sh[Steps]
+
+|GCloud
+|Kubernetes (GKE) Deploy Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/setup-deploy-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/gcloud/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/deploy[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/gcloud/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/deploy[Steps]
+
+|Azure DevOps
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-build-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/build[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/build[Steps]
+
+
+|Azure DevOps
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-test-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/test[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/test[Steps]
+
+|Azure DevOps
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-quality-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/quality[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/quality[Steps]
+
+|Azure DevOps
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-package-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/package[Steps]
+
+|Azure DevOps
+|Kubernetes Deploy Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-deploy-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/azure-devops/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/deploy[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/azure-devops/templates/common[Common] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/deploy[Steps]
+
+
+|GitHub
+|Build Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-build-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/build[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/build[Steps]
+
+|GitHub
+|Test Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-test-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/test[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/test[Steps]
+
+|GitHub
+|Quality Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-quality-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/quality[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/quality[Steps]
+
+|GitHub
+|Package Pipeline
+|https://github.com/devonfw/hangar/blob/master/documentation/github/setup-package-pipeline.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/scripts/pipelines/github/pipeline_generator.sh[Path]
+|https://github.com/devonfw/hangar/tree/master/scripts/pipelines/github/templates/package[Templates] https://github.com/devonfw/hangar/blob/master/scripts/pipelines/common/pipeline_generator.lib[Lib] https://github.com/devonfw/hangar/tree/master/scripts/pipelines/common/templates/package[Steps]
+
+|GitHub
+|Kubernetes Deploy Pipeline
+|TODO
+
+|===
+
+### Quickstarts
+
+image::assets/diagrams/Hangar-Quickstart.png[]
+
+
+[cols="1,2,1,1"]
+|===
+|Provider|Feature|Documentation|Script
+
+|GCloud
+|Wayat Backend Quickstart
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-backend.asciidoc[Docs]
+|https://github.com/devonfw/hangar/tree/master/scripts/quickstart/gcloud[Path]
+
+|GCloud
+|Wayat Frontend Quickstart
+|https://github.com/devonfw/hangar/blob/master/documentation/gcloud/quickstart-wayat-frontend.asciidoc[Docs]
+|https://github.com/devonfw/hangar/tree/master/scripts/quickstart/gcloud[Path]
+
+|===
