@@ -1,0 +1,106 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+
+= Setting up the AWS EKS provisioning {pipeline_type} on {provider}
+In this section we will create a {pipeline_type} which will provision an AWS EKS cluster. This {pipeline_type} will be configured to be manually triggered by the user. As part of EKS cluster provisioning, a NGINX Ingress controller is deployed and a .env file with the name `eks-variables` is created in .github folder, which contains, among others, the DNS name of the Ingress controller, that you you will need to add as CNAME record on the domains used in your application Ingress manifest files. Refer to the appendix to retrieve the DNS name of the Ingress controller independently. 
+
+The creation of the {pipeline_type} will follow the project workflow, so a new branch named `feature/eks-provisioning` will be created, the YAML file for the workflow and the terraform files for creating the cluster will be pushed to it.
+
+Then, a Pull Request (PR) will be created in order to merge the new branch into the appropriate branch (provided in `-b` flag). The PR will be automatically merged if the repository policies are met. If the merge is not possible, either the PR URL will be shown as output, or it will be opened in your web browser if using `-w` flag.
+
+The script located at `/scripts/pipelines/{path_provider}/pipeline_generator.sh` will automatically create this new branch, create the EKS provisioning {pipeline_type} based on the YAML template, create the Pull Request and, if it is possible, merge this new branch into the specified branch.
+
+=== Prerequisites
+
+ifdef::trigger_sentence_github[ * Add AWS credentials as https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository[Github Secrets] in your repository.]
+
+ifdef::trigger_sentence_azure[ * Install the https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks[Terraform extension] for Azure DevOps.]
+ifdef::trigger_sentence_azure[ * Create a service connection for connecting to an AWS account (as explained in the above Terraform extension link) and name it `AWS-Terraform-Connection`. If you already have a service connection available or you need a specific connection name, please update `eks-pipeline.cfg` accordingly.]
+
+* A S3 Bucket. You can use an existing one or https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-buckets-creating[create a new one] with the following command:
+```
+aws s3 mb <bucket name>
+# Example: aws s3 mb s3://terraformStateBucket
+```
+
+* An AWS IAM user with https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[required permissions] to provision the EKS cluster.
+
+* This script will commit and push the corresponding YAML template into your repository, so please be sure your local repository is up-to-date (i.e you have pulled the latest changes with `git pull`).
+
+== Creating the {pipeline_type} using provided script
+
+Before executing the workflow generator, you will need to customize some input variables about the environment. Also, you may want to use existing VPC and subnets instead of creating new ones. To do so, you can either edit `terraform.tfvars` file or take advantage of the `set-terraform-variables.sh` script located at `/scripts/environment-provisioning/aws/eks`, which allows you to create or update values for the required variables, passing them as flags.
+
+Example: creating a new VPC on cluster creation:
+
+```
+./set-terraform-variables.sh --region <region name> --instance_type <workers instance type> --vpc_name <vpc name> --vpc_cidr_block <vpc cidr block>
+```
+Example: reusing existing VPC and subnets:
+```
+./set-terraform-variables.sh --region <region name> --instance_type <workers instance type> --existing_vpc_id <vpc id> --existing_vpc_private_subnets <array of subnet ids>
+```
+* Rancher is installed by default on the cluster after provisioning. If you wish to change this, please update `eks-pipeline.cfg` accordingly.
+
+=== Usage
+```
+pipeline_generator.sh \
+  -c <config file path> \
+  ifdef::trigger_sentence_azure,trigger_sentence_github[-n <pipeline name> \]
+  -d <project local path> \
+  --cluster-name <cluster name> \  
+  ifdef::trigger_sentence_azure,trigger_sentence_github[--s3-bucket <s3 bucket name> \]
+  ifdef::trigger_sentence_azure,trigger_sentence_github[--s3-key-path <s3 key path> \]
+  ifdef::trigger_sentence_gitlab[--terraform-eks-state <terraform EKS state>\]
+  [-b <branch>] \
+  [-w]
+```
+
+NOTE: The config file for the EKS provisioning workflow is located at `/scripts/pipelines/{path_provider}/templates/eks/eks-pipeline.cfg`.
+
+=== Flags
+```
+-c, --config-file        [Required] Configuration file containing workflow definition.
+ifdef::trigger_sentence_azure,trigger_sentence_github[-n, --pipeline-name      [Required] Name that will be set to the {pipeline_type}.]
+-d, --local-directory    [Required] Local directory of your project (the path should always be using '/' and not '\').
+    --cluster-name       [Required] Name for the cluster."
+    ifdef::trigger_sentence_azure,trigger_sentence_github[--s3-bucket          [Required] Name of the S3 bucket where the Terraform state of the cluster will be stored.]
+    ifdef::trigger_sentence_azure,trigger_sentence_github[--s3-key-path        [Required] Path within the S3 bucket where the Terraform state of the cluster will be stored.]
+    ifdef::trigger_sentence_gitlab[--terraform-eks-state        [Required] Name of the Gitlab managed Terraform state file of the cluster]
+-b, --target-branch                 Name of the branch to which the Pull Request will target. PR is not created if the flag is not provided.
+-w                                  Open the Pull Request on the web browser if it cannot be automatically merged. Requires -b flag.
+```
+
+=== Example
+
+```
+ifdef::trigger_sentence_azure,trigger_sentence_github[./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -n eks-provisioning -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --s3-bucket terraformStateBucket --s3-key-path eks/state -b develop -w]
+ifdef::trigger_sentence_gitlab[./pipeline_generator.sh -c ./templates/eks/eks-pipeline.cfg -d C:/Users/$USERNAME/Desktop/quarkus-project --cluster-name hangar-eks-cluster --aws-region eu-west-1]
+```
+
+== Appendix: Interacting with the cluster
+
+First, generate a `kubeconfig` file for accessing the AWS EKS cluster:
+
+```
+aws eks update-kubeconfig --name <cluster name> --region <aws region>
+```
+Now you can use `kubectl` tool to communicate with the cluster.
+
+To enable an IAM user to connect to the EKS cluster, please refer https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html[here].
+
+To get the DNS name of the NGINX Ingress controller on the EKS cluster, run the below command:
+```
+kubectl get svc --namespace nginx-ingress nginx-ingress-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname}
+```
+
+Rancher will be available on `https://<ingress controller domain>/dashboard`.
+
+== Appendix: Rancher resources
+
+* https://rancher.com/docs/rancher/v2.6/en/cluster-admin/cluster-access/kubectl/[Downloading `kubeconfig`].
+* https://rancher.com/docs/rancher/v2.6/en/admin-settings/rbac/[RBAC]
+* https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/[Monitoring]
+* https://rancher.com/docs/rancher/v2.6/en/logging/[Logging]
