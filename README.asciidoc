@@ -112,3 +112,6 @@ devonfw Takeoff can be seen as a wrapper on top of Hangar to simplify even furth
 * https://github.com/devonfw/hangar/blob/master/documentation/gcloud/logging-monitoring-cloud-run.asciidoc[Logging and monitoring a service on Cloud Run]
 * https://github.com/devonfw/hangar/blob/master/documentation/logging-monitoring-kubernetes.asciidoc[Logging and monitoring on Kubernetes]
 
+## Developing Hangar
+
+Refer to https://github.com/devonfw/hangar/blob/master/documentation/developer-docs.asciidoc[Hangar Developer documentation].
