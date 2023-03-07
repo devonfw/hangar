@@ -1,4 +1,4 @@
-# Hangar Developer Documentation
+# Hangar Developer documentation
 
 ## Features
 
