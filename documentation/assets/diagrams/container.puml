@@ -1,0 +1,40 @@
+@startuml Container_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+AddContainerTag("db", $sprite="database_server", $legendText="database container")
+
+
+' LAYOUT_WITH_LEGEND()
+
+Person(user, "Customer", "Create / Deploy on a Cloud Environment", $sprite="users")
+System_Boundary(c1, "TakeOff") {
+    Container(flutter, "Flutter App", "Graphic User Interface", "Visual interaction with TakeOff")
+    Container(takeoff, "TakeOff Executable", "Abstraction Layer", "Automation of Hangar scripts")
+    Container(hangar, "Hangar", "Shell scripts & CLI toolkit", "Create / Manage Cloud Projects")
+    ContainerDb(db, "Cache Store", "User Configuration", $tags="db")
+    Rel(user, flutter, "Uses")
+    Rel(flutter, takeoff, "Interacts")
+    Rel(takeoff, hangar, "Interacts")
+    Rel(takeoff, db, "Stores / Reads")
+    Rel(user, takeoff, "Uses")
+}
+System_Boundary(c2, "Host OS") {
+    ContainerDb(dbcli, "CLI Configs", "Self CLI Configuration", $tags="db")
+}
+Rel(hangar, dbcli, "Stores /Reads")
+
+@enduml

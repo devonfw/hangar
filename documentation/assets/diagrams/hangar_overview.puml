@@ -1,0 +1,33 @@
+@startuml Container_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+
+!include <office/Servers/database_server>
+!include <office/Servers/file_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/service_application>
+!include <office/Concepts/firewall>
+
+' LAYOUT_WITH_LEGEND()
+
+Person(user, "Customer", "Create / Deploy on a Cloud Environment", $sprite="users")
+System_Boundary(c1, "Hangar") {
+    Container(accounts, "Accounts", "Shell scripts", "Project and account management")
+    Container(env_provisioning, "Environment provisioning", "Shell scripts", "Service and resource provisioning")
+    Container(pipelines, "Pipelines", "Shell scripts", "CI/CD management")
+    Container(quickstart, "Quickstart", "Shell scripts", "Single click project deployment")
+    Container(repositories, "Repositories", "Shell scripts", "Repository management")
+    Container(sonarqube, "Sonarqube", "Shell scripts", "Sonarqube deployment")
+}
+
+Rel(user, c1, "Uses")
+
+@enduml
