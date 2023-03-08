@@ -36,19 +36,19 @@ image::assets/diagrams/Hangar-Accounts-Projects.png[]
 
 |Azure DevOps
 |Create a DevOps Project
-|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/azure-devops/setup-project.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/documentation/azure-devops/setup-project.asciidoc[Docs]
 |https://github.com/devonfw/hangar/blob/master/scripts/accounts/azure-devops/create-project.sh[Path]
 |
 
 |AWS
 |Create an AWS Project User
-|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Docs]
+|https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc[Docs]
 |https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/create-user.sh[Path]
 |https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-managed-policies.txt[managed-policies.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-custom-policies.json[custom-policies.json]
 
 |AWS
 |Verify User Roles
-|https://github.com/devonfw/hangar/blob/feature/improve-main-documentation/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
+|https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
 |https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/verify-account-policies.sh[Path]
 |https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-managed-policies.txt[managed-policies.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-custom-policies.json[custom-policies.json]
 
