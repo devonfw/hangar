@@ -1,0 +1,23 @@
+@startuml Context_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+
+' LAYOUT_WITH_LEGEND()
+
+Person(user, "Customer", "Create / Deploy on a Cloud Environment", $sprite="users")
+System(take_off, "TakeOff", "Scripts & CLI toolkit to Create / Manage Cloud Projects")
+
+System(google, "Google Cloud")
+System(azure, "Azure")
+System(aws, "AWS")
+
+Rel(user, take_off, "Uses", "CLI / GUI")
+Rel(take_off, google, "Communicates with", "HTTPS")
+Rel(take_off, aws, "Communicates with", "HTTPS")
+Rel(take_off, azure, "Communicates with", "HTTPS")
+@enduml
