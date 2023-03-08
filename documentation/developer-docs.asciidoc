@@ -240,7 +240,7 @@ image::assets/diagrams/Hangar-PipelinesCI_CD.png[]
 
 |===
 
-### Quickstarts
+### Quickstart 
 
 image::assets/diagrams/Hangar-Quickstart.png[]
 
