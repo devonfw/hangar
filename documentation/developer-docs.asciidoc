@@ -48,7 +48,7 @@ image::assets/diagrams/Hangar-Accounts-Projects.png[]
 
 |AWS
 |Verify User Roles
-|https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
+| link:https://github.com/devonfw/hangar/blob/master/documentation/aws/setup-aws-account-iam-for-eks.asciidoc#check-iam-user-permissions[Docs]
 |https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/verify-account-policies.sh[Path]
 |https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-managed-policies.txt[managed-policies.txt] https://github.com/devonfw/hangar/blob/master/scripts/accounts/aws/eks-custom-policies.json[custom-policies.json]
 
