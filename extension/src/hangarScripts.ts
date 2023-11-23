@@ -1,4 +1,7 @@
 import * as vscode from "vscode";
+import * as childProcess from 'child_process';
+import path from "path";
+
 
 /**
  * Represents a script runner for a VS Code extension.
@@ -24,6 +27,21 @@ export class HangarScripts {
      * @param checkboxesIds - The IDs of the checkboxes for which to run scripts.
      */
     public scriptSelector(checkboxesIds: string[]): void {
-        vscode.window.showInformationMessage("🤞 RUNNING = " + checkboxesIds);
+        if (checkboxesIds.includes("create_repo")) { this.createRepoSh(); }
+    }
+
+    private createRepoSh(): void {
+        const absoluteScriptPath = path.resolve(__dirname, '../../scripts/repositories/github');
+        const relativeScriptPath = vscode.workspace.asRelativePath(absoluteScriptPath, false);
+
+        childProcess.exec(`cd ${relativeScriptPath} ; ./hello.sh`, (error, stdout) => {
+            if (error) {
+                console.error(`EXEC ERROR\n${error}`);
+                vscode.window.showErrorMessage("🛑 THERE HAS BEEN AN ERROR DURING THE EXECUTION OF THE SCRIPT");
+                return;
+            }
+            console.log(`STDOUT\n${stdout}`);
+            vscode.window.showInformationMessage("🆙 CREATING REPO ...");
+        });
     }
 }

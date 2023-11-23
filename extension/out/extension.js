@@ -46,7 +46,7 @@ function activate() {
         { id: "create_repo", label: "🆙 Create repo" },
         { id: "pipeline_generator", label: "⏩ Pipeline generator" }
     ];
-    const buttonLabel = "Run selected scripts";
+    const buttonLabel = "Run selected scripts (CLICK ME)";
     const buttonCommand = "hangar-cicd.runScripts";
     const checkboxDataProvider = new Checkbox_1.CheckboxDataProvider(customCheckboxes, buttonLabel, buttonCommand);
     vscode.window.registerTreeDataProvider("hangar-cicd", checkboxDataProvider);

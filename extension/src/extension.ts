@@ -24,7 +24,7 @@ export function activate() {
 		{ id: "pipeline_generator", label: "⏩ Pipeline generator" }
 	];
 
-	const buttonLabel = "Run selected scripts";
+	const buttonLabel = "Run selected scripts (CLICK ME)";
 	const buttonCommand = "hangar-cicd.runScripts";
 
 	const checkboxDataProvider = new CheckboxDataProvider(customCheckboxes, buttonLabel, buttonCommand);
