@@ -28,8 +28,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HangarScripts = void 0;
 const vscode = __importStar(require("vscode"));
-const childProcess = __importStar(require("child_process"));
 const path_1 = __importDefault(require("path"));
+const util_1 = require("util");
+const exec = (0, util_1.promisify)(require('child_process').exec);
 /**
  * Represents a script runner for a VS Code extension.
  *
@@ -45,7 +46,7 @@ const path_1 = __importDefault(require("path"));
  * hangarScripts.scriptSelector(['scriptId1', 'scriptId2']);
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 1.0.0
+ * @version 1.1.0
  */
 class HangarScripts {
     /**
@@ -54,22 +55,35 @@ class HangarScripts {
      * @param checkboxesIds - The IDs of the checkboxes for which to run scripts.
      */
     scriptSelector(checkboxesIds) {
-        if (checkboxesIds.includes("create_repo")) {
+        if (checkboxesIds.includes("create-repo.sh")) {
             this.createRepoSh();
         }
     }
-    createRepoSh() {
+    async executeScript(scriptPath) {
+        try {
+            const { stdout } = await exec(`cd ${scriptPath} ; ./hello.sh`);
+            return stdout;
+        }
+        catch (error) {
+            throw new Error(`EXEC ERROR\n${error}`);
+        }
+    }
+    getScriptPath() {
         const absoluteScriptPath = path_1.default.resolve(__dirname, '../../scripts/repositories/github');
-        const relativeScriptPath = vscode.workspace.asRelativePath(absoluteScriptPath, false);
-        childProcess.exec(`cd ${relativeScriptPath} ; ./hello.sh`, (error, stdout) => {
-            if (error) {
-                console.error(`EXEC ERROR\n${error}`);
-                vscode.window.showErrorMessage("🛑 THERE HAS BEEN AN ERROR DURING THE EXECUTION OF THE SCRIPT");
-                return;
-            }
+        return vscode.workspace.asRelativePath(absoluteScriptPath, false);
+    }
+    // TODO: REMOVE hello.sh
+    async createRepoSh() {
+        try {
+            const scriptPath = this.getScriptPath();
+            const stdout = await this.executeScript(scriptPath);
             console.log(`STDOUT\n${stdout}`);
             vscode.window.showInformationMessage("🆙 CREATING REPO ...");
-        });
+        }
+        catch (error) {
+            console.error(error);
+            vscode.window.showErrorMessage("🛑 THERE HAS BEEN AN ERROR DURING THE EXECUTION OF THE SCRIPT");
+        }
     }
 }
 exports.HangarScripts = HangarScripts;

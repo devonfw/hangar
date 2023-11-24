@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
-import * as childProcess from 'child_process';
 import path from "path";
+import { promisify } from 'util';
+const exec = promisify(require('child_process').exec);
 
 
 /**
@@ -18,7 +19,7 @@ import path from "path";
  * hangarScripts.scriptSelector(['scriptId1', 'scriptId2']);
  *  
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 1.0.0
+ * @version 1.1.0
  */
 export class HangarScripts {
     /**
@@ -27,21 +28,33 @@ export class HangarScripts {
      * @param checkboxesIds - The IDs of the checkboxes for which to run scripts.
      */
     public scriptSelector(checkboxesIds: string[]): void {
-        if (checkboxesIds.includes("create_repo")) { this.createRepoSh(); }
+        if (checkboxesIds.includes("create-repo.sh")) { this.createRepoSh(); }
     }
 
-    private createRepoSh(): void {
-        const absoluteScriptPath = path.resolve(__dirname, '../../scripts/repositories/github');
-        const relativeScriptPath = vscode.workspace.asRelativePath(absoluteScriptPath, false);
+    private async executeScript(scriptPath: string): Promise<string> {
+        try {
+            const { stdout } = await exec(`cd ${scriptPath} ; ./hello.sh`);
+            return stdout;
+        } catch (error) {
+            throw new Error(`EXEC ERROR\n${error}`);
+        }
+    }
 
-        childProcess.exec(`cd ${relativeScriptPath} ; ./hello.sh`, (error, stdout) => {
-            if (error) {
-                console.error(`EXEC ERROR\n${error}`);
-                vscode.window.showErrorMessage("🛑 THERE HAS BEEN AN ERROR DURING THE EXECUTION OF THE SCRIPT");
-                return;
-            }
+    private getScriptPath(): string {
+        const absoluteScriptPath = path.resolve(__dirname, '../../scripts/repositories/github');
+        return vscode.workspace.asRelativePath(absoluteScriptPath, false);
+    }
+
+    // TODO: REMOVE hello.sh
+    private async createRepoSh(): Promise<void> {
+        try {
+            const scriptPath = this.getScriptPath();
+            const stdout = await this.executeScript(scriptPath);
             console.log(`STDOUT\n${stdout}`);
             vscode.window.showInformationMessage("🆙 CREATING REPO ...");
-        });
+        } catch (error) {
+            console.error(error);
+            vscode.window.showErrorMessage("🛑 THERE HAS BEEN AN ERROR DURING THE EXECUTION OF THE SCRIPT");
+        }
     }
 }
