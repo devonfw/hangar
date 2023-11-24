@@ -43,8 +43,8 @@ const hangarScripts_1 = require("./hangarScripts");
 function activate() {
     const hangarScripts = new hangarScripts_1.HangarScripts();
     const customCheckboxes = [
-        { id: "create_repo", label: "🆙 Create repo" },
-        { id: "pipeline_generator", label: "⏩ Pipeline generator" }
+        { id: "create-repo.sh", label: "🆙 Create repo" },
+        { id: "pipeline_generator.sh", label: "⏩ Pipeline generator" }
     ];
     const buttonLabel = "Run selected scripts (CLICK ME)";
     const buttonCommand = "hangar-cicd.runScripts";
