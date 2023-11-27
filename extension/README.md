@@ -42,6 +42,10 @@ Now the extension will be installed and ready to use.
 
 # Release Notes
 
+## 1.2.0
+
+- Take into account different scripts locations
+
 ## 1.0.0
 
 - Initial release
