@@ -64,52 +64,62 @@ class HangarScripts {
         checkboxesIds.forEach(scriptId => {
             switch (scriptId) {
                 case "create-repo.sh":
-                    this.createRepoSh();
+                    this.createRepoSh("create-repo.sh");
                     break;
-                case "pipelin_generator.sh":
-                    this.pipelineGeneratorSh();
+                case "pipeline_generator.sh":
+                    this.pipelineGeneratorSh("pipeline_generator.sh");
                     break;
                 default:
                     vscode.window.showErrorMessage(`🛑 No script found for checkbox ID: ${scriptId}`);
             }
         });
     }
-    async executeScript(scriptPath) {
+    /**
+    * Executes a script located at the given path.
+    *
+    * @param {string} scriptPath - The path where the script is located.
+    * @param {string} scriptName - The name of the script to execute.
+    */
+    async executeScript(scriptPath, scriptName) {
         try {
-            const { stdout } = await exec(`cd ${scriptPath} ; ./hello.sh`);
+            const { stdout } = await exec(`cd ${scriptPath} ; ./${scriptName}`);
             return stdout;
         }
         catch (error) {
             throw new Error(`EXEC ERROR\n${error}`);
         }
     }
-    getScriptRelativePath(scriptName) {
-        const absoluteScriptPath = path_1.default.resolve(__dirname, `../../scripts/repositories/github/${scriptName}`);
+    /**
+     * Returns the relative path of a script located in a given subdirectory.
+     *
+     * @param {string} subdirectory - The subdirectory where the script is located.
+     */
+    getScriptRelativePath(subdirectory) {
+        const absoluteScriptPath = path_1.default.resolve(__dirname, `../../scripts/${subdirectory}`);
         return vscode.workspace.asRelativePath(absoluteScriptPath, false);
     }
-    // TODO: REMOVE hello.sh
-    async createRepoSh() {
+    async createRepoSh(scriptName) {
         try {
-            const scriptPath = this.getScriptRelativePath('create-repo.sh');
-            const stdout = await this.executeScript(scriptPath);
+            const scriptPath = this.getScriptRelativePath("repositories/github");
+            const stdout = await this.executeScript(scriptPath, scriptName);
             console.info(`STDOUT\n${stdout}`);
             vscode.window.showInformationMessage("🆙 CREATING REPO ...");
         }
         catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("🛑 THERE HAS BEEN AN ERROR DURING THE EXECUTION OF THE SCRIPT");
+            vscode.window.showErrorMessage("🛑 There has been an error during the exec of the script");
         }
     }
-    async pipelineGeneratorSh() {
+    async pipelineGeneratorSh(scriptName) {
         try {
-            const scriptPath = this.getScriptRelativePath('pipeline_generator.sh');
-            const stdout = await this.executeScript(scriptPath);
+            const scriptPath = this.getScriptRelativePath("pipelines/github");
+            const stdout = await this.executeScript(scriptPath, scriptName);
             console.log(`STDOUT\n${stdout}`);
             vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
         }
         catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("🛑 THERE HAS BEEN AN ERROR DURING THE EXECUTION OF THE SCRIPT");
+            vscode.window.showErrorMessage("🛑 There has been an error during the exec of the script");
         }
     }
 }
