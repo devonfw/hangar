@@ -20,8 +20,8 @@ export function activate() {
 	const hangarScripts = new HangarScripts();
 
 	const customCheckboxes: ICustomCheckbox[] = [
-		{ id: "create-repo.sh", label: "🆙 Create repo" },
-		{ id: "pipeline_generator.sh", label: "⏩ Pipeline generator" }
+		{ id: "create-repo.sh", label: "🆙 Create repo (repositories/github)" },
+		{ id: "pipeline_generator.sh", label: "⏩ Pipeline generator (pipelines/github)" }
 	];
 
 	const buttonLabel = "Run selected scripts (CLICK ME)";
