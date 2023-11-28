@@ -8,14 +8,14 @@ parameters:
     displayName: Build Artifact Path
     default: $(targetPath)
     type: string
-  #- name: sonarUrl
-  #  displayName: Sonar URL
-  # default: $(sonarUrl)
-  #  type: string
-  #- name: sonarToken
-  #  displayName: Sonar Token
-  #  default: $(sonarToken)
-  #  type: string 
+  - name: sonarUrl
+    displayName: Sonar URL
+   default: $(sonarUrl)
+    type: string
+  - name: sonarToken
+    displayName: Sonar Token
+    default: $(sonarToken)
+    type: string 
 
 variables:
   projectPath: $(Build.Repository.LocalPath)
