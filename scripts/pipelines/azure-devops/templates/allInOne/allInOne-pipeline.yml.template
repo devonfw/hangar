@@ -56,7 +56,7 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/TEST-*.xml'
 
- - task: Bash@3
+- task: Bash@3
   displayName: "SonarQube Analysis"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
@@ -65,7 +65,7 @@ steps:
     SONAR_URL: ${{ parameters.sonarUrl }}
     SONAR_TOKEN: ${{ parameters.sonarToken }}
 
- - task: Bash@3
+- task: Bash@3
   displayName: "SonarQube Analysis"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
