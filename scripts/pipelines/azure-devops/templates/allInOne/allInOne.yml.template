@@ -56,7 +56,7 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/TEST-*.xml'
 
-# - task: Bash@3
+ - task: Bash@3
   displayName: "SonarQube Analysis"
   inputs:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
