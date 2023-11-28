@@ -56,7 +56,6 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/TEST-*.xml'
 
-<<<<<<<< HEAD:scripts/pipelines/azure-devops/templates/allInOne/allInOne.yml.template
  - task: Bash@3
   displayName: "SonarQube Analysis"
   inputs:
@@ -65,13 +64,13 @@ steps:
     PROJECT_PATH: $(projectPath)
     SONAR_URL: ${{ parameters.sonarUrl }}
     SONAR_TOKEN: ${{ parameters.sonarToken }}
-========
-# - task: Bash@3
-#  displayName: "SonarQube Analysis"
-#  inputs:
-#    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
-#  env:
-#    PROJECT_PATH: $(projectPath)
-#    SONAR_URL: ${{ parameters.sonarUrl }}
-#    SONAR_TOKEN: ${{ parameters.sonarToken }}
->>>>>>>> 6513f4812bcd7c0b20c4756d50e5de6cf6ae1fdf:scripts/pipelines/azure-devops/templates/allInOne/allInOne-pipeline.yml.template
+
+ - task: Bash@3
+  displayName: "SonarQube Analysis"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
+  env:
+    PROJECT_PATH: $(projectPath)
+    SONAR_URL: ${{ parameters.sonarUrl }}
+    SONAR_TOKEN: ${{ parameters.sonarToken }}
+
