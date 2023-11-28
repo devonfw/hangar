@@ -17,12 +17,6 @@ parameters:
   #  default: $(sonarToken)
   #  type: string 
 
-resources:
-  pipelines:
-  - pipeline: 'Build-Pipeline'
-    source: '$buildPipelineName'
-    trigger: true
-
 variables:
   projectPath: $(Build.Repository.LocalPath)
 
