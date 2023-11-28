@@ -39,16 +39,11 @@ export function activate() {
 			}
 		});
 		if (checkboxesIds.length) {
-			// Ask the user for attributes until they choose to stop
-			const attributes: string[] = [];
-			let attribute: string | undefined;
-			do {
-				attribute = await vscode.window.showInputBox({ prompt: '✨ Enter an attribute or press Enter to finish' });
-				if (attribute) {
-					attributes.push(attribute);
-				}
-			} while (attribute);
-			hangarScripts.scriptSelector(checkboxesIds, attributes.join(' '));
+			// Ask the user for script attributes
+			let scriptAttributes: string | undefined = await vscode.window.showInputBox(
+				{ prompt: '✨ Enter ALL attributes separated by space ...' }
+			);
+			hangarScripts.scriptSelector(checkboxesIds, scriptAttributes!);
 		} else {
 			vscode.window.showErrorMessage("🤬 YOU MUST SELECT AT LEAST ONE SCRIPT !!!");
 		}
