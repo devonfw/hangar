@@ -3,12 +3,6 @@ trigger:
    include:
    - '*'
 
-resources:
-  pipelines:
-  - pipeline: 'Build-Pipeline'
-    source: '$buildPipelineName'
-    trigger: true
-
 parameters:
   - name: artifactPath
     displayName: Build Artifact Path
@@ -22,6 +16,12 @@ parameters:
   #  displayName: Sonar Token
   #  default: $(sonarToken)
   #  type: string 
+
+resources:
+  pipelines:
+  - pipeline: 'Build-Pipeline'
+    source: '$buildPipelineName'
+    trigger: true
 
 variables:
   projectPath: $(Build.Repository.LocalPath)
@@ -57,10 +57,10 @@ steps:
     testResultsFiles: '**/TEST-*.xml'
 
 # - task: Bash@3
-  displayName: "SonarQube Analysis"
-  inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
-  env:
-    PROJECT_PATH: $(projectPath)
-    SONAR_URL: ${{ parameters.sonarUrl }}
-    SONAR_TOKEN: ${{ parameters.sonarToken }}
+#  displayName: "SonarQube Analysis"
+#  inputs:
+#    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
+#  env:
+#    PROJECT_PATH: $(projectPath)
+#    SONAR_URL: ${{ parameters.sonarUrl }}
+#    SONAR_TOKEN: ${{ parameters.sonarToken }}
