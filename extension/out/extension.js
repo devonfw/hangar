@@ -50,7 +50,7 @@ function activate() {
     const buttonCommand = "hangar-cicd.runScripts";
     const checkboxDataProvider = new Checkbox_1.CheckboxDataProvider(customCheckboxes, buttonLabel, buttonCommand);
     vscode.window.registerTreeDataProvider("hangar-cicd", checkboxDataProvider);
-    vscode.commands.registerCommand(buttonCommand, () => {
+    vscode.commands.registerCommand(buttonCommand, async () => {
         let checkboxesIds = [];
         checkboxDataProvider.checkboxes.forEach(checkbox => {
             if (checkbox.checkboxState === 1) {
@@ -58,7 +58,16 @@ function activate() {
             }
         });
         if (checkboxesIds.length) {
-            hangarScripts.scriptSelector(checkboxesIds);
+            // Ask the user for attributes until they choose to stop
+            const attributes = [];
+            let attribute;
+            do {
+                attribute = await vscode.window.showInputBox({ prompt: '✨ Enter an attribute or press Enter to finish' });
+                if (attribute) {
+                    attributes.push(attribute);
+                }
+            } while (attribute);
+            hangarScripts.scriptSelector(checkboxesIds, attributes.join(' '));
         }
         else {
             vscode.window.showErrorMessage("🤬 YOU MUST SELECT AT LEAST ONE SCRIPT !!!");

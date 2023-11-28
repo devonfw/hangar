@@ -31,7 +31,7 @@ export function activate() {
 
 	vscode.window.registerTreeDataProvider("hangar-cicd", checkboxDataProvider);
 
-	vscode.commands.registerCommand(buttonCommand, () => {
+	vscode.commands.registerCommand(buttonCommand, async () => {
 		let checkboxesIds: string[] = [];
 		checkboxDataProvider.checkboxes.forEach(checkbox => {
 			if (checkbox.checkboxState === 1) {
@@ -39,7 +39,16 @@ export function activate() {
 			}
 		});
 		if (checkboxesIds.length) {
-			hangarScripts.scriptSelector(checkboxesIds);
+			// Ask the user for attributes until they choose to stop
+			const attributes: string[] = [];
+			let attribute: string | undefined;
+			do {
+				attribute = await vscode.window.showInputBox({ prompt: '✨ Enter an attribute or press Enter to finish' });
+				if (attribute) {
+					attributes.push(attribute);
+				}
+			} while (attribute);
+			hangarScripts.scriptSelector(checkboxesIds, attributes.join(' '));
 		} else {
 			vscode.window.showErrorMessage("🤬 YOU MUST SELECT AT LEAST ONE SCRIPT !!!");
 		}

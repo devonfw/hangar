@@ -60,14 +60,14 @@ class HangarScripts {
      * @example
      * scriptSelector(['create-repo.sh', 'pipeline_generator.sh']);
      */
-    scriptSelector(checkboxesIds) {
+    scriptSelector(checkboxesIds, attributes) {
         checkboxesIds.forEach(scriptId => {
             switch (scriptId) {
                 case "create-repo.sh":
-                    this.createRepoSh("create-repo.sh");
+                    this.createRepoSh("create-repo.sh", attributes);
                     break;
                 case "pipeline_generator.sh":
-                    this.pipelineGeneratorSh("pipeline_generator.sh");
+                    this.pipelineGeneratorSh("pipeline_generator.sh", attributes);
                     break;
                 default:
                     vscode.window.showErrorMessage(`🛑 No script found for checkbox ID: ${scriptId}`);
@@ -80,9 +80,9 @@ class HangarScripts {
     * @param {string} scriptPath - The path where the script is located.
     * @param {string} scriptName - The name of the script to execute.
     */
-    async executeScript(scriptPath, scriptName) {
+    async executeScript(scriptPath, scriptName, attributes) {
         try {
-            const { stdout } = await exec(`cd ${scriptPath} ; ./${scriptName}`);
+            const { stdout } = await exec(`cd ${scriptPath} ; ./${scriptName} ${attributes}`);
             return stdout;
         }
         catch (error) {
@@ -98,10 +98,10 @@ class HangarScripts {
         const absoluteScriptPath = path_1.default.resolve(__dirname, `../../scripts/${subdirectory}`);
         return vscode.workspace.asRelativePath(absoluteScriptPath, false);
     }
-    async createRepoSh(scriptName) {
+    async createRepoSh(scriptName, attributes) {
         try {
             const scriptPath = this.getScriptRelativePath("repositories/github");
-            const stdout = await this.executeScript(scriptPath, scriptName);
+            const stdout = await this.executeScript(scriptPath, scriptName, attributes);
             console.info(`STDOUT\n${stdout}`);
             vscode.window.showInformationMessage("🆙 CREATING REPO ...");
         }
@@ -110,10 +110,10 @@ class HangarScripts {
             vscode.window.showErrorMessage("🛑 There has been an error during the exec of the script");
         }
     }
-    async pipelineGeneratorSh(scriptName) {
+    async pipelineGeneratorSh(scriptName, attributes) {
         try {
             const scriptPath = this.getScriptRelativePath("pipelines/github");
-            const stdout = await this.executeScript(scriptPath, scriptName);
+            const stdout = await this.executeScript(scriptPath, scriptName, attributes);
             console.log(`STDOUT\n${stdout}`);
             vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
         }
