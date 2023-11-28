@@ -1,0 +1,66 @@
+trigger:
+  branches:
+   include:
+   - '*'
+
+resources:
+  pipelines:
+  - pipeline: 'Build-Pipeline'
+    source: '$buildPipelineName'
+    trigger: true
+
+parameters:
+  - name: artifactPath
+    displayName: Build Artifact Path
+    default: $(targetPath)
+    type: string
+  - name: sonarUrl
+    displayName: Sonar URL
+    default: $(sonarUrl)
+    type: string
+  - name: sonarToken
+    displayName: Sonar Token
+    default: $(sonarToken)
+    type: string
+
+variables:
+  projectPath: $(Build.Repository.LocalPath)
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Bash@3
+  displayName: "Build"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/build.sh'
+
+- task: Bash@3
+  displayName: "Archiving build artifact to the ArtifactStagingDirectory"
+  inputs:
+    targetType: inline
+    script: 'tar -cvf $(Build.ArtifactStagingDirectory)/BuildOutput.tar -C $(Build.Repository.LocalPath)/${{ parameters.artifactPath }} .'
+
+- publish: $(Build.ArtifactStagingDirectory)/BuildOutput.tar
+  displayName: "Publish Artifact"
+  artifact: BuildOutput
+
+- task: Bash@3
+  displayName: "Test"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/test.sh'
+
+- task: PublishTestResults@2
+  displayName: "Publish Test Results"
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
+
+- task: Bash@3
+  displayName: "SonarQube Analysis"
+  inputs:
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
+  env:
+    PROJECT_PATH: $(projectPath)
+    SONAR_URL: ${{ parameters.sonarUrl }}
+    SONAR_TOKEN: ${{ parameters.sonarToken }}
