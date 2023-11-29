@@ -7,8 +7,8 @@ const exec = promisify(require('child_process').exec);
 /**
  * Represents a script runner for a VS Code extension.
  * 
- * This class is responsible for executing scripts based on the selected checkboxes. It includes a method
- * for running the scripts associated with the given checkbox IDs.
+ * This class is responsible for executing scripts based on the selected radio button. It includes a method
+ * for running the script associated with the given radio button ID.
  * 
  * Available scripts:
  * - 🆙 Create repo
@@ -16,14 +16,14 @@ const exec = promisify(require('child_process').exec);
  * 
  * @example
  * const hangarScripts = new HangarScripts();
- * hangarScripts.scriptSelector(['scriptId1', 'scriptId2']);
+ * hangarScripts.scriptSelector('scriptId1');
  *  
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 1.2.0
+ * @version 2.0.0
  */
 export class HangarScripts {
     /**
-     * Executes the scripts associated with the given checkbox IDs.
+     * Executes the scripts associated with the given radio button ID.
      * 
      * This method iterates over the provided array of checkbox IDs, and for each ID, it executes the corresponding script.
      * If no script is found for a given ID, it logs an error message.

@@ -23,63 +23,62 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CheckboxDataProvider = void 0;
+exports.RadioButtonDataProvider = void 0;
 const vscode = __importStar(require("vscode"));
 /**
- * Represents a checkbox item in a VS Code extension.
+ * Represents a RadioButton item in a VS Code extension.
  *
- * This class extends the vscode.TreeItem and is responsible for managing the state and behavior of a checkbox
- * in a VS Code sidebar. It keeps track of the checkbox's label, state, and unique identifier.
+ * This class extends the vscode.TreeItem and is responsible for managing the state and behavior of a radioButton
+ * in a VS Code sidebar. It keeps track of the radioButton's label, state, and unique identifier.
  *
  * @example
- * const checkbox = new Checkbox({label: 'Example', id: 'exampleId'});
+ * const radioButton = new RadioButton({label: 'Example', id: 'exampleId'});
  *
  * @see {@link https://code.visualstudio.com/api/references/vscode-api#TreeItem | VS Code TreeItem API}
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 1.0.0
+ * @version 2.0.0
  */
-class Checkbox extends vscode.TreeItem {
+class RadioButton extends vscode.TreeItem {
     /**
-     * Create a new Checkbox.
+     * Create a new RadioButton.
      *
-     * @param customCheckbox - The custom checkbox object. (ICustomCheckbox)
+     * @param customRadioButton - The custom radio button object. (ICustomRadioButton)
      */
-    constructor(customCheckbox) {
-        super(customCheckbox.label, vscode.TreeItemCollapsibleState.None);
-        this.checkboxState = vscode.TreeItemCheckboxState.Unchecked;
-        this.id = customCheckbox.id;
+    constructor(customRadioButton) {
+        super(customRadioButton.label, vscode.TreeItemCollapsibleState.None);
+        this.id = customRadioButton.id;
     }
 }
 /**
- * Represents a data provider for checkboxes in a VS Code extension.
+ * Represents a data provider for the RadioButton in VS Code extension.
  *
- * This class is responsible for managing the state and behavior of checkboxes
- * in a VS Code sidebar. It keeps track of the checkboxes, their labels, and the
+ * This class is responsible for managing the state and behavior of radio buttons
+ * in a VS Code sidebar. It keeps track of the radio buttons, their labels, and the
  * commands associated with them. It also provides methods for getting the tree
  * item for a given element and for getting the children of the tree.
  *
  * @example
- * const checkboxDataProvider = new CheckboxDataProvider(customCheckboxes, 'Submit', 'submitCommand');
+ * const radioButtonDataProvider = new RadioButtonDataProvider(customRadioButton, 'Submit', 'submitCommand');
  *
  * @see {@link https://code.visualstudio.com/api/references/vscode-api#TreeDataProvider | VS Code TreeDataProvider API}
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 1.0.0
+ * @version 2.0.0
  */
-class CheckboxDataProvider {
-    checkboxes;
+class RadioButtonDataProvider {
+    radioButtons;
     buttonLabel;
     buttonCommand;
     /**
-     * Create a new CheckboxDataProvider.
+     * Create a new RadioButtonDataProvider.
      *
-     * @param customCheckboxes - Array of custom ICustomCheckbox.
+     * @param customRadioButtons - Array of ICustomRadioButtons.
      * @param buttonLabel - Button text.
      * @param buttonCommand - Command to be executed.
      */
-    constructor(customCheckboxes, buttonLabel, buttonCommand) {
-        this.checkboxes = customCheckboxes.map((checkbox) => new Checkbox(checkbox));
+    constructor(customRadioButtons, buttonLabel, buttonCommand) {
+        this.radioButtons = customRadioButtons.map((radioButton) => new RadioButton(radioButton));
         this.buttonLabel = buttonLabel;
         this.buttonCommand = buttonCommand;
     }
@@ -88,24 +87,24 @@ class CheckboxDataProvider {
      *
      * This method is responsible for returning the tree item that corresponds to the given element.
      *
-     * @param element - The Checkbox element for which to get the tree item.
+     * @param element - The RadioButton element for which to get the tree item.
      * @returns The tree item that corresponds to the given element.
      */
     getTreeItem(element) {
         return element;
     }
     /**
-     * Return the array of checkboxes plus the button as the root level.
+     * Return the array of RedioButtons plus the button as the root level.
      *
-     * This method is responsible for returning the children of the tree, which includes all checkboxes and the button.
+     * This method is responsible for returning the children of the tree, which includes all radio buttons and the button.
      *
-     * @returns A promise that resolves to an array of Checkbox items, including the button.
+     * @returns A promise that resolves to an array of RadioButton items, including the button.
      */
     getChildren() {
         const buttonItem = new vscode.TreeItem(this.buttonLabel, vscode.TreeItemCollapsibleState.None);
         buttonItem.command = { command: this.buttonCommand, title: this.buttonLabel };
-        return Promise.resolve([...this.checkboxes, buttonItem]);
+        return Promise.resolve([...this.radioButtons, buttonItem]);
     }
 }
-exports.CheckboxDataProvider = CheckboxDataProvider;
+exports.RadioButtonDataProvider = RadioButtonDataProvider;
 //# sourceMappingURL=Checkbox.js.map

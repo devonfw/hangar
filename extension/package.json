@@ -1,7 +1,7 @@
 {
 	"name": "hangar-cicd",
-	"displayName": "Hangar CICD",
-	"description": "This extension is meant to show different Hangar executions CI/CD scripts.",
+	"displayName": "Hangar CI/CD",
+	"description": "This extension is meant to show and execute diverse Hangar CI/CD scripts.",
 	"author": {
 		"name": "ADCenter Spain - DevOn Hangar Team"
 	},

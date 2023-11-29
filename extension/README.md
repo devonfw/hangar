@@ -42,6 +42,10 @@ Now the extension will be installed and ready to use.
 
 # Release Notes
 
+## 2.0.0
+
+- Changed checkboxes to radio buttons. No multiple selection options are available anymore.
+ 
 ## 1.2.0
 
 - Take into account different scripts locations
