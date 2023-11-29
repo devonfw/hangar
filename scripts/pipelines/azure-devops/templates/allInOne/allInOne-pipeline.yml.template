@@ -59,12 +59,4 @@ steps:
     SONAR_URL: ${{ parameters.sonarUrl }}
     SONAR_TOKEN: ${{ parameters.sonarToken }}
 
-- task: Bash@3
-  displayName: "SonarQube Analysis"
-  inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
-  env:
-    PROJECT_PATH: $(projectPath)
-    SONAR_URL: ${{ parameters.sonarUrl }}
-    SONAR_TOKEN: ${{ parameters.sonarToken }}
 
