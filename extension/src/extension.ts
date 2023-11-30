@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { ICustomRadioButton } from "./ICustomCheckbox";
-import { RadioButtonDataProvider } from "./Checkbox";
+import { ICustomRadioButton } from "./ICustomRadioButton";
+import { RadioButtonDataProvider } from "./RadioButton";
 import { HangarScripts } from "./hangarScripts";
 
 /**
@@ -34,10 +34,8 @@ export function activate() {
 	vscode.commands.registerCommand(buttonCommand, async () => {
 		let selectedRadioButtonId: string | undefined;
 		radioButtonDataProvider.radioButtons.forEach(radioButton => {
-			if (selectedRadioButtonId) {
-				vscode.window.showErrorMessage("🤬 YOU CAN ONLY SELECT ONE OPTION !!!");
-				return;
-			}
+			// Ensures that the selected radio button is properly set to selectedRadioButtonId
+			if (selectedRadioButtonId) { return; }
 			selectedRadioButtonId = radioButton.id as string;
 		});
 		if (selectedRadioButtonId) {
@@ -45,9 +43,7 @@ export function activate() {
 			let scriptAttributes: string | undefined = await vscode.window.showInputBox(
 				{ prompt: '✨ Enter ALL attributes separated by space ...' }
 			);
-			hangarScripts.scriptSelector([selectedRadioButtonId], scriptAttributes!);
-		} else {
-			vscode.window.showErrorMessage("🤬 YOU MUST SELECT AT LEAST ONE OPTION !!!");
+			hangarScripts.scriptSelector(selectedRadioButtonId, scriptAttributes as string);
 		}
 	});
 }

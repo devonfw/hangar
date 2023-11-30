@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
-const Checkbox_1 = require("./Checkbox");
+const RadioButton_1 = require("./RadioButton");
 const hangarScripts_1 = require("./hangarScripts");
 /**
  * Activates the VS Code extension.
@@ -48,13 +48,13 @@ function activate() {
     ];
     const buttonLabel = "Run selected scripts (CLICK ME)";
     const buttonCommand = "hangar-cicd.runScripts";
-    const radioButtonDataProvider = new Checkbox_1.RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
+    const radioButtonDataProvider = new RadioButton_1.RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
     vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
     vscode.commands.registerCommand(buttonCommand, async () => {
         let selectedRadioButtonId;
         radioButtonDataProvider.radioButtons.forEach(radioButton => {
+            // Ensures that the selected radio button is properly set to selectedRadioButtonId
             if (selectedRadioButtonId) {
-                vscode.window.showErrorMessage("🤬 YOU CAN ONLY SELECT ONE OPTION !!!");
                 return;
             }
             selectedRadioButtonId = radioButton.id;
@@ -62,10 +62,7 @@ function activate() {
         if (selectedRadioButtonId) {
             // Ask the user for script attributes
             let scriptAttributes = await vscode.window.showInputBox({ prompt: '✨ Enter ALL attributes separated by space ...' });
-            hangarScripts.scriptSelector([selectedRadioButtonId], scriptAttributes);
-        }
-        else {
-            vscode.window.showErrorMessage("🤬 YOU MUST SELECT AT LEAST ONE OPTION !!!");
+            hangarScripts.scriptSelector(selectedRadioButtonId, scriptAttributes);
         }
     });
 }

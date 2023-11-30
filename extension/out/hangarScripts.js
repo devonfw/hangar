@@ -41,10 +41,6 @@ const exec = (0, util_1.promisify)(require('child_process').exec);
  * - 🆙 Create repo
  * - ⏩ Pipeline generator
  *
- * @example
- * const hangarScripts = new HangarScripts();
- * hangarScripts.scriptSelector('scriptId1');
- *
  * @author ADCenter Spain - DevOn Hangar Team
  * @version 2.0.0
  */
@@ -52,27 +48,26 @@ class HangarScripts {
     /**
      * Executes the scripts associated with the given radio button ID.
      *
-     * This method iterates over the provided array of checkbox IDs, and for each ID, it executes the corresponding script.
+     * This method executes the corresponding script.
      * If no script is found for a given ID, it logs an error message.
      *
-     * @param {string[]} checkboxesIds - The IDs of the checkboxes selected by the user.
+     * @param {string} radioButtonId - The ID of the radio button selected by the user.
+     * @param {string} scriptAttributes - The script attributes.
      *
      * @example
-     * scriptSelector(['create-repo.sh', 'pipeline_generator.sh']);
+     * scriptSelector('create-repo.sh', '-a create -n repo-test -d /local/proyect/path');
      */
-    scriptSelector(checkboxesIds, scriptAttributes) {
-        checkboxesIds.forEach(scriptId => {
-            switch (scriptId) {
-                case "create-repo.sh":
-                    this.createRepoSh("create-repo.sh", scriptAttributes);
-                    break;
-                case "pipeline_generator.sh":
-                    this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
-                    break;
-                default:
-                    vscode.window.showErrorMessage(`🛑 No script found for checkbox ID: ${scriptId}`);
-            }
-        });
+    scriptSelector(radioButtonId, scriptAttributes) {
+        switch (radioButtonId) {
+            case "create-repo.sh":
+                this.createRepoSh("create-repo.sh", scriptAttributes);
+                break;
+            case "pipeline_generator.sh":
+                this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
+                break;
+            default:
+                vscode.window.showErrorMessage(`🛑 No script found for rdai button ID: ${radioButtonId}`);
+        }
     }
     /**
     * Executes a script located at the given path.
@@ -81,9 +76,9 @@ class HangarScripts {
     * @param {string} scriptName - The name of the script to execute.
     * @param {string} scriptAttributes - The scriptAttributes of the script.
     */
-    async executeScript(scriptPath, scriptName, attributes) {
+    async executeScript(scriptPath, scriptName, scriptAttributes) {
         try {
-            const { stdout } = await exec(`cd ${scriptPath} ; ./${scriptName} ${attributes}`);
+            const { stdout } = await exec(`cd ${scriptPath} ; ./${scriptName} ${scriptAttributes}`);
             return stdout;
         }
         catch (error) {
