@@ -39,3 +39,51 @@ jobs:
           path: ./BuildOutput.tar
 
 # mark to insert step for additional artifact #
+  Test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+
+      - name: Download artifact from build job (current workflow)
+        uses: actions/download-artifact@v2
+        id: dowloadFromSamePipeline
+        continue-on-error: true
+        with:
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Download artifact from build workflow
+        uses: dawidd6/action-download-artifact@v2
+        id: downloadFromBuild
+        continue-on-error: true
+        if: ${{ steps.dowloadFromSamePipeline.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.buildPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Download artifact from CI workflow
+        uses: dawidd6/action-download-artifact@v2
+        if: ${{ steps.downloadFromBuild.outcome == 'failure' }}
+        with:
+          workflow: ${{ env.ciPipelineYamlName }}
+          commit: ${{ github.sha }}
+          check_artifacts:  true
+          name: BuildOutput
+          path: ${{ env.targetPath }}
+
+      - name: Extracting archive
+        run: tar -C ${{ env.targetPath }} -xf ${{ env.targetPath }}/BuildOutput.tar
+
+      - name: Test
+        run: .github/workflows/scripts/test.sh
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: '**/TEST-*.xml'
