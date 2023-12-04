@@ -54,10 +54,9 @@ function activate() {
         let selectedRadioButtonId;
         radioButtonDataProvider.radioButtons.forEach(radioButton => {
             // Ensures that the selected radio button is properly set to selectedRadioButtonId
-            if (selectedRadioButtonId) {
-                return;
+            if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) {
+                selectedRadioButtonId = radioButton.id;
             }
-            selectedRadioButtonId = radioButton.id;
         });
         if (selectedRadioButtonId) {
             // Ask the user for script attributes

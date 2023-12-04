@@ -24,6 +24,7 @@ class RadioButton extends vscode.TreeItem {
     constructor(customRadioButton: ICustomRadioButton) {
         super(customRadioButton.label, vscode.TreeItemCollapsibleState.None);
         this.id = customRadioButton.id;
+        this.checkboxState = vscode.TreeItemCheckboxState.Unchecked;
     }
 }
 
