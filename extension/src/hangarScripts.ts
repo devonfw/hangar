@@ -77,7 +77,7 @@ export class HangarScripts {
             vscode.window.showInformationMessage("🆙 CREATING REPO ...");
         } catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("🛑 There has been an error during the exec of the script");
+            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
         }
     }
 
@@ -89,7 +89,7 @@ export class HangarScripts {
             vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
         } catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("🛑 There has been an error during the exec of the script");
+            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
         }
     }
 }

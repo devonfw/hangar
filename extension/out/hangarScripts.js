@@ -103,7 +103,7 @@ class HangarScripts {
         }
         catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("🛑 There has been an error during the exec of the script");
+            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
         }
     }
     async pipelineGeneratorSh(scriptName, scriptAttributes) {
@@ -115,7 +115,7 @@ class HangarScripts {
         }
         catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("🛑 There has been an error during the exec of the script");
+            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
         }
     }
 }

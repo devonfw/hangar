@@ -74,19 +74,23 @@ export function activate() {
 	vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
 
 	vscode.commands.registerCommand(buttonCommand, async () => {
-		let selectedRadioButtonId: string | undefined;
+		let selectedRadioButtonId: string[] = [];
 		radioButtonDataProvider.radioButtons.forEach(radioButton => {
 			// Ensures that the selected radio button is properly set to selectedRadioButtonId
 			if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) {
-				selectedRadioButtonId = radioButton.id as string;
+				selectedRadioButtonId.push(radioButton.id as string);
 			}
 		});
-		if (selectedRadioButtonId) {
+		// Avoids multiple scripts executions
+		if (selectedRadioButtonId.length > 1) {
+			vscode.window.showErrorMessage("ERROR: Please select only one script at a time.");
+		} else if (selectedRadioButtonId.length === 1) {
 			// Ask the user for script attributes
 			let scriptAttributes: string | undefined = await vscode.window.showInputBox(
 				{ prompt: '✨ Enter ALL attributes separated by space ...' }
 			);
-			hangarScripts.scriptSelector(selectedRadioButtonId, scriptAttributes as string);
+			console.info(selectedRadioButtonId);
+			hangarScripts.scriptSelector(selectedRadioButtonId[0], scriptAttributes as string);
 		}
 	});
 }
