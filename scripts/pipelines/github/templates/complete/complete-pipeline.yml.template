@@ -46,9 +46,6 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v2
 
-      - name: Extracting archive
-        run: tar -C ${{ env.targetPath }} -xf ${{ env.targetPath }}/BuildOutput.tar
-
       - name: Test
         run: .github/workflows/scripts/test.sh
 
