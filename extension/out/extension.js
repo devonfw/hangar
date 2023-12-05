@@ -69,36 +69,50 @@ function getWebviewContent() {
  * @see {@link https://code.visualstudio.com/api/references/activation-events | VS Code Activation Events}
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.0.0
+ * @version 3.0.0
  */
 function activate() {
     createWebviewPanel();
+    const radioButtonDataProvider = createRadioButtonDataProvider();
+    vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
+    registerCommandHandler(radioButtonDataProvider);
+}
+exports.activate = activate;
+/**
+ * Creates a radio button data provider.
+ *
+ * @returns The radio button data provider.
+ */
+function createRadioButtonDataProvider() {
     const customRadioButtons = [
         { id: "create-repo.sh", label: "🆙 Create repo (repositories/github)" },
         { id: "pipeline_generator.sh", label: "⏩ Pipeline generator (pipelines/github)" }
     ];
     const buttonLabel = "RUN";
     const buttonCommand = "hangar-cicd.runScripts";
-    const radioButtonDataProvider = new RadioButton_1.RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
-    vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
+    return new RadioButton_1.RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
+}
+/**
+ * Registers a command handler.
+ *
+ * @param radioButtonDataProvider The radio button data provider.
+ */
+function registerCommandHandler(radioButtonDataProvider) {
+    const buttonCommand = "hangar-cicd.runScripts";
     vscode.commands.registerCommand(buttonCommand, async () => {
-        let selectedRadioButtonId = [];
+        let selectedScriptIds = [];
         radioButtonDataProvider.radioButtons.forEach(radioButton => {
-            // Ensures that the selected radio button is properly set to selectedRadioButtonId
             if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) {
-                selectedRadioButtonId.push(radioButton.id);
+                selectedScriptIds.push(radioButton.id);
             }
         });
-        // Avoids multiple scripts executions
-        if (selectedRadioButtonId.length > 1) {
+        if (selectedScriptIds.length > 1) {
             vscode.window.showErrorMessage("ERROR: Please select only one script at a time.");
         }
-        else if (selectedRadioButtonId.length === 1) {
-            // Ask the user for script attributes
+        else if (selectedScriptIds.length === 1) {
             let scriptAttributes = await vscode.window.showInputBox({ prompt: '✨ Enter ALL attributes separated by space ...' });
-            hangarScripts.scriptSelector(selectedRadioButtonId[0], scriptAttributes);
+            hangarScripts.scriptSelector(selectedScriptIds[0], scriptAttributes);
         }
     });
 }
-exports.activate = activate;
 //# sourceMappingURL=extension.js.map

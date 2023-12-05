@@ -6,18 +6,17 @@ const hangarScripts = new HangarScripts();
 import * as childProcess from 'child_process';
 
 
-function createWebviewPanel() {
+function createWebviewPanel(): void {
 	const panel = vscode.window.createWebviewPanel(
 		'scriptDocu',
 		'Scripts documentation',
 		vscode.ViewColumn.One,
 		{}
 	);
-
 	panel.webview.html = getWebviewContent();
 }
 
-function getWebviewContent() {
+function getWebviewContent(): string {
 	const createRepoPath = hangarScripts.getScriptRelativePath('repositories/github');
 	const pipelineGeneratorPath = hangarScripts.getScriptRelativePath('pipelines/github');
 
@@ -56,40 +55,51 @@ function getWebviewContent() {
  * @see {@link https://code.visualstudio.com/api/references/activation-events | VS Code Activation Events}
  * 
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.0.0
+ * @version 3.0.0
  */
-export function activate() {
+export function activate(): void {
 	createWebviewPanel();
+	const radioButtonDataProvider = createRadioButtonDataProvider();
+	vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
+	registerCommandHandler(radioButtonDataProvider);
+}
 
+/**
+ * Creates a radio button data provider.
+ * 
+ * @returns The radio button data provider.
+ */
+function createRadioButtonDataProvider(): RadioButtonDataProvider {
 	const customRadioButtons: ICustomRadioButton[] = [
 		{ id: "create-repo.sh", label: "🆙 Create repo (repositories/github)" },
 		{ id: "pipeline_generator.sh", label: "⏩ Pipeline generator (pipelines/github)" }
 	];
-
 	const buttonLabel = "RUN";
 	const buttonCommand = "hangar-cicd.runScripts";
+	return new RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
+}
 
-	const radioButtonDataProvider = new RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
-
-	vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
-
+/**
+ * Registers a command handler.
+ * 
+ * @param radioButtonDataProvider The radio button data provider.
+ */
+function registerCommandHandler(radioButtonDataProvider: RadioButtonDataProvider): void {
+	const buttonCommand = "hangar-cicd.runScripts";
 	vscode.commands.registerCommand(buttonCommand, async () => {
-		let selectedRadioButtonId: string[] = [];
+		let selectedScriptIds: string[] = [];
 		radioButtonDataProvider.radioButtons.forEach(radioButton => {
-			// Ensures that the selected radio button is properly set to selectedRadioButtonId
 			if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) {
-				selectedRadioButtonId.push(radioButton.id as string);
+				selectedScriptIds.push(radioButton.id as string);
 			}
 		});
-		// Avoids multiple scripts executions
-		if (selectedRadioButtonId.length > 1) {
+		if (selectedScriptIds.length > 1) {
 			vscode.window.showErrorMessage("ERROR: Please select only one script at a time.");
-		} else if (selectedRadioButtonId.length === 1) {
-			// Ask the user for script attributes
+		} else if (selectedScriptIds.length === 1) {
 			let scriptAttributes: string | undefined = await vscode.window.showInputBox(
 				{ prompt: '✨ Enter ALL attributes separated by space ...' }
 			);
-			hangarScripts.scriptSelector(selectedRadioButtonId[0], scriptAttributes as string);
+			hangarScripts.scriptSelector(selectedScriptIds[0], scriptAttributes as string);
 		}
 	});
 }
