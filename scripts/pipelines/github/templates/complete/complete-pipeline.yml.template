@@ -40,7 +40,7 @@ jobs:
 
 # mark to insert step for additional artifact #
   Test:
-    name: test
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
@@ -61,7 +61,7 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-        
+
       - name: SonarQube analysis
         run: .github/workflows/scripts/quality.sh
         env:
