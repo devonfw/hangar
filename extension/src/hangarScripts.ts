@@ -64,7 +64,7 @@ export class HangarScripts {
      * 
      * @param {string} subdirectory - The subdirectory where the script is located.
      */
-    private getScriptRelativePath(subdirectory: string): string {
+    public getScriptRelativePath(subdirectory: string): string {
         const absoluteScriptPath = path.resolve(__dirname, `../../scripts/${subdirectory}`);
         return vscode.workspace.asRelativePath(absoluteScriptPath, false);
     }

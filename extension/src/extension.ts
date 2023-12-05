@@ -2,6 +2,48 @@ import * as vscode from "vscode";
 import { ICustomRadioButton } from "./ICustomRadioButton";
 import { RadioButtonDataProvider } from "./RadioButton";
 import { HangarScripts } from "./hangarScripts";
+const hangarScripts = new HangarScripts();
+import * as childProcess from 'child_process';
+
+
+function createWebviewPanel() {
+	const panel = vscode.window.createWebviewPanel(
+		'scriptDocu',
+		'Scripts documentation',
+		vscode.ViewColumn.One,
+		{}
+	);
+
+	panel.webview.html = getWebviewContent();
+}
+
+function getWebviewContent() {
+	const createRepoPath = hangarScripts.getScriptRelativePath('repositories/github');
+	const pipelineGeneratorPath = hangarScripts.getScriptRelativePath('pipelines/github');
+
+	const createRepoHelp = childProcess.execSync(`cd ${createRepoPath}; ./create-repo.sh --help`).toString();
+	const pipelineGeneratorHelp = childProcess.execSync(`cd ${pipelineGeneratorPath}; ./pipeline_generator.sh --help`).toString();
+
+	return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Scripts documentation</title>
+        </head>
+        <body>
+			<h1>Scripts documentation</h1>
+			<hr>
+            <h2>🆙 create-repo.sh --help</h2>
+            <h4>[${createRepoPath}]</h4>
+            <pre>${createRepoHelp}</pre>
+			<hr>
+            <h2>⏩ pipeline_generator.sh --help</h2>
+            <h4>[${pipelineGeneratorPath}]</h4>
+            <pre>${pipelineGeneratorHelp}</pre>
+        </body>
+        </html>`;
+}
 
 /**
  * Activates the VS Code extension.
@@ -17,14 +59,14 @@ import { HangarScripts } from "./hangarScripts";
  * @version 2.0.0
  */
 export function activate() {
-	const hangarScripts = new HangarScripts();
+	createWebviewPanel();
 
 	const customRadioButtons: ICustomRadioButton[] = [
 		{ id: "create-repo.sh", label: "🆙 Create repo (repositories/github)" },
 		{ id: "pipeline_generator.sh", label: "⏩ Pipeline generator (pipelines/github)" }
 	];
 
-	const buttonLabel = "Run selected scripts (CLICK ME)";
+	const buttonLabel = "RUN";
 	const buttonCommand = "hangar-cicd.runScripts";
 
 	const radioButtonDataProvider = new RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
@@ -35,7 +77,7 @@ export function activate() {
 		let selectedRadioButtonId: string | undefined;
 		radioButtonDataProvider.radioButtons.forEach(radioButton => {
 			// Ensures that the selected radio button is properly set to selectedRadioButtonId
-			if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) { 
+			if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) {
 				selectedRadioButtonId = radioButton.id as string;
 			}
 		});
