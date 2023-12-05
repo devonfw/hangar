@@ -63,7 +63,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: SonarQube analysis
-        run: .github/workflows/scripts/quality.sh
+        run: .github/workflows/scripts/quality.sh.template
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
           SONAR_URL: ${{ env.sonarUrl }}
