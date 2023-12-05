@@ -54,3 +54,17 @@ jobs:
         if: always()
         with:
           files: '**/TEST-*.xml'
+  
+  Quality:
+    name: SonarQube analysis
+    runs-on: ubuntu-latest   
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+        
+      - name: SonarQube analysis
+        run: .github/workflows/scripts/quality.sh
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          SONAR_URL: ${{ env.sonarUrl }}
+          PROJECT_PATH: .
