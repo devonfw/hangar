@@ -15,7 +15,7 @@ const exec = promisify(require('child_process').exec);
  * - ⏩ Pipeline generator
  *  
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.0.0
+ * @version 2.1.0
  */
 export class HangarScripts {
     /**
