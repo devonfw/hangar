@@ -4,6 +4,12 @@ on:
   workflow_call:
   workflow_dispatch:
     inputs:
+      sonarUrl:
+        required: false
+        default: $sonarUrl
+      sonarToken:
+        required: false
+        default:
       targetPath:
         description: 'Target directory of build process.'
         required: false
@@ -14,6 +20,8 @@ on:
 
 env:
   targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
+  sonarUrl: ${{ github.event.inputs.sonarUrl || '$sonarUrl' }}
+  sonarToken: ${{ github.event.inputs.sonarToken || secrets.SONARQUBE_TOKEN }}
 
 # mark to insert additional artifact env var #
 
