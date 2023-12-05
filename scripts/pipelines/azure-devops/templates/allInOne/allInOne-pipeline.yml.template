@@ -10,7 +10,7 @@ parameters:
     type: string
   - name: sonarUrl
     displayName: Sonar URL
-   default: $(sonarUrl)
+    default: $(sonarUrl)
     type: string
   - name: sonarToken
     displayName: Sonar Token
