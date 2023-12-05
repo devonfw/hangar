@@ -89,7 +89,6 @@ export function activate() {
 			let scriptAttributes: string | undefined = await vscode.window.showInputBox(
 				{ prompt: '✨ Enter ALL attributes separated by space ...' }
 			);
-			console.info(selectedRadioButtonId);
 			hangarScripts.scriptSelector(selectedRadioButtonId[0], scriptAttributes as string);
 		}
 	});

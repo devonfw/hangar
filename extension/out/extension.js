@@ -96,7 +96,6 @@ function activate() {
         else if (selectedRadioButtonId.length === 1) {
             // Ask the user for script attributes
             let scriptAttributes = await vscode.window.showInputBox({ prompt: '✨ Enter ALL attributes separated by space ...' });
-            console.info(selectedRadioButtonId);
             hangarScripts.scriptSelector(selectedRadioButtonId[0], scriptAttributes);
         }
     });
