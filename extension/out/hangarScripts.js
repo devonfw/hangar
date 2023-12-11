@@ -66,7 +66,7 @@ class HangarScripts {
                 this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
                 break;
             default:
-                vscode.window.showErrorMessage(`🛑 No script found for rdai button ID: ${radioButtonId}`);
+                vscode.window.showErrorMessage(`🛑 No script found for radio button ID: ${radioButtonId}`);
         }
     }
     /**
