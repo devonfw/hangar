@@ -11,9 +11,6 @@ import { ICustomRadioButton } from "./ICustomRadioButton";
  * const radioButton = new RadioButton({label: 'Example', id: 'exampleId'});
  * 
  * @see {@link https://code.visualstudio.com/api/references/vscode-api#TreeItem | VS Code TreeItem API}
- * 
- * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.0.0
  */
 class RadioButton extends vscode.TreeItem {
     /**
@@ -42,24 +39,30 @@ class RadioButton extends vscode.TreeItem {
  * @see {@link https://code.visualstudio.com/api/references/vscode-api#TreeDataProvider | VS Code TreeDataProvider API}
  * 
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.0.0
+ * @version 3.1.0
  */
 export class RadioButtonDataProvider implements vscode.TreeDataProvider<RadioButton> {
     public radioButtons: RadioButton[];
-    private buttonLabel: string;
-    private buttonCommand: string;
+    private runButtonLabel: string;
+    private runButtonCommand: string;
+    private documentationButtonLabel: string;
+    private documentationButtonCommand: string;
 
     /**
      * Create a new RadioButtonDataProvider.
      * 
      * @param customRadioButtons - Array of ICustomRadioButtons.
-     * @param buttonLabel - Button text.
-     * @param buttonCommand - Command to be executed.
+     * @param runButtonLabel - Run button text.
+     * @param runButtonCommand - Command to be executed.
+     * @param documentationButtonLabel - Documentation button text.
+     * @param documentationButtonCommand - Command to be executed.
      */
-    constructor(customRadioButtons: ICustomRadioButton[], buttonLabel: string, buttonCommand: string) {
+    constructor(customRadioButtons: ICustomRadioButton[], runButtonLabel: string, runButtonCommand: string, documentationButtonLabel: string, documentationButtonCommand: string) {
         this.radioButtons = customRadioButtons.map((radioButton) => new RadioButton(radioButton));
-        this.buttonLabel = buttonLabel;
-        this.buttonCommand = buttonCommand;
+        this.runButtonLabel = runButtonLabel;
+        this.runButtonCommand = runButtonCommand;
+        this.documentationButtonLabel = documentationButtonLabel;
+        this.documentationButtonCommand = documentationButtonCommand;
     }
 
     /**
@@ -82,8 +85,12 @@ export class RadioButtonDataProvider implements vscode.TreeDataProvider<RadioBut
      * @returns A promise that resolves to an array of RadioButton items, including the button.
      */
     getChildren(): vscode.ProviderResult<RadioButton[]> {
-        const buttonItem = new vscode.TreeItem(this.buttonLabel, vscode.TreeItemCollapsibleState.None);
-        buttonItem.command = { command: this.buttonCommand, title: this.buttonLabel };
-        return Promise.resolve([...this.radioButtons, buttonItem]);
+        const buttonItem = new vscode.TreeItem(this.runButtonLabel, vscode.TreeItemCollapsibleState.None);
+        buttonItem.command = { command: this.runButtonCommand, title: this.runButtonLabel };
+        
+        const documentationButtonItem = new vscode.TreeItem(this.documentationButtonLabel, vscode.TreeItemCollapsibleState.None);
+        documentationButtonItem.command = { command: this.documentationButtonCommand, title: this.documentationButtonLabel };
+
+        return Promise.resolve([...this.radioButtons, buttonItem, documentationButtonItem]);
     }
 }

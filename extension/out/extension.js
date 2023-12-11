@@ -69,13 +69,13 @@ function getWebviewContent() {
  * @see {@link https://code.visualstudio.com/api/references/activation-events | VS Code Activation Events}
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 3.0.0
+ * @version 3.1.0
  */
 function activate() {
-    createWebviewPanel();
     const radioButtonDataProvider = createRadioButtonDataProvider();
     vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
     registerCommandHandler(radioButtonDataProvider);
+    createWebviewPanel();
 }
 exports.activate = activate;
 /**
@@ -88,9 +88,11 @@ function createRadioButtonDataProvider() {
         { id: "create-repo.sh", label: "🆙 Create repo (repositories/github)" },
         { id: "pipeline_generator.sh", label: "⏩ Pipeline generator (pipelines/github)" }
     ];
-    const buttonLabel = "RUN";
-    const buttonCommand = "hangar-cicd.runScripts";
-    return new RadioButton_1.RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
+    const runButtonLabel = "RUN";
+    const runButtonCommand = "hangar-cicd.runScripts";
+    const documentationButtonLabel = "OPEN DOCUMENTATION";
+    const documentationButtonCommand = "hangar-cicd.openDocu";
+    return new RadioButton_1.RadioButtonDataProvider(customRadioButtons, runButtonLabel, runButtonCommand, documentationButtonLabel, documentationButtonCommand);
 }
 /**
  * Registers a command handler.
@@ -98,8 +100,10 @@ function createRadioButtonDataProvider() {
  * @param radioButtonDataProvider The radio button data provider.
  */
 function registerCommandHandler(radioButtonDataProvider) {
-    const buttonCommand = "hangar-cicd.runScripts";
-    vscode.commands.registerCommand(buttonCommand, async () => {
+    vscode.commands.registerCommand("hangar-cicd.openDocu", async () => {
+        createWebviewPanel();
+    });
+    vscode.commands.registerCommand("hangar-cicd.runScripts", async () => {
         let selectedScriptIds = [];
         radioButtonDataProvider.radioButtons.forEach(radioButton => {
             if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) {

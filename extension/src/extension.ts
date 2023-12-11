@@ -55,13 +55,13 @@ function getWebviewContent(): string {
  * @see {@link https://code.visualstudio.com/api/references/activation-events | VS Code Activation Events}
  * 
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 3.0.0
+ * @version 3.1.0
  */
 export function activate(): void {
-	createWebviewPanel();
 	const radioButtonDataProvider = createRadioButtonDataProvider();
 	vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
 	registerCommandHandler(radioButtonDataProvider);
+	createWebviewPanel();
 }
 
 /**
@@ -74,9 +74,14 @@ function createRadioButtonDataProvider(): RadioButtonDataProvider {
 		{ id: "create-repo.sh", label: "🆙 Create repo (repositories/github)" },
 		{ id: "pipeline_generator.sh", label: "⏩ Pipeline generator (pipelines/github)" }
 	];
-	const buttonLabel = "RUN";
-	const buttonCommand = "hangar-cicd.runScripts";
-	return new RadioButtonDataProvider(customRadioButtons, buttonLabel, buttonCommand);
+
+	const runButtonLabel = "RUN";
+	const runButtonCommand = "hangar-cicd.runScripts";
+
+	const documentationButtonLabel = "OPEN DOCUMENTATION";
+	const documentationButtonCommand = "hangar-cicd.openDocu";
+
+	return new RadioButtonDataProvider(customRadioButtons, runButtonLabel, runButtonCommand, documentationButtonLabel, documentationButtonCommand);
 }
 
 /**
@@ -85,8 +90,11 @@ function createRadioButtonDataProvider(): RadioButtonDataProvider {
  * @param radioButtonDataProvider The radio button data provider.
  */
 function registerCommandHandler(radioButtonDataProvider: RadioButtonDataProvider): void {
-	const buttonCommand = "hangar-cicd.runScripts";
-	vscode.commands.registerCommand(buttonCommand, async () => {
+	vscode.commands.registerCommand("hangar-cicd.openDocu", async () => {
+		createWebviewPanel();
+	});
+
+	vscode.commands.registerCommand("hangar-cicd.runScripts", async () => {
 		let selectedScriptIds: string[] = [];
 		radioButtonDataProvider.radioButtons.forEach(radioButton => {
 			if (radioButton.checkboxState === vscode.TreeItemCheckboxState.Checked) {
