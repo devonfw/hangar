@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ICustomRadioButton } from "./ICustomRadioButton";
-import { RadioButtonDataProvider } from "./RadioButton";
+import { RadioButtonDataProvider } from "./RadioButtonDataProvider";
 import { HangarScripts } from "./hangarScripts";
 const hangarScripts = new HangarScripts();
 import * as childProcess from 'child_process';

@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
-const RadioButton_1 = require("./RadioButton");
+const RadioButtonDataProvider_1 = require("./RadioButtonDataProvider");
 const hangarScripts_1 = require("./hangarScripts");
 const hangarScripts = new hangarScripts_1.HangarScripts();
 const childProcess = __importStar(require("child_process"));
@@ -92,7 +92,7 @@ function createRadioButtonDataProvider() {
     const runButtonCommand = "hangar-cicd.runScripts";
     const documentationButtonLabel = "OPEN DOCUMENTATION";
     const documentationButtonCommand = "hangar-cicd.openDocu";
-    return new RadioButton_1.RadioButtonDataProvider(customRadioButtons, runButtonLabel, runButtonCommand, documentationButtonLabel, documentationButtonCommand);
+    return new RadioButtonDataProvider_1.RadioButtonDataProvider(customRadioButtons, runButtonLabel, runButtonCommand, documentationButtonLabel, documentationButtonCommand);
 }
 /**
  * Registers a command handler.
