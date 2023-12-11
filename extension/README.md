@@ -42,6 +42,12 @@ Now the extension will be installed and ready to use.
 
 # Release Notes
 
+## 3.2.0
+- Upgrade "Error handling"
+- Enable visual buttons
+- Refactor several classes
+- Add scripts documentation
+
 ## 2.0.0
 
 - Changed checkboxes to radio buttons. No multiple selection options are available anymore.

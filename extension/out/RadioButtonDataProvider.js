@@ -40,7 +40,7 @@ const RadioButton_1 = require("./RadioButton");
  * @see {@link https://code.visualstudio.com/api/references/vscode-api#TreeDataProvider | VS Code TreeDataProvider API}
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 3.1.0
+ * @version 3.2.0
  */
 class RadioButtonDataProvider {
     radioButtons;

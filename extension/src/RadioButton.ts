@@ -10,6 +10,9 @@ import { ICustomRadioButton } from "./ICustomRadioButton";
  * @example
  * const radioButton = new RadioButton({label: 'Example', id: 'exampleId'});
  * 
+ * @author ADCenter Spain - DevOn Hangar Team
+ * @version 3.2.0
+ * 
  * @see {@link https://code.visualstudio.com/api/references/vscode-api#TreeItem | VS Code TreeItem API}
  */
 export class RadioButton extends vscode.TreeItem {
