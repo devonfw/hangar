@@ -56,7 +56,7 @@ steps:
     filePath: '$(Build.Repository.LocalPath)/.pipelines/scripts/quality.sh'
   env:
     PROJECT_PATH: $(projectPath)
-    SONAR_URL: ${{sonarUrl}}
-    SONAR_TOKEN: ${{sonarToken}}
+    SONAR_URL: ${{ parameters.sonarUrl }}
+    SONAR_TOKEN: ${{ parameters.sonarToken }}
 
 
