@@ -46,11 +46,6 @@ jobs:
           name: BuildOutput
           path: ./BuildOutput.tar
 
-# # mark to insert step for additional artifact #
-#   Test:
-#     name: Test
-#     runs-on: ubuntu-latest
-#     steps:
       - name: Checkout repository code
         uses: actions/checkout@v2
 
@@ -62,13 +57,6 @@ jobs:
         if: always()
         with:
           files: '**/TEST-*.xml'
-  
-  # Quality:
-  #   name: SonarQube analysis
-  #   runs-on: ubuntu-latest   
-  #   steps:
-      # - name: Checkout the repository
-      #   uses: actions/checkout@v2
 
       - name: SonarQube analysis
         run: .github/workflows/scripts/quality.sh.template
