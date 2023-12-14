@@ -138,6 +138,19 @@ function createPR {
     fi
 }
 
+function add_jacoco_dependency {
+    if [[ $language == "quarkus"* ]]
+    then
+        echo "Adding JaCoCo dependency to pom.xml..."
+        sed -i '/<\/dependencies>/i\
+        <dependency>\
+            <groupId>org.jacoco</groupId>\
+            <artifactId>jacoco-maven-plugin</artifactId>\
+            <version>jacoco.3.2.0</version>\
+        </dependency>' $localDirectory/pom.xml
+    fi
+}
+
 obtainHangarPath
 
 # Load common functions
@@ -160,6 +173,8 @@ copyYAMLFile
 copyCommonScript
 
 type copyScript &> /dev/null && copyScript
+
+add_jacoco_dependency
 
 commitCommonFiles
 
