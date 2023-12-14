@@ -142,11 +142,12 @@ function add_jacoco_dependency {
     if [[ $language == "quarkus"* ]]
     then
         echo "Adding JaCoCo dependency to pom.xml..."
-        python3 -c 
+        python3 - <<EOF
 import xml.etree.ElementTree as ET
+import os
 
 # Parse the pom.xml file
-tree = ET.parse('$localDirectory/pom.xml')
+tree = ET.parse(os.environ['PROJECT_PATH'] + '/pom.xml')
 root = tree.getroot()
 
 # Define the namespace
@@ -163,11 +164,11 @@ groupId.text = 'org.jacoco'
 artifactId = ET.SubElement(dependency, 'artifactId')
 artifactId.text = 'jacoco-maven-plugin'
 version = ET.SubElement(dependency, 'version')
-version.text = '3.2.0'  # Replace with the actual version of JaCoCo
+version.text = '0.8.7'  # Replace with the actual version of JaCoCo
 
 # Write the modified XML back to the pom.xml file
-tree.write('$localDirectory/pom.xml', encoding='utf-8', xml_declaration=True)
-
+tree.write(os.environ['PROJECT_PATH'] + '/pom.xml', encoding='utf-8', xml_declaration=True)
+EOF
     fi
 }
 
