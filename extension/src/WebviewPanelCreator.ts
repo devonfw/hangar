@@ -21,8 +21,13 @@ export class WebviewPanelCreator {
 			</head>
 			<body>
 				<h1>Scripts documentation</h1>
+				<h2>Index</h2>
+    			<ul>
+        			<li><a href="#create-repo">🆙 create-repo.sh</a></li>
+        			<li><a href="#pipeline-generator">⏩ pipeline_generator.sh</a></li>
+    			</ul>
 				<hr>
-				<h2>🆙 create-repo.sh</h2>
+				<h2 id="create-repo">🆙 create-repo.sh</h2>
 				<p>
 				Creates or imports a repository on GitHub.<br>
 				It allows you to, based on action flag, either:<br>
@@ -52,7 +57,7 @@ export class WebviewPanelCreator {
 				</pre>
 				<hr>
 
-				<h2>⏩ pipeline_generator.sh</h2>
+				<h2 id="pipeline-generator">⏩ pipeline_generator.sh</h2>
 				<p>
 				Generates a workflow on github based on the given definition.<br>
 				</p>
