@@ -11,6 +11,8 @@
 	},
 	"version": "3.2.0",
 	"publisher": "adcenter-spain-hangar-team",
+	"private": true,
+	"icon": "resources/hangar-icon.png",
 	"engines": {
 		"vscode": "^1.83.1"
 	},
@@ -25,7 +27,7 @@
 				{
 					"id": "hangar-scripts-explorer",
 					"title": "Hangar scripts explorer",
-					"icon": "src/icons/hangar-icon.png"
+					"icon": "resources/hangar-icon.png"
 				}
 			]
 		},
