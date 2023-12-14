@@ -2,7 +2,7 @@
 
 ## Features
 
-This extension is meant to show different Hangar executions CI/CD scripts.
+This extension is meant to help users execute Hangar CI/CD scripts.
 
 ## Available scripts
 - 🆙 Create repo
@@ -14,8 +14,9 @@ VS Code must be version **1.83.0** or higher!
 
 ---
 
-# HOW TO?
-## 1) Exporting the Extension for Sharing
+# Exporting & Installing
+
+## 1) Exporting the extension
 
 To share this extension with others without publishing it to the **VS Code Extension Marketplace**, you can package it into a `.vsix` file.
 Here are the steps to do so:
@@ -28,7 +29,7 @@ This will create a `.vsix` file in the extension's directory.
 
 Now you can share this file with others.
 
-## 2) Installing the Extension from a `.vsix` File
+## 2) Installing the extension from a `.vsix` file
 
 To install the extension from a `.vsix` file, follow these steps:
 
