@@ -42,7 +42,7 @@ const exec = (0, util_1.promisify)(require('child_process').exec);
  * - ⏩ Pipeline generator
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.1.0
+ * @version 2.1.1
  */
 class HangarScripts {
     /**
@@ -82,7 +82,7 @@ class HangarScripts {
             return stdout;
         }
         catch (error) {
-            throw new Error(`EXEC ERROR\n${error}`);
+            throw new Error(`${error}`);
         }
     }
     /**
@@ -103,7 +103,7 @@ class HangarScripts {
         }
         catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
+            vscode.window.showErrorMessage(`${error}`);
         }
     }
     async pipelineGeneratorSh(scriptName, scriptAttributes) {
@@ -115,7 +115,7 @@ class HangarScripts {
         }
         catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
+            vscode.window.showErrorMessage(`${error}`);
         }
     }
 }

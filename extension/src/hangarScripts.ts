@@ -15,7 +15,7 @@ const exec = promisify(require('child_process').exec);
  * - ⏩ Pipeline generator
  *  
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.1.0
+ * @version 2.1.1
  */
 export class HangarScripts {
     /**
@@ -55,7 +55,7 @@ export class HangarScripts {
             const { stdout } = await exec(`cd ${scriptPath} ; ./${scriptName} ${scriptAttributes}`);
             return stdout;
         } catch (error) {
-            throw new Error(`EXEC ERROR\n${error}`);
+            throw new Error(`${error}`);
         }
     }
 
@@ -77,7 +77,7 @@ export class HangarScripts {
             vscode.window.showInformationMessage("🆙 CREATING REPO ...");
         } catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
+            vscode.window.showErrorMessage(`${error}`);
         }
     }
 
@@ -89,7 +89,7 @@ export class HangarScripts {
             vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
         } catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("ERROR: There has been an error during the exec of the script");
+            vscode.window.showErrorMessage(`${error}`);
         }
     }
 }
