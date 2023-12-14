@@ -28,36 +28,8 @@ const vscode = __importStar(require("vscode"));
 const RadioButtonDataProvider_1 = require("./RadioButtonDataProvider");
 const hangarScripts_1 = require("./hangarScripts");
 const hangarScripts = new hangarScripts_1.HangarScripts();
-const childProcess = __importStar(require("child_process"));
-function createWebviewPanel() {
-    const panel = vscode.window.createWebviewPanel('scriptDocu', 'Scripts documentation', vscode.ViewColumn.One, {});
-    panel.webview.html = getWebviewContent();
-}
-function getWebviewContent() {
-    const createRepoPath = hangarScripts.getScriptRelativePath('repositories/github');
-    const pipelineGeneratorPath = hangarScripts.getScriptRelativePath('pipelines/github');
-    const createRepoHelp = childProcess.execSync(`cd ${createRepoPath}; ./create-repo.sh --help`).toString();
-    const pipelineGeneratorHelp = childProcess.execSync(`cd ${pipelineGeneratorPath}; ./pipeline_generator.sh --help`).toString();
-    return `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Scripts documentation</title>
-        </head>
-        <body>
-			<h1>Scripts documentation</h1>
-			<hr>
-            <h2>🆙 create-repo.sh --help</h2>
-            <h4>[${createRepoPath}]</h4>
-            <pre>${createRepoHelp}</pre>
-			<hr>
-            <h2>⏩ pipeline_generator.sh --help</h2>
-            <h4>[${pipelineGeneratorPath}]</h4>
-            <pre>${pipelineGeneratorHelp}</pre>
-        </body>
-        </html>`;
-}
+const WebviewPanelCreator_1 = require("./WebviewPanelCreator");
+const webviewPanelCreator = new WebviewPanelCreator_1.WebviewPanelCreator();
 /**
  * Activates the VS Code extension.
  *
@@ -75,7 +47,7 @@ function activate() {
     const radioButtonDataProvider = createRadioButtonDataProvider();
     vscode.window.registerTreeDataProvider("hangar-cicd", radioButtonDataProvider);
     registerCommandHandler(radioButtonDataProvider);
-    createWebviewPanel();
+    webviewPanelCreator.createWebviewPanel();
 }
 exports.activate = activate;
 /**
@@ -101,7 +73,7 @@ function createRadioButtonDataProvider() {
  */
 function registerCommandHandler(radioButtonDataProvider) {
     vscode.commands.registerCommand("hangar-cicd.openDocu", async () => {
-        createWebviewPanel();
+        webviewPanelCreator.createWebviewPanel();
     });
     vscode.commands.registerCommand("hangar-cicd.runScripts", async () => {
         let selectedScriptIds = [];
