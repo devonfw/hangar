@@ -163,7 +163,7 @@ function createPR {
 # artifactId = ET.SubElement(dependency, 'artifactId')
 # artifactId.text = 'jacoco-maven-plugin'
 # version = ET.SubElement(dependency, 'version')
-# version.text = '3.2.0'  # Replace with the actual version of JaCoCo
+# version.text = '0.8.7'  # Replace with the actual version of JaCoCo
 
 # # Write the modified XML back to the pom.xml file
 # tree.write('$localDirectory/pom.xml', encoding='utf-8', xml_declaration=True)
