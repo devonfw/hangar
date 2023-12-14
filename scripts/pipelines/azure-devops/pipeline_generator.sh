@@ -138,38 +138,38 @@ function createPR {
     fi
 }
 
-function add_jacoco_dependency {
-    if [[ $language == "quarkus"* ]]
-    then
-        echo "Adding JaCoCo dependency to pom.xml..."
-        python3 -c "
-import xml.etree.ElementTree as ET
+# function add_jacoco_dependency {
+#     if [[ $language == "quarkus"* ]]
+#     then
+#         echo "Adding JaCoCo dependency to pom.xml..."
+#         python3 -c "
+# import xml.etree.ElementTree as ET
 
-# Parse the pom.xml file
-tree = ET.parse('$localDirectory/pom.xml')
-root = tree.getroot()
+# # Parse the pom.xml file
+# tree = ET.parse('$localDirectory/pom.xml')
+# root = tree.getroot()
 
-# Define the namespace
-namespaces = {'xmlns': 'http://maven.apache.org/POM/4.0.0'}
-ET.register_namespace('', namespaces['xmlns'])
+# # Define the namespace
+# namespaces = {'xmlns': 'http://maven.apache.org/POM/4.0.0'}
+# ET.register_namespace('', namespaces['xmlns'])
 
-# Find the <dependencies> element
-dependencies = root.find('xmlns:dependencies', namespaces)
+# # Find the <dependencies> element
+# dependencies = root.find('xmlns:dependencies', namespaces)
 
-# Create the JaCoCo dependency element
-dependency = ET.SubElement(dependencies, 'dependency')
-groupId = ET.SubElement(dependency, 'groupId')
-groupId.text = 'org.jacoco'
-artifactId = ET.SubElement(dependency, 'artifactId')
-artifactId.text = 'jacoco-maven-plugin'
-version = ET.SubElement(dependency, 'version')
-version.text = '3.2.0'  # Replace with the actual version of JaCoCo
+# # Create the JaCoCo dependency element
+# dependency = ET.SubElement(dependencies, 'dependency')
+# groupId = ET.SubElement(dependency, 'groupId')
+# groupId.text = 'org.jacoco'
+# artifactId = ET.SubElement(dependency, 'artifactId')
+# artifactId.text = 'jacoco-maven-plugin'
+# version = ET.SubElement(dependency, 'version')
+# version.text = '3.2.0'  # Replace with the actual version of JaCoCo
 
-# Write the modified XML back to the pom.xml file
-tree.write('$localDirectory/pom.xml', encoding='utf-8', xml_declaration=True)
-"
-    fi
-}
+# # Write the modified XML back to the pom.xml file
+# tree.write('$localDirectory/pom.xml', encoding='utf-8', xml_declaration=True)
+# "
+#     fi
+# }
 
 obtainHangarPath
 
@@ -194,7 +194,7 @@ copyCommonScript
 
 type copyScript &> /dev/null && copyScript
 
-add_jacoco_dependency
+#add_jacoco_dependency
 
 commitCommonFiles
 
