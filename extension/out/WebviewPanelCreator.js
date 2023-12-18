@@ -48,7 +48,7 @@ class WebviewPanelCreator {
 				<hr>
 				<h2 id="create-repo">🆙 create-repo.sh</h2>
 				<p>
-				Creates or imports a repository on GitHub.<br>
+				Creates or imports a repository on GitHub, Azure Devops or Google Cloud.<br>
 				It allows you to, based on action flag, either:<br>
 				<ul>
 					<li>Create an empty repository with just a README file and clone it to your computer into the directory you set. Useful when starting a project from scratch.</li>
@@ -58,6 +58,8 @@ class WebviewPanelCreator {
 				<h3>Documentation link/s:</h3>
 				<ul>
 					<li><a href="https://github.com/hec-stbt/hangar/blob/feature/vscode-extension/documentation/github/setup-repository-script.asciidoc" target="_blank">Set up a repository on GitHub</a></li>
+					<li><a href="https://github.com/hec-stbt/hangar/blob/feature/vscode-extension/documentation/azure-devops/setup-repository-script.asciidoc" target="_blank">Set up a repository on Azure Devops</a></li>
+					<li><a href="https://github.com/hec-stbt/hangar/blob/feature/vscode-extension/documentation/gcloud/setup-repository-script.asciidoc" target="_blank">Set up a repository on Google Cloud</a></li>
 				</ul>
 				<h3>Flags</h3>
 				<pre>

@@ -29,8 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HangarScripts = void 0;
 const vscode = __importStar(require("vscode"));
 const path_1 = __importDefault(require("path"));
-const util_1 = require("util");
-const exec = (0, util_1.promisify)(require('child_process').exec);
+const child_process_1 = require("child_process");
 /**
  * Represents a script runner for a VS Code extension.
  *
@@ -42,31 +41,46 @@ const exec = (0, util_1.promisify)(require('child_process').exec);
  * - ⏩ Pipeline generator
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.1.1
+ * @version 2.2.1
  */
 class HangarScripts {
     /**
-     * Executes the scripts associated with the given radio button ID.
+     * Executes the scripts associated with the given script ID.
      *
      * This method executes the corresponding script.
      * If no script is found for a given ID, it logs an error message.
      *
-     * @param {string} radioButtonId - The ID of the radio button selected by the user.
+     * @param {string} scriptId - The ID of the selected script.
      * @param {string} scriptAttributes - The script attributes.
      *
      * @example
      * scriptSelector('create-repo.sh', '-a create -n repo-test -d /local/proyect/path');
      */
-    scriptSelector(radioButtonId, scriptAttributes) {
-        switch (radioButtonId) {
-            case "create-repo.sh":
-                this.createRepoSh("create-repo.sh", scriptAttributes);
+    scriptSelector(scriptId, scriptAttributes) {
+        switch (scriptId) {
+            case "create-repo-gh":
+                this.createRepoSh("create-repo-gh", scriptAttributes);
                 break;
-            case "pipeline_generator.sh":
+            case "create-repo-az":
+                this.createRepoSh("create-repo-az", scriptAttributes);
+                break;
+            case "create-repo-gc":
+                this.createRepoSh("create-repo-gc", scriptAttributes);
+                break;
+            case "add-secret":
+                // TODO: Add add secret class
+                break;
+            case "pipeline-generator-gh":
+                this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
+                break;
+            case "pipeline-generator-az":
+                this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
+                break;
+            case "pipeline-generator-gc":
                 this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
                 break;
             default:
-                vscode.window.showErrorMessage(`🛑 No script found for radio button ID: ${radioButtonId}`);
+                vscode.window.showErrorMessage(`🛑 No script found for radio button ID: ${scriptId}`);
         }
     }
     /**
@@ -76,13 +90,19 @@ class HangarScripts {
     * @param {string} scriptName - The name of the script to execute.
     * @param {string} scriptAttributes - The scriptAttributes of the script.
     */
-    async executeScript(scriptPath, scriptName, scriptAttributes) {
+    executeScript(scriptPath, scriptName, scriptAttributes) {
         try {
-            const { stdout } = await exec(`cd ${scriptPath} ; ./${scriptName} ${scriptAttributes}`);
-            return stdout;
+            (0, child_process_1.execSync)(`cd ${scriptPath} ; ./${scriptName} ${scriptAttributes}`);
         }
         catch (error) {
-            throw new Error(`${error}`);
+            if (typeof error === 'object' && error !== null && 'message' in error) {
+                console.error(`Error executing script: ${error.message}`);
+                vscode.window.showErrorMessage(`Error executing script: ${error.message}`);
+            }
+            else {
+                console.error(`Error executing script: ${error}`);
+                vscode.window.showErrorMessage(`Error executing script: ${error}`);
+            }
         }
     }
     /**
@@ -94,29 +114,35 @@ class HangarScripts {
         const absoluteScriptPath = path_1.default.resolve(__dirname, `../../scripts/${subdirectory}`);
         return vscode.workspace.asRelativePath(absoluteScriptPath, false);
     }
+    /**
+     * Asynchronously creates a repository based on the given script name and attributes.
+     *
+     * @param {string} scriptName - The name of the script.
+     * @param {string} scriptAttributes - The attributes for the script.
+     */
     async createRepoSh(scriptName, scriptAttributes) {
-        try {
-            const scriptPath = this.getScriptRelativePath("repositories/github");
-            const stdout = await this.executeScript(scriptPath, scriptName, scriptAttributes);
-            console.info(`STDOUT\n${stdout}`);
-            vscode.window.showInformationMessage("🆙 CREATING REPO ...");
+        let scriptPath = "";
+        if (scriptName === "create-repo-gh") {
+            scriptPath = this.getScriptRelativePath("repositories/github");
         }
-        catch (error) {
-            console.error(error);
-            vscode.window.showErrorMessage(`${error}`);
+        else if (scriptName === "create-repo-az") {
+            scriptPath = this.getScriptRelativePath("repositories/azure-devops");
+        }
+        else if (scriptName === "create-repo-gc") {
+            scriptPath = this.getScriptRelativePath("repositories/gcloud");
+        }
+        await vscode.window.showInformationMessage("🆙 CREATING REPO ...");
+        if (scriptAttributes) {
+            this.executeScript(scriptPath, "create-repo.sh", scriptAttributes);
+        }
+        else {
+            vscode.window.showErrorMessage("Required attributes missing");
         }
     }
-    async pipelineGeneratorSh(scriptName, scriptAttributes) {
-        try {
-            const scriptPath = this.getScriptRelativePath("pipelines/github");
-            const stdout = await this.executeScript(scriptPath, scriptName, scriptAttributes);
-            console.info(`STDOUT\n${stdout}`);
-            vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
-        }
-        catch (error) {
-            console.error(error);
-            vscode.window.showErrorMessage(`${error}`);
-        }
+    pipelineGeneratorSh(scriptName, scriptAttributes) {
+        vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
+        const scriptPath = this.getScriptRelativePath("pipelines/github");
+        this.executeScript(scriptPath, scriptName, scriptAttributes);
     }
 }
 exports.HangarScripts = HangarScripts;

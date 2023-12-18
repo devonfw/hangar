@@ -41,7 +41,7 @@ const webviewPanelCreator = new WebviewPanelCreator_1.WebviewPanelCreator();
  * @see {@link https://code.visualstudio.com/api/references/activation-events | VS Code Activation Events}
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 3.1.0
+ * @version 3.2.0
  */
 function activate() {
     const radioButtonDataProvider = createRadioButtonDataProvider();
@@ -57,8 +57,13 @@ exports.activate = activate;
  */
 function createRadioButtonDataProvider() {
     const customRadioButtons = [
-        { id: "create-repo.sh", label: "🆙 Create repo (repositories/github)" },
-        { id: "pipeline_generator.sh", label: "⏩ Pipeline generator (pipelines/github)" }
+        { id: "create-repo-gh", label: "🆙 Create repo (repositories/github)" },
+        { id: "create-repo-az", label: "🆙 Create repo (repositories/azure-devops)" },
+        { id: "create-repo-gc", label: "🆙 Create repo (repositories/gcloud)" },
+        { id: "add-secret", label: "🆕 Add secret (pipelines/gcloud)" },
+        { id: "pipeline-generator-gh", label: "⏩ Pipeline generator (pipelines/github)" },
+        { id: "pipeline-generator-az", label: "⏩ Pipeline generator (pipelines/azure-devops)" },
+        { id: "pipeline-generator-gc", label: "⏩ Pipeline generator (pipelines/gcloud)" },
     ];
     const runButtonLabel = "RUN";
     const runButtonCommand = "hangar-cicd.runScripts";
@@ -72,7 +77,7 @@ function createRadioButtonDataProvider() {
  * @param radioButtonDataProvider The radio button data provider.
  */
 function registerCommandHandler(radioButtonDataProvider) {
-    vscode.commands.registerCommand("hangar-cicd.openDocu", async () => {
+    vscode.commands.registerCommand("hangar-cicd.openDocu", () => {
         webviewPanelCreator.createWebviewPanel();
     });
     vscode.commands.registerCommand("hangar-cicd.runScripts", async () => {
