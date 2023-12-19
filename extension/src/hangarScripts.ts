@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import path from "path";
-import { execSync } from "child_process";
+import { exec, execSync } from "child_process";
 
 
 /**
@@ -95,8 +95,8 @@ export class HangarScripts {
      * @param {string} scriptName - The name of the script.
      * @param {string} scriptAttributes - The attributes for the script.
      */
-    private async createRepoSh(scriptName: string, scriptAttributes: string): Promise<void> {
-        let scriptPath = "";
+    private async createRepoSh(scriptName: string, scriptAttributes: string) {
+        let scriptPath: string = "";
 
         if (scriptName === "create-repo-gh") {
             scriptPath = this.getScriptRelativePath("repositories/github");
@@ -106,9 +106,18 @@ export class HangarScripts {
             scriptPath = this.getScriptRelativePath("repositories/gcloud");
         }
 
-        await vscode.window.showInformationMessage("🆙 CREATING REPO ...");
-
         if (scriptAttributes) {
+            let panel = vscode.window.createWebviewPanel(
+                'infoPanel',
+                'Information',
+                vscode.ViewColumn.One,
+                {}
+            );
+            panel.webview.html = `<h1>🆙 THE REPO HAS BEEN CREATED !!!</h1>`;
+            await new Promise(resolve => setTimeout(() => {
+                panel.dispose();
+                resolve(null);
+            }, 100));
             this.executeScript(scriptPath, "create-repo.sh", scriptAttributes);
         } else {
             vscode.window.showErrorMessage("Required attributes missing");

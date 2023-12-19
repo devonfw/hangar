@@ -131,8 +131,13 @@ class HangarScripts {
         else if (scriptName === "create-repo-gc") {
             scriptPath = this.getScriptRelativePath("repositories/gcloud");
         }
-        await vscode.window.showInformationMessage("🆙 CREATING REPO ...");
         if (scriptAttributes) {
+            let panel = vscode.window.createWebviewPanel('infoPanel', 'Information', vscode.ViewColumn.One, {});
+            panel.webview.html = `<h1>🆙 THE REPO HAS BEEN CREATED !!!</h1>`;
+            await new Promise(resolve => setTimeout(() => {
+                panel.dispose();
+                resolve(null);
+            }, 100));
             this.executeScript(scriptPath, "create-repo.sh", scriptAttributes);
         }
         else {
