@@ -41,7 +41,7 @@ const webviewPanelCreator = new WebviewPanelCreator_1.WebviewPanelCreator();
  * @see {@link https://code.visualstudio.com/api/references/activation-events | VS Code Activation Events}
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 3.2.0
+ * @version 3.3.0
  */
 function activate() {
     const radioButtonDataProvider = createRadioButtonDataProvider();
@@ -57,13 +57,9 @@ exports.activate = activate;
  */
 function createRadioButtonDataProvider() {
     const customRadioButtons = [
-        { id: "create-repo-gh", label: "🆙 Create repo (repositories/github)" },
-        { id: "create-repo-az", label: "🆙 Create repo (repositories/azure-devops)" },
-        { id: "create-repo-gc", label: "🆙 Create repo (repositories/gcloud)" },
-        { id: "add-secret", label: "🆕 Add secret (pipelines/gcloud)" },
-        { id: "pipeline-generator-gh", label: "⏩ Pipeline generator (pipelines/github)" },
-        { id: "pipeline-generator-az", label: "⏩ Pipeline generator (pipelines/azure-devops)" },
-        { id: "pipeline-generator-gc", label: "⏩ Pipeline generator (pipelines/gcloud)" },
+        { id: "create-repo.sh", label: "🆙 Create repo" },
+        { id: "add-secret.sh", label: "🆕 Add secret" },
+        { id: "pipeline_generator.sh", label: "⏩ Pipeline generator" },
     ];
     const runButtonLabel = "RUN";
     const runButtonCommand = "hangar-cicd.runScripts";
@@ -88,11 +84,23 @@ function registerCommandHandler(radioButtonDataProvider) {
             }
         });
         if (selectedScriptIds.length > 1) {
-            vscode.window.showErrorMessage("ERROR: Please select only one script at a time.");
+            vscode.window.showErrorMessage("🛑 Please select only one script at a time.");
         }
         else if (selectedScriptIds.length === 1) {
+            let scriptPath = await vscode.window.showOpenDialog({
+                canSelectMany: false,
+                canSelectFiles: false,
+                canSelectFolders: true,
+                openLabel: 'Open',
+                defaultUri: vscode.Uri.file('/')
+            });
             let scriptAttributes = await vscode.window.showInputBox({ prompt: '✨ Enter ALL attributes separated by space ...' });
-            hangarScripts.scriptSelector(selectedScriptIds[0], scriptAttributes);
+            if (scriptPath) {
+                hangarScripts.scriptSelector(selectedScriptIds[0], scriptPath[0].fsPath, scriptAttributes);
+            }
+            else {
+                vscode.window.showErrorMessage(`🛑 YOU MUST SELECT A SCRIPT FOLDER`);
+            }
         }
     });
 }

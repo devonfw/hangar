@@ -22,13 +22,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HangarScripts = void 0;
 const vscode = __importStar(require("vscode"));
-const path_1 = __importDefault(require("path"));
 const child_process_1 = require("child_process");
 /**
  * Represents a script runner for a VS Code extension.
@@ -38,10 +34,11 @@ const child_process_1 = require("child_process");
  *
  * Available scripts:
  * - 🆙 Create repo
+ * - 🆕 Add secret
  * - ⏩ Pipeline generator
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.2.1
+ * @version 3.0.0
  */
 class HangarScripts {
     /**
@@ -51,33 +48,22 @@ class HangarScripts {
      * If no script is found for a given ID, it logs an error message.
      *
      * @param {string} scriptId - The ID of the selected script.
+     * @param {string} scriptPath - The relative path of the script.
      * @param {string} scriptAttributes - The script attributes.
      *
      * @example
-     * scriptSelector('create-repo.sh', '-a create -n repo-test -d /local/proyect/path');
+     * scriptSelector('create-repo.sh', '/script/folder/path', '-a create -n repo-test -d /local/project/path');
      */
-    scriptSelector(scriptId, scriptAttributes) {
+    scriptSelector(scriptId, scriptPath, scriptAttributes) {
         switch (scriptId) {
-            case "create-repo-gh":
-                this.createRepoSh("create-repo-gh", scriptAttributes);
+            case "create-repo.sh":
+                this.createRepoSh(scriptId, scriptPath, scriptAttributes);
                 break;
-            case "create-repo-az":
-                this.createRepoSh("create-repo-az", scriptAttributes);
+            case "add-secret.sh":
+                // TODO: Add 'addSecretSh()' class
                 break;
-            case "create-repo-gc":
-                this.createRepoSh("create-repo-gc", scriptAttributes);
-                break;
-            case "add-secret":
-                // TODO: Add add secret class
-                break;
-            case "pipeline-generator-gh":
-                this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
-                break;
-            case "pipeline-generator-az":
-                this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
-                break;
-            case "pipeline-generator-gc":
-                this.pipelineGeneratorSh("pipeline_generator.sh", scriptAttributes);
+            case "pipeline_generator.sh":
+                this.pipelineGeneratorSh("pipeline_generator.sh", scriptPath, scriptAttributes);
                 break;
             default:
                 vscode.window.showErrorMessage(`🛑 No script found for radio button ID: ${scriptId}`);
@@ -85,12 +71,12 @@ class HangarScripts {
     }
     /**
     * Executes a script located at the given path.
-    *
-    * @param {string} scriptPath - The path where the script is located.
+    * TODO: Remove scriptName and make scriptPath have the ../../script-name.sh
     * @param {string} scriptName - The name of the script to execute.
+    * @param {string} scriptPath - The path where the script is located.
     * @param {string} scriptAttributes - The scriptAttributes of the script.
     */
-    executeScript(scriptPath, scriptName, scriptAttributes) {
+    executeScript(scriptName, scriptPath, scriptAttributes) {
         try {
             (0, child_process_1.execSync)(`cd ${scriptPath} ; ./${scriptName} ${scriptAttributes}`);
         }
@@ -106,31 +92,13 @@ class HangarScripts {
         }
     }
     /**
-     * Returns the relative path of a script located in a given subdirectory.
-     *
-     * @param {string} subdirectory - The subdirectory where the script is located.
-     */
-    getScriptRelativePath(subdirectory) {
-        const absoluteScriptPath = path_1.default.resolve(__dirname, `../../scripts/${subdirectory}`);
-        return vscode.workspace.asRelativePath(absoluteScriptPath, false);
-    }
-    /**
      * Asynchronously creates a repository based on the given script name and attributes.
      *
      * @param {string} scriptName - The name of the script.
+     * @param {string} scriptPath - The path of the script.
      * @param {string} scriptAttributes - The attributes for the script.
      */
-    async createRepoSh(scriptName, scriptAttributes) {
-        let scriptPath = "";
-        if (scriptName === "create-repo-gh") {
-            scriptPath = this.getScriptRelativePath("repositories/github");
-        }
-        else if (scriptName === "create-repo-az") {
-            scriptPath = this.getScriptRelativePath("repositories/azure-devops");
-        }
-        else if (scriptName === "create-repo-gc") {
-            scriptPath = this.getScriptRelativePath("repositories/gcloud");
-        }
+    async createRepoSh(scriptName, scriptPath, scriptAttributes) {
         if (scriptAttributes) {
             let panel = vscode.window.createWebviewPanel('infoPanel', 'Information', vscode.ViewColumn.One, {});
             panel.webview.html = `<h1>🆙 THE REPO HAS BEEN CREATED !!!</h1>`;
@@ -138,15 +106,14 @@ class HangarScripts {
                 panel.dispose();
                 resolve(null);
             }, 100));
-            this.executeScript(scriptPath, "create-repo.sh", scriptAttributes);
+            this.executeScript(scriptName, scriptPath, scriptAttributes);
         }
         else {
             vscode.window.showErrorMessage("Required attributes missing");
         }
     }
-    pipelineGeneratorSh(scriptName, scriptAttributes) {
+    pipelineGeneratorSh(scriptName, scriptPath, scriptAttributes) {
         vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
-        const scriptPath = this.getScriptRelativePath("pipelines/github");
         this.executeScript(scriptPath, scriptName, scriptAttributes);
     }
 }
