@@ -298,55 +298,38 @@ function add_jacoco_dependency {
         echo -ne ${white}
 
         # Define the Jacoco plugin
-        jacoco_plugin="\
-<plugin>\
-\n<groupId>org.jacoco</groupId>\
-\n<artifactId>jacoco-maven-plugin</artifactId>\
-\n<version>0.8.7</version>\
-\n<executions>\
-\n<execution>\
-\n<goals>\
-\n<goal>prepare-agent</goal>\
-\n</goals>\
-\n</execution>\
-\n<execution>\
-\n<id>report</id>\
-\n<phase>prepare-package</phase>\
-\n<goals>\
-\n<goal>report</goal>\
-\n</goals>\
-\n</execution>\
-\n</executions>\
-\n</plugin>"
+        jacoco_plugin="<plugin>
+<groupId>org.jacoco</groupId>
+<artifactId>jacoco-maven-plugin</artifactId>
+<version>0.8.7</version>
+<executions>
+<execution>
+<goals>
+<goal>prepare-agent</goal>
+</goals>
+</execution>
+<execution>
+<id>report</id>
+<phase>prepare-package</phase>
+<goals>
+<goal>report</goal>
+</goals>
+</execution>
+</executions>
+</plugin>"
 
-        # Create a temporary file
-        temp_file=$(mktemp)
+        # Create a Python script to add the Jacoco plugin to the pom.xml file
+        python_script=$(mktemp)
+        echo "import xml.etree.ElementTree as ET" >> "$python_script"
+        echo "tree = ET.parse('${localDirectory}/pom.xml')" >> "$python_script"
+        echo "root = tree.getroot()" >> "$python_script"
+        echo "plugins = root.find('.//plugins')" >> "$python_script"
+        echo "jacoco_plugin = ET.fromstring('''$jacoco_plugin''')" >> "$python_script"
+        echo "plugins.append(jacoco_plugin)" >> "$python_script"
+        echo "tree.write('${localDirectory}/pom.xml')" >> "$python_script"
 
-        # Set a flag to indicate when to insert the Jacoco plugin
-        insert_jacoco=false
-
-        # Read the pom.xml file line by line
-        while IFS= read -r line
-        do
-            # If the line contains the </plugins> tag, set the flag to insert the Jacoco plugin
-            if [[ "$line" == *"</plugins>"* ]]; then
-                insert_jacoco=true
-            fi
-
-            # If the flag is set, insert the Jacoco plugin
-            if [[ "$insert_jacoco" == true ]]; then
-                printf "$jacoco_plugin" >> "$temp_file"
-                insert_jacoco=false
-            fi
-
-            # Write the line to the temporary file
-            printf "$line\n" >> "$temp_file"
-        done < "${localDirectory}/pom.xml"
-
-        # Replace the pom.xml file with the temporary file
-        mv "$temp_file" "${localDirectory}/pom.xml"
+        # Run the Python script
+        python "$python_script"
     fi
 }
-
-
 
