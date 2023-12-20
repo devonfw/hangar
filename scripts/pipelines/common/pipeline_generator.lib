@@ -355,6 +355,7 @@ END
         )
 
         # Insert the Jacoco plugin into the pom.xml file
-        sed -i "/<\/plugins>/a $jacoco_plugin" "${localDirectory}/pom.xml"
+        xmlstarlet ed -L -s /project/build/plugins -t elem -n plugin -v "$jacoco_plugin" "${localDirectory}/pom.xml"
+        
     fi
 }
