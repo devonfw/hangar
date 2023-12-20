@@ -14,7 +14,7 @@ import { execSync } from "child_process";
  * - ⏩ Pipeline generator
  *  
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 3.0.0
+ * @version 3.1.0
  */
 export class HangarScripts {
     /**
@@ -36,7 +36,7 @@ export class HangarScripts {
                 this.createRepoSh(scriptId, scriptPath, scriptAttributes);
                 break;
             case "add-secret.sh":
-                // TODO: Add 'addSecretSh()' class
+                this.addSecretSh(scriptId, scriptPath, scriptAttributes);
                 break;
             case "pipeline_generator.sh":
                 this.pipelineGeneratorSh("pipeline_generator.sh", scriptPath, scriptAttributes);
@@ -48,7 +48,7 @@ export class HangarScripts {
 
     /**
     * Executes a script located at the given path.
-    * TODO: Remove scriptName and make scriptPath have the ../../script-name.sh
+    *
     * @param {string} scriptName - The name of the script to execute.
     * @param {string} scriptPath - The path where the script is located.
     * @param {string} scriptAttributes - The scriptAttributes of the script.
@@ -68,34 +68,71 @@ export class HangarScripts {
     }
 
     /**
+    * Opens a new tab that notifies the user that the corresponding script
+    * has been executed.
+    *
+    * @param {string} htmlContent - The html content to be displayed in the tab.
+    */
+    private async displayPanel(htmlContent: string): Promise<void> {
+        let panel = vscode.window.createWebviewPanel(
+            'infoPanel',
+            'Information',
+            vscode.ViewColumn.One,
+            {}
+        );
+        panel.webview.html = htmlContent + "<br><p>You can close this tab now.</p>";
+        await new Promise(resolve => setTimeout(() => {
+            panel.dispose();
+            resolve(null);
+        }, 100));
+    }
+
+    /**
      * Asynchronously creates a repository based on the given script name and attributes.
      * 
      * @param {string} scriptName - The name of the script.
      * @param {string} scriptPath - The path of the script.
      * @param {string} scriptAttributes - The attributes for the script.
      */
-    private async createRepoSh(scriptName: string, scriptPath: string, scriptAttributes: string) {
+    private async createRepoSh(scriptName: string, scriptPath: string, scriptAttributes: string): Promise<void> {
         if (scriptAttributes) {
-            let panel = vscode.window.createWebviewPanel(
-                'infoPanel',
-                'Information',
-                vscode.ViewColumn.One,
-                {}
-            );
-            panel.webview.html = `<h1>🆙 THE REPO HAS BEEN CREATED !!!</h1>`;
-            await new Promise(resolve => setTimeout(() => {
-                panel.dispose();
-                resolve(null);
-            }, 100));
-
+            await this.displayPanel(`<h1>🆙 THE REPO HAS BEEN CREATED !!!</h1>`);
             this.executeScript(scriptName, scriptPath, scriptAttributes);
         } else {
-            vscode.window.showErrorMessage("Required attributes missing");
+            vscode.window.showErrorMessage("🛑 Required attributes missing");
         }
     }
 
-    private pipelineGeneratorSh(scriptName: string, scriptPath: string, scriptAttributes: string): void {
-        vscode.window.showInformationMessage("⏩ GENERATING PIPELINE ...");
-        this.executeScript(scriptPath, scriptName, scriptAttributes);
+    /**
+    *  Uploads a file or a variable as a secret in Google Cloud Secret Manager
+    *  to make it available in chosen pipelines.
+    * 
+    * @param {string} scriptName - The name of the script.
+    * @param {string} scriptPath - The path of the script.
+    * @param {string} scriptAttributes - The attributes for the script.
+    */
+    private async addSecretSh(scriptName: string, scriptPath: string, scriptAttributes: string): Promise<void> {
+        if (scriptAttributes) {
+            await this.displayPanel(`<h1>⏩ THE SECRET HAS BEEN ADDED !!!</h1>`);
+            this.executeScript(scriptName, scriptPath, scriptAttributes);
+        } else {
+            vscode.window.showErrorMessage("🛑 Required attributes missing");
+        }
+    }
+
+    /**
+     *  Generates a workflow on github based on the given definition
+     * 
+     * @param {string} scriptName - The name of the script.
+     * @param {string} scriptPath - The path of the script.
+     * @param {string} scriptAttributes - The attributes for the script.
+    */
+    private async pipelineGeneratorSh(scriptName: string, scriptPath: string, scriptAttributes: string): Promise<void> {
+        if (scriptAttributes) {
+            await this.displayPanel(`<h1>⏩ THE PIPELINE HAS BEEN CREATED !!!</h1>`);
+            this.executeScript(scriptName, scriptPath, scriptAttributes);
+        } else {
+            vscode.window.showErrorMessage("🛑 Required attributes missing");
+        }
     }
 }
