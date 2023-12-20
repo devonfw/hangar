@@ -163,8 +163,6 @@ copyCommonScript
 
 type copyScript &> /dev/null && copyScript
 
-#add_jacoco_dependency
-
 commitCommonFiles
 
 type commitFiles &> /dev/null && commitFiles
