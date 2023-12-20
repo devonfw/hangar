@@ -42,10 +42,19 @@ class WebviewPanelCreator {
 				<h1>Scripts documentation</h1>
 				<h2>Index</h2>
     			<ul>
+        			<li><a href="#how-does">🤔 How does this extension works?</a></li>
         			<li><a href="#create-repo">🆙 create-repo.sh</a></li>
         			<li><a href="#pipeline-generator">⏩ pipeline_generator.sh</a></li>
     			</ul>
 				<hr>
+				<h2 id="how-does">🤔 How does this extension works?</h2>
+				<ol>
+					<li>Select the script you want to run. <b>(JUST ONE)</b></li>
+					<li>Click <b>RUN</b> button.</li>
+					<li>Search for script's <b>folder</b>.</li>
+					<li>Type all the scripts <b>attributes</b> (flags) you want to use.</li>
+					<li>Once the script <b>has run successfully</b>, you can close the notification tab.</li>
+				</ol>
 				<h2 id="create-repo">🆙 create-repo.sh</h2>
 				<p>
 				Creates or imports a repository on GitHub, Azure Devops or Google Cloud.<br>
