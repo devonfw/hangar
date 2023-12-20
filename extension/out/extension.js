@@ -91,7 +91,6 @@ function registerCommandHandler(radioButtonDataProvider) {
                 canSelectMany: false,
                 canSelectFiles: false,
                 canSelectFolders: true,
-                openLabel: 'Open',
                 defaultUri: vscode.Uri.file('/')
             });
             let scriptAttributes = await vscode.window.showInputBox({ prompt: '✨ Enter ALL attributes separated by space ...' });

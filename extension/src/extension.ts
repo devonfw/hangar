@@ -74,7 +74,6 @@ function registerCommandHandler(radioButtonDataProvider: RadioButtonDataProvider
 				canSelectMany: false,
 				canSelectFiles: false,
 				canSelectFolders: true,
-				openLabel: 'Open',
 				defaultUri: vscode.Uri.file('/')
 			});
 			let scriptAttributes: string | undefined = await vscode.window.showInputBox(
