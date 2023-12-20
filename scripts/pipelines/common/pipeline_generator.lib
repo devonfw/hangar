@@ -355,6 +355,6 @@ END
         )
 
         # Insert the Jacoco plugin into the pom.xml file
-        sed -i "/<\/plugins>/i $jacoco_plugin" "${localDirectory}/pom.xml"
+        sed -i "/<\/plugins>/a $jacoco_plugin" "${localDirectory}/pom.xml"
     fi
 }
