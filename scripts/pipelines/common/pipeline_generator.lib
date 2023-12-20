@@ -323,7 +323,7 @@ function add_jacoco_dependency {
         echo "import xml.etree.ElementTree as ET" >> "$python_script"
         echo "tree = ET.parse('${localDirectory}/pom.xml')" >> "$python_script"
         echo "root = tree.getroot()" >> "$python_script"
-        echo "plugins = root.find('.//plugins')" >> "$python_script"
+        echo "plugins = root.find('.//build/plugins')" >> "$python_script"
         echo "jacoco_plugin = ET.fromstring('''$jacoco_plugin''')" >> "$python_script"
         echo "plugins.append(jacoco_plugin)" >> "$python_script"
         echo "tree.write('${localDirectory}/pom.xml')" >> "$python_script"
