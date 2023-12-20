@@ -44,6 +44,7 @@ class WebviewPanelCreator {
     			<ul>
         			<li><a href="#how-does">🤔 How does this extension works?</a></li>
         			<li><a href="#create-repo">🆙 create-repo.sh</a></li>
+        			<li><a href="#add-secret">🆕 add-secret.sh</a></li>
         			<li><a href="#pipeline-generator">⏩ pipeline_generator.sh</a></li>
     			</ul>
 				<hr>
@@ -55,6 +56,8 @@ class WebviewPanelCreator {
 					<li>Type all the scripts <b>attributes</b> (flags) you want to use.</li>
 					<li>Once the script <b>has run successfully</b>, you can close the notification tab.</li>
 				</ol>
+				<hr>
+
 				<h2 id="create-repo">🆙 create-repo.sh</h2>
 				<p>
 				Creates or imports a repository on GitHub, Azure Devops or Google Cloud.<br>
@@ -83,6 +86,28 @@ class WebviewPanelCreator {
 	-f, --force                            Skips any user confirmation.
 		--subpath                          When combined with -g and -r, imports only the specified subpath of the source Git repository.
 	-u, --public                           Sets repository scope to public. Private otherwise.
+				</code>
+				</pre>
+				<hr>
+
+				<h2 id="add-secret">🆕 add-secret.sh</h2>
+				<p>
+				Uploads a file or a variable as a secret in Google Cloud Secret Manager to make it available in chosen pipelines.
+				</p>
+				<h3>Documentation link/s:</h3>
+				<ul>
+					<li><a href="https://github.com/hec-stbt/hangar/blob/master/documentation/gcloud/upload-secret-manager.asciidoc" target="_blank">Upload files or variables as secrets in Google Cloud Secret Manager</a></li>
+				</ul>
+				<h3>Flags</h3>
+				<pre>
+				<code>
+	-d, --local-directory       [Required] Local directory of your project."
+	-f, --local-file-path       [Required, unless -v] Local path of the file to be uploaded. Takes precedence over -v.
+	-r, --remote-file-path      [Required, if -f] File path (in pipeline context) where the secret will be downloaded.
+	-n, --secret-name           [Required, if -v] Name for the secret in Secret Manager. If not specified (when optional), file name is used as default. The name must comply with the regex [a-zA-Z0-9_].
+	-v, --value                 [Required, unless -f] Value of the secret.
+	-b, --target-branch         [Required] Name of the branch to which the merge will target.
+	-p, --pipelines                        List of pipelines where the secret will be made available. By default, all pipelines.
 				</code>
 				</pre>
 				<hr>
