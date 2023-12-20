@@ -268,6 +268,9 @@ function commitCommonFiles {
     # Add the YAML files.
     git add "$pipelinePath" -f
 
+    # Add the changes in the pom.xml file
+    git add "pom.xml"
+
     # Git commit and push it into the repository.
     # changing all files to be executable
     find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
