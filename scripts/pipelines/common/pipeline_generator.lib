@@ -298,7 +298,8 @@ function add_jacoco_dependency {
         echo -ne ${white}
 
         # Define the Jacoco plugin
-        jacoco_plugin= <plugin>
+        jacoco_plugin= 
+        "<plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.7</version>
@@ -317,7 +318,7 @@ function add_jacoco_dependency {
                     </goals>
                 </execution>
             </executions>
-        </plugin>
+        </plugin>"
 
         # Create a temporary file
         temp_file=$(mktemp)
