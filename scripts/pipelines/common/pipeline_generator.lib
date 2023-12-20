@@ -293,7 +293,7 @@ function languageVersionVerification {
     fi
 }
 function add_jacoco_dependency {
-    if [[ "$language" == "quarkus" ]] || [[ "$language" == "quarkus-jvm" ]]; then
+    if [[ "$language" == "quarkus"* ]]; then
         echo -e "${green}Adding Jacoco plugin dependencies to pom.xml..."
         echo -ne ${white}
 
