@@ -10,7 +10,7 @@
  * const customRadioButton: ICustomRadioButton = { id: 'create-repo.sh', label: '🆙 Create repo' };
  *
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 2.0.2
+ * @version 1.0.0
  */
 export interface ICustomRadioButton {
     id: string;

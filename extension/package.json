@@ -9,7 +9,7 @@
 		"type": "git",
 		"url": "https://github.com/hec-stbt/hangar.git"
 	},
-	"version": "3.2.0",
+	"version": "1.0.0",
 	"publisher": "adcenter-spain-hangar-team",
 	"private": true,
 	"icon": "resources/hangar-icon.png",

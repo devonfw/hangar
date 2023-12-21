@@ -16,7 +16,7 @@ import { RadioButton } from "./RadioButton";
  * @see {@link https://code.visualstudio.com/api/references/vscode-api#TreeDataProvider | VS Code TreeDataProvider API}
  * 
  * @author ADCenter Spain - DevOn Hangar Team
- * @version 3.2.0
+ * @version 1.0.0
  */
 export class RadioButtonDataProvider implements vscode.TreeDataProvider<RadioButton> {
     public radioButtons: RadioButton[];
