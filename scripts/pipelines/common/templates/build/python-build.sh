@@ -9,11 +9,11 @@ export PIP_NO_CACHE_DIR=1
 export POETRY_VERSION=1.0.5
 
 pip install "poetry==$POETRY_VERSION"
-python -m venv /venv
-poetry export --without-hashes -f requirements.txt | /venv/bin/pip install -r /dev/stdin
+python -m venv ./venv
+poetry export --without-hashes -f requirements.txt | ./venv/bin/pip install -r /dev/stdin
 # shellcheck source=/dev/null
-. /venv/bin/activate
+. ./venv/bin/activate
 mypy .
-poetry build && /venv/bin/pip install dist/*.whl
+poetry build && ./venv/bin/pip install dist/*.whl
 deactivate
-mv /venv ./venv
+#mv /venv ./venv
