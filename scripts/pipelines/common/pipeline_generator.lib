@@ -268,8 +268,11 @@ function commitCommonFiles {
     # Add the YAML files.
     git add "$pipelinePath" -f
 
-    # Add the changes in the pom.xml file
-    git add "pom.xml"
+    # Check if the pom.xml file exists before trying to add it.
+    if [ -f "pom.xml" ]; then
+        # Add the changes in the pom.xml file
+        git add "pom.xml"
+    fi
 
     # Git commit and push it into the repository.
     # changing all files to be executable
