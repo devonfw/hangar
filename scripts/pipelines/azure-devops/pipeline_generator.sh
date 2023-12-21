@@ -99,7 +99,7 @@ function createPR {
         echo -e "${green}Creating a Pull Request..."
         echo -ne ${white}
         # Create the Pull Request to merge into the specified branch.
-        pr=$(az repos  pr create --source-branch ${sourceBranch} --target-branch $targetBranch --title "Pipeline" --auto-complete true)
+        pr=$(az repos  pr create --source-branch ${sourceBranch} --target-branch $targetBranch --title "Pipeline" --auto-complete true --project "$projectName" --repository "$repoName")
 
         # Obtain the PR id.
         id=$(echo "$pr" | python -c "import sys, json; print(json.load(sys.stdin)['pullRequestId'])")
