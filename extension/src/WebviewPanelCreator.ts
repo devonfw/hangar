@@ -33,7 +33,6 @@ export class WebviewPanelCreator {
 				<ol>
 					<li>Select the script you want to run. <b>(JUST ONE)</b></li>
 					<li>Click <b>RUN</b> button.</li>
-					<li>Search for script's <b>folder</b>.</li>
 					<li>Type all the scripts <b>attributes</b> (flags) you want to use.</li>
 					<li>Once the script <b>has run successfully</b>, you can close the notification tab.</li>
 				</ol>
