@@ -268,6 +268,12 @@ function commitCommonFiles {
     # Add the YAML files.
     git add "$pipelinePath" -f
 
+    # Check if the pom.xml file exists before trying to add it.
+    if [ -f "pom.xml" ]; then
+        # Add the changes in the pom.xml file
+        git add "pom.xml"
+    fi
+
     # Git commit and push it into the repository.
     # changing all files to be executable
     find "$pipelinePath" -type f -name '*.sh' -exec git update-index --chmod=+x {} \;
@@ -290,5 +296,35 @@ function languageVersionVerification {
     then
         echo -e "${red}Error: Language given requires --language-version flag.${white}" >&2
         exit 2
+    fi
+}
+function add_jacoco_dependency {
+    if [[ "$language" == "quarkus"* ]]; then
+        echo -e "${green}Adding Jacoco plugin dependencies to pom.xml..."
+        echo -ne ${white}
+
+        # Define the Jacoco plugin
+        jacoco_plugin="<plugin>
+<groupId>org.jacoco</groupId>
+<artifactId>jacoco-maven-plugin</artifactId>
+<version>0.8.7</version>
+<executions>
+<execution>
+<goals>
+<goal>prepare-agent</goal>
+</goals>
+</execution>
+<execution>
+<id>report</id>
+<phase>prepare-package</phase>
+<goals>
+<goal>report</goal>
+</goals>
+</execution>
+</executions>
+</plugin>"
+
+        # Insert the Jacoco plugin into the pom.xml file
+        perl -i -pe "s|</plugins>|${jacoco_plugin}\n</plugins>|g" "${localDirectory}/pom.xml"
     fi
 }

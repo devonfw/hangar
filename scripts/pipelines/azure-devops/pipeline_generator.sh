@@ -157,6 +157,8 @@ createNewBranch
 
 copyYAMLFile
 
+add_jacoco_dependency
+
 copyCommonScript
 
 type copyScript &> /dev/null && copyScript
