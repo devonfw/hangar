@@ -1,0 +1,66 @@
+name: $pipelineName
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      sonarUrl:
+        required: false
+        default: $sonarUrl
+      sonarToken:
+        required: false
+        default:
+      targetPath:
+        description: 'Target directory of build process.'
+        required: false
+        type: string
+        default: '$targetDirectory'
+
+# mark to insert additional artifact input #
+
+env:
+  targetPath: ${{ github.event.inputs.targetPath || '$targetDirectory' }}
+  sonarUrl: ${{ github.event.inputs.sonarUrl || '$sonarUrl' }}
+  sonarToken: ${{ github.event.inputs.sonarToken || secrets.SONARQUBE_TOKEN }}
+
+# mark to insert additional artifact env var #
+
+jobs:
+  Build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Build the application
+        run: .github/workflows/scripts/build.sh
+
+      - name: Archiving artifact
+        run: pwd;ls -l;tar -cvf ./BuildOutput.tar -C ${{ env.targetPath }}/ .
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildOutput
+          path: ./BuildOutput.tar
+
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+
+      - name: Test
+        run: .github/workflows/scripts/test.sh
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: '**/TEST-*.xml'
+
+      - name: SonarQube analysis
+        run: .github/workflows/scripts/quality.sh.template
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          SONAR_URL: ${{ env.sonarUrl }}
+          PROJECT_PATH: .
