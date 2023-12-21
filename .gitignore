@@ -1,6 +1,10 @@
 # VSCode Config
 .vscode/*
 
+# VSCode Hangar Extension
+/extension/scripts/*
+!/extension/scripts/.gitkeep
+
 # Terraform files
 **/.terraform/**
 **/.terraform.lock.hcl
