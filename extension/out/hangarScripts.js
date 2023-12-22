@@ -97,12 +97,10 @@ class HangarScripts {
         }
         catch (error) {
             if (typeof error === 'object' && error !== null && 'message' in error) {
-                console.error(`Error executing script: ${error.message}`);
-                vscode.window.showErrorMessage(`Error executing script: ${error.message}`);
+                vscode.window.showErrorMessage(`${error.message}`);
             }
             else {
-                console.error(`Error executing script: ${error}`);
-                vscode.window.showErrorMessage(`Error executing script: ${error}`);
+                vscode.window.showErrorMessage(`${error}`);
             }
         }
     }
